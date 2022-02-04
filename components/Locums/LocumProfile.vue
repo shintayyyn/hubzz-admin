@@ -179,6 +179,16 @@
             </template>
 
             <p class="mt-2">
+              NI Number
+            </p>
+            <p
+              class="font-bold pl-2"
+              :class="!locumDetails.nhs_smart_card_id_number && 'opacity-75'"
+            >
+              {{ locumDetails.ni_number ? locumDetails.ni_number : 'N/A' }}
+            </p>
+
+            <p class="mt-2">
               NHS Smart Card ID Number
             </p>
             <p
