@@ -249,9 +249,9 @@
             break
           case 'Withdrawn':
             if (this.locumUser) {
-              count =  this.$store.state.jobs.practice_withdrawn_sessions_count
-            } else if (this.practice || this.practiceSurgery) {
               count =  this.$store.state.jobs.locum_withdrawn_jobs_count
+            } else if (this.practice || this.practiceSurgery) {
+              count =  this.$store.state.jobs.practice_withdrawn_sessions_count
             }
             break
           default:
@@ -319,9 +319,9 @@
             break
           case 'Withdrawn':
             if (this.locumUser) {
-              records = this.$store.state.jobs.practice_withdrawn_sessions
-            } else if (this.practice || this.practiceSurgery) {
               records = this.$store.state.jobs.locum_withdrawn_jobs
+            } else if (this.practice || this.practiceSurgery) {
+              records = this.$store.state.jobs.practice_withdrawn_sessions
             }
             break
           default:
@@ -612,6 +612,10 @@
               case 'Unfilled':
                 this.$store.commit("jobs/SET_PRACTICE_UNFILLED_SESSIONS_COUNT", count)
                 this.$store.commit("jobs/SET_PRACTICE_UNFILLED_SESSIONS", jobs)
+                break
+              case 'Live':
+                this.$store.commit("jobs/SET_PRACTICE_LIVE_SESSIONS_COUNT", count)
+                this.$store.commit("jobs/SET_PRACTICE_LIVE_SESSIONS", jobs)
                 break
               case 'Available':
                 this.$store.commit("jobs/SET_LOCUM_AVAILABLE_JOBS_COUNT", count)
