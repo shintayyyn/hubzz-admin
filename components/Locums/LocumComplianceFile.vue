@@ -12,7 +12,7 @@
       </button>
     </header>
 
-    <main class="border rounded-lg md:mx-4 mb-6 p-4">
+    <main class="border rounded-lg md:mx-4 mb-6 p-4 overflow-y-auto">
       <div class="w-full inline-flex flex-wrap md:flex-no-wrap md:flex-row flex-col-reverse text-sm">
         <div class="m-2 md:w-1/3 lg:w-1/3">
           <div class="leading-tight pb-4">
