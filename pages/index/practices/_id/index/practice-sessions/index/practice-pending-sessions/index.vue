@@ -2,7 +2,7 @@
   <div>
     <JobsLists
       :practice="practice"
-      :status="['Ongoing']"
+      :status="['Pending']"
       :jobDenom="'Jobs'"
     />
   </div>
