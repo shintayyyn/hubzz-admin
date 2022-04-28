@@ -269,7 +269,7 @@
             </p>
             
             <p class="mt-2">
-              Short Biography
+              Biography
             </p>
 
             <p
