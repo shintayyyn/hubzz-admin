@@ -258,6 +258,7 @@
                 v-if="locumComplianceDocument.file.type === 'image'"
                 :src="fileUrl"
                 class="object-contain object-left-top"
+                style="max-height: 70vh;"
               >
               <embed
                 v-if="locumComplianceDocument.file.type !== 'image' && authAdminPermissions.includes('Download Locum Compliance Documents') === true"
