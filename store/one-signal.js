@@ -25,7 +25,7 @@ export const actions = {
       console.log('loggedIn', this.$auth.loggedIn)
 
       if (oneSignalId) {
-        if (!oneSignalId && this.$auth.loggedIn) {
+        if (this.$auth.loggedIn) {
           await this.$axios.post('/api/v1/one-signal/login', {
             one_signal_id: oneSignalId
           })

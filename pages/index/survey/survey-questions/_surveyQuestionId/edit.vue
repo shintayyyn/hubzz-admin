@@ -30,6 +30,48 @@
               required
             />
 
+            <div v-if="['Check Boxes', 'Radio Buttons'].includes(questionType)">
+              <div class="flex items-end">
+                <strong class="pr-3">Choices <span class="text-red-500">*</span></strong>
+                <AppButton class="mt-4" label="Add" @click="addChoice()" />
+              </div>
+
+              <div
+                v-if="formErrors.find(({ field, choiceId }) => field === 'choices' && !choiceId)"
+                class="text-red-700 py-1 text-xs"
+              >
+                {{ formErrors.find(({ field, choiceId }) => field === 'choices' && !choiceId).message }}
+              </div>
+
+              <div>
+                <div v-for="choice in choices" :key="choice.id" class="flex items-center">
+                  <button @click="moveUp(choice.id)">
+                    <svgicon
+                      name="arrow_upward"
+                      width="16"
+                      height="16"
+                      class="fill-current text-waterloo hover:text-sunglow"
+                    />
+                  </button>
+                  <button class="px-1" @click="moveDown(choice.id)">
+                    <svgicon
+                      name="arrow_downward"
+                      width="16"
+                      height="16"
+                      class="fill-current text-waterloo hover:text-sunglow"
+                    />
+                  </button>
+                  <AppInput
+                    v-model="choice.choice"
+                    type="text"
+                    :error="formErrors.find(({ field, choiceId }) => field === 'choices' && choiceId === choice.id)"
+                    class="flex-1"
+                  />
+                  <AppButton class="mt-4 ml-2" label="Remove" :customTheme="'bg-red-500 text-white hover:bg-red-600 py-1'" @click="removeChoice(choice.id)" />
+                </div>
+              </div>
+            </div>
+
             <AppButton class="mt-4" :label="updatingSurveyQuestion ? 'Saving...' : 'Save'" @click="updateSurveyQuestionnare" />
           </div>
         </div>
@@ -42,6 +84,7 @@
 import AppLoading from '@/components/Base/AppLoading'
 import AppInput from '@/components/Base/AppInput'
 import AppButton from "@/components/Base/AppButton"
+import nanoid from 'nanoid'
 
 export default {
   components: {
@@ -65,14 +108,18 @@ export default {
           label: 'Text Box',
           value: 'Text Box',
         },
-        // {
-        //   label: 'Check Box',
-        //   value: 'Check Box',
-        // },
+        {
+          label: 'Check Boxes',
+          value: 'Check Boxes',
+        },
+        {
+          label: 'Radio Buttons',
+          value: 'Radio Buttons',
+        },
       ],
       questionType: null,
       question: '',
-
+      choices: [],
       surveyQuestion: null,
       gettingSurveryQuestion: false,
 
@@ -115,6 +162,13 @@ export default {
         })
       }
     },
+
+    choices: {
+      handler () {
+        this.validateChoices()
+      },
+      deep: true,
+    }
   },
 
   mounted () {
@@ -122,6 +176,89 @@ export default {
   },
 
   methods: {
+    validateChoices () {
+      this.formErrors = this.formErrors.filter(({ field }) => field !== 'choices')
+
+      if (['Check Boxes', 'Radio Buttons'].includes(this.questionType)) {
+        if (!this.choices) {
+          this.formErrors.push({
+            field: 'choices',
+            message: 'Choices is required.',
+            validation: 'required',
+          })
+        } else if (!Array.isArray(this.choices)) {
+          this.formErrors.push({
+            field: 'choices',
+            message: 'Choices must be an array.',
+            validation: 'array',
+          })
+        } else if (this.choices.length === 0) {
+          this.formErrors.push({
+            field: 'choices',
+            message: 'Choices is required.',
+            validation: 'required',
+          })
+        } else if (this.choices && Array.isArray(this.choices)) {
+          this.choices.forEach((choice) => {
+            if (!choice.choice) {
+              this.formErrors.push({
+                field: 'choices',
+                message: 'Choice is required.',
+                validation: 'required',
+                choiceId: choice.id,
+              })
+
+              return
+            }
+
+            if (choice.choice.length > 255) {
+              this.formErrors.push({
+                field: 'choices',
+                message: 'Choice maximum length is 255 characters.',
+                validation: 'max',
+                choiceId: choice.id,
+              })
+            }
+          })
+        }
+      }
+    },
+
+    moveUp (choiceId) {
+      const index = this.choices.findIndex((choice) => choice.id === choiceId)
+
+      if (index > -1 && index !== 0) {
+        const choice = this.choices[index]
+        this.choices.splice(index, 1)
+        this.choices.splice(index - 1, 0, choice)
+      }
+    },
+
+    moveDown (choiceId) {
+      const index = this.choices.findIndex((choice) => choice.id === choiceId)
+
+      if (index > -1 && index !== (this.choices.length - 1)) {
+        const choice = this.choices[index]
+        this.choices.splice(index, 1)
+        this.choices.splice(index + 1, 0, choice)
+      }
+    },
+
+    addChoice () {
+      this.choices.push({
+        id: nanoid(),
+        choice: '',
+      })
+    },
+
+    removeChoice (choiceId) {
+      const index = this.choices.findIndex((choice) => choice.id === choiceId)
+
+      if (index > -1) {
+        this.choices.splice(index, 1)
+      }
+    },
+
     async getSurveyQuestionnare () {
       try {
         this.gettingSurveryQuestion = true
@@ -135,6 +272,7 @@ export default {
         this.surveyQuestion = surveyQuestion
         this.questionType = surveyQuestion.question_type
         this.question = surveyQuestion.question
+        this.choices = surveyQuestion.choices
 
         this.gettingSurveryQuestion = false
       } catch (err) {
@@ -167,6 +305,7 @@ export default {
         const data = {
           question_type: this.questionType,
           question: this.question,
+          choices: this.choices,
         }
 
         this.formErrors = await this.$validator(data, {
@@ -178,6 +317,8 @@ export default {
           'question.string': 'Question must be a string.',
           'question.max': 'Question maximum length is 255 characters.',
         }).then(() => []).catch((errors) => errors)
+
+        this.validateChoices()
 
         if (this.formErrors.length) {
           return
