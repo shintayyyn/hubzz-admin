@@ -112,7 +112,7 @@
                   {{ surveyResponseAnswer.question }}
                 </h1>
                 <p class="w-full p-2 border rounded-lg bg-yellow-500 shadow-lg">
-                  {{ surveyResponseAnswer.answer }}
+                  {{ surveyResponseAnswer.answer ? surveyResponseAnswer.answer : '&nbsp;' }}
                 </p>
               </div>
 
@@ -121,7 +121,7 @@
                   {{ surveyResponseAnswer.question }}
                 </h1>
                 <p class="w-full p-2 border rounded-lg bg-yellow-500 shadow-lg">
-                  {{ surveyResponseAnswer.answer }}
+                  {{ surveyResponseAnswer.answer ? surveyResponseAnswer.answer : '&nbsp;' }}
                 </p>
               </div>
               
@@ -137,6 +137,46 @@
                     :class="`${(surveyResponseAnswer.answer || 0) >= number ? 'bg-yellow-500' : 'bg-gray-200'}`"
                     :style="{ width: '28px', height: '32px', transition: '.1s' }"
                   />
+                </div>
+              </div>
+              
+              <div v-if="surveyResponseAnswer.question_type === 'Check Boxes'" class="mb-4">
+                <h1 class="text-lg">
+                  {{ surveyResponseAnswer.question }}
+                </h1>
+                <div class="flex flex-col ml-2">
+                  <div
+                    v-for="choice in surveyResponseAnswer.survey_question.choices"
+                    :key="choice.id"
+                    class="flex py-2"
+                  >
+                    <input
+                      :name="choice.id"
+                      type="checkbox"
+                      :checked="surveyResponseAnswer.selected_choices.some((selectedChoice) => selectedChoice.selected_choice === choice.choice)"
+                    >
+                    <label>{{ choice.choice }}</label>
+                  </div>
+                </div>
+              </div>
+              
+              <div v-if="surveyResponseAnswer.question_type === 'Radio Buttons'" class="mb-4">
+                <h1 class="text-lg">
+                  {{ surveyResponseAnswer.question }}
+                </h1>
+                <div class="flex flex-col ml-2">
+                  <div
+                    v-for="choice in surveyResponseAnswer.survey_question.choices"
+                    :key="choice.id"
+                    class="flex py-2"
+                  >
+                    <input
+                      :name="choice.id"
+                      type="radio"
+                      :checked="surveyResponseAnswer.selected_choices.some((selectedChoice) => selectedChoice.selected_choice === choice.choice)"
+                    >
+                    <label>{{ choice.choice }}</label>
+                  </div>
                 </div>
               </div>
             </div>
