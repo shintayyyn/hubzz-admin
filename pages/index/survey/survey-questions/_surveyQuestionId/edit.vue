@@ -100,10 +100,10 @@ export default {
           label: 'Rating',
           value: 'Rating',
         },
-        {
-          label: 'Text',
-          value: 'Text',
-        },
+        // {
+        //   label: 'Text',
+        //   value: 'Text',
+        // },
         {
           label: 'Text Box',
           value: 'Text Box',
