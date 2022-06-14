@@ -241,6 +241,15 @@
             flexShrink: 0,
           },
           {
+            title: 'Profession Name',
+            key: 'profession_name',
+            sort_key: 'profession_name',
+            column: item => item.profession_name,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
             title: 'Practice',
             key: 'practice_name',
             sort_key: 'practice_name',

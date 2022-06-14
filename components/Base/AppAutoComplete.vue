@@ -1,0 +1,281 @@
+<template>
+  <div
+    v-on-clickaway="toggledOff"
+    class="relative flex flex-col py-2 mb-3 md:mb-6"
+  >
+    <div class="relative flex flex-row flex-no-wrap justify-between">
+      <label :for="name" class="text-xs sm:text-sm py-1">{{ label }}</label>
+
+      <div class="flex">
+        <div
+          v-if="error"
+          class="bg-red-500 ml-2 p-1 text-xs sm:text-base text-white"
+        >
+          {{ error.message }}
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-row justify-start mt-1">
+      <input
+        ref="search"
+        :value="value"
+        type="text"
+        :placeholder="placeholder"
+        class="border-b-2 focus:border-yellow-400 focus:outline-none py-4 font-bold text-xs sm:text-sm w-full"
+        :class="error ? 'border-red-500' : ''"
+        :style="inStyle"
+        @focus="toggledOn"
+        @keydown="handleKeyDownEvent"
+        @input="$emit('input', $event.target.value)"
+      />
+    </div>
+
+    <transition name="fade">
+      <div v-if="showLists" class="relative z-10">
+        <div
+          v-if="results.length > 0"
+          class="w-full absolute bg-white shadow-md"
+        >
+          <div
+            v-for="(item, index) in results"
+            :key="index"
+            class="flex flex-row flex-no-wrap justify-start p-2 text-xs border-b-2 cursor-pointer"
+            :class="{ 'bg-gray-300': activeIndex === index }"
+            @mouseover="activeIndex = index"
+            @click="add"
+          >
+            <span v-if="item.domain === 'Locum'" class="flex justify-center">
+              <AppAvatar
+                class="w-10 h-10 rounded-full border"
+                :width="'40px'"
+                :height="'40px'"
+                :src="
+                  item.avatar && item.avatar.file && item.avatar.file.url
+                    ? item.avatar.file.url
+                    : ''
+                "
+              />
+            </span>
+
+            <div class="w-full flex flex-col justify-center mx-2 leading-none">
+              <p class="font-bold text-base">
+                {{ item.personal_detail.first_name }}
+                {{ item.personal_detail.last_name }}
+              </p>
+
+              <p v-if="item.practice_detail" class="text-gray-600">
+                <span>{{ item.practice_detail.practice_role }}</span>
+                <span>
+                  ({{
+                    item.practice_detail.practice &&
+                      item.practice_detail.practice.name
+                  }})
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div
+          v-if="results.length === 0"
+          class="absolute w-full text-sm p-2 bg-white shadow-md"
+          style="bottom: -26px;"
+        >
+          No results found
+        </div>
+      </div>
+    </transition>
+  </div>
+</template>
+
+<script>
+import debounce from 'lodash.debounce'
+import AppAvatar from '@/components/Base/AppAvatar'
+import { mixin as clickaway } from 'vue-clickaway'
+export default {
+  components: {
+    AppAvatar
+  },
+
+  mixins: [clickaway],
+
+  props: {
+    value: {
+      type: String,
+      default: () => null
+    },
+
+    name: {
+      type: String,
+      default: () => null
+    },
+
+    label: {
+      type: String,
+      default: () => null
+    },
+
+    placeholder: {
+      type: String,
+      default: () => null
+    },
+
+    url: {
+      type: String,
+      default: () => null
+    },
+
+    data: {
+      type: String,
+      default: () => null
+    },
+
+    error: {
+      type: Object,
+      default: () => null
+    },
+
+    inStyle: {
+      type: String,
+      default: () => null
+    }
+  },
+
+  data() {
+    return {
+      showLists: false,
+      results: [],
+      activeIndex: 0
+    }
+  },
+
+  computed: {
+    conversations() {
+      return this.$store.getters['chat/getConversations']
+    }
+  },
+
+  watch: {
+    value(value) {
+      if (value) {
+        this.getSearchUsers(value)
+      } else {
+        this.showLists = false
+      }
+    },
+
+    url() {
+      if (this.value) {
+        this.getSearchUsers(this.value)
+      } else {
+        this.showLists = false
+      }
+    }
+  },
+
+  methods: {
+    add() {
+      let selectedUser = this.results[this.activeIndex]
+      if (!selectedUser) {
+        return
+      }
+      console.log(selectedUser)
+      this.showLists = false
+      this.$axios
+        .$get(`/api/v1/conversations/search?user_id=${selectedUser.id}`)
+        .then(res => {
+          if (res.data.user) {
+            this.$emit('newConversation', res.data.user)
+          } else if (res.data.conversation) {
+            let id = res.data.conversation.conversation_id
+            if (!this.conversations.find(item => item.id == id)) {
+              this.$store.dispatch('chat/fetchMoreConversation', {
+                offset: this.conversations.length
+              })
+            }
+            this.$router.push(`/messages/${id}`)
+          }
+        })
+        .catch(err => {
+          console.log('err', err.response || err)
+          if (err.response.data.message) {
+            this.$store.commit('SET_NOTIFICATION', {
+              enabled: true,
+              status: 'danger',
+              text: [`${err.response.data.message}`]
+            })
+          }
+        })
+    },
+
+    getSearchUsers: debounce(function(input) {
+      const params = {
+        search: input,
+        limit: 5
+      }
+      this.$axios
+        .$get(this.url, { params })
+        .then(res => {
+          this.results = res.data.users
+          this.showLists = true
+        })
+        .catch(err => {
+          console.log('err', err.response || err)
+          if (err.response.data.message) {
+            this.$store.commit('SET_NOTIFICATION', {
+              enabled: true,
+              status: 'danger',
+              text: [`${err.response.data.message}`]
+            })
+          }
+        })
+    }, 500),
+
+    toggledOn() {
+      if (this.search && this.search.length) {
+        this.showLists = true
+      }
+    },
+
+    toggledOff() {
+      this.showLists = false
+    },
+
+    handleKeyDownEvent(event) {
+      if (!this.showLists) {
+        return
+      }
+      if (event.key === 'ArrowUp') {
+        if (this.activeIndex === 0) {
+          this.activeIndex = 4
+        } else {
+          this.activeIndex--
+        }
+      }
+      if (event.key === 'ArrowDown') {
+        if (this.activeIndex === 4) {
+          this.activeIndex = 0
+        } else {
+          this.activeIndex++
+        }
+      }
+      if (event.key === 'Enter') {
+        this.add()
+      }
+      if (event.key === 'Escape' || event.key === 'Tab') {
+        this.toggledOff()
+      }
+    }
+  }
+}
+</script>
+
+<style scoped>
+.icon {
+  max-width: 1rem;
+  max-height: 1rem;
+  min-width: 1rem;
+  min-height: 1rem;
+}
+</style>

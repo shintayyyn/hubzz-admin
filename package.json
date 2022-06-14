@@ -96,10 +96,7 @@
         "error",
         "never"
       ],
-      "space-before-function-paren": [
-        "error",
-        "always"
-      ],
+      "space-before-function-paren": "off",
       "camelcase": "off",
       "max-len": "off",
       "no-console": "off",
@@ -107,7 +104,8 @@
       "no-await-in-loop": "off",
       "func-names": "off",
       "global-require": "off",
-      "import/no-dynamic-require": "off"
+      "import/no-dynamic-require": "off",
+      "vue/html-self-closing": "off"
     }
   },
   "husky": {

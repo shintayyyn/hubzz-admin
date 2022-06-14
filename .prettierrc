@@ -1,0 +1,7 @@
+{
+  "semi": false,
+  "singleQuote": true,
+  "space-before-function-paren": true,
+  "printWidth": 150,
+  "trailing-comma": "es5"
+}
