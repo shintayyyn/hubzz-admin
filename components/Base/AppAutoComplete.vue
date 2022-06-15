@@ -1,16 +1,10 @@
 <template>
-  <div
-    v-on-clickaway="toggledOff"
-    class="relative flex flex-col py-2 mb-3 md:mb-6"
-  >
+  <div v-on-clickaway="toggledOff" class="relative flex flex-col py-2 mb-3 md:mb-6">
     <div class="relative flex flex-row flex-no-wrap justify-between">
       <label :for="name" class="text-xs sm:text-sm py-1">{{ label }}</label>
 
       <div class="flex">
-        <div
-          v-if="error"
-          class="bg-red-500 ml-2 p-1 text-xs sm:text-base text-white"
-        >
+        <div v-if="error" class="bg-red-500 ml-2 p-1 text-xs sm:text-base text-white">
           {{ error.message }}
         </div>
       </div>
@@ -33,10 +27,7 @@
 
     <transition name="fade">
       <div v-if="showLists" class="relative z-10">
-        <div
-          v-if="results.length > 0"
-          class="w-full absolute bg-white shadow-md"
-        >
+        <div v-if="results.length > 0" class="w-full absolute bg-white shadow-md">
           <div
             v-for="(item, index) in results"
             :key="index"
@@ -50,11 +41,7 @@
                 class="w-10 h-10 rounded-full border"
                 :width="'40px'"
                 :height="'40px'"
-                :src="
-                  item.avatar && item.avatar.file && item.avatar.file.url
-                    ? item.avatar.file.url
-                    : ''
-                "
+                :src="item.avatar && item.avatar.file && item.avatar.file.url ? item.avatar.file.url : ''"
               />
             </span>
 
@@ -66,22 +53,13 @@
 
               <p v-if="item.practice_detail" class="text-gray-600">
                 <span>{{ item.practice_detail.practice_role }}</span>
-                <span>
-                  ({{
-                    item.practice_detail.practice &&
-                      item.practice_detail.practice.name
-                  }})
-                </span>
+                <span> ({{ item.practice_detail.practice && item.practice_detail.practice.name }}) </span>
               </p>
             </div>
           </div>
         </div>
 
-        <div
-          v-if="results.length === 0"
-          class="absolute w-full text-sm p-2 bg-white shadow-md"
-          style="bottom: -26px;"
-        >
+        <div v-if="results.length === 0" class="absolute w-full text-sm p-2 bg-white shadow-md" style="bottom: -26px;">
           No results found
         </div>
       </div>
@@ -150,12 +128,6 @@ export default {
     }
   },
 
-  computed: {
-    conversations() {
-      return this.$store.getters['chat/getConversations']
-    }
-  },
-
   watch: {
     value(value) {
       if (value) {
@@ -188,13 +160,8 @@ export default {
           if (res.data.user) {
             this.$emit('newConversation', res.data.user)
           } else if (res.data.conversation) {
-            let id = res.data.conversation.conversation_id
-            if (!this.conversations.find(item => item.id == id)) {
-              this.$store.dispatch('chat/fetchMoreConversation', {
-                offset: this.conversations.length
-              })
-            }
-            this.$router.push(`/messages/${id}`)
+            let conversationId = res.data.conversation.conversation_id
+            this.$router.push(`/messages/${conversationId}`)
           }
         })
         .catch(err => {

@@ -62,23 +62,10 @@ export default {
     }
   },
 
-  mounted() {
-    if (window.innerWidth < 768) {
-      this.$store.commit('IS_MOBILE', false)
-    }
-
-    // this.$store.commit('chat/CLEAR_MESSAGES')
-  },
-
-  created() {
-    // this.$store.commit('chat/DELETE_ACTIVE_CONVERSATION')
-  },
-
   methods: {
     newConversation(user) {
-      this.$router.push({
-        path: `/messages/create/${user.id}`
-      })
+      console.log('newConversation', { user })
+      this.$router.push(`/messages/create/${user.id}`)
     },
 
     goBack() {
