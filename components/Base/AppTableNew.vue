@@ -2,10 +2,8 @@
   <section class="relative">
     <div class="relative">
       <AppLoading :loading="loading" spinner />
-      <div
-        class="relative flex flex-col overflow-x-auto w-full"
-        :style="`min-height: ${minHeight ? minHeight : '60vh'}`"
-      >
+
+      <div class="relative flex flex-col overflow-x-auto w-full" :style="`min-height: ${minHeight ? minHeight : '60vh'}`">
         <!-- HEADER -->
         <div
           v-if="disabledHeadings === false"
@@ -22,33 +20,39 @@
               column.class && column.class,
               column.sortable && 'cursor-pointer'
             ]"
-            :style="`min-width: 100px; ${column.width ? `max-width: ${column.width}px` : ''}`"
+            :style="
+              `min-width: ${column.slotName && column.slotName === 'checker' ? '50px' : '100px'}; ${
+                column.width ? `max-width: ${column.width}px` : ''
+              }`
+            "
             @click="column.sortable && sort(column.dataIndex)"
           >
             <span class="px-2">{{ column.name || column.title }}</span>
             <svgicon v-if="column.sortable" :name="sortIcon(column.dataIndex)" height="12" width="12" />
           </div>
         </div>
-        <div
-          v-for="(item, rowIndex) in items"
-          :key="item.id"
-          :style="`${customWidth ? `min-width: ${customWidth}px` : ``}`"
-          class="row"
-        >
+
+        <div v-for="(item, rowIndex) in items" :key="item.id" :style="`${customWidth ? `min-width: ${customWidth}px` : ``}`" class="row">
           <nuxt-link
-            :to="routerLink && {}.toString.call(routerLink) === '[object Function]'
-              ? routerLink(item)
-              : {
-                path: `${routerLink}/${routerId ? item[routerId] : item.id}`,
-                query: {
-                  ...$route.query,
-                },
-              }"
+            :to="
+              routerLink && {}.toString.call(routerLink) === '[object Function]'
+                ? routerLink(item)
+                : {
+                  path: `${routerLink}/${routerId ? item[routerId] : item.id}`,
+                  query: {
+                    ...$route.query
+                  }
+                }
+            "
             :event="!routerLink || (routerId && item[routerId] === null) ? '' : 'click'"
           >
             <div
               class="flex justify-start items-center text-xs py-2 border-l border-r stripe-hover"
-              :class="[routerLink ? 'cursor-pointer ' : 'cursor-default', rowIndex % 2 === 0 ? 'stripe-gray':'bg-white', rowIndex === items.length-1 ? 'border-b' : '']"
+              :class="[
+                routerLink ? 'cursor-pointer ' : 'cursor-default',
+                rowIndex % 2 === 0 ? 'stripe-gray' : 'bg-white',
+                rowIndex === items.length - 1 ? 'border-b' : ''
+              ]"
             >
               <div
                 v-for="(column, index) in columns"
@@ -56,7 +60,11 @@
                 :ref="`col${index}`"
                 class="flex-1 px-1 break-word hyphens h-full"
                 :class="column.class"
-                :style="`min-width: 100px; ${column.width ? `max-width: ${column.width}px` : ''}; ${column.dataIndex !== 'actions' ? countLines(index, column.width, rowIndex) : '' }`"
+                :style="
+                  `min-width: ${column.slotName && column.slotName === 'checker' ? '50px' : '100px'}; ${
+                    column.width ? `max-width: ${column.width}px` : ''
+                  }; ${column.dataIndex !== 'actions' ? countLines(index, column.width, rowIndex) : ''}`
+                "
                 style="line-height:20px; "
               >
                 <template v-if="Array.isArray(dataCell(item, column))">
@@ -64,6 +72,7 @@
                     {{ item }}
                   </div>
                 </template>
+
                 <template v-else>
                   <template v-if="column.slotName">
                     <div v-if="column.slotName == 'checker'" @click.prevent.stop="$emit(column.eventName, item)">
@@ -72,28 +81,28 @@
 
                     <slot v-else :name="column.slotName" :item="item" @click="$emit(column.eventName, item)" />
                   </template>
+
                   <template v-if="column.dataIndex === 'actions'">
                     <template v-if="column.class.includes('dropdown')">
-                      <div class="relative" @click="dropdownIndex===rowIndex ? dropdownIndex=null : dropdownIndex=rowIndex">
+                      <div class="relative" @click="dropdownIndex === rowIndex ? (dropdownIndex = null) : (dropdownIndex = rowIndex)">
                         <div class="flex items-center w-full">
                           <div class="flex flex-col relative w-full">
-                            <div class="cursor-pointer rounded flex items-center justify-between px-2 text-xs border border-gray-500 bg-white"
-                                 :class="dropdownIndex !== null && dropdownIndex===rowIndex ? 'bg-white' : ''"
+                            <div
+                              class="cursor-pointer rounded flex items-center justify-between px-2 text-xs border border-gray-500 bg-white"
+                              :class="dropdownIndex !== null && dropdownIndex === rowIndex ? 'bg-white' : ''"
                             >
                               <span>{{ column.initialDropdown ? column.initialDropdown : 'Select Action' }}</span>
-                              <span v-if="dropdownIndex!==rowIndex"><svgicon name="caret-down" width="8" /></span>
+                              <span v-if="dropdownIndex !== rowIndex"><svgicon name="caret-down" width="8" /></span>
                             </div>
-                            <div v-if="dropdownIndex !== null && dropdownIndex===rowIndex"
-                                 class="absolute bottom-0 "
-                                 :class="(items.length > 1 && total > perPage-5) && rowIndex === items.length-1 ? 'dropdown-up' :'dropdown'"
+                            <div
+                              v-if="dropdownIndex !== null && dropdownIndex === rowIndex"
+                              class="absolute bottom-0 "
+                              :class="items.length > 1 && total > perPage - 5 && rowIndex === items.length - 1 ? 'dropdown-up' : 'dropdown'"
                             >
                               <slot name="actions" :item="item" @click="$emit('click', item)" />
                             </div>
                           </div>
-                          <span 
-                            v-if="dropdownIndex !== null && dropdownIndex===rowIndex"
-                            class="p-1 bg-orange-400 ml-1 rounded"
-                          >
+                          <span v-if="dropdownIndex !== null && dropdownIndex === rowIndex" class="p-1 bg-orange-400 ml-1 rounded">
                             <svgicon name="left-arrow" style="transform:rotate(180deg)" width="8" />
                           </span>
                         </div>
@@ -101,38 +110,23 @@
                     </template>
                     <slot v-else name="actions" :item="item" @click="$emit('click', item)" />
                   </template>
+
                   <template v-if="column.dataIndex === 'shared'">
                     <slot name="shared" :item="item" @click="$emit('click', item)" />
                   </template>
+
                   <template v-if="column.dataIndex === 'actions-button'">
                     <slot name="actions-button" :item="item" />
                   </template>
+
                   <template v-if="!column.slotName">
-                    <template
-                      v-if="
-                        column.class &&
-                          column.class.includes('localDate') &&
-                          dataCell(item, column) !== '(none)'
-                      "
-                    >
+                    <template v-if="column.class && column.class.includes('localDate') && dataCell(item, column) !== '(none)'">
                       {{ dataCell(item, column) | localDate }}
                     </template>
-                    <template
-                      v-else-if="
-                        column.class &&
-                          column.class.includes('currency') &&
-                          dataCell(item, column) !== '(none)'
-                      "
-                    >
+                    <template v-else-if="column.class && column.class.includes('currency') && dataCell(item, column) !== '(none)'">
                       {{ dataCell(item, column) | currency }}
                     </template>
-                    <template
-                      v-else-if="
-                        column.class &&
-                          column.class.includes('fileSize') &&
-                          dataCell(item, column) !== '(none)'
-                      "
-                    >
+                    <template v-else-if="column.class && column.class.includes('fileSize') && dataCell(item, column) !== '(none)'">
                       {{ dataCell(item, column) | fileSize }}
                     </template>
                     <template v-else>
@@ -146,6 +140,7 @@
         </div>
       </div>
     </div>
+
     <div v-if="!loading && total > perPage && disabledPagination === false" class="w-full">
       <AppPagination
         :total="total"
@@ -159,49 +154,51 @@
     </div>
   </section>
 </template>
+
 <script>
-import AppPagination from "@/components/Base/AppPagination"
-import AppLoading from "@/components/Base/AppLoading"
-import { isArray } from 'highcharts'
+import AppPagination from '@/components/Base/AppPagination'
+import AppLoading from '@/components/Base/AppLoading'
+
 export default {
   components: {
     AppLoading,
-    AppPagination,
+    AppPagination
   },
+
   props: {
     total: {
       type: Number,
-      required: true,
+      required: true
     },
     items: {
       type: Array,
-      required: true,
+      required: true
     },
     loading: {
       type: Boolean,
-      default: false,
+      default: false
     },
     currentPage: {
       type: Number,
-      default: 1,
+      default: 1
     },
     perPage: {
       type: Number,
-      default: 15,
+      default: 15
     },
     columns: {
       type: Array,
-      required: true,
+      required: true
     },
     orderBy: {
       type: Array,
-      required: false,
+      required: false
     },
     routerLink: {
-      type: [String, Function,],
+      type: [String, Function]
     },
     routerId: {
-      type: String,
+      type: String
     },
     customWidth: {
       type: [String, Number],
@@ -209,10 +206,10 @@ export default {
     },
     customItemsWidth: {
       type: String,
-      default: null,
+      default: null
     },
     minHeight: {
-      type: String,
+      type: String
     },
     noTextResize: {
       type: Boolean,
@@ -220,31 +217,35 @@ export default {
     },
     disabledHeadings: {
       type: Boolean,
-      default: false,
+      default: false
     },
     disabledPagination: {
       type: Boolean,
       default: false
-    },
+    }
   },
-  data () {
+
+  data() {
     return {
       params: [],
       dropdownIndex: null
       // totalPages: 0
     }
   },
+
   computed: {
-    totalPages () {
+    totalPages() {
       return Math.ceil(this.total / this.perPage)
-    },
+    }
   },
-  mounted () {
+
+  mounted() {
     this.params = this.orderBy
     // this.totalPages = Math.ceil(this.total / this.perPage);
   },
+
   methods: {
-    sort (dataIndex) {
+    sort(dataIndex) {
       if (!this.params.some(item => item.includes(`${dataIndex}`))) {
         this.params = []
         this.params.push(`${dataIndex}:desc`)
@@ -259,35 +260,34 @@ export default {
           )
         }
       }
-      this.$emit("sorted", this.params)
+      this.$emit('sorted', this.params)
     },
-    checkClicked (item) {
-      this.$emit("toggleCheck", item)
+    checkClicked(item) {
+      this.$emit('toggleCheck', item)
     },
-    pagechanged (e) {
-      this.$emit("pagechanged", e)
+    pagechanged(e) {
+      this.$emit('pagechanged', e)
     },
-    limitchanged (limit) {
-      this.$emit("limitchanged", limit)
+    limitchanged(limit) {
+      this.$emit('limitchanged', limit)
     },
-    sortIcon (dataIndex) {
+    sortIcon(dataIndex) {
       if (Array.isArray(this.params) && this.params.length > 0) {
         return this.params.some(orderBy => orderBy === dataIndex || orderBy === `${dataIndex}:asc`)
-        ? 'sort-ascend'
-        : this.params.some(orderBy => orderBy === `${dataIndex}:desc`)
+          ? 'sort-ascend'
+          : this.params.some(orderBy => orderBy === `${dataIndex}:desc`)
           ? 'sort-descend'
           : 'sort'
       } else {
         return ''
       }
-      
     },
-    dataCell (item, column) {
+    dataCell(item, column) {
       if (column.column instanceof Function) {
         return column.column(item)
       }
 
-      var dataIndexArr = column.dataIndex.split(".")
+      var dataIndexArr = column.dataIndex.split('.')
       let str = null
       if (Array.isArray(item[dataIndexArr[0]])) {
         str = []
@@ -299,73 +299,54 @@ export default {
           }
         })
       } else {
-        str = ""
+        str = ''
         if (dataIndexArr.length === 1) {
           str = item[dataIndexArr[0]]
         }
         if (dataIndexArr.length === 2 && item[dataIndexArr[0]]) {
           str = item[dataIndexArr[0]][dataIndexArr[1]]
         }
-        if (
-          dataIndexArr.length === 3
-                    && item[dataIndexArr[0]]
-                    && item[dataIndexArr[0]][dataIndexArr[1]]
-        ) {
+        if (dataIndexArr.length === 3 && item[dataIndexArr[0]] && item[dataIndexArr[0]][dataIndexArr[1]]) {
           str = item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]]
         }
         if (
-          dataIndexArr.length === 4
-                    && item[dataIndexArr[0]]
-                    && item[dataIndexArr[0]][dataIndexArr[1]]
-                    && item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]]
+          dataIndexArr.length === 4 &&
+          item[dataIndexArr[0]] &&
+          item[dataIndexArr[0]][dataIndexArr[1]] &&
+          item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]]
         ) {
-          str
-                        = item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]][
-              dataIndexArr[3]
-            ]
+          str = item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]][dataIndexArr[3]]
         }
         if (
-          dataIndexArr.length === 5
-                    && item[dataIndexArr[0]]
-                    && item[dataIndexArr[0]][dataIndexArr[1]]
-                    && item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]][
-                      dataIndexArr[3]
-                    ]
+          dataIndexArr.length === 5 &&
+          item[dataIndexArr[0]] &&
+          item[dataIndexArr[0]][dataIndexArr[1]] &&
+          item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]][dataIndexArr[3]]
         ) {
-          str
-                        = item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]][
-              dataIndexArr[3]
-            ][dataIndexArr[4]]
+          str = item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]][dataIndexArr[3]][dataIndexArr[4]]
         }
         if (
-          dataIndexArr.length === 6
-                    && item[dataIndexArr[0]]
-                    && item[dataIndexArr[0]][dataIndexArr[1]]
-                    && item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]][
-                      dataIndexArr[3]
-                    ]
-                    && item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]][
-                      dataIndexArr[3]
-                    ][dataIndexArr[4]]
+          dataIndexArr.length === 6 &&
+          item[dataIndexArr[0]] &&
+          item[dataIndexArr[0]][dataIndexArr[1]] &&
+          item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]][dataIndexArr[3]] &&
+          item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]][dataIndexArr[3]][dataIndexArr[4]]
         ) {
-          str
-                        = item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]][
-              dataIndexArr[3]
-            ][dataIndexArr[4]][dataIndexArr[5]]
+          str = item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]][dataIndexArr[3]][dataIndexArr[4]][dataIndexArr[5]]
         }
       }
       if (str === false) {
-        str = "No"
+        str = 'No'
       }
       if (str === true) {
-        str = "Yes"
+        str = 'Yes'
       }
       if (str === null) {
-        str = "(none)"
+        str = '(none)'
       }
       return str
     },
-    countLines (index, width, rowIndex) {
+    countLines(index, width, rowIndex) {
       if (this.noTextResize) return
       let el = null
       if (this.$refs[`col${index}`]) {
@@ -375,39 +356,39 @@ export default {
           let lineHeight = parseInt(el.style.lineHeight)
           let lines = colHeight / lineHeight
           if (lines && lines > 1) {
-            return `font-size: ${(12-lines)}px; line-height: ${(12-lines)+4}px;`
+            return `font-size: ${12 - lines}px; line-height: ${12 - lines + 4}px;`
           }
         }
       }
-    
-    },
-  },
+    }
+  }
 }
 </script>
 
 <style scoped>
-  .row {
-      min-width: 1200px;
-  }
-  .stripe-gray {
-    background-color: #f8f8f8;
-  }
-  .stripe-hover:hover {
-    background-color: #fee8c7;
-  }
-  .table-font-size {
-    font-size: 100vb;
-    max-height: 50px;
-  }
-  .dropdown, .dropdown-up {
-    z-index: 1;
-    width: 100%;
-    /* margin-top: -4px; */
-  }
-  .dropdown {
-    top: 0;
-  }
-  .dropdown-up {
-    bottom: 0;
-  }
+.row {
+  min-width: 1200px;
+}
+.stripe-gray {
+  background-color: #f8f8f8;
+}
+.stripe-hover:hover {
+  background-color: #fee8c7;
+}
+.table-font-size {
+  font-size: 100vb;
+  max-height: 50px;
+}
+.dropdown,
+.dropdown-up {
+  z-index: 1;
+  width: 100%;
+  /* margin-top: -4px; */
+}
+.dropdown {
+  top: 0;
+}
+.dropdown-up {
+  bottom: 0;
+}
 </style>

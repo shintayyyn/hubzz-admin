@@ -61,6 +61,11 @@ export default {
     user: {
       type: Object,
       default: () => null
+    },
+
+    messageModal: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -115,9 +120,9 @@ export default {
 
           if (this.user.id) {
             this.messageSent = true
-            setTimeout(() => {
-              this.messageSent = false
-            }, 1000)
+            // setTimeout(() => {
+            //   this.messageSent = false
+            // }, 1000)
           }
 
           const conversation = response.data.data.conversation
@@ -126,7 +131,9 @@ export default {
 
           this.$emit('newMessageInConversation', conversation)
 
-          this.$router.push(`/messages/${conversation.id}`)
+          if (!this.messageModal) {
+            this.$router.push(`/messages/${conversation.id}`)
+          }
         } catch (err) {
           console.log('err', err.response || err)
 

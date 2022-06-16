@@ -17,6 +17,7 @@
             :label="'Messages'"
             class="notif-btn"
             :customTheme="'border-2 py-2 text-black'"
+            :badge="unreadConversations.length"
             @click="$router.push('/messages')"
           />
         </div>
@@ -133,7 +134,8 @@ export default {
 
   data() {
     return {
-      showDropdownNotifications: false
+      showDropdownNotifications: false,
+      unreadConversations: []
     }
   },
 
@@ -162,7 +164,49 @@ export default {
     }
   },
 
+  mounted() {
+    this.$axios.get('/api/v1/conversations?seen=false&limit=999').then(response => {
+      this.unreadConversations = response.data.data.conversations
+    })
+
+    this.$socket.on('newMessage', this.newMessageInConversationHandler)
+    this.$socket.on('seenConversation', this.seenConversationHandler)
+  },
+
+  destroyed() {
+    this.$socket.removeListener('newMessage', this.newMessageInConversationHandler)
+    this.$socket.removeListener('seenConversation', this.seenConversationHandler)
+  },
+
   methods: {
+    newMessageInConversationHandler(conversation) {
+      console.log('AppHeader newMessageInConversationHandler', conversation)
+
+      if (conversation.latest_conversation_message.user.id !== this.$auth.user.id) {
+        const index = this.unreadConversations.findIndex(({ id }) => id === conversation.id)
+
+        if (index === -1) {
+          this.unreadConversations.unshift(conversation)
+        }
+      }
+    },
+
+    seenConversationHandler(conversation) {
+      console.log('AppHeader seenConversationHandler', conversation)
+
+      const index = this.unreadConversations.findIndex(({ id }) => id === conversation.id)
+
+      console.log('index', index)
+
+      if (index > -1) {
+        const unreadConversations = [...this.unreadConversations]
+
+        unreadConversations.splice(index, 1)
+
+        this.unreadConversations = unreadConversations
+      }
+    },
+
     onClickaway() {
       this.showDropdownNotifications = false
     },

@@ -1,11 +1,12 @@
 <template>
   <section class="flex-1 flex flex-col overflow-y-auto">
-    <template 
-      v-if="(authAdminPermissions.includes('View Locums') 
-        || authAdminPermissions.includes('View Locum Jobs')
-        || authAdminPermissions.includes('View Locum Compliance Detail'))
-        && $route.name === 'index-locums'
-      "  
+    <template
+      v-if="
+        (authAdminPermissions.includes('View Locums') ||
+          authAdminPermissions.includes('View Locum Jobs') ||
+          authAdminPermissions.includes('View Locum Compliance Detail')) &&
+          $route.name === 'index-locums'
+      "
     >
       <div class="flex flex-col md:flex-row justify-between md:items-center">
         <div class="flex flex-col w-full justify-start mb-2">
@@ -22,17 +23,19 @@
                   @click="searchSubmit()"
                 />
               </div>
+
               <div class="mx-1 my-2">
                 <AppButton
                   label="Filters"
                   icon="caret-down"
                   :rotate="filterModal ? 180 : ''"
                   :customTheme="'border-2 border-gray-400 rounded-lg font-bold text-gray-600'"
-                  @click="filterModal = !filterModal"
                   labelClass="flex-row-reverse mr-2"
                   iconWidth="10"
+                  @click="filterModal = !filterModal"
                 />
               </div>
+
               <div v-if="filterModal" class="mx-1 my-2">
                 <AppButton
                   label="Apply"
@@ -44,24 +47,29 @@
               <div v-if="filterModal" class="mx-1 my-2">
                 <AppButton
                   label="Clear"
-                  :customTheme="'bg-gray-400 hover:bg-gray-500 text-whtie border border-gray-400 rounded'"
+                  :customTheme="'bg-gray-400 hover:bg-gray-500 text-black border border-gray-400 rounded'"
                   @click="filterReset"
                 />
               </div>
+
+              <!-- <div class="mx-1 my-2">
+                <AppButton
+                  label="Message"
+                  :customTheme="
+                    `border rounded-lg ${
+                      chosenLocums.length > 0 ? 'bg-orange-400 hover:bg-orange-500 text-gray-700' : 'bg-gray-400 hover:bg-gray-500 text-black'
+                    }`
+                  "
+                  labelClass="flex-row-reverse mr-2"
+                  :disabled="chosenLocums.length === 0"
+                  @click="sendMessageModal = !sendMessageModal"
+                />
+              </div> -->
             </div>
           </div>
-          <div
-            class="flex flex-row flex-wrap justify-start items-center w-full rounded-lg -mt-3"
-            :class="filterModal ? 'flex' : 'hidden'"
-          >
+          <div class="flex flex-row flex-wrap justify-start items-center w-full rounded-lg -mt-3" :class="filterModal ? 'flex' : 'hidden'">
             <div class="text-gray-800 w-full lg:w-1/4 md:w-1/5">
-              <AppInputSmall
-                v-model="filterStatus"
-                :type="'select'"
-                :name="'locum_status'"
-                :placeholder="'Locum Status'"
-                :items="locumStatuses"
-              />
+              <AppInputSmall v-model="filterStatus" :type="'select'" :name="'locum_status'" :placeholder="'Locum Status'" :items="locumStatuses" />
             </div>
 
             <div class="mx-2 text-gray-800 w-full lg:w-1/4 md:w-1/5">
@@ -89,31 +97,31 @@
         :orderBy="orderBy"
         :customWidth="'800'"
         :min-height="'55vh'"
+        :noTextResize="true"
         @pagechanged="pageChangedHandler"
-        @sorted="(_orderBy) => orderBy = _orderBy"
+        @sorted="_orderBy => (orderBy = _orderBy)"
         @limitchanged="limitChangedHandler"
+        @checkClicked="toggleCheck"
       >
+        <template v-slot:checker="slotProps">
+          <input :id="slotProps.item" v-model="chosenLocums" type="checkbox" :value="slotProps.item" />
+          <label :for="slotProps.item" />
+        </template>
+
         <template v-slot:status_slot="slotProps">
-          <div
-            class="text-center text-xs"
-            :class="statusStyle(slotProps.item.status)"
-          >
+          <div class="text-center text-xs" :class="statusStyle(slotProps.item.status)">
             {{ slotProps.item.status }}
           </div>
         </template>
+
         <template v-slot:compliance_slot="slotProps">
-          <div
-            class="text-center text-xs"
-            :class="complianceStatusStyle(slotProps.item.compliance_status)"
-          >
+          <div class="text-center text-xs" :class="complianceStatusStyle(slotProps.item.compliance_status)">
             {{ slotProps.item.compliance_status }}
           </div>
         </template>
 
         <template v-slot:registration_type_slot="slotProps">
-          <div
-            class="text-center text-xs"
-          >
+          <div class="text-center text-xs">
             {{ registrationType(slotProps.item.referrer_domain) }}
           </div>
         </template>
@@ -123,415 +131,448 @@
         <span>{{ hasFilter ? 'No locums found.' : 'No registered locums.' }}</span>
       </div>
     </template>
-    <nuxt-child
-      @updateLocumUsers="getAllLocumUsers"
-      @locumUserUpdated="locumUserUpdatedHandler"
-    />
+
+    <transition name="fade" mode="out-in">
+      <div v-if="sendMessageModal && chosenLocums.length > 0" class="message-modal md:w-2/3 lg:w-1/2 xl:w-1/3">
+        <SendMessageModal :user="chosenLocums[0]" @close="sendMessageModal = false" />
+      </div>
+    </transition>
+
+    <div v-if="sendMessageModal" class="shield" @click="sendMessageModal = false" />
+
+    <nuxt-child @updateLocumUsers="getAllLocumUsers" @locumUserUpdated="locumUserUpdatedHandler" />
   </section>
 </template>
 
 <script>
-	import debounce from 'lodash.debounce'
-  import AppTableNew from '@/components/Base/AppTableNew'
-  import AppInputSmall from '@/components/Base/AppInputSmall'
-  import AppButton from '@/components/Base/AppButton'
-	export default {
+import debounce from 'lodash.debounce'
+import AppTableNew from '@/components/Base/AppTableNew'
+import AppInputSmall from '@/components/Base/AppInputSmall'
+import AppButton from '@/components/Base/AppButton'
+import SendMessageModal from '@/components/Messages/SendMessageModal'
 
-		components: {
-      AppTableNew,
-      AppInputSmall,
-      AppButton,
-		},
+export default {
+  components: {
+    AppTableNew,
+    AppInputSmall,
+    AppButton,
+    SendMessageModal
+  },
 
-		data () {
-			return {
-        loading: false,
-				currentPage: 1,
-				filterStatus: null,
-				filterCompliances: null,
-				search: '',
-        limit: 15,
-        orderBy: [
-          'created_at_in_gb_formatted:desc',
-        ],
-        count: 0,
-        locumUsers: [],
+  data() {
+    return {
+      loading: false,
+      currentPage: 1,
+      filterStatus: null,
+      filterCompliances: null,
+      search: '',
+      limit: 15,
+      orderBy: ['created_at_in_gb_formatted:desc'],
+      count: 0,
+      locumUsers: [],
 
-        locumStatuses: [
-          {
-            label: "Active",
-            value: "Active",
-          },
-          {
-            label: "Dormant",
-            value: "Dormant",
-          },
-          {
-            label: "Inactive",
-            value: "Inactive",
-          },
-          {
-            label: "Bogus",
-            value: "Bogus",
-          },
-          {
-            label: "Deactivated",
-            value: "Deactivated",
-          },
-          {
-            label: "Account Suspension",
-            value: "Account Suspension",
-          },
-          {
-            label: "Compliance Suspension",
-            value: "Compliance Suspension",
-          },
-        ],
-
-        complianceStatuses: [
-          {
-            label: "Empty",
-            value: "Empty",
-          },
-          {
-            label: "Incomplete",
-            value: "Incomplete",
-          },
-          {
-            label: "Pending",
-            value: "Pending",
-          },
-          {
-            label: "Expiring",
-            value: "Expiring",
-          },
-          {
-            label: "Expired",
-            value: "Expired",
-          },
-          {
-            label: "Rejected",
-            value: "Rejected",
-          },
-          {
-            label: "Compliant",
-            value: "Compliant",
-          },
-        ],
-
-        filterModal: false,
-			}
-		},
-
-		computed: {
-      authAdminPermissions () {
-        return this.$store.getters["permissions"]
-      },
-      columns () {
-        return [
-					{
-						name: 'User ID',
-						dataIndex: 'id',
-						class: 'md:text-center',
-						sortable: true,
-            flex: '1 0 0',
-            minWidth: '100px',
-            maxWidth: '140px',
-            width: 100
-					},
-					{
-						name: 'Name',
-						dataIndex: 'name',
-						class: 'md:text-center',
-						sortable: true,
-            flex: '1 0 0',
-            minWidth: '120px',
-            maxWidth: '550px',
-					},
-					{
-						name: 'E-Mail Address',
-						dataIndex: 'email',
-						class: 'md:text-center',
-						sortable: true,
-            flex: '1 0 0',
-            minWidth: '120px',
-            maxWidth: '550px',
-					},
-					{
-						name: 'Profession',
-						dataIndex: 'profession_name',
-						class: 'md:text-center',
-						sortable: true,
-            flex: '1 0 0',
-            minWidth: '100px',
-            maxWidth: '550px',
-					},
-					{
-						name: 'Date Signed-up',
-						dataIndex: 'created_at_in_gb_formatted',
-						class: 'md:text-center',
-						sortable: true,
-            flex: '1 0 0',
-            minWidth: '100px',
-            maxWidth: '170px',
-            width: 130
-					},
-					{
-						name: 'Sign-up verified',
-						dataIndex: 'email_verified_at_in_gb_formatted',
-						class: 'md:text-center',
-						sortable: true,
-            flex: '1 0 0',
-            minWidth: '100px',
-            maxWidth: '170px',
-            width: 130
-					},
-					{
-						name: 'Status',
-						dataIndex: 'status',
-						class: 'md:text-center',
-						sortable: true,
-						slot: true,
-						slotName: 'status_slot',
-            flex: '1 0 0',
-            minWidth: '150px',
-            maxWidth: '170px',
-            width: 150
-					},
-					{
-						name: 'Compliance Status',
-						dataIndex: 'compliance_status',
-						class: 'md:text-center',
-						sortable: true,
-						slot: true,
-						slotName: 'compliance_slot',
-            flex: '1 0 0',
-            minWidth: '150px',
-            maxWidth: '170px',
-            width: 130
-          },
-          {
-						name: 'Registration Type',
-						dataIndex: 'referrer_domain',
-						class: 'md:text-center',
-						sortable: true,
-						slot: true,
-						slotName: 'registration_type_slot',
-            flex: '1 0 0',
-            minWidth: '150px',
-            maxWidth: '170px',
-            width: 130
-					},
-				]
-      },
-
-      offset () {
-        return this.limit * (this.currentPage - 1)
-      },
-
-      hasFilter () {
-        return this.search || this.filterStatus || this.filterCompliances
-      },
-      
-			totalPages () {
-				return Math.ceil(this.count / this.limit)
-      },
-
-      orderByValue: {
-        get () {
-          return this.orderBy.length > 0 ? this.orderBy[0] : null
+      locumStatuses: [
+        {
+          label: 'Active',
+          value: 'Active'
         },
-        set (orderBy) {
-          this.orderBy = [orderBy]
+        {
+          label: 'Dormant',
+          value: 'Dormant'
         },
-      },
+        {
+          label: 'Inactive',
+          value: 'Inactive'
+        },
+        {
+          label: 'Bogus',
+          value: 'Bogus'
+        },
+        {
+          label: 'Deactivated',
+          value: 'Deactivated'
+        },
+        {
+          label: 'Account Suspension',
+          value: 'Account Suspension'
+        },
+        {
+          label: 'Compliance Suspension',
+          value: 'Compliance Suspension'
+        }
+      ],
 
-		},
+      complianceStatuses: [
+        {
+          label: 'Empty',
+          value: 'Empty'
+        },
+        {
+          label: 'Incomplete',
+          value: 'Incomplete'
+        },
+        {
+          label: 'Pending',
+          value: 'Pending'
+        },
+        {
+          label: 'Expiring',
+          value: 'Expiring'
+        },
+        {
+          label: 'Expired',
+          value: 'Expired'
+        },
+        {
+          label: 'Rejected',
+          value: 'Rejected'
+        },
+        {
+          label: 'Compliant',
+          value: 'Compliant'
+        }
+      ],
 
-		watch: {
-			// filterStatus () {
-			// 	this.currentPage = 1
-      //   this.getAllLocumUsers()
-			// },
+      filterModal: false,
 
-			// filterCompliances () {
-			// 	this.currentPage = 1
-      //   this.getAllLocumUsers()
-			// },
+      chosenLocums: [],
 
-			search () {
-				this.searchSubmit()
-			},
-      
-			orderBy () {
-        this.currentPage = 1
-        this.getAllLocumUsers()
-      },
-		},
+      sendMessageModal: false
+    }
+  },
 
-		mounted () {
-      this.$socket.on("updateLocumStatus", this.locumUserUpdatedHandler)
-    
-      this.count = 0
-      this.locumUsers = []
-			this.getAllLocumUsers()
+  computed: {
+    authAdminPermissions() {
+      return this.$store.getters['permissions']
     },
-    
-    destroyed () {
-      this.$socket.removeListener("updateLocumStatus", this.locumUserUpdatedHandler)
+    columns() {
+      return [
+        // {
+        //   name: 'Check',
+        //   dataIndex: 'checker',
+        //   class: 'text-center',
+        //   slotName: 'checker',
+        //   eventName: 'checkClicked',
+        //   width: 80,
+        //   order: 1
+        // },
+        {
+          name: 'User ID',
+          dataIndex: 'id',
+          class: 'md:text-center',
+          sortable: true,
+          flex: '1 0 0',
+          minWidth: '100px',
+          maxWidth: '140px',
+          width: 100
+        },
+        {
+          name: 'Name',
+          dataIndex: 'name',
+          class: 'md:text-center',
+          sortable: true,
+          flex: '1 0 0',
+          minWidth: '120px',
+          maxWidth: '550px'
+        },
+        {
+          name: 'E-Mail Address',
+          dataIndex: 'email',
+          class: 'md:text-center',
+          sortable: true,
+          flex: '1 0 0',
+          minWidth: '120px',
+          maxWidth: '550px'
+        },
+        {
+          name: 'Profession',
+          dataIndex: 'profession_name',
+          class: 'md:text-center',
+          sortable: true,
+          flex: '1 0 0',
+          minWidth: '100px',
+          maxWidth: '550px'
+        },
+        {
+          name: 'Date Signed-up',
+          dataIndex: 'created_at_in_gb_formatted',
+          class: 'md:text-center',
+          sortable: true,
+          flex: '1 0 0',
+          minWidth: '100px',
+          maxWidth: '170px',
+          width: 130
+        },
+        {
+          name: 'Sign-up verified',
+          dataIndex: 'email_verified_at_in_gb_formatted',
+          class: 'md:text-center',
+          sortable: true,
+          flex: '1 0 0',
+          minWidth: '100px',
+          maxWidth: '170px',
+          width: 130
+        },
+        {
+          name: 'Status',
+          dataIndex: 'status',
+          class: 'md:text-center',
+          sortable: true,
+          slot: true,
+          slotName: 'status_slot',
+          flex: '1 0 0',
+          minWidth: '150px',
+          maxWidth: '170px',
+          width: 150
+        },
+        {
+          name: 'Compliance Status',
+          dataIndex: 'compliance_status',
+          class: 'md:text-center',
+          sortable: true,
+          slot: true,
+          slotName: 'compliance_slot',
+          flex: '1 0 0',
+          minWidth: '150px',
+          maxWidth: '170px',
+          width: 130
+        },
+        {
+          name: 'Registration Type',
+          dataIndex: 'referrer_domain',
+          class: 'md:text-center',
+          sortable: true,
+          slot: true,
+          slotName: 'registration_type_slot',
+          flex: '1 0 0',
+          minWidth: '150px',
+          maxWidth: '170px',
+          width: 130
+        }
+      ]
     },
 
-		methods: {
-      submitFilters() {
-        this.currentPage = 1
-        this.getAllLocumUsers()
+    offset() {
+      return this.limit * (this.currentPage - 1)
+    },
+
+    hasFilter() {
+      return this.search || this.filterStatus || this.filterCompliances
+    },
+
+    totalPages() {
+      return Math.ceil(this.count / this.limit)
+    },
+
+    orderByValue: {
+      get() {
+        return this.orderBy.length > 0 ? this.orderBy[0] : null
       },
+      set(orderBy) {
+        this.orderBy = [orderBy]
+      }
+    }
+  },
 
-			getAllLocumUsers () {
-        const filters = {}
+  watch: {
+    // filterStatus () {
+    // 	this.currentPage = 1
+    //   this.getAllLocumUsers()
+    // },
 
-        if (this.search) {
-          filters.search = this.search
-        }
+    // filterCompliances () {
+    // 	this.currentPage = 1
+    //   this.getAllLocumUsers()
+    // },
 
-        if (this.filterStatus) {
-          filters.status = this.filterStatus
-        }
+    search() {
+      this.searchSubmit()
+    },
 
-        if (this.filterCompliances) {
-          filters.compliance_status = this.filterCompliances
-        }
+    orderBy() {
+      this.currentPage = 1
+      this.getAllLocumUsers()
+    }
+  },
 
-        this.loading = true
+  mounted() {
+    this.$socket.on('updateLocumStatus', this.locumUserUpdatedHandler)
 
-				Promise.all([
-					this.$axios.get('/api/v1/admin/locum-users/count', {
-						params: {
-							...filters,
-						},
-					}).then(response => response.data.data.count),
-					this.$axios.get('/api/v1/admin/locum-users', {
-						params: {
+    this.count = 0
+    this.locumUsers = []
+    this.getAllLocumUsers()
+  },
+
+  destroyed() {
+    this.$socket.removeListener('updateLocumStatus', this.locumUserUpdatedHandler)
+  },
+
+  methods: {
+    toggleCheck(item) {
+      const index = this.chosenLocums.findIndex(locum => {
+        return locum.id === item.id
+      })
+
+      if (index > -1) {
+        this.chosenLocums.splice(index, 1)
+      } else {
+        this.chosenLocums.push(item)
+      }
+    },
+
+    submitFilters() {
+      this.currentPage = 1
+      this.getAllLocumUsers()
+    },
+
+    getAllLocumUsers() {
+      const filters = {}
+
+      if (this.search) {
+        filters.search = this.search
+      }
+
+      if (this.filterStatus) {
+        filters.status = this.filterStatus
+      }
+
+      if (this.filterCompliances) {
+        filters.compliance_status = this.filterCompliances
+      }
+
+      this.loading = true
+
+      Promise.all([
+        this.$axios
+          .get('/api/v1/admin/locum-users/count', {
+            params: {
+              ...filters
+            }
+          })
+          .then(response => response.data.data.count),
+        this.$axios
+          .get('/api/v1/admin/locum-users', {
+            params: {
               ...filters,
               order_by: this.orderBy,
-							limit: this.limit,
-							offset: this.offset,
-						},
-					}).then(response => response.data.data.users),
-				]).then((responses) => {
-					const [
-						count,
-						locumUsers,
-					] = responses
+              limit: this.limit,
+              offset: this.offset
+            }
+          })
+          .then(response => response.data.data.users)
+      ])
+        .then(responses => {
+          const [count, locumUsers] = responses
 
           this.count = count
           this.locumUsers = locumUsers
-				}).finally(() => {
+        })
+        .finally(() => {
           this.loading = false
-				})
-      },
-      
-			searchSubmit: debounce(function () {
-				this.currentPage = 1
-        this.getAllLocumUsers()
-      }, 500),
-      
-      filterReset () {
-        this.search = null
-        this.filterStatus = null
-        this.filterCompliances = null
+        })
+    },
 
-        this.getAllLocumUsers()
-      },
-    
-      pageChangedHandler (page) {
-        this.currentPage = page
-        this.getAllLocumUsers()
-      },
+    searchSubmit: debounce(function() {
+      this.currentPage = 1
+      this.getAllLocumUsers()
+    }, 500),
 
-      limitChangedHandler (limit) {
-        this.currentPage = 1
-        this.limit = limit
-        this.getAllLocumUsers()
-      },
-      
-      locumUserUpdatedHandler (locumUser) {
-        const index = this.locumUsers.findIndex(({ id }) => id === locumUser.id)
+    filterReset() {
+      this.search = null
+      this.filterStatus = null
+      this.filterCompliances = null
 
-        if (index > -1) {
-          this.locumUsers.splice(index, 1, locumUser)
-        }
-      },
-      
-			statusStyle (status) {
-				switch (status) {
-					case 'Active':
-						return 'text-green-700'
-					case 'Inactive':
-						return 'text-gray-700'
-					case 'Deactivated':
-						return 'text-black'
-					case 'Account Suspension':
-						return 'text-red-600'
-					case 'Compliance Suspension':
-						return 'text-red-600'
-					case 'Dormant':
-            return 'text-gray-500'
-          case 'Bogus':
-						return 'text-gray-600'
-					default:
-						return
-				}
-			},
+      this.getAllLocumUsers()
+    },
 
-			complianceStatusStyle (status) {
-				switch (status) {
-					case 'Empty':
-						return 'text-gray-400'
-					case 'Incomplete':
-						return 'text-orange-600'
-					case 'Pending':
-						return 'text-yellow-800'
-					case 'Expiring':
-						return ' text-red-400'
-					case 'Expired':
-						return 'text-red-500'
-					case 'Rejected':
-						return 'text-orange-700'
-					case 'Compliant':
-						return 'text-green-700'
-					default:
-						return
-				}
-      },
+    pageChangedHandler(page) {
+      this.currentPage = page
+      this.getAllLocumUsers()
+    },
 
-      registrationType (type) {
-        let registrationType = ''
-        if (type === 'Practice') {
-          registrationType = 'Referred by Practice'
-        } else if (type === 'Locum') {
-          registrationType = 'Referred by Locum'
-        } else {
-          registrationType = 'Organic'
-        }
+    limitChangedHandler(limit) {
+      this.currentPage = 1
+      this.limit = limit
+      this.getAllLocumUsers()
+    },
 
-        return registrationType
+    locumUserUpdatedHandler(locumUser) {
+      const index = this.locumUsers.findIndex(({ id }) => id === locumUser.id)
+
+      if (index > -1) {
+        this.locumUsers.splice(index, 1, locumUser)
       }
-		},
-	}
+    },
+
+    statusStyle(status) {
+      switch (status) {
+        case 'Active':
+          return 'text-green-700'
+        case 'Inactive':
+          return 'text-gray-700'
+        case 'Deactivated':
+          return 'text-black'
+        case 'Account Suspension':
+          return 'text-red-600'
+        case 'Compliance Suspension':
+          return 'text-red-600'
+        case 'Dormant':
+          return 'text-gray-500'
+        case 'Bogus':
+          return 'text-gray-600'
+        default:
+          return
+      }
+    },
+
+    complianceStatusStyle(status) {
+      switch (status) {
+        case 'Empty':
+          return 'text-gray-400'
+        case 'Incomplete':
+          return 'text-orange-600'
+        case 'Pending':
+          return 'text-yellow-800'
+        case 'Expiring':
+          return ' text-red-400'
+        case 'Expired':
+          return 'text-red-500'
+        case 'Rejected':
+          return 'text-orange-700'
+        case 'Compliant':
+          return 'text-green-700'
+        default:
+          return
+      }
+    },
+
+    registrationType(type) {
+      let registrationType = ''
+      if (type === 'Practice') {
+        registrationType = 'Referred by Practice'
+      } else if (type === 'Locum') {
+        registrationType = 'Referred by Locum'
+      } else {
+        registrationType = 'Organic'
+      }
+
+      return registrationType
+    }
+  }
+}
 </script>
 
 <style>
-	.page-button {
-		background: linear-gradient(to top, #f2d024, #efde86);
-	}
+.page-button {
+  background: linear-gradient(to top, #f2d024, #efde86);
+}
 
-	.page-button-disabled {
-		background: linear-gradient(to top, #6b717e, #6b7386);
-		cursor: not-allowed;
-	}
+.page-button-disabled {
+  background: linear-gradient(to top, #6b717e, #6b7386);
+  cursor: not-allowed;
+}
 
-	.page-button:active {
-		transform: translate(2px, 2px);
-	}
+.page-button:active {
+  transform: translate(2px, 2px);
+}
 </style>

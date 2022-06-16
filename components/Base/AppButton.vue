@@ -20,16 +20,19 @@
         :width="iconWidth ? iconWidth : '14'"
         class="fill-current"
         :style="rotate ? `transform: rotate(${rotate}deg)` : ''"
-      /> <span :class="icon ? 'hidden md:block mx-2' : 'mx-2'">{{ label }}</span>
+      />
+      <span :class="icon ? 'hidden md:block mx-2' : 'mx-2'">{{ label }}</span>
     </p>
-    <span v-if="badge" class="ml-2 md:ml-6 bg-red-600 font-bold text-xs text-white px-1 h-5 flex items-center justify-center">{{ badge > 99 ? '99+' : badge }}</span>
+    <span v-if="badge" class="ml-2 md:ml-6 bg-red-600 font-bold text-xs text-white px-1 h-5 flex items-center justify-center">{{
+      badge > 99 ? '99+' : badge
+    }}</span>
   </nuxt-link>
   <button
     v-else
     :disabled="disabled"
     class="default-btn rounded-md px-2 focus:outline-none transition-hover text-sm "
     :class="[
-      disabled ? 'disabled-button py-1' : '',
+      disabled ? 'disabled-button' : '',
       inClass,
       customTheme ? customTheme : 'button bg-sunglow hover:bg-sunglow-dark py-1',
       badge && icon ? 'flex items-center justify-between' : '',
@@ -45,10 +48,13 @@
         :width="iconWidth ? iconWidth : '14'"
         class="fill-current"
         :style="rotate ? `transform: rotate(${rotate}deg)` : ''"
-      /> <span :class="icon ? 'hidden md:block mx-2' : 'mx-2'">{{ label }}</span>
+      />
+      <span :class="icon ? 'hidden md:block mx-2' : 'mx-2'">{{ label }}</span>
     </p>
 
-    <span v-if="badge" class="ml-2 md:ml-6 bg-red-600 font-bold text-xs text-white px-1 h-5 flex items-center justify-center">{{ badge > 99 ? '99+' : badge }}</span>
+    <span v-if="badge" class="ml-2 md:ml-6 bg-red-600 font-bold text-xs text-white px-1 h-5 flex items-center justify-center">{{
+      badge > 99 ? '99+' : badge
+    }}</span>
 
     <!-- <svgicon
       v-if="label.includes('Filter') || label.includes('Sort')"
@@ -63,125 +69,124 @@ export default {
   props: {
     label: {
       type: String,
-      default: "Save",
+      default: 'Save'
     },
 
     rotate: {
-      type: [Number, String],
+      type: [Number, String]
     },
 
     icon: {
-      type: String,
+      type: String
     },
 
-    iconWidth : {
+    iconWidth: {
       type: String
     },
 
     badge: {
-      type: [String, Number,],
+      type: [String, Number]
     },
 
     labelClass: {
       type: String,
-      default: null,
+      default: null
     },
 
     inClass: {
       type: String,
-      default: null,
+      default: null
     },
 
     inStyle: {
       type: String,
-      default: null,
+      default: null
     },
 
     disabled: {
       type: Boolean,
-      default: false,
+      default: false
     },
 
     customTheme: {
       type: [String, Array],
-      default: null,
+      default: null
     },
 
     nuxtLink: {
-			type: [String, Array, Object],
-      default: () => null,
+      type: [String, Array, Object],
+      default: () => null
     },
 
     draggable: {
-			type: Boolean,
-			default: true
-    },
-  },
+      type: Boolean,
+      default: true
+    }
+  }
 }
 </script>
 
-<style >
-  .button {
-    /* background: linear-gradient(to top, #f2d024, #efde86); */
-  }
+<style>
+.button {
+  /* background: linear-gradient(to top, #f2d024, #efde86); */
+}
 
-  .bg-warning {
-    background: #f9a423;
-  }
-  .bg-info {
-    background: #16e3c8;
-  }
+.bg-warning {
+  background: #f9a423;
+}
+.bg-info {
+  background: #16e3c8;
+}
 
-  .bg-info:hover,
-  .bg-info:focus {
-    background: #0fbea7;
-    /* background: linear-gradient(to top, #e6c520, #f1d130); */
-  }
+.bg-info:hover,
+.bg-info:focus {
+  background: #0fbea7;
+  /* background: linear-gradient(to top, #e6c520, #f1d130); */
+}
 
-  .bg-warning:hover,
-  .bg-warning:focus {
-    background: #eb9a1f;
-    /* background: linear-gradient(to top, #e6c520, #f1d130); */
-  }
+.bg-warning:hover,
+.bg-warning:focus {
+  background: #eb9a1f;
+  /* background: linear-gradient(to top, #e6c520, #f1d130); */
+}
 
-  .button:hover,
-  .button:focus {
-    /* background: #f8f8f8; */
-    /* background: linear-gradient(to top, #e6c520, #f1d130); */
-  }
+.button:hover,
+.button:focus {
+  /* background: #f8f8f8; */
+  /* background: linear-gradient(to top, #e6c520, #f1d130); */
+}
 
-  .default-btn {
-    border-radius: 6px;
-  }
-  
-   button:focus{
-     outline: none;
-   }
-  .default-btn:hover {
-    transform: translate(1px, 1px);
-  }
+.default-btn {
+  border-radius: 6px;
+}
 
-  .default-btn:active {
-    transform: translate(2px, 2px);
-  }
+button:focus {
+  outline: none;
+}
+.default-btn:hover {
+  transform: translate(1px, 1px);
+}
 
-  .disabled-button {
-    color: #9e9e9e;
-    background: #ddd;
-    /* background: linear-gradient(to top, #ccc, #ddd); */
-    cursor: not-allowed;
-  }
+.default-btn:active {
+  transform: translate(2px, 2px);
+}
 
-  .disabled-button:hover {
-    transform: translate(0, 0);
-    background: #ddd;
-    /* background: linear-gradient(to top, #ccc, #ddd); */
-  }
+.disabled-button {
+  color: #9e9e9e;
+  background: #ddd;
+  /* background: linear-gradient(to top, #ccc, #ddd); */
+  cursor: not-allowed;
+}
 
-  /* @media (min-width: 720px) {
+.disabled-button:hover {
+  transform: translate(0, 0);
+  background: #ddd;
+  /* background: linear-gradient(to top, #ccc, #ddd); */
+}
+
+/* @media (min-width: 720px) {
     .default {
       min-width: 150px;
     }
   } */
 </style>
-
