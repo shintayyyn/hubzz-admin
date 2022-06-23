@@ -1,12 +1,23 @@
 <template>
   <section class="messages-section fixed left-0 md:relative border">
-    <MessagesLeftPanel :gettingConversations="gettingConversations" :conversations="conversations" :conversationsCount="conversationsCount" />
+    <MessagesLeftPanel
+      :gettingConversations="gettingConversations"
+      :conversations="conversations"
+      :conversationsCount="conversationsCount"
+      :searchConversationText="searchConversationText"
+      :searchedConversationText="searchedConversationText"
+      :searchingConversations="searchingConversations"
+      :searchConversations="searchConversations"
+      @setSearchConversationText="_searchConversationText => (searchConversationText = _searchConversationText)"
+    />
     <nuxt-child :gettingConversations="gettingConversations" :conversations="conversations" :conversationsCount="conversationsCount" />
   </section>
 </template>
 
 <script>
+import debounce from 'lodash.debounce'
 import MessagesLeftPanel from '@/components/Messages/LeftPanel/MessagesLeftPanel'
+
 export default {
   components: {
     MessagesLeftPanel
@@ -16,7 +27,25 @@ export default {
     return {
       gettingConversations: true,
       conversations: [],
-      conversationsCount: 0
+      conversationsCount: 0,
+
+      searchConversationText: '',
+      searchedConversationText: '',
+      searchingConversations: false,
+      searchConversations: []
+    }
+  },
+
+  watch: {
+    searchConversationText() {
+      if (!this.searchConversationText) {
+        this.searchingConversations = false
+        this.searchConversations = []
+        this.searchedConversationText = ''
+        return
+      }
+
+      this.searchConversationSubmit(this.searchConversationText)
     }
   },
 
@@ -70,6 +99,40 @@ export default {
   },
 
   methods: {
+    searchConversationSubmit: debounce(function(searchConversationText) {
+      this.searchingConversations = true
+      this.$axios
+        .get(`/api/v1/conversations?search=${searchConversationText}`)
+        .then(response => {
+          this.searchedConversationText = searchConversationText
+          this.searchConversations = response.data.data.conversations
+        })
+        .catch(err => {
+          console.log('err', err.response || err)
+
+          let message = null
+
+          if (err.response) {
+            message = err.response.data.message
+          } else if (err.request) {
+            message = 'Something went wrong!'
+          } else {
+            message = err.message
+          }
+
+          if (message) {
+            this.$store.commit('SET_NOTIFICATION', {
+              enabled: true,
+              status: 'danger',
+              text: [`${message}`]
+            })
+          }
+        })
+        .finally(() => {
+          this.searchingConversations = false
+        })
+    }, 500),
+
     newMessageInConversationHandler(conversation) {
       console.log('messages newMessageInConversationHandler', conversation)
 
