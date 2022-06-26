@@ -102,7 +102,14 @@
         @sorted="_orderBy => (orderBy = _orderBy)"
         @limitchanged="limitChangedHandler"
         @checkClicked="toggleCheck"
+        @messageButtonClicked="messageButtonClicked"
       >
+        <template v-slot:messageButton="slotProps">
+          <div class="flex justify-center">
+            <svgicon name="chat" width="20" class="text-gray-600 fill-current" />
+          </div>
+        </template>
+
         <template v-slot:checker="slotProps">
           <input :id="slotProps.item" v-model="chosenLocums" type="checkbox" :value="slotProps.item" />
           <label :for="slotProps.item" />
@@ -257,6 +264,15 @@ export default {
         //   order: 1
         // },
         {
+          name: 'Message',
+          dataIndex: 'messageButton',
+          class: 'text-center',
+          slotName: 'messageButton',
+          eventName: 'messageButtonClicked',
+          width: 80,
+          order: 1
+        },
+        {
           name: 'User ID',
           dataIndex: 'id',
           class: 'md:text-center',
@@ -408,6 +424,30 @@ export default {
   },
 
   methods: {
+    messageButtonClicked(item) {
+      console.log('messageButtonClicked', item)
+
+      this.$axios
+        .get(`/api/v1/conversations?locum_user_id=${item.id}`)
+        .then(res => {
+          if (res.data.data.conversations.length > 0) {
+            this.$router.push(`/messages/${res.data.data.conversations[0].id}`)
+          } else {
+            this.$router.push(`/messages/create/${item.id}`)
+          }
+        })
+        .catch(err => {
+          console.log('err', err.response || err)
+          if (err.response.data.message) {
+            this.$store.commit('SET_NOTIFICATION', {
+              enabled: true,
+              status: 'danger',
+              text: [`${err.response.data.message}`]
+            })
+          }
+        })
+    },
+
     toggleCheck(item) {
       const index = this.chosenLocums.findIndex(locum => {
         return locum.id === item.id

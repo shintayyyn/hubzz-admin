@@ -1,19 +1,11 @@
 <template>
   <div class="flex items-center py-2">
-    <div 
-      v-for="(item, index) in crumbs" :key="index" 
-      class="flex items-center"
-      :class="item.classes"
-    >
+    <div v-for="(item, index) in crumbs" :key="index" class="flex items-center" :class="item.classes">
       <span v-if="index > 0 && index < crumbs.length" class="font-bold text-gray-500 mx-2">
-        <svgicon
-          :name="'arrow-right'"
-          width="9"
-          class="fill-current"
-        /> 
+        <svgicon :name="'arrow-right'" width="9" class="fill-current" />
       </span>
-      
-      <div class="text-gray-700" :class="index !== crumbs.length-1 ? 'hover:text-blue-500 cursor-pointer' :''" @click="$router.push(item.to)">
+
+      <div class="text-gray-700" :class="index !== crumbs.length - 1 ? 'hover:text-blue-500 cursor-pointer' : ''" @click="$router.push(item.to)">
         {{ item.text }}
       </div>
     </div>
@@ -23,29 +15,42 @@
 <script>
 export default {
   computed: {
-    crumbs () {
+    crumbs() {
       if (this.$route.name === 'index-survey-survey-questions-surveyQuestionId-edit') {
         return [
           {
             text: 'Survey',
-            to: { name: 'index-survey' },
+            to: { name: 'index-survey' }
           },
           {
             text: 'Edit Questionnaire',
-            to: { name: 'index-survey-survey-questions-surveyQuestionId-edit' },
-          },
+            to: { name: 'index-survey-survey-questions-surveyQuestionId-edit' }
+          }
         ]
       }
 
-      const routeMatched = this.$route.path.split("/")
-      
+      if (this.$route.name === 'index-messages-create-practice-practiceId') {
+        return [
+          {
+            text: 'Messages',
+            to: { name: 'index-messages' }
+          },
+          {
+            text: 'Create',
+            to: { name: 'index-messages-create' }
+          }
+        ]
+      }
+
+      const routeMatched = this.$route.path.split('/')
+
       routeMatched.shift()
-      
+
       let to = ''
 
       let toArray = []
 
-      routeMatched.forEach((item) => {
+      routeMatched.forEach(item => {
         to = `${to}/${item}`
         toArray.push(to)
       })
@@ -56,18 +61,18 @@ export default {
         text = text.replace(/-/g, ' ')
 
         text = text.replace(/(^\w{1})|(\s{1}\w{1})/g, word => word.toUpperCase())
-        
+
         breadcrumbArray.push({
           path: path,
           to: toArray[index],
-          text,
+          text
         })
 
         return breadcrumbArray
       }, [])
 
-      return breadcrumbs.filter(items=> items.text !== '')
+      return breadcrumbs.filter(items => items.text !== '')
     }
-  },
+  }
 }
 </script>

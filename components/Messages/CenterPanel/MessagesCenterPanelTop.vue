@@ -1,12 +1,50 @@
 <template>
-  <div
-    class="relative panel-top px-4 md:p-4 w-full flex items-center border-b leading-none"
-    :class="$auth.user.domain === 'Locum' ? 'py-3' : 'pb-4 pt-6'"
-  >
+  <div class="relative panel-top px-4 md:p-4 w-full flex items-center border-b leading-none" :class="true ? 'py-3' : 'pb-4 pt-6'">
     <div class="pr-4 md:hidden">
       <button class="focus:outline-none" @click="goBack()">
         <svgicon name="left-arrow" height="20" width="20" />
       </button>
+    </div>
+
+    <div v-if="conversation && conversation.practice" class="flex flex-col justify-center leading-tight">
+      <div class="font-bold md:text-lg">
+        <span>{{ conversation.practice.name }}</span>
+      </div>
+
+      <div class="flex items-center text-xs md:text-sm text-gray-600">
+        <div class="flex items-center">
+          <span :class="practiceHasOnline ? 'bg-green-400' : 'bg-gray-300'" class="rounded-full mr-1" style="padding: 5px" />
+
+          <p class="inline-block">
+            {{ practiceHasOnline ? 'Online' : 'Offline' }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="conversation && conversation.locum_user" class="flex flex-col justify-center leading-tight">
+      <div class="font-bold md:text-lg">
+        <span>{{ conversation.locum_user.first_name }} {{ conversation.locum_user.last_name }}</span>
+      </div>
+
+      <div class="flex items-center text-xs md:text-sm text-gray-600">
+        <span class>{{ conversation.locum_user.locum_detail_profession_name }}</span>
+
+        <span class="mx-1 text-lg">|</span>
+
+        <div class="flex items-center">
+          <span :class="conversation.locum_user.is_online ? 'bg-green-400' : 'bg-gray-300'" class="rounded-full mr-1" style="padding: 5px" />
+          <p class="inline-block">
+            {{ conversation.locum_user.is_online ? 'Online' : 'Offline' }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="practice" class="flex flex-col justify-center leading-tight">
+      <div class="font-bold md:text-lg">
+        <span>{{ practice.name }}</span>
+      </div>
     </div>
 
     <div v-if="displayUser" class="flex flex-col justify-center leading-tight">
@@ -14,20 +52,13 @@
         <span>{{ displayUser.name }}</span>
       </div>
 
-      <div
-        v-if="displayUser.profession && displayUser.status !== null"
-        class="flex items-center text-xs md:text-sm text-gray-600"
-      >
+      <div v-if="displayUser.profession && displayUser.status !== null" class="flex items-center text-xs md:text-sm text-gray-600">
         <span class>{{ displayUser.profession }}</span>
 
         <span class="mx-1 text-lg">|</span>
 
         <div class="flex items-center">
-          <span
-            :class="displayUser.status ? 'bg-green-400' : 'bg-gray-300'"
-            class="rounded-full mr-1"
-            style="padding: 5px"
-          />
+          <span :class="displayUser.status ? 'bg-green-400' : 'bg-gray-300'" class="rounded-full mr-1" style="padding: 5px" />
 
           <p class="inline-block">
             {{ displayUser.status ? 'Online' : 'Offline' }}
@@ -42,6 +73,16 @@
 <script>
 export default {
   props: {
+    conversation: {
+      type: Object,
+      default: () => null
+    },
+
+    practice: {
+      type: Object,
+      default: () => null
+    },
+
     user: {
       type: Object,
       default: () => null
@@ -57,12 +98,8 @@ export default {
 
         if (
           conversationMemberUser.domain === 'Practice' &&
-          (['Deleted', 'Deactivated'].includes(
-            conversationMemberUser.practice_user_status
-          ) ||
-            ['Deleted', 'Deactivated'].includes(
-              conversationMemberUser.practice_status
-            ))
+          (['Deleted', 'Deactivated'].includes(conversationMemberUser.practice_user_status) ||
+            ['Deleted', 'Deactivated'].includes(conversationMemberUser.practice_status))
         ) {
           return {
             name: 'Hubzz User',
@@ -71,12 +108,7 @@ export default {
           }
         }
 
-        if (
-          conversationMemberUser.domain === 'Locum' &&
-          ['Deleted', 'Deactivated'].includes(
-            conversationMemberUser.locum_user_status
-          )
-        ) {
+        if (conversationMemberUser.domain === 'Locum' && ['Deleted', 'Deactivated'].includes(conversationMemberUser.locum_user_status)) {
           return {
             name: 'Hubzz User',
             profession: null,
@@ -97,6 +129,15 @@ export default {
       }
 
       return null
+    },
+
+    practiceHasOnline() {
+      return (
+        this.conversation &&
+        this.conversation.practice &&
+        this.conversation.practice.users &&
+        this.conversation.practice.users.some(user => user.is_online)
+      )
     }
   },
 

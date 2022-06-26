@@ -61,7 +61,7 @@
                 class="flex-1 px-1 break-word hyphens h-full"
                 :class="column.class"
                 :style="
-                  `min-width: ${column.slotName && column.slotName === 'checker' ? '50px' : '100px'}; ${
+                  `min-width: ${column.slotName && (column.slotName === 'checker' || column.slotName === 'messageButton') ? '50px' : '100px'}; ${
                     column.width ? `max-width: ${column.width}px` : ''
                   }; ${column.dataIndex !== 'actions' ? countLines(index, column.width, rowIndex) : ''}`
                 "
@@ -75,7 +75,10 @@
 
                 <template v-else>
                   <template v-if="column.slotName">
-                    <div v-if="column.slotName == 'checker'" @click.prevent.stop="$emit(column.eventName, item)">
+                    <div
+                      v-if="column.slotName === 'checker' || column.slotName === 'messageButton'"
+                      @click.prevent.stop="$emit(column.eventName, item)"
+                    >
                       <slot :name="column.slotName" :item="item" />
                     </div>
 

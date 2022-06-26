@@ -124,14 +124,16 @@ export default {
         conversation
       })
 
-      const conversationMessage = conversation.latest_conversation_message
+      if (this.activeConversationId === conversation.id) {
+        const conversationMessage = conversation.latest_conversation_message
 
-      const index = this.conversationMessages.findIndex(({ id }) => id === conversationMessage.id)
+        const index = this.conversationMessages.findIndex(({ id }) => id === conversationMessage.id)
 
-      if (index === -1) {
-        this.conversationMessages = [...this.conversationMessages, conversationMessage]
-        this.conversationMessagesCount++
-        this.hasNewMessage = conversationMessage.user.id !== this.$auth.user.id
+        if (index === -1) {
+          this.conversationMessages = [...this.conversationMessages, conversationMessage]
+          this.conversationMessagesCount++
+          this.hasNewMessage = conversationMessage.user.id !== this.$auth.user.id
+        }
       }
     },
 

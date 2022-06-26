@@ -1,6 +1,6 @@
 <template>
   <div class="relative w-full flex flex-col">
-    <MessagesCenterPanelTop :user="activeConversationDisplayUser" class="mt-10 md:mt-0" />
+    <MessagesCenterPanelTop :conversation="activeConversation" class="mt-10 md:mt-0" />
     <MessagesCenterPanelChat
       :conversationMessages="conversationMessages"
       :user="activeConversationDisplayUser"
@@ -11,7 +11,7 @@
       @seenNewMessage="$emit('seenNewMessage')"
     />
     <MessagesCenterPanelForm
-      :user="activeConversationDisplayUser"
+      :conversation="activeConversation"
       @newMessageInConversation="conversation => $emit('newMessageInConversation', conversation)"
     />
   </div>

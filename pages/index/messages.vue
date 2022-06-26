@@ -2,13 +2,17 @@
   <section class="messages-section fixed left-0 md:relative border">
     <MessagesLeftPanel
       :gettingConversations="gettingConversations"
-      :conversations="conversations"
+      :conversations="sortedConversations"
       :conversationsCount="conversationsCount"
       :searchConversationText="searchConversationText"
       :searchedConversationText="searchedConversationText"
       :searchingConversations="searchingConversations"
-      :searchConversations="searchConversations"
+      :searchConversations="sortedSearchConversations"
+      :gettingMoreConversations="gettingMoreConversations"
+      :domain="domain"
+      @setDomain="_domain => (domain = _domain)"
       @setSearchConversationText="_searchConversationText => (searchConversationText = _searchConversationText)"
+      @loadMoreConversation="loadMoreConversation"
     />
     <nuxt-child :gettingConversations="gettingConversations" :conversations="conversations" :conversationsCount="conversationsCount" />
   </section>
@@ -32,7 +36,34 @@ export default {
       searchConversationText: '',
       searchedConversationText: '',
       searchingConversations: false,
-      searchConversations: []
+      searchConversations: [],
+
+      gettingMoreConversations: false,
+      limit: 10,
+
+      domain: 'Locum'
+    }
+  },
+
+  computed: {
+    sortedConversations() {
+      return [...this.conversations].sort((conversationA, conversationB) => {
+        return conversationA.latest_conversation_message.created_at > conversationB.latest_conversation_message.created_at
+          ? -1
+          : conversationA.latest_conversation_message.created_at < conversationB.latest_conversation_message.created_at
+          ? 1
+          : 0
+      })
+    },
+
+    sortedSearchConversations() {
+      return [...this.searchConversations].sort((conversationA, conversationB) => {
+        return conversationA.latest_conversation_message.created_at > conversationB.latest_conversation_message.created_at
+          ? -1
+          : conversationA.latest_conversation_message.created_at < conversationB.latest_conversation_message.created_at
+          ? 1
+          : 0
+      })
     }
   },
 
@@ -46,48 +77,22 @@ export default {
       }
 
       this.searchConversationSubmit(this.searchConversationText)
+    },
+
+    domain() {
+      this.getConversations()
+
+      if (this.searchConversationText) {
+        this.searchingConversations = false
+        this.searchConversations = []
+        this.searchedConversationText = ''
+        this.searchConversationSubmit(this.searchConversationText)
+      }
     }
   },
 
   mounted() {
-    this.gettingConversations = true
-    Promise.all([
-      this.$axios.get('/api/v1/conversations/count').then(response => {
-        return response.data.data.count
-      }),
-      this.$axios
-        .get('/api/v1/conversations', {
-          params: {
-            limit: 10,
-            offset: 0
-          }
-        })
-        .then(response => {
-          return response.data.data.conversations
-        }),
-      new Promise(resolve => setTimeout(resolve, 1000 * 1))
-    ])
-      .then(([conversationsCount, conversations]) => {
-        console.log({
-          conversationsCount,
-          conversations
-        })
-
-        this.conversationsCount = conversationsCount
-
-        conversations.forEach(conversation => {
-          conversation.displayUser = conversation.conversation_member_users.find(({ id }) => id !== this.$auth.user.id) || null
-        })
-
-        console.log({
-          conversations
-        })
-
-        this.conversations = conversations
-      })
-      .finally(() => {
-        this.gettingConversations = false
-      })
+    this.getConversations()
 
     this.$socket.on('newMessage', this.newMessageInConversationHandler)
     this.$socket.on('seenConversation', this.seenConversationHandler)
@@ -101,8 +106,15 @@ export default {
   methods: {
     searchConversationSubmit: debounce(function(searchConversationText) {
       this.searchingConversations = true
+      const subType = this.domain
       this.$axios
-        .get(`/api/v1/conversations?search=${searchConversationText}`)
+        .get(`/api/v1/conversations?search=${searchConversationText}`, {
+          params: {
+            sub_type: subType,
+            limit: this.limit,
+            offset: 0
+          }
+        })
         .then(response => {
           this.searchedConversationText = searchConversationText
           this.searchConversations = response.data.data.conversations
@@ -142,8 +154,6 @@ export default {
         this.conversations.splice(index, 1)
       }
 
-      conversation.displayUser = conversation.conversation_member_users.find(({ id }) => id !== this.$auth.user.id) || null
-
       this.conversations.unshift(conversation)
     },
 
@@ -155,14 +165,96 @@ export default {
       console.log('index', index)
 
       if (index > -1) {
-        conversation.displayUser = conversation.conversation_member_users.find(({ id }) => id !== this.$auth.user.id) || null
-
         const conversations = [...this.conversations]
 
         conversations.splice(index, 1, conversation)
 
         this.conversations = conversations
       }
+    },
+
+    getConversations() {
+      this.gettingConversations = true
+      this.conversationsCount = 0
+      this.conversations = []
+      const subType = this.domain
+      Promise.all([
+        this.$axios
+          .get('/api/v1/conversations/count', {
+            params: {
+              sub_type: subType
+            }
+          })
+          .then(response => {
+            return response.data.data.count
+          }),
+        this.$axios
+          .get('/api/v1/conversations', {
+            params: {
+              sub_type: subType,
+              limit: this.limit,
+              offset: 0
+            }
+          })
+          .then(response => {
+            return response.data.data.conversations
+          }),
+        new Promise(resolve => setTimeout(resolve, 1000 * 1))
+      ])
+        .then(([conversationsCount, conversations]) => {
+          console.log({
+            conversationsCount,
+            conversations
+          })
+
+          this.conversationsCount = conversationsCount
+
+          this.conversations = conversations
+        })
+        .finally(() => {
+          this.gettingConversations = false
+        })
+    },
+
+    loadMoreConversation() {
+      this.gettingMoreConversations = true
+      const subType = this.domain
+      Promise.all([
+        this.$axios
+          .get('/api/v1/conversations/count', {
+            params: {
+              sub_type: subType
+            }
+          })
+          .then(response => {
+            return response.data.data.count
+          }),
+        this.$axios
+          .get('/api/v1/conversations', {
+            params: {
+              sub_type: subType,
+              limit: this.limit,
+              offset: this.conversations.length
+            }
+          })
+          .then(response => {
+            return response.data.data.conversations
+          }),
+        new Promise(resolve => setTimeout(resolve, 1000 * 1))
+      ])
+        .then(([conversationsCount, conversations]) => {
+          console.log({
+            conversationsCount,
+            conversations
+          })
+
+          this.conversationsCount = conversationsCount
+
+          this.conversations = [...this.conversations, ...conversations]
+        })
+        .finally(() => {
+          this.gettingMoreConversations = false
+        })
     }
   }
 }
@@ -170,7 +262,7 @@ export default {
 
 <style scoped>
 .messages-section {
-  overflow: hidden;
+  /* overflow: hidden; */
   display: flex;
   min-height: 100%;
   max-height: 100%;

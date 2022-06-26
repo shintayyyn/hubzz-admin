@@ -36,26 +36,31 @@
             @mouseover="activeIndex = index"
             @click="add"
           >
-            <span v-if="item.domain === 'Locum'" class="flex justify-center">
-              <AppAvatar
-                class="w-10 h-10 rounded-full border"
-                :width="'40px'"
-                :height="'40px'"
-                :src="item.avatar && item.avatar.file && item.avatar.file.url ? item.avatar.file.url : ''"
-              />
-            </span>
+            <template v-if="url === 'api/v1/conversations/search-practices'">
+              <div class="w-full flex flex-col justify-center mx-2 leading-none">
+                <p class="font-bold text-base">
+                  {{ item.name }}
+                </p>
+              </div>
+            </template>
 
-            <div class="w-full flex flex-col justify-center mx-2 leading-none">
-              <p class="font-bold text-base">
-                {{ item.personal_detail.first_name }}
-                {{ item.personal_detail.last_name }}
-              </p>
+            <template v-if="url !== 'api/v1/conversations/search-practices' && item.domain === 'Locum'">
+              <span class="flex justify-center">
+                <AppAvatar
+                  class="w-10 h-10 rounded-full border"
+                  :width="'40px'"
+                  :height="'40px'"
+                  :src="item.avatar && item.avatar.file && item.avatar.file.url ? item.avatar.file.url : ''"
+                />
+              </span>
 
-              <p v-if="item.practice_detail" class="text-gray-600">
-                <span>{{ item.practice_detail.practice_role }}</span>
-                <span> ({{ item.practice_detail.practice && item.practice_detail.practice.name }}) </span>
-              </p>
-            </div>
+              <div class="w-full flex flex-col justify-center mx-2 leading-none">
+                <p class="font-bold text-base">
+                  {{ item.personal_detail.first_name }}
+                  {{ item.personal_detail.last_name }}
+                </p>
+              </div>
+            </template>
           </div>
         </div>
 
@@ -154,26 +159,48 @@ export default {
       }
       console.log(selectedUser)
       this.showLists = false
-      this.$axios
-        .$get(`/api/v1/conversations/search?user_id=${selectedUser.id}`)
-        .then(res => {
-          if (res.data.user) {
-            this.$emit('newConversation', res.data.user)
-          } else if (res.data.conversation) {
-            let conversationId = res.data.conversation.conversation_id
-            this.$router.push(`/messages/${conversationId}`)
-          }
-        })
-        .catch(err => {
-          console.log('err', err.response || err)
-          if (err.response.data.message) {
-            this.$store.commit('SET_NOTIFICATION', {
-              enabled: true,
-              status: 'danger',
-              text: [`${err.response.data.message}`]
-            })
-          }
-        })
+
+      if (this.url === 'api/v1/conversations/search-practices') {
+        this.$axios
+          .get(`/api/v1/conversations?practice_id=${selectedUser.id}`)
+          .then(res => {
+            if (res.data.data.conversations.length > 0) {
+              this.$router.push(`/messages/${res.data.data.conversations[0].id}`)
+            } else {
+              this.$router.push(`/messages/create/practice/${selectedUser.id}`)
+            }
+          })
+          .catch(err => {
+            console.log('err', err.response || err)
+            if (err.response.data.message) {
+              this.$store.commit('SET_NOTIFICATION', {
+                enabled: true,
+                status: 'danger',
+                text: [`${err.response.data.message}`]
+              })
+            }
+          })
+      } else {
+        this.$axios
+          .get(`/api/v1/conversations?locum_user_id=${selectedUser.id}`)
+          .then(res => {
+            if (res.data.data.conversations.length > 0) {
+              this.$router.push(`/messages/${res.data.data.conversations[0].id}`)
+            } else {
+              this.$router.push(`/messages/create/${selectedUser.id}`)
+            }
+          })
+          .catch(err => {
+            console.log('err', err.response || err)
+            if (err.response.data.message) {
+              this.$store.commit('SET_NOTIFICATION', {
+                enabled: true,
+                status: 'danger',
+                text: [`${err.response.data.message}`]
+              })
+            }
+          })
+      }
     },
 
     getSearchUsers: debounce(function(input) {
@@ -184,7 +211,11 @@ export default {
       this.$axios
         .$get(this.url, { params })
         .then(res => {
-          this.results = res.data.users
+          if (this.url === 'api/v1/conversations/search-practices') {
+            this.results = res.data.practices
+          } else {
+            this.results = res.data.users
+          }
           this.showLists = true
         })
         .catch(err => {

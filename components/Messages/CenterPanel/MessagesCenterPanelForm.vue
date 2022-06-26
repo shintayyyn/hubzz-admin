@@ -58,6 +58,16 @@ export default {
       default: () => null
     },
 
+    conversation: {
+      type: Object,
+      default: () => null
+    },
+
+    practice: {
+      type: Object,
+      default: () => null
+    },
+
     user: {
       type: Object,
       default: () => null
@@ -110,54 +120,89 @@ export default {
       return message.replace(/^\s*/, '').replace(/\s*$/, '')
     },
 
+    errorHandler(err) {
+      console.log('err', err.response || err)
+
+      let message = null
+
+      if (err.response) {
+        if (err.response.status === 400 && err.response.data.error_messages) {
+          message = err.response.data.error_messages.map(({ message }) => message).join(', ')
+        } else {
+          message = err.response.data.message
+        }
+      } else if (err.request) {
+        message = 'Something went wrong!'
+      } else {
+        message = err.message
+      }
+
+      if (message) {
+        this.$store.commit('SET_NOTIFICATION', {
+          enabled: true,
+          status: 'danger',
+          text: message
+        })
+      }
+    },
+
     async sendMessage() {
       if (this.trimmedMessage(this.message) && this.trimmedMessage(this.message).length <= this.textLimit) {
         try {
-          const response = await this.$axios.post(`/api/v1/conversations`, {
-            user_id: this.user.id,
-            message: this.message
-          })
+          if (this.conversation) {
+            const type = this.conversation.practice ? 'Practice' : 'Locum'
 
-          if (this.user.id) {
-            this.messageSent = true
-            // setTimeout(() => {
-            //   this.messageSent = false
-            // }, 1000)
-          }
+            const response = await this.$axios.post(`/api/v1/conversations`, {
+              type,
+              practice_id: this.conversation.practice ? this.conversation.practice.id : null,
+              locum_user_id: this.conversation.locum_user ? this.conversation.locum_user.id : null,
+              message: this.message
+            })
 
-          const conversation = response.data.data.conversation
+            const conversation = response.data.data.conversation
 
-          this.message = ''
+            this.message = ''
 
-          this.$emit('newMessageInConversation', conversation)
+            this.$emit('newMessageInConversation', conversation)
+          } else if (this.practice) {
+            const response = await this.$axios.post(`/api/v1/conversations`, {
+              type: 'Practice',
+              practice_id: this.practice.id,
+              message: this.message
+            })
 
-          if (!this.messageModal) {
+            const conversation = response.data.data.conversation
+
+            this.message = ''
+
+            this.$emit('newMessageInConversation', conversation)
+
             this.$router.push(`/messages/${conversation.id}`)
+          } else {
+            const response = await this.$axios.post(`/api/v1/conversations`, {
+              user_id: this.user.id,
+              message: this.message
+            })
+
+            if (this.user.id) {
+              this.messageSent = true
+              // setTimeout(() => {
+              //   this.messageSent = false
+              // }, 1000)
+            }
+
+            const conversation = response.data.data.conversation
+
+            this.message = ''
+
+            this.$emit('newMessageInConversation', conversation)
+
+            if (!this.messageModal) {
+              this.$router.push(`/messages/${conversation.id}`)
+            }
           }
         } catch (err) {
-          console.log('err', err.response || err)
-
-          let message = null
-
-          if (err.response) {
-            if (err.response.status === 400 && err.response.data.error_messages) {
-              message = err.response.data.error_messages.map(({ message }) => message).join(', ')
-            } else {
-              message = err.response.data.message
-            }
-          } else if (err.request) {
-            message = 'Something went wrong!'
-          } else {
-            message = err.message
-          }
-
-          if (message) {
-            this.$store.commit('SET_NOTIFICATION', {
-              enabled: true,
-              status: 'danger',
-              text: message
-            })
-          }
+          this.errorHandler(err)
         }
       }
     }

@@ -1,11 +1,11 @@
 <template>
   <section class="flex w-full">
     <div class="relative h-full w-full flex flex-col justify-between overflow-y-hidden">
-      <MessagesCenterPanelTop :user="user" class="mt-10 md:mt-0" />
+      <MessagesCenterPanelTop :practice="practice" class="mt-10 md:mt-0" />
 
       <div class="h-full px-4 md:px-20 md:pt-20" />
 
-      <MessagesCenterPanelForm :user="user" />
+      <MessagesCenterPanelForm :practice="practice" />
     </div>
   </section>
 </template>
@@ -22,38 +22,23 @@ export default {
 
   data() {
     return {
-      user: null
+      practice: null
     }
   },
 
   mounted() {
-    if (window.innerWidth < 768) {
-      this.$store.commit('IS_MOBILE', false)
-    }
-
-    const userId = this.$route.params.userId
+    const practiceId = this.$route.params.practiceId
 
     this.$axios
-      .get('/api/v1/conversations/search-users', {
+      .get('/api/v1/conversations/search-practices', {
         params: {
-          id: userId
+          id: practiceId
         }
       })
       .then(response => {
-        const user = response.data.data.users.length > 0 ? response.data.data.users[0] : null
+        const practice = response.data.data.practices.length > 0 ? response.data.data.practices[0] : null
 
-        if (user) {
-          this.user = {
-            ...user,
-            name: `${user.personal_detail.first_name} ${user.personal_detail.last_name}`,
-            profession: user.locum_detail_profession_name
-              ? user.locum_detail_profession_name
-              : user.practice_detail_practice_role
-              ? `${user.practice_detail_practice_role} (${user.practice_name})`
-              : null,
-            status: user.is_online
-          }
-        }
+        this.practice = practice
       })
       .catch(err => {
         console.log('err', err.response || err)

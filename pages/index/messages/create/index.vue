@@ -36,7 +36,9 @@
             v-model="searchUser"
             :placeholder="`Search for ${sendMessageTo}`"
             :keyword="'practices'"
-            :url="`api/v1/conversations/search-users?domain=${sendMessageTo}`"
+            :url="
+              sendMessageTo === 'Practice' ? `api/v1/conversations/search-practices` : `api/v1/conversations/search-users?domain=${sendMessageTo}`
+            "
             @newConversation="newConversation"
           />
         </div>
