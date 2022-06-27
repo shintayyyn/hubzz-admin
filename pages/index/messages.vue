@@ -159,6 +159,18 @@ export default {
 
         this.conversations.unshift(conversation)
       }
+
+      if (subType !== this.domain && conversation.latest_conversation_message.user.id === this.$auth.user.id) {
+        this.domain = subType
+
+        const index = this.conversations.findIndex(({ id }) => id === conversation.id)
+
+        if (index > -1) {
+          this.conversations.splice(index, 1)
+        }
+
+        this.conversations.unshift(conversation)
+      }
     },
 
     seenConversationHandler(conversation) {

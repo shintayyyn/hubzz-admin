@@ -13,6 +13,7 @@
         v-model="message"
         class="resize-none w-full text-sm focus:outline-none"
         :class="inClass"
+        :disabled="sendingMessage"
         placeholder="Type your message here"
         @keydown.enter.exact.prevent
         @keyup.enter.exact="sendMessage()"
@@ -31,7 +32,7 @@
     </div>
 
     <button
-      :disabled="hasDeletedOrDeactivatedUser || trimmedMessage(message).length === 0 || trimmedMessage(message).length > textLimit"
+      :disabled="sendingMessage || hasDeletedOrDeactivatedUser || trimmedMessage(message).length === 0 || trimmedMessage(message).length > textLimit"
       :class="
         hasDeletedOrDeactivatedUser || trimmedMessage(message).length === 0 || trimmedMessage(message).length > textLimit
           ? 'cursor-not-allowed bg-gray-500'
@@ -85,7 +86,8 @@ export default {
       hasDeletedOrDeactivatedUser: false,
       textLimit: 250,
       messageSent: false,
-      conversations: []
+      conversations: [],
+      sendingMessage: false
     }
   },
 
@@ -147,8 +149,12 @@ export default {
     },
 
     async sendMessage() {
+      if (this.sendingMessage) {
+        return
+      }
       if (this.trimmedMessage(this.message) && this.trimmedMessage(this.message).length <= this.textLimit) {
         try {
+          this.sendingMessage = true
           if (this.conversation) {
             const type = this.conversation.practice ? 'Practice' : 'Locum'
 
@@ -201,7 +207,9 @@ export default {
               this.$router.push(`/messages/${conversation.id}`)
             }
           }
+          this.sendingMessage = false
         } catch (err) {
+          this.sendingMessage = false
           this.errorHandler(err)
         }
       }
