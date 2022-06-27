@@ -148,13 +148,17 @@ export default {
     newMessageInConversationHandler(conversation) {
       console.log('messages newMessageInConversationHandler', conversation)
 
-      const index = this.conversations.findIndex(({ id }) => id === conversation.id)
+      const subType = conversation.practice ? 'Practice' : conversation.locum_user ? 'Locum' : null
 
-      if (index > -1) {
-        this.conversations.splice(index, 1)
+      if (subType === this.domain) {
+        const index = this.conversations.findIndex(({ id }) => id === conversation.id)
+
+        if (index > -1) {
+          this.conversations.splice(index, 1)
+        }
+
+        this.conversations.unshift(conversation)
       }
-
-      this.conversations.unshift(conversation)
     },
 
     seenConversationHandler(conversation) {

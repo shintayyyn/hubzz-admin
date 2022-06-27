@@ -33,18 +33,26 @@
       <div class="py-2 md:px-4">
         <transition-group name="fade">
           <div v-for="(item, index) in conversationMessages" :key="item.id">
-            <div :id="`message-${index}`" class="flex flex-col" :class="isReceiver(item) ? 'items-start' : 'items-end'">
+            <div
+              :id="`message-${index}`"
+              class="flex flex-col"
+              :class="!['Super Admin', 'Admin'].includes(item.user.domain) ? 'items-start' : 'items-end'"
+            >
               <div v-if="isMessageDeleted(item.user.id, item.deleted_by_sender, item.deleted_by_receiver)" class="flex my-1">
-                <div v-if="$auth.user.domain === 'Practice'" :class="isReceiver(item) ? '' : 'hidden'" class="w-10 h-10 my-1 ml-4">
+                <div
+                  v-if="item.user.domain === 'Locum'"
+                  :class="!['Super Admin', 'Admin'].includes(item.user.domain) ? '' : 'hidden'"
+                  class="w-10 h-10 my-1 ml-4"
+                >
                   <AppAvatar class="m-auto" :width="'40px'" :height="'40px'" :src="item.user.avatar ? item.user.avatar.file.url : ''" />
                 </div>
 
                 <div class="flex flex-col text-sm md:px-2">
-                  <span class="text-xs px-2 text-gray-600" :class="isReceiver(item) ? '' : 'text-right'">{{
+                  <span class="text-xs px-2 text-gray-600" :class="!['Super Admin', 'Admin'].includes(item.user.domain) ? '' : 'text-right'">{{
                     isReceiver(item) ? userFullName(item) : 'You'
                   }}</span>
 
-                  <div class="flex" :class="isReceiver(item) ? '' : 'flex-row-reverse'">
+                  <div class="flex" :class="!['Super Admin', 'Admin'].includes(item.user.domain) ? '' : 'flex-row-reverse'">
                     <div
                       class="rounded-lg text-xs px-2 py-2 border text-gray-500 italic"
                       :class="{ 'ml-2': isReceiver(item) }"
@@ -63,19 +71,27 @@
                 </div>
               </div>
 
-              <div v-else class="flex my-1 md:max-w-sm lg:max-w-lg" :class="isReceiver(item) ? '' : 'flex-row-reverse'">
-                <div v-if="$auth.user.domain === 'Practice'" :class="isReceiver(item) ? '' : 'hidden'" class="w-10 h-10 my-1 ml-4">
+              <div
+                v-else
+                class="flex my-1 md:max-w-sm lg:max-w-lg"
+                :class="!['Super Admin', 'Admin'].includes(item.user.domain) ? '' : 'flex-row-reverse'"
+              >
+                <div
+                  v-if="item.user.domain === 'Locum'"
+                  :class="!['Super Admin', 'Admin'].includes(item.user.domain) ? '' : 'hidden'"
+                  class="w-10 h-10 my-1 ml-4"
+                >
                   <AppAvatar class="m-auto" :height="'40px'" :width="'40px'" :src="item.user.avatar ? item.user.avatar.file.url : ''" />
                 </div>
 
                 <div class="flex flex-col text-sm px-2">
-                  <span class="text-xs px-2 text-gray-600" :class="isReceiver(item) ? '' : 'text-right'">{{
+                  <span class="text-xs px-2 text-gray-600" :class="!['Super Admin', 'Admin'].includes(item.user.domain) ? '' : 'text-right'">{{
                     isReceiver(item) ? userFullName(item) : 'You'
                   }}</span>
 
                   <div
                     class="flex items-center"
-                    :class="isReceiver(item) ? '' : 'flex-row-reverse'"
+                    :class="!['Super Admin', 'Admin'].includes(item.user.domain) ? '' : 'flex-row-reverse'"
                     @mouseover="hoverId = item.id"
                     @mouseleave="hoverId = ''"
                   >
