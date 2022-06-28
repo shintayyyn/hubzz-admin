@@ -86,10 +86,14 @@ export default {
     this.getActiveConversation()
 
     this.$socket.on('newMessage', this.newMessageInConversationHandler)
+    this.$socket.on('presence-in', this.presenceHandler)
+    this.$socket.on('presence-out', this.presenceHandler)
   },
 
   destroyed() {
     this.$socket.removeListener('newMessage', this.newMessageInConversationHandler)
+    this.$socket.removeListener('presence-in', this.presenceHandler)
+    this.$socket.removeListener('presence-out', this.presenceHandler)
   },
 
   methods: {
@@ -134,6 +138,25 @@ export default {
           this.conversationMessagesCount++
           this.hasNewMessage = conversationMessage.user.id !== this.$auth.user.id
         }
+      }
+    },
+
+    presenceHandler({ user_id, domain, practice_id, online }) {
+      if (domain === 'Locum' && this.activeConversation && this.activeConversation.locum_user && this.activeConversation.locum_user.id === user_id) {
+        this.activeConversation.locum_user.is_online = online
+      }
+
+      if (
+        domain === 'Practice' &&
+        this.activeConversation &&
+        this.activeConversation.practice &&
+        this.activeConversation.practice.id === practice_id
+      ) {
+        this.activeConversation.practice.users.forEach(user => {
+          if (user.id === user_id) {
+            user.is_online = online
+          }
+        })
       }
     },
 
