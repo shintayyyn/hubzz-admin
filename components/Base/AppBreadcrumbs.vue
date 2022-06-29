@@ -56,17 +56,19 @@ export default {
       })
 
       let breadcrumbs = routeMatched.reduce((breadcrumbArray, path, index) => {
-        let text = this.$route.matched[index].meta.breadCrumb || path
+        if (this.$route.matched[index]) {
+          let text = this.$route.matched[index].meta.breadCrumb || path
 
-        text = text.replace(/-/g, ' ')
+          text = text.replace(/-/g, ' ')
 
-        text = text.replace(/(^\w{1})|(\s{1}\w{1})/g, word => word.toUpperCase())
+          text = text.replace(/(^\w{1})|(\s{1}\w{1})/g, word => word.toUpperCase())
 
-        breadcrumbArray.push({
-          path: path,
-          to: toArray[index],
-          text
-        })
+          breadcrumbArray.push({
+            path: path,
+            to: toArray[index],
+            text
+          })
+        }
 
         return breadcrumbArray
       }, [])
