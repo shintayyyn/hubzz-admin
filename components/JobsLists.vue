@@ -45,6 +45,7 @@
         :customWidth="800"
         @pagechanged="pagechanged"
         @sorted="_orderBy => (orderBy = _orderBy)"
+        @limitchanged="_limit => (limit = _limit)"
       >
         <template v-slot:invoice_status_slot="slotProps">
           <div class="py-1 px-2 text-sm rounded-lg whitespace-no-wrap text-center mx-2" :class="invoiceStatusStyle(slotProps.item.invoice_status)">
@@ -466,7 +467,13 @@ export default {
       this.currentPage = parseInt(to.query.page)
       this.getJobs()
     },
+
     orderBy() {
+      this.currentPage = 1
+      this.getJobs()
+    },
+
+    limit() {
       this.currentPage = 1
       this.getJobs()
     }
@@ -505,9 +512,9 @@ export default {
         filters.type = 'Platform'
       }
       if (this.practice || this.practiceSurgery) {
-        (filters.practice_id = this.$route.name.includes('practice-surgeries') ? null : this.$route.params.id),
-          (filters.practice_surgery_id = this.$route.name.includes('practice-surgeries') ? this.$route.params.practiceSurgeryId : null),
-          (filters.status = this.status)
+        filters.practice_id = this.$route.name.includes('practice-surgeries') ? null : this.$route.params.id
+        filters.practice_surgery_id = this.$route.name.includes('practice-surgeries') ? this.$route.params.practiceSurgeryId : null
+        filters.status = this.status
       }
       filters.title_includes = this.job_title
       if (this.jobDenom === 'Jobs') {
@@ -531,7 +538,7 @@ export default {
             .$get(`/api/v1/admin/jobs`, {
               params: {
                 ...filters,
-                limit: this.perPage,
+                limit: this.limit,
                 offset: this.offset,
                 order_by: this.orderBy
               }
@@ -551,7 +558,7 @@ export default {
             .$get(`/api/v1/admin/job-parts`, {
               params: {
                 ...filters,
-                limit: this.perPage,
+                limit: this.limit,
                 offset: this.offset,
                 order_by: this.orderBy
               }
@@ -660,12 +667,14 @@ export default {
           return 'bg-green-500 text-white opacity-75'
       }
     },
-    async pagechanged(e) {
+
+    pagechanged(e) {
       const query = {
         ...this.$route.query,
         page: e || 1
       }
-      await this.$router.push({ query })
+
+      this.$router.push({ query })
     }
   }
 }
