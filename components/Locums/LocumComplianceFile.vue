@@ -1,5 +1,5 @@
 <template>
-  <section class="absolute flex flex-col w-full" style="max-width: calc(100% - 200px);">
+  <section class="absolute flex flex-col w-full" style="max-width: calc(100% - 220px);">
     <header class="flex items-center text-sm md:px-4">
       <button
         v-if="authAdminPermissions.includes('Download Locum Compliance Documents')"
@@ -217,7 +217,7 @@
             File
           </p>
           <div class="w-full">
-            <div v-if="loadingFile">
+            <div v-if="loadingFile" class="flex">
               <span class="text-2xl">Loading...</span>
             </div>
             <template v-if="!loadingFile && fileUrl">
