@@ -387,13 +387,28 @@ export default {
           )
         }
       }
+
+      //old logic for year picker
+
+      // if (!this.isAfter) {
+      //   for (let i = 0; i <= 2; i++) {
+      //     let year = this.$moment(this.selectedYear, 'YYYY')
+      //       .subtract(i, 'years')
+      //       .format('YYYY')
+      //     if (!this.yearLists.includes(year.toString())) {
+      //       this.yearLists.push(year)
+      //     }
+      //   }
+      // }
+
+      //new logic for year picker
       if (!this.isAfter) {
-        for (let i = 0; i <= 2; i++) {
-          let year = this.$moment(this.selectedYear, 'YYYY')
-            .subtract(i, 'years')
-            .format('YYYY')
+        const selectedYear = parseInt(this.selectedYear)
+        const minYear = 2022
+
+        for (let year = selectedYear; year >= minYear; year--) {
           if (!this.yearLists.includes(year.toString())) {
-            this.yearLists.push(year)
+            this.yearLists.push(year.toString())
           }
         }
       }
