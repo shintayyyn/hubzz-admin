@@ -388,7 +388,7 @@ export default {
         }
       }
       if (!this.isAfter) {
-        for (let i = 0; i >= 2; i++) {
+        for (let i = 0; i <= 2; i++) {
           let year = this.$moment(this.selectedYear, 'YYYY')
             .subtract(i, 'years')
             .format('YYYY')
