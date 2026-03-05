@@ -5,11 +5,7 @@
       <div class="flex flex-col lg:flex-row w-full m-4">
         <div class="flex w-5/6">
           <div class="md:px-1 w-full lg:w-1/4">
-            <AppDate
-              v-model="filter.registered_at_date_start"
-              label="Date Start"
-              format="YYYY-MM-DD"
-            />
+            <AppDate v-model="filter.registered_at_date_start" label="Date Start" format="YYYY-MM-DD" />
           </div>
 
           <div class="md:px-1 w-full lg:w-1/4">
