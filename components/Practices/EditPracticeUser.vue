@@ -449,8 +449,10 @@ export default {
         this.toPutPracticeUser.first_name = this.practiceUser.first_name
         this.toPutPracticeUser.last_name = this.practiceUser.last_name
         this.toPutPracticeUser.suffix = this.practiceUser.suffix
-        this.toPutPracticeUser.practice_role = this.practiceUser.practice_detail.practice_role
-        this.toPutPracticeUser.practice_user_role_id = this.practiceUser.practice_role_id
+        //data fix not matching on backend
+        this.toPutPracticeUser.practice_role = this.practiceUser.practice_detail?.practice_role || ''
+        this.toPutPracticeUser.practice_user_role_id = this.practiceUser.practice_detail?.role?.id || ''
+        //end
         this.toPutPracticeUser.status = this.practiceUser.status
       }
     }
@@ -468,8 +470,10 @@ export default {
       first_name: this.practiceUser.first_name,
       last_name: this.practiceUser.last_name,
       suffix: this.practiceUser.suffix,
-      practice_role: this.practiceUser.practice_detail.practice_role,
-      practice_user_role_id: this.practiceUser.practice_role_id,
+      //data fix not matching on backend
+      practice_role: this.practiceUser.practice_detail?.practice_role || '',
+      practice_user_role_id: this.practiceUser.practice_detail?.role?.id || '',
+      //end
       status: this.practiceUser.status
     }
 
