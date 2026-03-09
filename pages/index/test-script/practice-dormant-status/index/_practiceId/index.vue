@@ -27,7 +27,7 @@
             </div>
           </div>
         </div>
-
+        <!--Updated date picker-->
         <div class="py-4">
           <div class=" flex flex-wrap items-center">
             <div class="text-lg font-bold" style="width: 150px;">
