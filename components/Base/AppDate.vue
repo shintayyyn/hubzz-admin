@@ -406,42 +406,42 @@ export default {
           )
         }
       }
-
-      //new logic for year picker.
-      if (!this.isAfter) {
-        const selectedYear = parseInt(this.selectedYear)
-        const minYear = 2022
-
-        for (let year = selectedYear; year >= minYear; year--) {
-          if (!this.yearLists.includes(year.toString())) {
-            this.yearLists.push(year.toString())
-          }
-        }
-      }
-      this.yearLists.sort(function(a, b) {
-        return a - b
-      })
-    },
-    isSelectedDate(date) {
-      let selectedDate = `${this.selectedYear}-${this.selectedMonth}-${date}`
-      return this.$moment(selectedDate, 'YYYY-MM-D').isSame(this.value)
-    },
-    isSame(date) {
-      let newDate = this.$moment().format('MM-DD-YYYY')
-      return this.$moment(date, 'MM-DD-YYYY').isSame(newDate)
-    },
-    isDisabled(date) {
-      let newDate = this.$moment.utc().format('MM-DD-YYYY')
-      if (this.isBefore) {
-        if (this.startDate) {
-          return this.$moment(date).isAfter(this.startDate)
-        }
-        return this.$moment(date, 'MM-DD-YYYY').isAfter(this.$moment(newDate, 'MM-DD-YYYY'))
-      }
-      if (this.isAfter) {
-        return this.$moment(date, 'MM-DD-YYYY')
-          .subtract(1, 'd')
-          .isBefore(this.$moment(newDate, 'MM-DD-YYYY'))
+			if (!this.isAfter) {
+				for (let i = 0; i <= 2; i++) {
+					let year = this.$moment(this.selectedYear, "YYYY")
+						.subtract(i, "years")
+						.format("YYYY")
+					if (!this.yearLists.includes(year.toString())) {
+						this.yearLists.push(year)
+					}
+				}
+			}
+			this.yearLists.sort(function (a, b) {
+				return a - b
+			})
+		},
+		isSelectedDate (date) {
+			let selectedDate = `${this.selectedYear}-${this.selectedMonth}-${date}`
+			return this.$moment(selectedDate, "YYYY-MM-D").isSame(this.value)
+		},
+		isSame (date) {
+			let newDate = this.$moment().format("MM-DD-YYYY")
+			return this.$moment(date, "MM-DD-YYYY").isSame(newDate)
+		},
+		isDisabled (date) {
+			let newDate = this.$moment.utc().format("MM-DD-YYYY")
+			if (this.isBefore) {
+				if (this.startDate) {
+					return this.$moment(date).isAfter(this.startDate)
+				}
+				return this.$moment(date, "MM-DD-YYYY").isAfter(
+					this.$moment(newDate, "MM-DD-YYYY")
+				)
+			}
+			if (this.isAfter) {
+				return this.$moment(date, "MM-DD-YYYY").subtract(1, 'd').isBefore(
+					this.$moment(newDate, "MM-DD-YYYY")
+				)
       }
       if (this.isAfterDate) {
         return this.$moment(date).subtract(1, 'd').isBefore(this.isAfterDate)
