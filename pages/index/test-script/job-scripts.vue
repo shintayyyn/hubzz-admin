@@ -23,7 +23,7 @@
           :perPage="limit"
           :columns="columns"
           :loading="loading"
-          :routerLink="`/jobs`"
+          :routerLink="`/content-management/jobs`"
           :orderBy="orderBy"
           @pagechanged="pageChangedHandler"
           @sorted="(_orderBy) => orderBy = _orderBy"
@@ -49,7 +49,7 @@
 
 <script>
   import debounce from 'lodash.debounce'
-  
+
   import AppTableNew from '@/components/Base/AppTableNew'
   import AppButton from '@/components/Base/AppButton'
 
@@ -154,12 +154,12 @@
 
 		mounted () {
       // this.$socket.on("updateLocumStatus", this.locumUserUpdatedHandler)
-    
+
       this.count = 0
       this.jobs = []
 			this.getAllJobs()
     },
-    
+
     destroyed () {
       this.$socket.removeListener("updateLocumStatus", this.locumUserUpdatedHandler)
     },
@@ -202,17 +202,17 @@
           this.loading = false
 				})
       },
-      
+
 			searchSubmit: debounce(function () {
 				this.currentPage = 1
         this.getAllJobs()
 			}, 500),
-    
+
       pageChangedHandler (page) {
         this.currentPage = page
         this.getAllJobs()
       },
-      
+
       locumUserUpdatedHandler (locumUser) {
         const index = this.jobs.findIndex(({ id }) => id === locumUser.id)
 
@@ -220,7 +220,7 @@
           this.jobs.splice(index, 1, locumUser)
         }
       },
-      
+
 			statusStyle (status) {
 				switch (status) {
 					case 'Active':
@@ -241,7 +241,7 @@
 						return
 				}
 			},
-      
+
 		},
   }
 </script>
