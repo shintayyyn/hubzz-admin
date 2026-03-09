@@ -4,12 +4,7 @@
       <!-- class="absolute top-0 bottom-0 right-0 left-0 flex flex-col p-4 md:p-8" -->
       <div class="flex justify-between text-sm my-4 mx-2">
         <div class="cursor-pointer" @click="$emit('close')">
-          <svgicon
-            name="arrow-left-solid"
-            height="32"
-            width="32"
-            class="hover:text-sunglow fill-current"
-          />
+          <svgicon name="arrow-left-solid" height="32" width="32" class="hover:text-sunglow fill-current" />
         </div>
       </div>
 
@@ -25,15 +20,9 @@
 
         <div class="flex my-4 p-4 border rounded-lg text-sm max-w-lg">
           <div class="w-full text-sm">
-            <!-- <AppFormError v-if="formError.length > 0 && showFormError == true" class="w-full mb-4" :formError="formError" /> -->
             <!-- USER PERSONAL DETAILS -->
-            <AppInput 
-              v-model="toPostUser.title"
-              :type="'text'"
-              :label="'Title'"
-              :placeholder="'Mr. / Mrs. / Dr. / etc...'"
-            />
-            <AppInput 
+            <AppInput v-model="toPostUser.title" :type="'text'" :label="'Title'" :placeholder="'Mr. / Mrs. / Dr. / etc...'" />
+            <AppInput
               v-model="toPostUser.first_name"
               :type="'text'"
               :label="'First Name'"
@@ -42,7 +31,7 @@
               required
               @blur="CheckEmptyField(toPostUser.first_name, 'first_name')"
             />
-            <AppInput 
+            <AppInput
               v-model="toPostUser.last_name"
               :type="'text'"
               :label="'Last Name'"
@@ -52,34 +41,35 @@
               @blur="CheckEmptyField(toPostUser.last_name, 'last_name')"
             />
 
-            <AppInput
-              v-if="false"
-              v-model="toPostUser.suffix"
-              :type="'text'"
-              :label="'Suffix'"
-              :placeholder="'Ph.D'"
-            />
+            <AppInput v-if="false" v-model="toPostUser.suffix" :type="'text'" :label="'Suffix'" :placeholder="'Ph.D'" />
             <!-- USER PERSONAL DETAILS ENDS HERE -->
 
             <!-- PRACTICE DETAILS ; IF PRACTICE IS BEING CREATED -->
-            <template v-if=" registeeType == 'customSurgery' || registeeType == 'newPractice'">
-              <AppInput 
+            <template v-if="registeeType == 'customSurgery' || registeeType == 'newPractice'">
+              <AppInput
                 v-model="toPostUser.type"
                 :type="'select'"
                 :label="'Type'"
-                :items="[{label: 'Hub', value: 'Hub'}, {label: 'Stand Alone', value: 'Stand Alone'}, {label: 'Spoke', value: 'Spoke'}]"
+                :items="[
+                  { label: 'Hub', value: 'Hub' },
+                  { label: 'Stand Alone', value: 'Stand Alone' },
+                  { label: 'Spoke', value: 'Spoke' }
+                ]"
                 required
               />
               <template v-if="toPostUser.type == 'Hub'">
-                <AppInput 
+                <AppInput
                   v-model="toPostUser.hub_type"
                   :type="'select'"
                   :label="'Hub Type'"
-                  :items="[{label: 'Type 1', value: 'Type 1'}, {label: 'Type 2', value: 'Type 2'}]"
+                  :items="[
+                    { label: 'Type 1', value: 'Type 1' },
+                    { label: 'Type 2', value: 'Type 2' }
+                  ]"
                   required
                 />
               </template>
-              <AppInput 
+              <AppInput
                 v-model="toPostUser.code"
                 :type="'text'"
                 :label="'Surgery Code'"
@@ -88,7 +78,7 @@
                 required
                 @blur="CheckEmptyField(toPostUser.code, 'code')"
               />
-              <AppInput 
+              <AppInput
                 v-model="toPostUser.name"
                 :type="'text'"
                 :label="'Surgery Name'"
@@ -97,7 +87,7 @@
                 required
                 @blur="CheckEmptyField(toPostUser.name, 'name')"
               />
-              <AppInput 
+              <AppInput
                 v-model="toPostUser.phone_number"
                 :type="'text'"
                 :label="'Phone Number'"
@@ -106,7 +96,7 @@
                 required
                 @blur="CheckEmptyField(toPostUser.phone_number, 'phone_number')"
               />
-              <AppInput 
+              <AppInput
                 v-model="toPostUser.address_line_1"
                 :type="'text'"
                 :label="'Surgery Address - Line 1'"
@@ -115,7 +105,7 @@
                 required
                 @blur="CheckEmptyField(toPostUser.address_line_1, 'address_line_1')"
               />
-              <AppInput 
+              <AppInput
                 v-model="toPostUser.address_line_2"
                 :type="'text'"
                 :label="'Surgery Address - Line 2'"
@@ -124,7 +114,7 @@
                 required
                 @blur="CheckEmptyField(toPostUser.address_line_2, 'address_line_2')"
               />
-              <AppInput 
+              <AppInput
                 v-model="toPostUser.address_line_3"
                 :type="'text'"
                 :label="'Surgery Address - Line 3'"
@@ -133,19 +123,19 @@
                 required
                 @blur="CheckEmptyField(toPostUser.address_line_3, 'address_line_3')"
               />
-              <AppInput 
+              <AppInput
                 v-model="toPostUser.address_line_4"
                 :type="'text'"
                 :label="'Surgery Address - Line 4'"
                 :placeholder="'Surgery Address - Line 4'"
               />
-              <AppInput 
+              <AppInput
                 v-model="toPostUser.address_line_5"
                 :type="'text'"
                 :label="'Surgery Address - Line 5'"
                 :placeholder="'Surgery Address - Line 5'"
               />
-            
+
               <!-- <AppInput 
               v-model="toPostUser.postcode"
               :type="'select'"
@@ -162,7 +152,7 @@
                 @blur="CheckEmptyField(toPostUser.postcode, 'postcode')"
               />
               Coordinate X {{ toPostUser.coordinate_x }} Coordinate Y{{ toPostUser.coordinate_y }}
-              <AppInput 
+              <AppInput
                 v-model="toPostUser.clinical_commissioning_group_name"
                 :type="'text'"
                 :label="'Clinical Commissioning Group'"
@@ -171,12 +161,7 @@
                 @blur="CheckEmptyField(toPostUser.clinical_commissioning_group_name, 'clinical_commissioning_group_name')"
               />
               <!-- BANKING DETAILS -->
-              <AppInput
-                v-model="toPostUser.vat_registered"
-                :type="'single-checkbox'"
-                :name="'vat_registered'"
-                :label="'Are you VAT registered?'"
-              />
+              <AppInput v-model="toPostUser.vat_registered" :type="'single-checkbox'" :name="'vat_registered'" :label="'Are you VAT registered?'" />
               <template v-if="toPostUser.vat_registered">
                 <AppInput
                   v-model="toPostUser.vat_number"
@@ -192,7 +177,7 @@
                   :error="formError.find(item => item.field === 'tax_year_end_date')"
                 />
               </template>
-              <AppInput 
+              <AppInput
                 v-model="toPostUser.account_name"
                 :type="'text'"
                 :label="'Account Name'"
@@ -201,7 +186,7 @@
                 required
                 @blur="CheckEmptyField(toPostUser.account_name, 'account_name')"
               />
-              <AppInput 
+              <AppInput
                 v-model="toPostUser.bank_name"
                 :type="'text'"
                 :label="'Bank Name'"
@@ -210,7 +195,7 @@
                 required
                 @blur="CheckEmptyField(toPostUser.bank_name, 'bank_name')"
               />
-              <AppInput 
+              <AppInput
                 v-model="toPostUser.sort_code"
                 :type="'numberDash'"
                 :label="'Sort Code'"
@@ -220,9 +205,10 @@
                 required
                 @blur="CheckEmptyField(toPostUser.sort_code, 'sort_code')"
               />
-              <AppInput 
+              <!--New app input-->
+              <AppInput
                 v-model="toPostUser.account_number"
-                :type="'text'"
+                :type="'number'"
                 :label="'Account Number'"
                 :placeholder="'Account Number'"
                 :error="formError.find(item => item.field === 'account_number')"
@@ -230,7 +216,7 @@
                 required
                 @blur="CheckEmptyField(toPostUser.account_number, 'account_number')"
               />
-
+              <!-- end -->
               <AppInput
                 v-model="toPostUser.practice_type_id"
                 :type="'multi-checkbox'"
@@ -247,14 +233,18 @@
 
             <!-- PRACTICE USER ROLES ; IF PRACTICE USER FOR A SPECIFIC PRACTICE IS BEING CREATED -->
             <!-- v-if="surgery && surgery.practice_count > 0 && practice && practice.user_count > 0" -->
-          
-            <AppInput 
+
+            <AppInput
               v-if="registeeType !== 'admin'"
               v-model="toPostUser.practice_role"
               :type="'select'"
               :label="'Role'"
               :placeholder="'Select...'"
-              :items="[{label: 'Partner', value: 'Partner'}, {label: 'Practice Manager', value: 'Practice Manager'}, {label: 'Practice Staff', value: 'Practice Staff'}]"
+              :items="[
+                { label: 'Partner', value: 'Partner' },
+                { label: 'Practice Manager', value: 'Practice Manager' },
+                { label: 'Practice Staff', value: 'Practice Staff' }
+              ]"
               :error="formError.find(item => item.field === 'practice_role')"
               required
               @blur="CheckEmptyField(toPostUser.practice_role, 'practice_role')"
@@ -266,9 +256,7 @@
               :type="'select'"
               :label="'Practice User Role'"
               :placeholder="'Select...'"
-              :error="
-                formError.find(item => item.field === 'practice_user_role_id')
-              "
+              :error="formError.find(item => item.field === 'practice_user_role_id')"
               :items="practice_user_roles"
             />
             <!-- PRACTICE USER ROLES ; IF PRACTICE USER FOR A SPECIFIC PRACTICE IS BEING CREATED -->
@@ -293,20 +281,12 @@
               required
               @blur="CheckEmptyField(toPostUser.email, 'email')"
             />
-          
+
             <div class="flex flex-col b rounded-lg">
               <div class="">
-                <button
-                  class="flex p-2 bg-gray-600 hover:bg-gray-700 transition-hover text-white rounded-lg" @click="generateRandomPassword()"
-                >
-                  <span class="px-2 pt-1 mr-1"> Generate Random Password</span> 
-                  <svgicon
-                    name="dices" 
-                    width="28" 
-                    height="28"
-                    color="white"
-                    class="mr-2"
-                  />
+                <button class="flex p-2 bg-gray-600 hover:bg-gray-700 transition-hover text-white rounded-lg" @click="generateRandomPassword()">
+                  <span class="px-2 pt-1 mr-1"> Generate Random Password</span>
+                  <svgicon name="dices" width="28" height="28" color="white" class="mr-2" />
                 </button>
               </div>
               <div>
@@ -318,7 +298,7 @@
                   :error="formError.find(item => item.field === 'password')"
                   required
                   @blur="validatePassword(toPostUser.password, 'password')"
-                />  
+                />
               </div>
               <div>
                 <AppInput
@@ -349,10 +329,7 @@
             />
             <!-- ADMIN ROLES ; IF ADMIN IS BEING CREATED ENDS HERE -->
 
-            <AppButton 
-              :label="'Create'" 
-              @click="checkForm(toPostUser, toPostUser.surgery_id)" 
-            />
+            <AppButton :label="'Create'" @click="checkForm(toPostUser, toPostUser.surgery_id)" />
           </div>
         </div>
       </div>
@@ -361,688 +338,686 @@
 </template>
 
 <script>
-  import debounce from "lodash.debounce"
-  import AppInput from "@/components/Base/AppInput"
-  import AppButton from "@/components/Base/AppButton"
-  import AppSuggestSelect from "@/components/Base/AppSuggestSelect"
-  import AppDate from "@/components/Base/AppDate"
-  import AppFormError from "@/components/Base/AppFormError"
+import debounce from 'lodash.debounce'
+import AppInput from '@/components/Base/AppInput'
+import AppButton from '@/components/Base/AppButton'
+import AppSuggestSelect from '@/components/Base/AppSuggestSelect'
+import AppDate from '@/components/Base/AppDate'
 
-  export default {
-    components: {
-      AppDate,
-      AppInput,
-      AppButton,
-      AppSuggestSelect,
-      AppFormError,
+export default {
+  components: {
+    AppDate,
+    AppInput,
+    AppButton,
+    AppSuggestSelect
+  },
+
+  props: {
+    practice: {
+      type: Object,
+      default: () => null
     },
-    
-    props: {
-      practice: {
-        type: Object,
-        default: () => null,
-      },
-      surgery: {
-        type: Object,
-        default: () => null,
-      },
-      user: {
-        type: Object,
-        default: () => null,
-      },
-      registeeType: {
-        type: String,
-        default: null,
-      },
-      userCount: {
-        type: Number,
-        default: 0,
-      },
-      customSurgery: {
-        type: Object,
-        default: () => null,
-      },
+    surgery: {
+      type: Object,
+      default: () => null
     },
-    
-    data () {
-      return {
-        showFormError: false,
-        formError: [],
-        specificSurgery: [],
-        specificPractice: [],
-        practiceTypes: [],
-        multiple: "true",
-        adminRoles: [],
-        coordinates: "",
-        postCodes: [],
-        practice_user_roles: [],
-        toPostUser: {
-          // USER PERSONAL DETAILS
-          title: "",
-          first_name: "",
-          last_name: "",
-          suffix: "",
+    user: {
+      type: Object,
+      default: () => null
+    },
+    registeeType: {
+      type: String,
+      default: null
+    },
+    userCount: {
+      type: Number,
+      default: 0
+    },
+    customSurgery: {
+      type: Object,
+      default: () => null
+    }
+  },
 
-          // USER CREDENTIALS
-          username: "",
-          email: "",
-          password: "",
-          password_confirmation: "",
+  data() {
+    return {
+      showFormError: false,
+      formError: [],
+      specificSurgery: [],
+      specificPractice: [],
+      practiceTypes: [],
+      multiple: 'true',
+      adminRoles: [],
+      coordinates: '',
+      postCodes: [],
+      practice_user_roles: [],
+      toPostUser: {
+        // USER PERSONAL DETAILS
+        title: '',
+        first_name: '',
+        last_name: '',
+        suffix: '',
 
-          //  PRACTICE DETAILS ; IF PRACTICE IS BEING CREATED
-          practice_role: "",
-          type: "",
-          hub_type: "",
-          code: "",
-          name: "",
-          phone_number: "",
-          address_line_1: "",
-          address_line_2: "",
-          address_line_3: "",
-          address_line_4: "",
-          address_line_5: "",
-          postcode: "",
-          coordinate_x: "",
-          coordinate_y: "",
-          clinical_commissioning_group_name: "",
-          vat_registered: false,
-          vat_number: "",
-          tax_year_end_date: "",
-          account_name: "",
-          bank_name: "",
-          sort_code: "",
-          account_number: "",
-          practice_type_id: [],
-          surgery_id: "",
+        // USER CREDENTIALS
+        username: '',
+        email: '',
+        password: '',
+        password_confirmation: '',
 
-          // FOR ADMIN ROLES ; IF ADMIN IS BEING CREATED
-          roles_id: [],
+        //  PRACTICE DETAILS ; IF PRACTICE IS BEING CREATED
+        practice_role: '',
+        type: '',
+        hub_type: '',
+        code: '',
+        name: '',
+        phone_number: '',
+        address_line_1: '',
+        address_line_2: '',
+        address_line_3: '',
+        address_line_4: '',
+        address_line_5: '',
+        postcode: '',
+        coordinate_x: '',
+        coordinate_y: '',
+        clinical_commissioning_group_name: '',
+        vat_registered: false,
+        vat_number: '',
+        tax_year_end_date: '',
+        account_name: '',
+        bank_name: '',
+        sort_code: '',
+        account_number: '',
+        practice_type_id: [],
+        surgery_id: '',
 
-          // IF PRACTICE USER IS BEING CREATED FOR PRACTICE
-          practice_id: `${this.practice ? this.practice.id : ""}`,
-          practice_user_role_id: '',
-        },
+        // FOR ADMIN ROLES ; IF ADMIN IS BEING CREATED
+        roles_id: [],
 
-        showPasswordFocus: false,
+        // IF PRACTICE USER IS BEING CREATED FOR PRACTICE
+        practice_id: `${this.practice ? this.practice.id : ''}`,
+        practice_user_role_id: ''
+      },
+
+      showPasswordFocus: false
+    }
+  },
+
+  watch: {
+    //new watcher
+    'toPostUser.account_number'(value) {
+      if (value !== null && value !== undefined) {
+        const numeric = String(value)
+          .replace(/\D/g, '')
+          .slice(0, 8)
+        if (numeric !== String(value)) {
+          this.$nextTick(() => {
+            this.toPostUser.account_number = numeric
+          })
+        }
+      }
+    },
+    //end
+    'toPostUser.sort_code'(value) {
+      let final = ''
+      if (value && value.length > 0) {
+        let digit = value.split('-').join('')
+
+        final = digit.match(/.{1,2}/g).join('-')
+        this.toPostUser.sort_code = final
+      } else {
+        return ''
+      }
+    },
+    'toPostUser.username'() {
+      const index = this.formError.findIndex(formError => formError.field === 'username')
+
+      if (this.toPostUser.username) {
+        if (index > -1) {
+          this.formError.splice(index, 1)
+        }
+      } else {
+        if (index === -1) {
+          this.formError.push({
+            field: 'username',
+            message: 'Username is required.',
+            validation: 'required'
+          })
+        }
       }
     },
 
-    watch: {
-      "toPostUser.sort_code" (value) {
-        let final = ''
-        if (value && value.length > 0) {
-          let digit = value.split('-').join('')
+    'toPostUser.email'(value) {
+      const error = this.ValidateEmail(value)
 
-          final = digit.match(/.{1,2}/g).join('-')
-          this.toPostUser.sort_code = final
-        } else {
-          return ''
+      if (error) {
+        let errorExists = this.formError.findIndex(formErr => formErr.field === error.field)
+        if (errorExists < 0) {
+          this.formError.push(error)
         }
-      },
-      "toPostUser.username" () {
-        const index = this.formError.findIndex(formError => formError.field === 'username')
-
-        if (this.toPostUser.username) {
-          if (index > -1) {
-            this.formError.splice(index, 1)
-          }
-        } else {
-          if (index === -1) {
-            this.formError.push({
-              field: 'username',
-              message: 'Username is required.',
-              validation: 'required',
-            })
-          }
+      } else {
+        let index = this.formError.findIndex(item => item.field === 'email')
+        let errors = this.formError.filter(item => item.field === 'email')
+        if (index >= 0) {
+          this.formError.splice(index, errors.length)
         }
-      },
-
-      "toPostUser.email" (value) {
-        const error = this.ValidateEmail(value)
-        
-        if (error) {
-          let errorExists = this.formError.findIndex(formErr => formErr.field === error.field)
-          if (errorExists < 0) {
-            this.formError.push(error)
-          }
-        } else {
-          let index = this.formError.findIndex(item => item.field === "email")
-          let errors = this.formError.filter(item => item.field === "email")
-          if (index >= 0) {
-            this.formError.splice(index, errors.length)
-          }
-        }
-      },
-      "toPostUser.password" (value) {
-        if (value && value.length < 6) {
-          let errorExists = this.formError.findIndex(formErr => formErr.field === "password")
-          if(errorExists < 0) {
-            this.formError.push({
-              field: "password",
-              message: "Password Must Be Atleast 6 Characters"
-            })
-          }
-        } else {
-          let index = this.formError.findIndex(
-            item => item.field === "password"
-          )
-          let error = this.formError.filter(
-            item => item.field === "password"
-          )
-            this.formError.splice(index, error.length)
-        }
-        if(this.toPostUser.password_confirmation){
-          const error = this.ValidateSamePassword(value, this.toPostUser.password_confirmation)
-          if (error) {
-            let errorExists = this.formError.findIndex(formErr => formErr.field === error.field)
-            if (errorExists < 0) {
-              this.formError.push(error)
-            }
-          } else {
-            let confirm_index = this.formError.findIndex(
-              item => item.field === "password_confirmation"
-            )
-            let password_index = this.formError.findIndex(
-              item => item.field === "password"
-            )
-            let errors = this.formError.filter(
-              item => ["password", "password_confirmation"].includes(item.field) 
-            )
-            if (confirm_index >= 0) {
-              this.formError.splice(confirm_index, errors.length)
-              this.formError.splice(password_index, errors.length)
-            }
-          }
-        }
-      },
-      "toPostUser.password_confirmation" (value) {
-        const error = this.ValidateSamePassword(this.toPostUser.password, value)
-        if (error) {
-          let errorExists = this.formError.findIndex(formErr => formErr.field === error.field)
-          if (errorExists < 0) {
-            this.formError.push(error)
-          }
-        } else {
-            let confirm_index = this.formError.findIndex(
-              item => item.field === "password_confirmation"
-            )
-            let password_index = this.formError.findIndex(
-              item => item.field === "password"
-            )
-            let errors = this.formError.filter(
-              item => ["password", "password_confirmation"].includes(item.field) 
-            )
-            if (confirm_index >= 0) {
-              this.formError.splice(confirm_index, errors.length)
-              this.formError.splice(password_index, errors.length)
-            }
-        }
-      },
-      "toPostUser.postcode" (value) {
-        this.$axios.$get(`/api/v1/postcode-coordinates?search=${value}`)
-        .then(res => {
-          this.toPostUser.coordinate_x  = res.data.postcode_coordinates[0] ? res.data.postcode_coordinates[0].coordinate_x : null
-          this.toPostUser.coordinate_y = res.data.postcode_coordinates[0] ? res.data.postcode_coordinates[0].coordinate_y : null
-        })
-      },
+      }
     },
+    'toPostUser.password'(value) {
+      if (value && value.length < 6) {
+        let errorExists = this.formError.findIndex(formErr => formErr.field === 'password')
+        if (errorExists < 0) {
+          this.formError.push({
+            field: 'password',
+            message: 'Password Must Be Atleast 6 Characters'
+          })
+        }
+      } else {
+        let index = this.formError.findIndex(item => item.field === 'password')
+        let error = this.formError.filter(item => item.field === 'password')
+        this.formError.splice(index, error.length)
+      }
+      if (this.toPostUser.password_confirmation) {
+        const error = this.ValidateSamePassword(value, this.toPostUser.password_confirmation)
+        if (error) {
+          let errorExists = this.formError.findIndex(formErr => formErr.field === error.field)
+          if (errorExists < 0) {
+            this.formError.push(error)
+          }
+        } else {
+          let confirm_index = this.formError.findIndex(item => item.field === 'password_confirmation')
+          let password_index = this.formError.findIndex(item => item.field === 'password')
+          let errors = this.formError.filter(item => ['password', 'password_confirmation'].includes(item.field))
+          if (confirm_index >= 0) {
+            this.formError.splice(confirm_index, errors.length)
+            this.formError.splice(password_index, errors.length)
+          }
+        }
+      }
+    },
+    'toPostUser.password_confirmation'(value) {
+      const error = this.ValidateSamePassword(this.toPostUser.password, value)
+      if (error) {
+        let errorExists = this.formError.findIndex(formErr => formErr.field === error.field)
+        if (errorExists < 0) {
+          this.formError.push(error)
+        }
+      } else {
+        let confirm_index = this.formError.findIndex(item => item.field === 'password_confirmation')
+        let password_index = this.formError.findIndex(item => item.field === 'password')
+        let errors = this.formError.filter(item => ['password', 'password_confirmation'].includes(item.field))
+        if (confirm_index >= 0) {
+          this.formError.splice(confirm_index, errors.length)
+          this.formError.splice(password_index, errors.length)
+        }
+      }
+    },
+    'toPostUser.postcode'(value) {
+      this.$axios.$get(`/api/v1/postcode-coordinates?search=${value}`).then(res => {
+        this.toPostUser.coordinate_x = res.data.postcode_coordinates[0] ? res.data.postcode_coordinates[0].coordinate_x : null
+        this.toPostUser.coordinate_y = res.data.postcode_coordinates[0] ? res.data.postcode_coordinates[0].coordinate_y : null
+      })
+    }
+  },
 
-    async created () {
-      console.log('registee type', this.registeeType)
-      if(this.surgery){
-        this.toPostUser.surgery_id = this.surgery.id
-        this.toPostUser.practice_role = 'Partner'
-        this.toPostUser.type = 'Hub'
-        this.toPostUser.hub_type = 'Type 1'
-        this.toPostUser.code = this.surgery.code
-        this.toPostUser.name = this.surgery.name
-        this.toPostUser.phone_number = this.surgery.phone_number
-        this.toPostUser.address_line_1 = this.surgery.address_line_1
-        this.toPostUser.address_line_2 = this.surgery.address_line_2
-        this.toPostUser.address_line_3 = this.surgery.address_line_3
-        this.toPostUser.address_line_4 = this.surgery.address_line_4
-        this.toPostUser.address_line_5 = this.surgery.address_line_5
-        this.toPostUser.postcode = this.surgery.postcode
-        this.toPostUser.coordinate_x = ""
-        this.toPostUser.coordinate_y = ""
-        this.toPostUser.clinical_commissioning_group_name = this.surgery.clinical_commissioning_group_name
+  async created() {
+    console.log('registee type', this.registeeType)
+    if (this.surgery) {
+      this.toPostUser.surgery_id = this.surgery.id
+      this.toPostUser.practice_role = 'Partner'
+      this.toPostUser.type = 'Hub'
+      this.toPostUser.hub_type = 'Type 1'
+      this.toPostUser.code = this.surgery.code
+      this.toPostUser.name = this.surgery.name
+      this.toPostUser.phone_number = this.surgery.phone_number
+      this.toPostUser.address_line_1 = this.surgery.address_line_1
+      this.toPostUser.address_line_2 = this.surgery.address_line_2
+      this.toPostUser.address_line_3 = this.surgery.address_line_3
+      this.toPostUser.address_line_4 = this.surgery.address_line_4
+      this.toPostUser.address_line_5 = this.surgery.address_line_5
+      this.toPostUser.postcode = this.surgery.postcode
+      this.toPostUser.coordinate_x = ''
+      this.toPostUser.coordinate_y = ''
+      this.toPostUser.clinical_commissioning_group_name = this.surgery.clinical_commissioning_group_name
 
-        await this.$axios
-        .$post(`/api/v1/postcode-to-coordinates`,{ postcode: this.surgery.postcode})
+      await this.$axios
+        .$post(`/api/v1/postcode-to-coordinates`, { postcode: this.surgery.postcode })
         .then(res => {
-          this.toPostUser.coordinate_x = res.data.postcode_coordinate.coordinate_x,
-          this.toPostUser.coordinate_y = res.data.postcode_coordinate.coordinate_y
+          (this.toPostUser.coordinate_x = res.data.postcode_coordinate.coordinate_x),
+            (this.toPostUser.coordinate_y = res.data.postcode_coordinate.coordinate_y)
         })
         .catch(err => {
-          this.$store.commit("SET_NOTIFICATION", {
+          this.$store.commit('SET_NOTIFICATION', {
             enabled: true,
-            status: "danger",
+            status: 'danger',
             text: err.response.data.message
           })
         })
-      }
+    }
 
-      if(this.practice && this.userCount > 0) {
-        await this.$axios
+    if (this.practice && this.userCount > 0) {
+      await this.$axios
         .$get(`/api/v1/admin/practices/${this.practice.id}/practice-roles`)
         .then(res => {
           res.data.roles.forEach(role => {
-            this.practice_user_roles.push({ label: role.name, value: role.id})
+            this.practice_user_roles.push({ label: role.name, value: role.id })
           })
         })
         .catch(err => {
-          this.$store.commit("SET_NOTIFICATION", {
+          this.$store.commit('SET_NOTIFICATION', {
             enabled: true,
-            status: "danger",
+            status: 'danger',
             text: err.response.data.message
           })
         })
-      }
-      await this.$axios
-        .$get(`/api/v1/admin/practice-types`)
-        .then(res => {
-          this.practiceTypes = []
-          res.data.practice_types.forEach(item => {
-            this.practiceTypes.push({ value: item.id, label: item.name })
-          })
+    }
+    await this.$axios
+      .$get(`/api/v1/admin/practice-types`)
+      .then(res => {
+        this.practiceTypes = []
+        res.data.practice_types.forEach(item => {
+          this.practiceTypes.push({ value: item.id, label: item.name })
         })
-        .catch(err => {
-          this.$store.commit("SET_NOTIFICATION", {
-            enabled: true,
-            status: "danger",
-            text: err.response.data.message
-          })
-        })
-      await this.$axios.$get(`/api/v1/admin/admin-roles`).then(res => {
-        res.data.roles.forEach(item => {
-          this.adminRoles.push({label: item.name, value: item.id})
-        })
-        // eslint-disable-next-line no-unused-vars
-        let default_role = res.data.roles.find((item, index) => index === 0)
       })
+      .catch(err => {
+        this.$store.commit('SET_NOTIFICATION', {
+          enabled: true,
+          status: 'danger',
+          text: err.response.data.message
+        })
+      })
+    await this.$axios.$get(`/api/v1/admin/admin-roles`).then(res => {
+      res.data.roles.forEach(item => {
+        this.adminRoles.push({ label: item.name, value: item.id })
+      })
+      // eslint-disable-next-line no-unused-vars
+      let default_role = res.data.roles.find((item, index) => index === 0)
+    })
 
     await this.$axios.$get(`/api/v1/postcode-coordinates`).then(res => {
-        res.data.postcode_coordinates.forEach(item => {
-          this.postCodes.push({value: item.postcode, label: item.postcode})
-        })
-        // let default_post_code = res.data.roles.find((item, index) => index === 0)
+      res.data.postcode_coordinates.forEach(item => {
+        this.postCodes.push({ value: item.postcode, label: item.postcode })
       })
-      // console.log('practice details', this.toPostUser)
-      // if (this.practice) {
-      //   console.log("Practice to be created is a spoke");
-      // }
+      // let default_post_code = res.data.roles.find((item, index) => index === 0)
+    })
+    // console.log('practice details', this.toPostUser)
+    // if (this.practice) {
+    //   console.log("Practice to be created is a spoke");
+    // }
+  },
 
+  methods: {
+    //new logic for account number input validation
+    onAccountNumberInput(event) {
+      const numeric = String(event).replace(/\D/g, '')
+      this.toPostUser.account_number = numeric.slice(0, 8)
     },
 
-    methods: {
-      validatePassword (field, fieldName) {
-        this.CheckEmptyField(field, fieldName)
-        this.ValidateSamePassword(this.toPostUser.password, this.toPostUser.password_confirmation)
-      },
-      
-      getPostCodes: debounce(function (input) {
-        const params = {
-          postcode: input
-        }
-        this.$axios.$post(`/api/v1/postcode-to-coordinates`, { params })
-      }, 250),
+    onlyNumbers(event) {
+      const charCode = event.which ?? event.keyCode
+      if (charCode < 48 || charCode > 57) {
+        event.preventDefault()
+      }
+    },
+    //end
+    validatePassword(field, fieldName) {
+      this.CheckEmptyField(field, fieldName)
+      this.ValidateSamePassword(this.toPostUser.password, this.toPostUser.password_confirmation)
+    },
 
-      getQuery () {
-        const query = {
-          ...this.$route.query
-        }
-        const offset = parseInt(query.page) * 10 - 10
-        return offset
-      },
+    getPostCodes: debounce(function(input) {
+      const params = {
+        postcode: input
+      }
+      this.$axios.$post(`/api/v1/postcode-to-coordinates`, { params })
+    }, 250),
 
-      getPractices () {
-        this.$store.dispatch("practices/fetchPractices", {
-          limit: 10,
-          status: 'Inactive',
-          order_by: "created_at:desc"
-        })
-      },
+    getQuery() {
+      const query = {
+        ...this.$route.query
+      }
+      const offset = parseInt(query.page) * 10 - 10
+      return offset
+    },
 
-      getAdminUsers () {
-        this.$store.dispatch("adminusers/fetchAdminUsersCount", {})
-        this.$store.dispatch("adminusers/fetchAdminUsers", {
-          limit: 10
-        })
-        this.$store.commit("adminusers/ADD_ADMIN_USER", this.toPostUser)
-      },
+    getPractices() {
+      this.$store.dispatch('practices/fetchPractices', {
+        limit: 10,
+        status: 'Inactive',
+        order_by: 'created_at:desc'
+      })
+    },
 
-      errorMessage (field) {
-        if (this.formError.find(error => error.field === field.toString())) {
-          let error = this.formError.find(
-            error => error.field === field.toString()
-          )
-          return error.message.charAt(0).toUpperCase() + error.message.slice(1).replace(/_/g, " ")
-        }
-        return
-      },
+    getAdminUsers() {
+      this.$store.dispatch('adminusers/fetchAdminUsersCount', {})
+      this.$store.dispatch('adminusers/fetchAdminUsers', {
+        limit: 10
+      })
+      this.$store.commit('adminusers/ADD_ADMIN_USER', this.toPostUser)
+    },
 
-      checkForm: function (userInfo, surgID) {
-        this.formError = []
+    errorMessage(field) {
+      if (this.formError.find(error => error.field === field.toString())) {
+        let error = this.formError.find(error => error.field === field.toString())
+        return error.message.charAt(0).toUpperCase() + error.message.slice(1).replace(/_/g, ' ')
+      }
+      return
+    },
 
-        let notRequired = [
-          "title",
-          "suffix",
-          "vat_registered",
-        ]
+    checkForm: function(userInfo, surgID) {
+      this.formError = []
 
-        if (
-          (this.registeeType === 'customSurgery' || this.registeeType === 'newPractice')
-          && ["false", false].includes(this.toPostUser.vat_registered)
-        ) {
-          notRequired.push("vat_number", "tax_year_end_date")
-        }
+      let notRequired = ['title', 'suffix', 'vat_registered']
 
-        if (this.registeeType !== 'admin') {
-          notRequired.push("roles_id", "address_line_4", "address_line_5",)
-        }
+      if (
+        (this.registeeType === 'customSurgery' || this.registeeType === 'newPractice') &&
+        ['false', false].includes(this.toPostUser.vat_registered)
+      ) {
+        notRequired.push('vat_number', 'tax_year_end_date')
+      }
 
-        if(this.registeeType !== 'practiceUser'){
-          notRequired.push("practice_user_role_id", "practice_id")
-        }
+      if (this.registeeType !== 'admin') {
+        notRequired.push('roles_id', 'address_line_4', 'address_line_5')
+      }
 
-        if (this.surgery && this.surgery.practice_count >= 1) {
-          notRequired.push("hub_type")
-        }
-        
-        if(this.registeeType === 'customSurgery') {
-          notRequired.push("surgery_id", "hub_type")
-        }
+      if (this.registeeType !== 'practiceUser') {
+        notRequired.push('practice_user_role_id', 'practice_id')
+      }
 
-        if (this.registeeType === 'admin' || this.registeeType === 'practiceUser'){
-          notRequired.push(
-            "practice_type_id",
-            "surgery_id", 
-            "practice_role",
-            "type",
-            "hub_type",
-            "code",
-            "name",
-            "phone_number",
-            "address_line_1",
-            "address_line_2",
-            "address_line_3",
-            "address_line_4",
-            "address_line_5",
-            "postcode",
-            "coordinate_x",
-            "coordinate_y",
-            "clinical_commissioning_group_name",
-            "vat_registered",
-            "vat_number",
-            "tax_year_end_date",
-            "account_name",
-            "bank_name",
-            "sort_code",
-            "account_number"
-          )
-        }
+      if (this.surgery && this.surgery.practice_count >= 1) {
+        notRequired.push('hub_type')
+      }
 
-        if (this.registeeType === 'admin') {
-          notRequired.push("username")
-        }
+      if (this.registeeType === 'customSurgery') {
+        notRequired.push('surgery_id', 'hub_type')
+      }
 
-        this.Validate(this.toPostUser, notRequired)
-
-        if (this.formError.length === 0) {
-          this.showFormError = false
-
-          this.toPostUserInfo(userInfo, surgID)
-        } else {
-          this.showFormError = true
-
-          console.log('formErrorasd ', this.formError)
-
-          this.$nextTick(() => { // here
-            console.log('scroll up ', this.formError)
-            console.log(this.$refs.modalContainer)
-            this.$refs.modalContainer.scrollTop = 0
-          })
-
-          if (this.registeeType === 'customSurgery') {
-            this.$emit('formError', this.formError)
-          }
-        }
-      },
-
-      uncheckPractice (value) {
-        this.toPostUser.practice_type_id = this.toPostUser.practice_type_id.filter(
-          id => id != value
+      if (this.registeeType === 'admin' || this.registeeType === 'practiceUser') {
+        notRequired.push(
+          'practice_type_id',
+          'surgery_id',
+          'practice_role',
+          'type',
+          'hub_type',
+          'code',
+          'name',
+          'phone_number',
+          'address_line_1',
+          'address_line_2',
+          'address_line_3',
+          'address_line_4',
+          'address_line_5',
+          'postcode',
+          'coordinate_x',
+          'coordinate_y',
+          'clinical_commissioning_group_name',
+          'vat_registered',
+          'vat_number',
+          'tax_year_end_date',
+          'account_name',
+          'bank_name',
+          'sort_code',
+          'account_number'
         )
-      },
+      }
 
-      uncheckRole (value) {
-        this.toPostUser.roles_id = this.toPostUser.roles_id.filter(
-          id => id != value
-        )
-      },
+      if (this.registeeType === 'admin') {
+        notRequired.push('username')
+      }
 
-      togglePassword (){
-        if (this.passwordToggle) {
-          return 'text'
-        } else {
-          return 'password'
+      this.Validate(this.toPostUser, notRequired)
+
+      if (this.formError.length === 0) {
+        this.showFormError = false
+
+        this.toPostUserInfo(userInfo, surgID)
+      } else {
+        this.showFormError = true
+
+        console.log('formErrorasd ', this.formError)
+
+        this.$nextTick(() => {
+          // here
+          console.log('scroll up ', this.formError)
+          console.log(this.$refs.modalContainer)
+          this.$refs.modalContainer.scrollTop = 0
+        })
+
+        if (this.registeeType === 'customSurgery') {
+          this.$emit('formError', this.formError)
         }
-      },
+      }
+    },
 
-      generateRandomPassword () {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!&*'.split('')
-        const password = Array(6).fill().map(() => chars[Math.floor(Math.random() * chars.length)]).join('')
-        this.toPostUser.password = password
-        this.toPostUser.password_confirmation = password
-      },
+    uncheckPractice(value) {
+      this.toPostUser.practice_type_id = this.toPostUser.practice_type_id.filter(id => id != value)
+    },
 
-      async getPracticeTypes () {
-        await this.$axios.$get(`/api/v1/admin/practice-types`).then(res => {
-          this.practiceTypes = []
-          res.data.practice_types.forEach(item => {
-            this.practiceTypes.push({ label: item.name, value: item.id })
-          })
+    uncheckRole(value) {
+      this.toPostUser.roles_id = this.toPostUser.roles_id.filter(id => id != value)
+    },
+
+    togglePassword() {
+      if (this.passwordToggle) {
+        return 'text'
+      } else {
+        return 'password'
+      }
+    },
+
+    generateRandomPassword() {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!&*'.split('')
+      const password = Array(6)
+        .fill()
+        .map(() => chars[Math.floor(Math.random() * chars.length)])
+        .join('')
+      this.toPostUser.password = password
+      this.toPostUser.password_confirmation = password
+    },
+
+    async getPracticeTypes() {
+      await this.$axios.$get(`/api/v1/admin/practice-types`).then(res => {
+        this.practiceTypes = []
+        res.data.practice_types.forEach(item => {
+          this.practiceTypes.push({ label: item.name, value: item.id })
         })
-        console.log("practice types", this.practiceTypes)
-      },
-      
-      async getAdminRoles () {
-        await this.$axios.$get(`/api/v1/admin/admin-roles`).then(res => {
-          this.adminRoles = []
-          res.data.roles.forEach(item => {
-            this.adminRoles.push({ label: item.name, value: item.id})
-          })
+      })
+      console.log('practice types', this.practiceTypes)
+    },
+
+    async getAdminRoles() {
+      await this.$axios.$get(`/api/v1/admin/admin-roles`).then(res => {
+        this.adminRoles = []
+        res.data.roles.forEach(item => {
+          this.adminRoles.push({ label: item.name, value: item.id })
         })
-      },
+      })
+    },
 
-      async toPostUserInfo (toPostUser) {
-        try {
-          if (this.registeeType === 'newPractice' || this.registeeType === 'customSurgery') {
-            if (!toPostUser.coordinate_x || !toPostUser.coordinate_y) {
-              const response = await this.$axios.post(`/api/v1/postcode-to-coordinates`,{
-                postcode: toPostUser.postcode,
-              })
-
-              const postcodeCoordinate = response.data.data.postcode_coordinate
-
-              const {
-                coordinate_x: coordinateX,
-                coordinate_y: coordinateY,
-              } = postcodeCoordinate
-              
-              toPostUser.coordinate_x = coordinateX
-              toPostUser.coordinate_y = coordinateY
-            }
-
-            await this.createPractice(toPostUser)
-          } else if (this.registeeType === 'practiceUser') {
-            await this.createPracticeUser(toPostUser)
-          } else if (this.registeeType === 'admin') {
-            await this.createAdminUser(toPostUser)
-          }
-        } catch (err) {
-          console.log('err', err.response || err)
-
-          this.showFormError = true
-
-          let message = null
-
-          if (err.response) {
-            if (err.response.status === 400 && err.response.data.error_messages) {
-              this.formError = err.response.data.error_messages
-            } else {
-              message = err.response.data.message
-            }
-          } else if (err.request) {
-            message = 'Something went wrong!'
-          } else {
-            message = err.message
-          }
-
-          if (message) {
-            this.$store.commit('SET_NOTIFICATION', {
-              enabled: true,
-              status: 'danger',
-              text: message,
+    async toPostUserInfo(toPostUser) {
+      try {
+        if (this.registeeType === 'newPractice' || this.registeeType === 'customSurgery') {
+          if (!toPostUser.coordinate_x || !toPostUser.coordinate_y) {
+            const response = await this.$axios.post(`/api/v1/postcode-to-coordinates`, {
+              postcode: toPostUser.postcode
             })
+
+            const postcodeCoordinate = response.data.data.postcode_coordinate
+
+            const { coordinate_x: coordinateX, coordinate_y: coordinateY } = postcodeCoordinate
+
+            toPostUser.coordinate_x = coordinateX
+            toPostUser.coordinate_y = coordinateY
           }
 
-          if (this.registeeType === 'customSurgery') {
-            this.$emit('formError', this.formError)
-          }
+          await this.createPractice(toPostUser)
+        } else if (this.registeeType === 'practiceUser') {
+          await this.createPracticeUser(toPostUser)
+        } else if (this.registeeType === 'admin') {
+          await this.createAdminUser(toPostUser)
+        }
+      } catch (err) {
+        console.log('err', err.response || err)
 
-          this.$nextTick(() => {
-            this.$refs.modalContainer.scrollTop = 0
+        this.showFormError = true
+
+        let message = null
+
+        if (err.response) {
+          if (err.response.status === 400 && err.response.data.error_messages) {
+            this.formError = err.response.data.error_messages
+          } else {
+            message = err.response.data.message
+          }
+        } else if (err.request) {
+          message = 'Something went wrong!'
+        } else {
+          message = err.message
+        }
+
+        if (message) {
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'danger',
+            text: message
           })
         }
-      },
 
-      async createPractice (data) {
-        await this.$axios.post(`/api/v1/admin/practices`, data)
-
-        this.$router.push('/practices')
-        
-        this.$store.commit('SET_NOTIFICATION', {
-          enabled: true,
-          status: 'success',
-          text: 'New practice created.',
-        })
-
-        this.$emit('userCreated')
-
-        this.$emit('updatePractices')
-
-        await this.getPractices()
-      },
-
-      async createPracticeUser (data) {
-        const response = await this.$axios.post(`/api/v1/admin/practice-users`, data)
-
-        const practiceUser = response.data.data.user
-
-        this.$emit('userCreated', practiceUser)
-
-        this.$emit('close')
-
-        this.$store.commit('SET_NOTIFICATION', {
-          enabled: true,
-          status: 'success',
-          text: 'Added new user.',
-        })
-      },
-
-      async createAdminUser (data) {
-        await this.$axios.post(`/api/v1/admin/admin-users`, data)
-
-        this.$store.commit('SET_NOTIFICATION', {
-          enabled: true,
-          status: 'success',
-          text: 'New admin account successfully created.',
-        })
-
-        this.getAdminUsers()
-
-        this.$emit('userCreated')
-
-        this.$emit('close')
-      },
-
-      getStyle (type) {
-        console.log('style', type)
-        switch(type){
-          case 'admin':
-            return 'new-user-modal'
-          case 'newPractice':
-            return this.practice ? 'practice-user-modal-small shadow-lg' : 'practice-user-modal shadow-lg'
-          case 'practiceUser':
-            return 'practice-user-modal'
-          case 'customSurgery':
-            return 'custom-surgery'
-          default: 
-            return
+        if (this.registeeType === 'customSurgery') {
+          this.$emit('formError', this.formError)
         }
+
+        this.$nextTick(() => {
+          this.$refs.modalContainer.scrollTop = 0
+        })
+      }
+    },
+
+    async createPractice(data) {
+      await this.$axios.post(`/api/v1/admin/practices`, data)
+
+      this.$router.push('/practices')
+
+      this.$store.commit('SET_NOTIFICATION', {
+        enabled: true,
+        status: 'success',
+        text: 'New practice created.'
+      })
+
+      this.$emit('userCreated')
+
+      this.$emit('updatePractices')
+
+      await this.getPractices()
+    },
+
+    async createPracticeUser(data) {
+      const response = await this.$axios.post(`/api/v1/admin/practice-users`, data)
+
+      const practiceUser = response.data.data.user
+
+      this.$emit('userCreated', practiceUser)
+
+      this.$emit('close')
+
+      this.$store.commit('SET_NOTIFICATION', {
+        enabled: true,
+        status: 'success',
+        text: 'Added new user.'
+      })
+    },
+
+    async createAdminUser(data) {
+      await this.$axios.post(`/api/v1/admin/admin-users`, data)
+
+      this.$store.commit('SET_NOTIFICATION', {
+        enabled: true,
+        status: 'success',
+        text: 'New admin account successfully created.'
+      })
+
+      this.getAdminUsers()
+
+      this.$emit('userCreated')
+
+      this.$emit('close')
+    },
+
+    getStyle(type) {
+      console.log('style', type)
+      switch (type) {
+        case 'admin':
+          return 'new-user-modal'
+        case 'newPractice':
+          return this.practice ? 'practice-user-modal-small shadow-lg' : 'practice-user-modal shadow-lg'
+        case 'practiceUser':
+          return 'practice-user-modal'
+        case 'customSurgery':
+          return 'custom-surgery'
+        default:
+          return
       }
     }
   }
+}
 </script>
 
 <style>
+.new-user-modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin-right: 0%;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  border-left: solid 2px #ffc72c;
+  transition: all 0.3s ease-in-out;
+  background-color: white;
+  z-index: 512;
+}
+
+.practice-user-modal,
+.practice-user-modal-small {
+  background-color: orange;
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin-right: 0%;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  border-left: solid 2px #ffc72c;
+  transition: all 0.3s ease-in-out;
+  background-color: white;
+  z-index: 512;
+}
+
+.custom-surgery {
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin-right: 0%;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  border-left: solid 2px #ffc72c;
+  transition: all 0.3s ease-in-out;
+  background-color: white;
+  z-index: 512;
+}
+
+@media screen and (min-width: 1200px) {
   .new-user-modal {
-    position: fixed;
-    top: 0;
-    right: 0;
-    margin-right: 0%;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    border-left: solid 2px #ffc72c;
-    transition: all 0.3s ease-in-out;
-    background-color: white;
-    z-index: 512;
+    width: 70%;
   }
-
-  .practice-user-modal,
+  .practice-user-modal {
+    width: 70%;
+  }
+  .custom-surgery {
+    width: 70%;
+  }
   .practice-user-modal-small {
-    background-color: orange;
-    position: fixed;
-    top: 0;
-    right: 0;
-    margin-right: 0%;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    border-left: solid 2px #ffc72c;
-    transition: all 0.3s ease-in-out;
-    background-color: white;
-    z-index: 512;
+    width: 70%;
   }
-
-  .custom-surgery{
-    position: fixed;
-    top: 0;
-    right: 0;
-    margin-right: 0%;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    border-left: solid 2px #ffc72c;
-    transition: all 0.3s ease-in-out;
-    background-color: white;
-    z-index: 512;
-  }
-
-  @media screen and (min-width: 1200px) {
-    .new-user-modal {
-      width: 70%;
-    }
-    .practice-user-modal {
-      width: 70%;
-    }
-    .custom-surgery {
-      width: 70%;
-    }
-    .practice-user-modal-small {
-      width: 70%;
-    }
-  }
+}
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <PracticeSessionModal :job_part="job_part" />
+    <PracticeSessionModal :jobPart="job_part" />
   </div>
 </template>
 
