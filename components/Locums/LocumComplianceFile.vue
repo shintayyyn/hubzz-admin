@@ -190,6 +190,7 @@
                     v-model="toPutLocumDetailCompliance.expired_at"
                     :disabled="expiration_not_applicable === false ? false : true"
                     :isDisabled="expiration_not_applicable === false ? false : true"
+                    isAfter
                     :name="'expired_at'"
                     :label="'Change Expiration Date'"
                     :error="formError.find(item => item.field === 'expired_at')"
