@@ -110,6 +110,7 @@ export default {
           // flex: '1 0 0',
           // width: 200,
         },
+        //new
         {
           name: 'Role/s',
           // dataIndex: "admin_detail.role.name",
