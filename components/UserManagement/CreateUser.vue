@@ -718,11 +718,13 @@ export default {
       if (this.registeeType !== 'admin') {
         notRequired.push('roles_id', 'address_line_4', 'address_line_5')
       }
-
+      //fix not required
       if (this.registeeType !== 'practiceUser') {
         notRequired.push('practice_user_role_id', 'practice_id')
+      } else {
+        notRequired.push('practice_user_role_id')
       }
-
+      //end
       if (this.surgery && this.surgery.practice_count >= 1) {
         notRequired.push('hub_type')
       }
@@ -893,6 +895,11 @@ export default {
     },
 
     async createPractice(data) {
+      //new cleanup logic
+      if (!data.practice_user_role_id) {
+        delete data.practice_user_role_id
+      }
+      //end
       await this.$axios.post(`/api/v1/admin/practices`, data)
 
       this.$router.push('/practices')
