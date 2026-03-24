@@ -136,7 +136,7 @@
                 :placeholder="'Surgery Address - Line 5'"
               />
 
-              <!-- <AppInput 
+              <!-- <AppInput
               v-model="toPostUser.postcode"
               :type="'select'"
               :label="'Post Code'"
@@ -866,6 +866,8 @@ export default {
 
         if (err.response) {
           if (err.response.status === 400 && err.response.data.error_messages) {
+            this.formError = err.response.data.error_messages
+          } else if (err.response.status === 400 && err.response.data.error_messages) {
             this.formError = err.response.data.error_messages
           } else {
             message = err.response.data.message
