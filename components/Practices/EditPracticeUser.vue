@@ -109,10 +109,14 @@
             :label="'Practice User Role'"
             :items="practice_user_roles"
             :error="formError.find(item => item.field === 'practice_user_role_id')"
+            :disabled="isPracticeUserAdmin"
             required
             @blur="CheckEmptyField(toPutPracticeUser.practice_user_role_id, 'practice_user_role_id')"
           />
 
+          <p v-if="isPracticeUserAdmin" class="text-xs text-gray-500 -mt-3 mb-3">
+            Practice User Role cannot be changed for Practice User Admin.
+          </p>
           <p class="flex py-1 font-bold">
             Sign-Up verified by e-mail
           </p>
@@ -259,12 +263,7 @@
           <br />
 
           <div
-            v-if="
-              practiceUser &&
-                practiceUser.status !== 'Deleted' &&
-                practiceUser.practice_role_name !== 'Practice User Admin' &&
-                authAdminPermissions.includes('Delete Practice User')
-            "
+            v-if="practiceUser && practiceUser.status !== 'Deleted' && !isPracticeUserAdmin && authAdminPermissions.includes('Delete Practice User')"
             class="flex my-2"
           >
             <AppButton
@@ -378,6 +377,14 @@ export default {
   computed: {
     authAdminPermissions() {
       return this.$store.getters['permissions']
+    },
+    isPracticeUserAdmin() {
+      return (
+        this.practiceUser &&
+        this.practiceUser.practice_detail &&
+        this.practiceUser.practice_detail.role &&
+        this.practiceUser.practice_detail.role.name === 'Practice User Admin'
+      )
     }
   },
 
@@ -483,6 +490,18 @@ export default {
         res.data.roles.forEach(role => {
           this.practice_user_roles.push({ label: role.name, value: role.id })
         })
+
+        // ← if Practice User Admin, add it manually so it shows in the disabled select
+        if (
+          this.practiceUser.practice_detail &&
+          this.practiceUser.practice_detail.role &&
+          this.practiceUser.practice_detail.role.name === 'Practice User Admin'
+        ) {
+          this.practice_user_roles.unshift({
+            label: this.practiceUser.practice_detail.role.name,
+            value: this.practiceUser.practice_detail.role.id
+          })
+        }
       })
       .catch(err => {
         this.$store.commit('SET_NOTIFICATION', {
