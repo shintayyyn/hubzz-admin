@@ -85,7 +85,7 @@ export default {
       params: {},
       search: '',
 
-      // itemCount:'',
+      //itemCount:'',
       // adminUsers:{},
       adminCreate: true,
       adminAccountId: '',
@@ -236,10 +236,13 @@ export default {
       if (this.adminAccountId) {
         await this.$axios
           .$delete(`/api/v1/admin/admin-users/${this.adminAccountId}`)
-          .then((res) => {
-            console.log(res)
-            this.$store.getters['adminusers/getAdminUsers']
-            this.$emit('close')
+          .then(async res => {
+            await this.$store.dispatch('adminusers/fetchAdminUsers', {
+              limit: 10,
+              offset: this.getQuery(),
+              search: this.search
+            })
+
             this.$store.commit('SET_NOTIFICATION', {
               enabled: true,
               status: 'success',

@@ -50,26 +50,32 @@
             <div class="m-1 w-1/2 flex flex-no-wrap justify-end">
               <span
                 class="mr-1"
+                :class="selectedYear == yearLists[0] && selectedMonth == 1 ? 'cursor-not-allowed' : 'cursor-pointer'"
+                @click="adjustMonth('previous')"
+              >
+                <svgicon name="arrow-left" height="12" width="12" :color="selectedYear == yearLists[0] && selectedMonth == 1 ? 'gray' : ''" />
+              </span>
+              <span
+                class="ml-1"
                 :class="
-                  selectedYear.toString() === $moment().format('YYYY') && selectedMonth.toString() === $moment().format('M') && isAfter
+                  (isBefore && selectedYear == $moment().format('YYYY') && parseInt(selectedMonth) == parseInt($moment().format('M'))) ||
+                    (selectedYear == yearLists[yearLists.length - 1] && selectedMonth == 12)
                     ? 'cursor-not-allowed'
                     : 'cursor-pointer'
                 "
-                @click="adjustMonth('previous')"
+                @click="adjustMonth('next')"
               >
                 <svgicon
-                  name="arrow-left"
+                  name="arrow-right"
                   height="12"
                   width="12"
                   :color="
-                    selectedYear.toString() === $moment().format('YYYY') && selectedMonth.toString() === $moment().format('M') && isAfter
-                      ? '#ccc'
-                      : '#fff'
+                    (isBefore && selectedYear == $moment().format('YYYY') && parseInt(selectedMonth) == parseInt($moment().format('M'))) ||
+                      (selectedYear == yearLists[yearLists.length - 1] && selectedMonth == 12)
+                      ? 'gray'
+                      : ''
                   "
                 />
-              </span>
-              <span class="cursor-pointer ml-1" @click="adjustMonth('next')">
-                <svgicon name="arrow-right" height="12" width="12" color="#fff" />
               </span>
             </div>
           </div>
@@ -319,13 +325,39 @@ export default {
       modal: false,
       months,
       monthLists: [],
-      yearLists: [],
       selectedMonth: this.$moment.utc().format('M'),
       selectedYear: this.$moment.utc().format('YYYY'),
       daysInMonth: []
     }
   },
   computed: {
+    yearLists() {
+      const years = []
+      const currentYear = parseInt(this.$moment().format('YYYY'))
+      const minYear = 2022
+
+      if (this.isBefore) {
+        for (let year = minYear; year <= currentYear; year++) {
+          years.push(year.toString())
+        }
+      } else if (this.isAfter) {
+        for (let i = 0; i <= 10; i++) {
+          years.push(
+            this.$moment()
+              .add(i, 'years')
+              .format('YYYY')
+          )
+        }
+      } else {
+        // no restriction — show past and future
+        for (let year = minYear; year <= currentYear + 10; year++) {
+          years.push(year.toString())
+        }
+      }
+
+      return years
+    },
+
     filteredMonths() {
       // if selected year === current year, get only the current month up to last month,
       // if not, get all the months
@@ -368,7 +400,6 @@ export default {
     // get month list
     this.getMonthLists()
     // get year list
-    this.getYearLists()
     this.getDaysInMonth(this.selectedMonth, this.selectedYear)
   },
   methods: {
@@ -451,31 +482,38 @@ export default {
       this.modal = false
     },
     adjustMonth(type) {
+      const currentYear = parseInt(this.selectedYear)
+      const currentMonth = parseInt(this.selectedMonth)
+      const todayYear = parseInt(this.$moment().format('YYYY'))
+      const todayMonth = parseInt(this.$moment().format('M'))
+      const minYear = Math.min(...this.yearLists.map(Number))
+      const maxYear = Math.max(...this.yearLists.map(Number))
+
       if (type === 'previous') {
-        let index = this.filteredMonths.findIndex(month => month.value === this.selectedMonth)
-        // return if selected month and year === current month and year
-        if (
-          this.selectedMonth.toString() === this.$moment().format('M') &&
-          this.selectedYear.toString() === this.$moment().format('YYYY') &&
-          this.isAfter
-        ) {
-          return
-        }
-        this.selectedYear = parseInt(this.selectedYear)
-        if (index === 0 || this.selectedMonth != 1) {
-          this.selectedMonth--
+        // Stop at Jan of the minimum year
+        if (currentYear <= minYear && currentMonth === 1) return
+        // Stop at current month if isAfter
+        if (currentYear === todayYear && currentMonth === todayMonth && this.isAfter) return
+
+        if (currentMonth > 1) {
+          this.selectedMonth = currentMonth - 1
         } else {
           this.selectedMonth = 12
-          this.selectedYear--
+          this.selectedYear = currentYear - 1
         }
       }
+
       if (type === 'next') {
-        if (this.selectedMonth === 12 || this.selectedMonth === '12') {
-          this.selectedYear++
+        // Stop at current month/year if isBefore
+        if (this.isBefore && currentYear === todayYear && currentMonth === todayMonth) return
+        // Stop at Dec of the maximum year
+        if (currentYear >= maxYear && currentMonth === 12) return
+
+        if (currentMonth === 12) {
+          this.selectedYear = currentYear + 1
           this.selectedMonth = 1
         } else {
-          this.selectedMonth = parseInt(this.selectedMonth)
-          this.selectedMonth++
+          this.selectedMonth = currentMonth + 1
         }
       }
     },
