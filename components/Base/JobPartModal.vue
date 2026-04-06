@@ -355,7 +355,7 @@
             </div>
 
             <div class="w-full">
-              <GmapMap :center="{ lat: latLangPlatform.y, lng: latLangPlatform.x }" :zoom="15" map-type-id="terrain" style="width: 100% height:350px">
+              <GmapMap :center="{ lat: latLangPlatform.y, lng: latLangPlatform.x }" :zoom="15" map-type-id="terrain" style="width: 100%; height:350px">
                 <GmapMarker :position="google && new google.maps.LatLng(latLangPlatform.y, latLangPlatform.x)" />
               </GmapMap>
             </div>
