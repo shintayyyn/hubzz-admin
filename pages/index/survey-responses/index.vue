@@ -91,11 +91,11 @@
 
               <div class="flex items-end mx-2">
                 <div class="text-gray-800">
-                  <AppDate v-model="dateSubmittedStart" :name="'date_start'" :label="'Date Submitted Start'" />
+                  <AppDate v-model="dateSubmittedStart" :name="'date_start'" :label="'Date Submitted Start'" isBefore />
                 </div>
 
                 <div class="mx-2 text-gray-800">
-                  <AppDate v-model="dateSubmittedEnd" :name="'date_end'" :label="'Date Submitted End'" />
+                  <AppDate v-model="dateSubmittedEnd" :name="'date_end'" :label="'Date Submitted End'" isBefore />
                 </div>
               </div>
 
