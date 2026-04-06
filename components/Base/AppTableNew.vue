@@ -44,12 +44,12 @@
                   }
                 }
             "
-            :event="!routerLink || (routerId && item[routerId] === null) ? '' : 'click'"
+            :event="isClickable(item) ? 'click' : ''"
           >
             <div
               class="flex justify-start items-center text-xs py-2 border-l border-r stripe-hover"
               :class="[
-                routerLink ? 'cursor-pointer ' : 'cursor-default',
+                isClickable(item) ? 'cursor-pointer ' : 'opacity-60 cursor-not-allowed bg-gray-100',
                 rowIndex % 2 === 0 ? 'stripe-gray' : 'bg-white',
                 rowIndex === items.length - 1 ? 'border-b' : ''
               ]"
@@ -248,6 +248,23 @@ export default {
   },
 
   methods: {
+    isClickable(item) {
+      if (!this.routerLink) return false
+      if (this.routerId && item[this.routerId] === null) return false
+
+      const invoiceCol = this.columns.find(c => c.name === 'Invoice Number')
+      if (invoiceCol && this.dataCell(item, invoiceCol) === '(none)') {
+        return false
+      }
+
+      const currentStatus = item.invoice_status || item.status
+      if (currentStatus === 'To Be Invoiced') {
+        return false
+      }
+
+      return true
+    },
+
     sort(dataIndex) {
       if (!this.params.some(item => item.includes(`${dataIndex}`))) {
         this.params = []
