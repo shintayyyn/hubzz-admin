@@ -31,15 +31,11 @@
       >
         <div v-if="job_part.status === 'Cancelled'" class="flex flex-col   rounded-lg leading-tight my-2">
           <div class="m-4">
-            <div class="font-bold text-sm sm:text-md">
-              {{ job_part.terminated ? 'Terminated' : 'Cancelled' }} At
-            </div>
+            <div class="font-bold text-sm sm:text-md">{{ job_part.terminated ? 'Terminated' : 'Cancelled' }} At</div>
             <div class="text-xs sm:text-sm mb-8">
               {{ job_part.cancelled_at_in_gb_formatted }}
             </div>
-            <div class="font-bold text-sm sm:text-md">
-              Reason for {{ job_part.terminated ? 'Termination' : 'Cancellation' }}
-            </div>
+            <div class="font-bold text-sm sm:text-md">Reason for {{ job_part.terminated ? 'Termination' : 'Cancellation' }}</div>
             <div class="text-xs sm:text-sm mb-8">
               {{ job_part.job.platform_job.cancelled_reason }}
             </div>
@@ -54,8 +50,8 @@
                     job_part.cancelled_by_practice === 'Hub'
                       ? job_part.parent_practice_name
                       : job_part.cancelled_by_practice === 'Spoke'
-                        ? job_part.practice_name
-                        : job_part.practice_name
+                      ? job_part.practice_name
+                      : job_part.practice_name
                   }}
                 </div>
                 <div v-if="job_part.cancelled_by_user" class="mx-1">
@@ -89,7 +85,7 @@
         <div class="rounded-lg shadow p-4">
           <div class="flex flex-wrap">
             <!-- INFOS LEFT -->
-            <div class="xl:w-1/3 w-full px-1">
+            <div class="w-full px-1">
               <template v-if="isInvoice === true && job_part.locum_invoice_item && job_part.locum_invoice_item.locum_invoice">
                 <p class="mt-4 font-semibold">
                   Invoice Number
@@ -146,37 +142,63 @@
                   </p>
                 </div>
               </template>
-              <p class="mt-4 font-semibold">
-                Job Part Number
-              </p>
+              <div class="flex flex-col">
+                <div class="grid grid-cols-2 gap-x-4 gap-y-3">
+                  <div>
+                    <p class="font-semibold">Job Part Number</p>
+                    <p>{{ job_part.job_part_number }}</p>
+                  </div>
 
-              <p class="">
-                {{ job_part.job_part_number }}
-              </p>
+                  <!-- Duration -->
+                  <div class="text-sm">
+                    <p class="font-semibold">Duration</p>
+                    <p>Days: {{ job_part.days }}</p>
+                  </div>
 
-              <p class="mt-4 font-semibold">
-                Job Part
-              </p>
+                  <!-- Job Part -->
+                  <div>
+                    <p class="font-semibold">Job Part</p>
+                    <p>{{ job_part.part }} of {{ job_part.parts }}</p>
+                  </div>
 
-              <p class="">
-                {{ job_part.part }} of {{ job_part.parts }}
-              </p>
+                  <!-- Job Description -->
+                  <div>
+                    <p class="font-semibold self-start mt-1">Job Description</p>
+                    <p class="break-words">
+                      {{ job_part.job && job_part.job.description ? job_part.job.description : '(none)' }}
+                    </p>
+                  </div>
+                </div>
+                <!-- SCHEDULES -->
+                <JobSchedules
+                  v-if="job_part"
+                  class="px-2"
+                  :locumInvoiceable="job_part.locum_invoiceable"
+                  :status="job_part.status"
+                  :schedules="job_part.schedules"
+                />
+              </div>
 
+              <!-- <p class="mt-4 font-semibold">
+                Unpaid Breaks (in minutes)
+              </p>
+              <p class="ml-2 mb-2">
+                {{ job_part.job.platform_job.unpaid_breaks_in_minutes }}
+              </p> -->
+            </div>
+            <!-- INFOS RIGHT -->
+            <div class="xl:w-1/3 w-full px-1">
               <p class="mt-4 font-semibold">
                 Job Part Gross Rate
               </p>
 
-              <p class="">
-                £ {{ job_part.job_part_gross_rate_formatted }}
-              </p>
+              <p class="">£ {{ job_part.job_part_gross_rate_formatted }}</p>
 
               <p class="mt-4 font-semibold">
                 Job Part Hubzz Fee
               </p>
 
-              <p class="">
-                £ {{ job_part.job_part_hubzz_fee_formatted }}
-              </p>
+              <p class="">£ {{ job_part.job_part_hubzz_fee_formatted }}</p>
 
               <p class="mt-4 font-semibold">
                 Total Original Hours
@@ -195,22 +217,6 @@
                   {{ job_part ? job_part.job_part_total_final_hours_in_minutes_formatted : null }}
                 </p>
               </template>
-
-              <p class="mt-4 font-semibold">
-                Job Description
-              </p>
-              <p class=" break-words">
-                {{ job_part.job && job_part.job.description ? job_part.job.description : '(none)' }}
-              </p>
-              <!-- <p class="mt-4 font-semibold">
-                Unpaid Breaks (in minutes)
-              </p>
-              <p class="ml-2 mb-2">
-                {{ job_part.job.platform_job.unpaid_breaks_in_minutes }}
-              </p> -->
-            </div>
-            <!-- INFOS RIGHT -->
-            <div class="xl:w-1/3 w-full px-1">
               <div v-if="job_part.status === 'Completed'">
                 <p class="mt-4 font-semibold">
                   Completed At
@@ -219,6 +225,7 @@
                   {{ job_part.completed_at_in_gb_formatted }}
                 </div>
               </div>
+
               <div v-if="job_part.status === 'Approved'">
                 <p class="mt-4 font-semibold">
                   Approved At
@@ -227,32 +234,7 @@
                   {{ job_part.approved_at_in_gb_formatted }}
                 </div>
               </div>
-              <p class="mt-4 font-semibold">
-                Duration
-              </p>
-              <div class="text-xs sm:text-sm">
-                <p class="px-1">
-                  {{ $moment(job_part.date_start, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} -
-                  {{ $moment(job_part.date_end, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}
-                </p>
-                <div class="flex">
-                  <div class="px-1">
-                    <p>Days:</p>
-                    <p>Time:</p>
-                    <p>Shift:</p>
-                  </div>
-                  <div class="px-1">
-                    <p>{{ job_part.days }}</p>
-                    <p>{{ job_part.time_start }} - {{ job_part.time_end }}</p>
-                    <p>{{ job_part.job.shift ? job_part.job.shift.name : null }}</p>
-                  </div>
-                </div>
-                <div class="overflow-y-auto" style="max-height: 205px">
-                  <div v-for="(date, index) in job_part.dates" :key="index" class="m-1">
-                    {{ $moment(date, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}
-                  </div>
-                </div>
-              </div>
+
               <p class="mt-4 font-semibold">
                 Invoiced?
               </p>
@@ -340,33 +322,11 @@
               </p>
             </div>
           </div>
-          <!-- GOOGLE MAPS -->
-          <div v-if="job_part.job ? job_part.job.platform_job : null" class="w-full mt-4">
-            <div class=" pb-2">
-              <div class="mt-4 font-semibold">
-                Practice
-                <p>{{ job_part.job ? job_part.job.platform_job.practice.surgery.name : null }}</p>
-              </div>
-              <p>
-                {{ job_part.job ? job_part.job.platform_job.practice.surgery.address.line_1 : null }}
-                {{ job_part.job ? job_part.job.platform_job.practice.surgery.address.line_2 : null }}
-                {{ job_part.job ? job_part.job.platform_job.practice.surgery.address.line_3 : null }}
-              </p>
-            </div>
-
-            <div class="w-full">
-              <GmapMap :center="{ lat: latLangPlatform.y, lng: latLangPlatform.x }" :zoom="15" map-type-id="terrain" style="width: 100%; height:350px">
-                <GmapMarker :position="google && new google.maps.LatLng(latLangPlatform.y, latLangPlatform.x)" />
-              </GmapMap>
-            </div>
-          </div>
         </div>
       </div>
       <div class="flex-col order-1 md:order-2 w-full md:w-1/2">
-        <div v-if="jobParts.length > 0" class="py-2 pl-4 overflow-hidden w-full">
-          <div class="mx-2  font-semibold">
-            Job Parts
-          </div>
+        <div class="py-2 pl-4 overflow-hidden w-full">
+          <div v-if="jobParts.length > 0" class="mx-2 font-semibold">Job Parts</div>
           <div class="flex flex-col ">
             <div class="overflow-x-auto text-sm ">
               <div class="jobpart">
@@ -401,13 +361,17 @@
                   </div>
                   <div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
                     <strong class="block md:hidden text-sm uppercase">Date Start</strong>
-                    <span>{{ $moment(item.date_start, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} |
-                      {{ $moment(item.time_start, 'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
+                    <span
+                      >{{ $moment(item.date_start, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} |
+                      {{ $moment(item.time_start, 'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span
+                    >
                   </div>
                   <div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
                     <strong class="block md:hidden text-sm uppercase">Date End</strong>
-                    <span>{{ $moment(item.date_end, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} |
-                      {{ $moment(item.time_end, 'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
+                    <span
+                      >{{ $moment(item.date_end, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} |
+                      {{ $moment(item.time_end, 'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span
+                    >
                   </div>
                   <div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
                     <strong class="block md:hidden text-sm uppercase">Job Part Status</strong>
@@ -417,12 +381,20 @@
               </div>
             </div>
             <AppPagination
-              :total="specificJobPart.job.job_parts.length"
+              v-if="jobParts.length > 0"
+              :total="jobParts.length"
               :totalPages="totalPages"
               :currentPage="currentPage"
               :perPage="params.limit"
               @pagechanged="pagechanged"
             />
+            <!-- <AppPagination
+              :total="specificJobPart.job.job_parts.length"
+              :totalPages="totalPages"
+              :currentPage="currentPage"
+              :perPage="params.limit"
+              @pagechanged="pagechanged"
+            /> -->
             <!-- not working also -->
             <!-- <nuxt-link
 							v-for="(item, index) in specificJobPart.job.job_parts"
@@ -439,15 +411,32 @@
             </nuxt-link>-->
           </div>
         </div>
+        <!-- GOOGLE MAPS -->
+        <div v-if="job_part.job ? job_part.job.platform_job : null" class="w-full mt-4">
+          <div class=" pb-2">
+            <div class="mt-4 font-semibold">
+              Practice
+              <p>{{ job_part.job ? job_part.job.platform_job.practice.surgery.name : null }}</p>
+            </div>
 
-        <!-- SCHEDULES -->
-        <JobSchedules
-          v-if="job_part"
-          class="px-2"
-          :locumInvoiceable="job_part.locum_invoiceable"
-          :status="job_part.status"
-          :schedules="job_part.schedules"
-        />
+            <p>
+              {{ job_part.job ? job_part.job.platform_job.practice.surgery.address.line_1 : null }}
+              {{ job_part.job ? job_part.job.platform_job.practice.surgery.address.line_2 : null }}
+              {{ job_part.job ? job_part.job.platform_job.practice.surgery.address.line_3 : null }}
+            </p>
+            <div class="flex items-center flex-wrap">
+              <div v-for="practiceType in practiceTypes" :key="practiceType.id" class="mr-2 bg-sunglow px-3 py-1 my-1 rounded-lg text-sm sm:text-md">
+                {{ practiceType.name }}
+              </div>
+            </div>
+          </div>
+
+          <div class="w-full">
+            <GmapMap :center="{ lat: latLangPlatform.y, lng: latLangPlatform.x }" :zoom="15" map-type-id="terrain" style="width: 100%; height:350px">
+              <GmapMarker :position="google && new google.maps.LatLng(latLangPlatform.y, latLangPlatform.x)" />
+            </GmapMap>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -493,6 +482,7 @@ export default {
 
   data() {
     return {
+      practiceTypes: [],
       jobParts: [],
       currentPage: 1,
       totalPages: 0,
@@ -527,23 +517,75 @@ export default {
     }
   },
   computed: {
-    loadingPractices() {
-      return this.$store.state.practices.loading_practices
+    practiceTypes() {
+      return this.specificJobPart?.job?.platform_job?.practice?.practice_types ?? []
     },
-    google: gmapApi,
     latLangPlatform() {
-      return this.specificJobPart.job.platform_job.practice.surgery.address.coordinates
+      // Safely check every level
+      if (
+        this.specificJobPart &&
+        this.specificJobPart.job &&
+        this.specificJobPart.job.platform_job &&
+        this.specificJobPart.job.platform_job.practice
+      ) {
+        return this.specificJobPart.job.platform_job.practice.surgery.address.coordinates
+      }
+      return { x: 0, y: 0 } // Fallback
     },
     latLangPrivate() {
-      return this.specificJobPart.job.private_job.private_practice.surgery.address.coordinates
+      if (this.specificJobPart && this.specificJobPart.job && this.specificJobPart.job.private_job) {
+        return this.specificJobPart.job.private_job.private_practice.surgery.address.coordinates
+      }
+      return { x: 0, y: 0 } // Fallback
     }
   },
-  created() {
-    this.totalPages = Math.ceil(this.specificJobPart.job.job_parts.length / this.params.limit)
-    this.job_part = this.specificJobPart
-    this.getJobParts(this.params)
+  // computed: {
+  //   loadingPractices() {
+  //     return this.$store.state.practices.loading_practices
+  //   },
+  //   google: gmapApi,
+  //   latLangPlatform() {
+  //     return this.specificJobPart.job.platform_job.practice.surgery.address.coordinates
+  //   },
+  //   latLangPrivate() {
+  //     return this.specificJobPart.job.private_job.private_practice.surgery.address.coordinates
+  //   }
+  // },
+  // created() {
+  //   this.totalPages = Math.ceil(this.specificJobPart.job.job_parts.length / this.params.limit)
+  //   this.job_part = this.specificJobPart
+  //   this.getJobParts(this.params)
 
-    console.log('jobpart', this.job_part)
+  //   console.log('jobpart', this.job_part)
+  // },
+  created() {
+    if (this.specificJobPart && this.specificJobPart.job) {
+      this.job_part = this.specificJobPart
+
+      // If we have a jobId prop, fetch.
+      // If jobId prop is missing, try to get it from specificJobPart
+      const idToUse = this.jobId || this.specificJobPart.job_id
+      if (idToUse) {
+        this.getJobParts(this.params)
+      }
+    }
+  },
+  mounted() {
+    console.log('Component Mounted. jobId Prop:', this.jobId)
+    console.log('specificJobPart Prop:', this.specificJobPart)
+  },
+  watch: {
+    specificJobPart: {
+      immediate: true,
+      handler(newVal) {
+        if (newVal && (newVal.job_id || (newVal.job && newVal.job.id))) {
+          // Use job_id if available, otherwise fallback to job.id
+          const id = newVal.job_id || newVal.job.id
+          console.log('Detected Job ID from object:', id)
+          this.getJobParts(id)
+        }
+      }
+    }
   },
   methods: {
     async show(id) {
@@ -553,41 +595,43 @@ export default {
         this.loading = false
       })
     },
-    getJobParts(params) {
+    getJobParts(id) {
+      if (!id) return
+
       this.loading = true
+      const params = this.params
+      const url = `/api/v1/admin/job-parts?job_id=${id}&limit=${params.limit}&offset=${params.offset}`
+
       this.$axios
-        .$get(`/api/v1/admin/job-parts?job_id=${this.jobId}&limit=${params.limit}&offset=${params.offset}`)
+        .$get(url)
         .then(res => {
-          this.jobParts = res.data.job_parts
+          if (res.data && res.data.job_parts) {
+            this.jobParts = res.data.job_parts
+            this.totalPages = Math.ceil((res.data.total || res.data.job_parts.length) / params.limit)
+            this.practiceTypes = res.data.job_part.job.platform_job.practice.practice_types ?? []
+          }
         })
         .catch(err => {
-          console.log('get job parts error', err)
+          console.error('get job parts error', err)
         })
-      this.loading = false
+        .finally(() => {
+          this.loading = false
+        })
     },
     unclickableJobPart() {
-      if (this.specificJobPart.job) {
-        if (
-          this.specificJobPart.job.status === 'Live' ||
-          this.specificJobPart.job.status === 'Applied' ||
-          this.specificJobPart.job.status === 'Allocated' ||
-          this.specificJobPart.job.status === 'Unfilled' ||
-          this.specificJobPart.job.status === 'Cancelled' ||
-          this.specificJobPart.job.status === 'Declined'
-        ) {
-          return true
-        } else {
-          return false
-        }
-      }
+      if (!this.specificJobPart || !this.specificJobPart.job) return true
+
+      const statuses = ['Live', 'Applied', 'Allocated', 'Unfilled', 'Cancelled', 'Declined']
+
+      return statuses.includes(this.specificJobPart.job.status)
     },
     pagechanged(page) {
       this.params.offset = this.params.limit * (page - 1)
       this.currentPage = page
-      this.getJobParts(this.params)
+      const id = this.jobId || (this.specificJobPart ? this.specificJobPart.job_id || this.specificJobPart.job.id : null)
+      this.getJobParts(id)
     },
     sorted(order_by) {
-      // go back to page 1
       this.currentPage = 1
       this.params.order_by = order_by
       this.getJobParts(this.params)
