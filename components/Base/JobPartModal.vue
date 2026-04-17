@@ -31,11 +31,15 @@
       >
         <div v-if="job_part.status === 'Cancelled'" class="flex flex-col   rounded-lg leading-tight my-2">
           <div class="m-4">
-            <div class="font-bold text-sm sm:text-md">{{ job_part.terminated ? 'Terminated' : 'Cancelled' }} At</div>
+            <div class="font-bold text-sm sm:text-md">
+              {{ job_part.terminated ? 'Terminated' : 'Cancelled' }} At
+            </div>
             <div class="text-xs sm:text-sm mb-8">
               {{ job_part.cancelled_at_in_gb_formatted }}
             </div>
-            <div class="font-bold text-sm sm:text-md">Reason for {{ job_part.terminated ? 'Termination' : 'Cancellation' }}</div>
+            <div class="font-bold text-sm sm:text-md">
+              Reason for {{ job_part.terminated ? 'Termination' : 'Cancellation' }}
+            </div>
             <div class="text-xs sm:text-sm mb-8">
               {{ job_part.job.platform_job.cancelled_reason }}
             </div>
@@ -50,8 +54,8 @@
                     job_part.cancelled_by_practice === 'Hub'
                       ? job_part.parent_practice_name
                       : job_part.cancelled_by_practice === 'Spoke'
-                      ? job_part.practice_name
-                      : job_part.practice_name
+                        ? job_part.practice_name
+                        : job_part.practice_name
                   }}
                 </div>
                 <div v-if="job_part.cancelled_by_user" class="mx-1">
@@ -145,25 +149,33 @@
               <div class="flex flex-col">
                 <div class="grid grid-cols-2 gap-x-4 gap-y-3">
                   <div>
-                    <p class="font-semibold">Job Part Number</p>
+                    <p class="font-semibold">
+                      Job Part Number
+                    </p>
                     <p>{{ job_part.job_part_number }}</p>
                   </div>
 
                   <!-- Duration -->
                   <div class="text-sm">
-                    <p class="font-semibold">Duration</p>
+                    <p class="font-semibold">
+                      Duration
+                    </p>
                     <p>Days: {{ job_part.days }}</p>
                   </div>
 
                   <!-- Job Part -->
                   <div>
-                    <p class="font-semibold">Job Part</p>
+                    <p class="font-semibold">
+                      Job Part
+                    </p>
                     <p>{{ job_part.part }} of {{ job_part.parts }}</p>
                   </div>
 
                   <!-- Job Description -->
                   <div>
-                    <p class="font-semibold self-start mt-1">Job Description</p>
+                    <p class="font-semibold self-start mt-1">
+                      Job Description
+                    </p>
                     <p class="break-words">
                       {{ job_part.job && job_part.job.description ? job_part.job.description : '(none)' }}
                     </p>
@@ -192,13 +204,17 @@
                 Job Part Gross Rate
               </p>
 
-              <p class="">£ {{ job_part.job_part_gross_rate_formatted }}</p>
+              <p class="">
+                £ {{ job_part.job_part_gross_rate_formatted }}
+              </p>
 
               <p class="mt-4 font-semibold">
                 Job Part Hubzz Fee
               </p>
 
-              <p class="">£ {{ job_part.job_part_hubzz_fee_formatted }}</p>
+              <p class="">
+                £ {{ job_part.job_part_hubzz_fee_formatted }}
+              </p>
 
               <p class="mt-4 font-semibold">
                 Total Original Hours
@@ -324,9 +340,11 @@
           </div>
         </div>
       </div>
-      <div class="flex-col order-1 md:order-2 w-full md:w-1/2">
+      <div class="flex-col order-1 md:order-2 px-5 md:w-1/2">
         <div class="py-2 pl-4 overflow-hidden w-full">
-          <div v-if="jobParts.length > 0" class="mx-2 font-semibold">Job Parts</div>
+          <div v-if="jobParts.length > 0" class="mx-2 font-semibold">
+            Job Parts
+          </div>
           <div class="flex flex-col ">
             <div class="overflow-x-auto text-sm ">
               <div class="jobpart">
@@ -361,17 +379,13 @@
                   </div>
                   <div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
                     <strong class="block md:hidden text-sm uppercase">Date Start</strong>
-                    <span
-                      >{{ $moment(item.date_start, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} |
-                      {{ $moment(item.time_start, 'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span
-                    >
+                    <span>{{ $moment(item.date_start, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} |
+                      {{ $moment(item.time_start, 'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
                   </div>
                   <div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
                     <strong class="block md:hidden text-sm uppercase">Date End</strong>
-                    <span
-                      >{{ $moment(item.date_end, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} |
-                      {{ $moment(item.time_end, 'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span
-                    >
+                    <span>{{ $moment(item.date_end, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} |
+                      {{ $moment(item.time_end, 'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
                   </div>
                   <div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
                     <strong class="block md:hidden text-sm uppercase">Job Part Status</strong>
@@ -411,24 +425,29 @@
             </nuxt-link>-->
           </div>
         </div>
+
         <!-- GOOGLE MAPS -->
-        <div v-if="job_part.job ? job_part.job.platform_job : null" class="w-full mt-4">
-          <div class=" pb-2">
+        <div v-if="job_part.job ? job_part.job.platform_job : null" class="w-full p-5 mt-4 rounded-lg shadow">
+          <div class="pb-2">
             <div class="mt-4 font-semibold">
               Practice
               <p>{{ job_part.job ? job_part.job.platform_job.practice.surgery.name : null }}</p>
             </div>
-
+            <div class="flex items-center flex-wrap">
+              <div
+                v-for="practiceType in activePracticeTypes"
+                :key="practiceType.id"
+                class="mr-2 bg-sunglow px-3 py-1 my-1 rounded-lg text-sm sm:text-md"
+              >
+                {{ practiceType.name }}
+              </div>
+            </div>
             <p>
               {{ job_part.job ? job_part.job.platform_job.practice.surgery.address.line_1 : null }}
               {{ job_part.job ? job_part.job.platform_job.practice.surgery.address.line_2 : null }}
               {{ job_part.job ? job_part.job.platform_job.practice.surgery.address.line_3 : null }}
+              {{ job_part.job ? job_part.job.platform_job.practice.surgery.address.post_code : null }}
             </p>
-            <div class="flex items-center flex-wrap">
-              <div v-for="practiceType in practiceTypes" :key="practiceType.id" class="mr-2 bg-sunglow px-3 py-1 my-1 rounded-lg text-sm sm:text-md">
-                {{ practiceType.name }}
-              </div>
-            </div>
           </div>
 
           <div class="w-full">
@@ -442,7 +461,6 @@
   </div>
 </template>
 <script>
-import { gmapApi } from 'vue2-google-maps'
 import AppPagination from '@/components/Base/AppPagination'
 import AppLoading from '@/components/Base/AppLoading'
 import JobSchedules from '@/components/Base/JobSchedules'
@@ -482,7 +500,6 @@ export default {
 
   data() {
     return {
-      practiceTypes: [],
       jobParts: [],
       currentPage: 1,
       totalPages: 0,
@@ -517,8 +534,8 @@ export default {
     }
   },
   computed: {
-    practiceTypes() {
-      return this.specificJobPart?.job?.platform_job?.practice?.practice_types ?? []
+    activePracticeTypes() {
+      return this.specificJobPart?.practice_types ?? this.job_part?.practice_types ?? this.specificJobPart?.job?.practice_types ?? []
     },
     latLangPlatform() {
       // Safely check every level
@@ -537,6 +554,19 @@ export default {
         return this.specificJobPart.job.private_job.private_practice.surgery.address.coordinates
       }
       return { x: 0, y: 0 } // Fallback
+    }
+  },
+  watch: {
+    specificJobPart: {
+      immediate: true,
+      handler(newVal) {
+        if (newVal && (newVal.job_id || (newVal.job && newVal.job.id))) {
+          // Use job_id if available, otherwise fallback to job.id
+          const id = newVal.job_id || newVal.job.id
+          console.log('Detected Job ID from object:', id)
+          this.getJobParts(id)
+        }
+      }
     }
   },
   // computed: {
@@ -574,19 +604,6 @@ export default {
     console.log('Component Mounted. jobId Prop:', this.jobId)
     console.log('specificJobPart Prop:', this.specificJobPart)
   },
-  watch: {
-    specificJobPart: {
-      immediate: true,
-      handler(newVal) {
-        if (newVal && (newVal.job_id || (newVal.job && newVal.job.id))) {
-          // Use job_id if available, otherwise fallback to job.id
-          const id = newVal.job_id || newVal.job.id
-          console.log('Detected Job ID from object:', id)
-          this.getJobParts(id)
-        }
-      }
-    }
-  },
   methods: {
     async show(id) {
       this.loading = true
@@ -608,7 +625,6 @@ export default {
           if (res.data && res.data.job_parts) {
             this.jobParts = res.data.job_parts
             this.totalPages = Math.ceil((res.data.total || res.data.job_parts.length) / params.limit)
-            this.practiceTypes = res.data.job_part.job.platform_job.practice.practice_types ?? []
           }
         })
         .catch(err => {
