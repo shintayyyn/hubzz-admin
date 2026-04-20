@@ -28,10 +28,11 @@ export default {
       }
     ],
     script: [
-      // {
-      // 	src: 'https://cdn.onesignal.com/sdks/OneSignalSDK.js',
-      // 	defer: true,
-      // },
+      {
+        // OneSignal Web SDK v16
+        src: 'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js',
+        defer: true,
+      },
       {
         src: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'
       },
@@ -56,10 +57,10 @@ export default {
       src: '@/plugins/socket-io.js',
       mode: 'client'
     },
-    // {
-    // 	src: '@/plugins/one-signal.js',
-    // 	mode: 'client',
-    // },
+    {
+      src: '@/plugins/one-signal.js',
+      mode: 'client',
+    },
     {
       src: '@/plugins/vue-svgicon.js',
       ssr: true
