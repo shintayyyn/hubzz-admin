@@ -33,23 +33,26 @@
         </div>
 
         <div v-for="(item, rowIndex) in items" :key="item.id" :style="`${customWidth ? `min-width: ${customWidth}px` : ``}`" class="row">
-          <nuxt-link
-            :to="
-              routerLink && {}.toString.call(routerLink) === '[object Function]'
-                ? routerLink(item)
-                : {
-                  path: `${routerLink}/${routerId ? item[routerId] : item.id}`,
-                  query: {
-                    ...$route.query
-                  }
+          <component
+            :is="isClickable(item) ? 'nuxt-link' : 'div'"
+            v-bind="
+              isClickable(item)
+                ? {
+                  to:
+                    routerLink && {}.toString.call(routerLink) === '[object Function]'
+                      ? routerLink(item)
+                      : {
+                        path: `${routerLink}/${routerId ? item[routerId] : item.id}`,
+                        query: { ...$route.query }
+                      }
                 }
+                : {}
             "
-            :event="isClickable(item) ? 'click' : ''"
           >
             <div
               class="flex justify-start items-center text-xs py-2 border-l border-r stripe-hover"
               :class="[
-                isClickable(item) ? 'cursor-pointer ' : 'opacity-60 cursor-not-allowed bg-gray-100',
+                isClickable(item) ? 'cursor-pointer ' : 'opacity-60 cursor-not-allowed',
                 rowIndex % 2 === 0 ? 'stripe-gray' : 'bg-white',
                 rowIndex === items.length - 1 ? 'border-b' : ''
               ]"
@@ -82,7 +85,9 @@
                       <slot :name="column.slotName" :item="item" />
                     </div>
 
-                    <slot v-else :name="column.slotName" :item="item" @click="$emit(column.eventName, item)" />
+                    <div v-else :class="column.disableLink ? 'pointer-events-none' : ''">
+                      <slot :name="column.slotName" :item="item" @click="$emit(column.eventName, item)" />
+                    </div>
                   </template>
 
                   <template v-if="column.dataIndex === 'actions'">
@@ -139,7 +144,7 @@
                 </template>
               </div>
             </div>
-          </nuxt-link>
+          </component>
         </div>
       </div>
     </div>
@@ -261,7 +266,9 @@ export default {
       if (currentStatus === 'To Be Invoiced') {
         return false
       }
-
+      if (item.type === 'Private') {
+        return false
+      }
       return true
     },
 
