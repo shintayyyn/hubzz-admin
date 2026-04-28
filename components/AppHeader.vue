@@ -169,17 +169,37 @@ export default {
       this.unreadConversations = response.data.data.conversations
     })
 
-    this.$socket.on('newMessage', this.newMessageInConversationHandler)
+    const messageEvents = [
+      'newMessage',
+      'newMessageLocum',
+      'newMessagePractice',
+      'newMessage:locum',
+      'newMessage:practice',
+      'message:new',
+      'new-message'
+    ]
+    messageEvents.forEach(evt => this.$socket.on(evt, this.newMessageInConversationHandler))
     this.$socket.on('seenConversation', this.seenConversationHandler)
   },
 
   destroyed() {
-    this.$socket.removeListener('newMessage', this.newMessageInConversationHandler)
+    const messageEvents = [
+      'newMessage',
+      'newMessageLocum',
+      'newMessagePractice',
+      'newMessage:locum',
+      'newMessage:practice',
+      'message:new',
+      'new-message'
+    ]
+    messageEvents.forEach(evt => this.$socket.removeListener(evt, this.newMessageInConversationHandler))
     this.$socket.removeListener('seenConversation', this.seenConversationHandler)
   },
 
   methods: {
-    newMessageInConversationHandler(conversation) {
+    newMessageInConversationHandler(raw) {
+      const conversation = raw && raw.conversation ? raw.conversation : raw
+      if (!conversation || !conversation.latest_conversation_message) return
       console.log('AppHeader newMessageInConversationHandler', conversation)
 
       if (conversation.latest_conversation_message.user.id !== this.$auth.user.id) {

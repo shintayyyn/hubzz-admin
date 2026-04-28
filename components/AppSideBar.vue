@@ -9,7 +9,7 @@
         <div class="flex justify-center">
           <img src="~/assets/images/hubzz_logo.png" class="w-3/5">
         </div>
-        
+
         <!-- <button
           class="close-button cursor-pointer focus:outline-none text-2xl font-bold text-yellow-500 px-4"
           @click="close"
@@ -36,19 +36,19 @@
           >
             <span class="mr-2">{{ navigationTab.name }}</span>
 
-            <span v-if="navigationTab.name === 'Locums' && unseenLocumNotificationsCount > 0" class="text-white rounded-sm p-1 bg-red-700 text-xs font-bold flex items-center justify-center" style="min-width: 20px; height: 20px;"> 
+            <span v-if="navigationTab.name === 'Locums' && unseenLocumNotificationsCount > 0" class="text-white rounded-sm p-1 bg-red-700 text-xs font-bold flex items-center justify-center" style="min-width: 20px; height: 20px;">
               {{ unseenLocumNotificationsCount }}
             </span>
 
-            <span v-if="navigationTab.name === 'Practices' && unseenPracticeNotificationsCount > 0" class="text-white rounded-sm p-1 bg-red-700 text-xs font-bold flex items-center justify-center" :style="unseenPracticeNotificationsCount > 99 ? 'font-size: 10px' :''" style="min-width: 20px; height: 20px;"> 
+            <span v-if="navigationTab.name === 'Practices' && unseenPracticeNotificationsCount > 0" class="text-white rounded-sm p-1 bg-red-700 text-xs font-bold flex items-center justify-center" :style="unseenPracticeNotificationsCount > 99 ? 'font-size: 10px' :''" style="min-width: 20px; height: 20px;">
               {{ unseenPracticeNotificationsCount }}
             </span>
 
-            <!-- <span v-if="navigationTab.name === 'Inquiries' && unacknowledgedCount > 0" class="text-white rounded-sm p-1 bg-red-700 text-xs"> 
-              {{max- unacknowledgedCount }}
-            </span> -->
+            <span v-if="navigationTab.name === 'Inquiries' && unacknowledgedCount > 0" class="text-white rounded-sm p-1 bg-red-700 text-xs">
+              {{unacknowledgedCount }}
+            </span>
 
-            <span v-if="navigationTab.name === 'Change Email Requests' && pendingChangeEmailRequestIds.length > 0" class="text-white rounded-sm p-1 bg-red-700 text-xs font-bold flex items-center justify-center" style="min-width: 20px; height: 20px;"> 
+            <span v-if="navigationTab.name === 'Change Email Requests' && pendingChangeEmailRequestIds.length > 0" class="text-white rounded-sm p-1 bg-red-700 text-xs font-bold flex items-center justify-center" style="min-width: 20px; height: 20px;">
               {{ pendingChangeEmailRequestIds.length }}
             </span>
           </div>
@@ -126,7 +126,7 @@ export default {
 
       let addedLists = []
 
-      if(this.authAdminPermissions.includes('View Locums') 
+      if(this.authAdminPermissions.includes('View Locums')
         || this.authAdminPermissions.includes('View Locum Jobs')
         || this.authAdminPermissions.includes('View Locum Compliance Detail')
         || this.authAdminPermissions.includes('View Reports')
@@ -180,7 +180,7 @@ export default {
           active: `/${this.$route.path.split('/')[1]}` === '/standard-terms',
         })
       }
-      
+
       if(this.authAdminPermissions.includes('View Referral Lottery')){
         addedLists.push({
           name: "Referral Lottery",
@@ -230,7 +230,7 @@ export default {
       //     active: `/${this.$route.path.split('/')[1]}` === '/inquiries',
       //   })
       // }
-    
+
       if(this.authAdminPermissions.includes('View Admin Accounts')
         || this.authAdminPermissions.includes('View Roles')){
         addedLists.push({
@@ -258,7 +258,7 @@ export default {
           order: 13,
         })
       }
-      
+
       addedLists.push({
         name: "Test Script",
         route: "/test-script",
@@ -267,7 +267,7 @@ export default {
       })
       // =================INCLUDE BILLINGS PERMISSIONS, FAQS================
       // if(this.authAdminPermissions.includes(''))
-      
+
       // if (domain === "Super Admin") {
       //   addedLists = [
       //     { name: "Compliance", route: "/compliance" },

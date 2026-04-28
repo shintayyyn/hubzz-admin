@@ -28,39 +28,56 @@
             <!-- TABLE BODY -->
             <div class="row py-2">
               <div class="relative">
-                <div class="flex flex-col md:flex-row items-start md:items-center justify-start shadow rounded-lg py-3  border-l-8 border-sunglow md:border-none transition-hover">
+                <div
+                  class="flex flex-col md:flex-row items-start md:items-center justify-start shadow rounded-lg py-3  border-l-8 border-sunglow md:border-none transition-hover"
+                >
                   <AppLoading :loading="uploading" message="Uploading" :spinner="false" class="rounded-lg" />
 
-                  <div class="flex flex-col md:block flex-1 md:truncate px-2 leading-tight py-1 md:py-0 md:text-center md:items-center md:justify-center">
+                  <div
+                    class="flex flex-col md:block flex-1 md:truncate px-2 leading-tight py-1 md:py-0 md:text-center md:items-center md:justify-center"
+                  >
                     <span class="md:hidden pr-1 font-bold">Filename</span>
                     <span>{{ standardTerms ? standardTerms.filename : null }}</span>
                   </div>
 
-                  <div class="flex flex-col md:block flex-1 md:truncate px-2 leading-tight py-1 md:py-0 md:text-center md:items-center md:justify-center">
+                  <div
+                    class="flex flex-col md:block flex-1 md:truncate px-2 leading-tight py-1 md:py-0 md:text-center md:items-center md:justify-center"
+                  >
                     <span class="md:hidden pr-1 font-bold">Uploaded At</span>
                     <span>{{ standardTerms ? standardTerms.uploaded_at_in_gb_formatted : null }}</span>
                   </div>
 
-                  <div class="flex flex-col md:block flex-1 md:truncate px-2 leading-tight py-1 md:py-0 md:text-center md:items-center md:justify-center">
+                  <div
+                    class="flex flex-col md:block flex-1 md:truncate px-2 leading-tight py-1 md:py-0 md:text-center md:items-center md:justify-center"
+                  >
                     <span class="md:hidden pr-1 font-bold">Action</span>
 
                     <div class="w-full flex md:flex-col lg:flex-row items-center lg:justify-center">
                       <div v-if="standardTerms" class=" flex items-center justify-center  text-xs px-1 py-1 xl:py-0">
-                        <nuxt-link :to="standardTerms ? `/standard-terms/${standardTerms.file_id}` : '/standard-terms'" class="bg-blue-500 hover:bg-blue-600 text-white flex items-center text-center rounded-full  no-underline px-6 py-2">
+                        <nuxt-link
+                          :to="standardTerms ? `/standard-terms/${standardTerms.file_id}` : '/standard-terms'"
+                          class="bg-blue-500 hover:bg-blue-600 text-white flex items-center text-center rounded-full  no-underline px-6 py-2"
+                        >
                           <svgicon name="folder" width="16" height="16" color="white white" />
 
                           <span class="pl-2">View</span>
                         </nuxt-link>
                       </div>
 
-                      <div 
+                      <div
                         v-if="authAdminPermissions.includes('Modify Standard Terms')"
-                        class="flex items-center md:justify-center px-1 py-1" :class="standardTerms ? '' : 'w-full'">
+                        class="flex items-center md:justify-center px-1 py-1"
+                        :class="standardTerms ? '' : 'w-full'"
+                      >
                         <div class="flex justify-center  text-sm">
                           <label>
-                            <input ref="inputFile" class="hidden" type="file" @input="handleInputFileChange">
+                            <input ref="inputFile" class="hidden" type="file" @input="handleInputFileChange" />
 
-                            <button class="cursor-pointer flex items-center text-center rounded-full  px-4 py-2 text-xs text-white" :class="standardTerms ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-600 hover:bg-gray-700'" @click="$refs.inputFile.click()">
+                            <button
+                              class="cursor-pointer flex items-center text-center rounded-full  px-4 py-2 text-xs text-white"
+                              :class="standardTerms ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-600 hover:bg-gray-700'"
+                              @click="$refs.inputFile.click()"
+                            >
                               <svgicon name="cloud-upload" width="16" height="16" color="transparent white" />
 
                               <span class="pl-2">{{ standardTerms ? 'Update' : 'Upload' }}</span>
@@ -85,139 +102,100 @@
 </template>
 
 <script>
-  import AppLoading from "@/components/Base/AppLoading"
+import AppLoading from '@/components/Base/AppLoading'
 
-  export default {
-    components: {
-      AppLoading
-    },
+const ALLOWED_SUBTYPES = new Set([
+  'pdf',
+  'jpeg',
+  'jfif',
+  'msword',
+  'tiff',
+  'vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'vnd.openxmlformats-officedocument.wordprocessingml.template',
+  'vnd.ms-word.document.macroEnabled.12',
+  'vnd.ms-word.template.macroEnabled.12'
+])
 
-    data () {
-      return {
-        loading: false,
-        uploading: false,
-        standardTerms: null,
-        routerLink: '/standard-terms',
+export default {
+  components: { AppLoading },
+
+  data: () => ({
+    loading: false,
+    uploading: false,
+    standardTerms: null,
+    routerLink: '/standard-terms'
+  }),
+
+  computed: {
+    authAdminPermissions() {
+      return this.$store.getters['permissions']
+    }
+  },
+
+  async asyncData({ store, error }) {
+    try {
+      const perms = store.getters['permissions'] || []
+      if (!perms.includes('View Standard Terms')) {
+        error({ statusCode: 403, message: 'You are not authorized to view this page.' })
       }
+    } catch (err) {
+      store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+      error({ statusCode: 404 })
+    }
+  },
+
+  async mounted() {
+    this.loading = true
+    try {
+      const { data } = await this.$axios.get('/api/v1/admin/standard-terms')
+      this.standardTerms = data?.data?.standard_terms ?? null
+    } catch (err) {
+      console.log('err.response || err', err.response || err)
+      this.$nuxt.error(err.response || err)
+    } finally {
+      this.loading = false
+    }
+  },
+
+  methods: {
+    notify(payload) {
+      this.$store.commit('SET_NOTIFICATION', payload)
     },
 
-    computed: {
-      authAdminPermissions () {
-        return this.$store.getters["permissions"]
-      },
-    },
+    async handleInputFileChange() {
+      const input = this.$refs.inputFile
+      if (!input?.files?.length) return
 
-    async asyncData ({ store, error }) {
+      const file = input.files[0]
+      const subtype = (file.type || '').split('/')[1] || (file.name || '').split('.').pop()
+
+      if (!ALLOWED_SUBTYPES.has(subtype)) {
+        this.notify({ enabled: true, status: 'danger', text: 'Invalid file format' })
+        return
+      }
+
+      const formData = new FormData()
+      formData.append('file', file)
+
+      this.uploading = true
       try {
-        const authAdminPermissions = store.getters["permissions"]
-
-        if (authAdminPermissions.includes('View Standard Terms') === false) {
-          error({
-            statusCode: 403,
-            message: 'You are not authorized to view this page.',
-          })
-          return
-        }
-
-      } catch(err) {
-        error({ statusCode: 404 })
-        store.commit("SET_NOTIFICATION", {
-          enabled: true,
-          status: "danger",
-          text: "Something went wrong!"
-        })
-      }
-    },
-
-    mounted () {
-      this.loading = true
-      this.standardTerms = null
-      this.$axios.get('/api/v1/admin/standard-terms').then((response) => {
-        this.standardTerms = response.data.data.standard_terms
-      }).catch((err) => {
-        console.log('err.response || err', err.response || err)
-        this.$nuxt.error(err.response || err)
-      }).finally(() => {
-        this.loading = false
-      })
-    },
-
-    methods: {
-      handleInputFileChange () {
-
-        if (
-          !this.$refs.inputFile
-          || !this.$refs.inputFile.files
-          || this.$refs.inputFile.files.length === 0
-        ) {
-          return
-        }
-
-        const file = this.$refs.inputFile.files[0]
-
-        let types = [
-          'pdf',
-          'jpeg',
-          'msword',
-          'tiff',
-          'vnd.openxmlformats-officedocument.wordprocessingml.document',
-          'vnd.openxmlformats-officedocument.wordprocessingml.template',
-          'vnd.ms-word.document.macroEnabled.12',
-          'vnd.ms-word.template.macroEnabled.12',
-        ]
-
-        const subtype = file.type.split('/')[1]
-
-        if (!types.includes(subtype)) {
-          this.$store.commit('SET_NOTIFICATION', {
-            enabled: true,
-            status: 'danger',
-            text: 'Invalid file format',
-          })
-
-          return
-        }
-        
-        const formData = new FormData()
-
-        formData.append('file', file)
-
-        this.uploading = true
-        this.$axios.put('/api/v1/admin/standard-terms', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-          onUploadProgress (progressEvent) {
+        const response = await this.$axios.put('/api/v1/admin/standard-terms', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+          onUploadProgress(progressEvent) {
             console.log('progressEvent', progressEvent)
-          },
-        }).then((response) => {
-          console.log('response', response)
-
-          this.standardTerms = response.data.data.standard_terms
-
-          this.$store.commit('SET_NOTIFICATION', {
-            enabled: true,
-            status: 'success',
-            text: 'Upload Success',
-          })
-        }).catch((err) => {
-          console.log('err', err.response || err)
-
-          let message = 'Something went wrong!'
-
-          if (err.response && err.response.data && err.response.data.message) {
-            message = err.response.data.message
           }
-
-          this.$store.commit('SET_NOTIFICATION', {
-            enabled: true,
-            status: 'danger',
-            text: message,
-          })
-        }).finally(() => {
-          this.uploading = false
         })
+
+        this.standardTerms = response.data?.data?.standard_terms ?? this.standardTerms
+        this.notify({ enabled: true, status: 'success', text: 'Upload Success' })
+      } catch (err) {
+        console.log('err', err.response || err)
+        const message = err?.response?.data?.message || 'Something went wrong!'
+        this.notify({ enabled: true, status: 'danger', text: message })
+      } finally {
+        this.uploading = false
       }
-    },
+    }
   }
+}
 </script>

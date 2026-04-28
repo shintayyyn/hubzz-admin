@@ -2,9 +2,9 @@
   <section>
     <div>
       <AppLoading :loading="loading" spinner />
-      <div 
+      <div
         class="relative flex flex-col mt-4"
-        :class="customWidth ? customWidth : 'w-full overflow-x-auto'" 
+        :class="customWidth ? customWidth : 'w-full overflow-x-auto'"
         :style="totalPages > 1 && `min-height: ${minHeight}`"
       >
         <!-- HEADER -->
@@ -39,9 +39,9 @@
         </div>
         <!-- HEADER ENDS HERE -->
         <!-- RECORDS START HERE -->
-        <div 
-          v-for="item in items" 
-          :key="item.id" 
+        <div
+          v-for="item in items"
+          :key="item.id"
           class="row py-2"
         >
           <nuxt-link
@@ -126,7 +126,7 @@
                   >
                     {{ dataCell(item, column) | fileSize }}
                   </template>
-                  
+
                   <template v-else>
                     <span class="break-words">{{ dataCell(item, column) }}</span>
                   </template>
@@ -155,7 +155,7 @@
 <script>
   import AppPagination from "@/components/Base/AppPagination"
   import AppLoading from "@/components/Base/AppLoading"
-  
+
   export default {
     components: {
       AppLoading,
@@ -251,7 +251,7 @@
     methods: {
       recordClass () {
         if(this.routerLink && this.itemsOnTop === true) {
-          return "transition-hover hover:bg-waterloo-dark items-start".concat(this.customItemsWidth ? this.customItemsWidth : '') 
+          return "transition-hover hover:bg-waterloo-dark items-start".concat(this.customItemsWidth ? this.customItemsWidth : '')
         } else if (this.routerLink && this.itemsOnTop === false) {
           return "transition-hover hover:bg-waterloo-dark items-start md:items-center".concat(this.customItemsWidth ? this.customItemsWidth : '')
         } else if (this.routerLink && this.itemsOnTop === true) {

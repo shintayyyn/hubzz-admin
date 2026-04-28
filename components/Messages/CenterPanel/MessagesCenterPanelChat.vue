@@ -44,7 +44,7 @@
                   :class="!['Super Admin', 'Admin'].includes(item.user.domain) ? '' : 'hidden'"
                   class="w-10 h-10 my-1 ml-4"
                 >
-                  <AppAvatar class="m-auto" :width="'40px'" :height="'40px'" :src="item.user.avatar ? item.user.avatar.file.url : ''" />
+                  <AppAvatar class="m-auto" :width="'40px'" :height="'40px'" :src="getAvatarUrl(item.user)" />
                 </div>
 
                 <div class="flex flex-col text-sm md:px-2">
@@ -81,7 +81,7 @@
                   :class="!['Super Admin', 'Admin'].includes(item.user.domain) ? '' : 'hidden'"
                   class="w-10 h-10 my-1 ml-4"
                 >
-                  <AppAvatar class="m-auto" :height="'40px'" :width="'40px'" :src="item.user.avatar ? item.user.avatar.file.url : ''" />
+                  <AppAvatar class="m-auto" :height="'40px'" :width="'40px'" :src="getAvatarUrl(item.user)" />
                 </div>
 
                 <div class="flex flex-col text-sm px-2">
@@ -98,7 +98,8 @@
                     <span
                       class="chat-message rounded-lg p-2 mx-2 whitespace-pre-line"
                       :class="isReceiver(item) ? 'bg-gray-300 chat-message-left' : 'chat-message-right bg-blue-500 text-white'"
-                    >{{ item.message }}</span>
+                      >{{ item.message }}</span
+                    >
 
                     <transition name="fade" mode="out-in">
                       <div
@@ -221,9 +222,18 @@ export default {
     },
 
     userFullName(item) {
+      if (item && item.user && (item.user.domain === 'Super Admin' || item.user.domain === 'Admin')) {
+        if (item.user.name) return item.user.name
+
+        const first = item.user.first_name || ''
+        const last = item.user.last_name || ''
+        const full = `${first} ${last}`.trim()
+        return full || 'Hubzz Admin'
+      }
+
       let fullName
 
-      if (this.user.id === item.user.id) {
+      if (this.user && this.user.id === item.user.id) {
         const conversationMemberUser = this.user
 
         if (
@@ -240,14 +250,15 @@ export default {
       }
 
       if (item.user) {
-        fullName = `${item.user.first_name} ${item.user.last_name}`
-      } else if (item.user.email) {
-        fullName = `${item.user.email}`
-      } else {
-        fullName = 'Hubzz User'
+        fullName = `${item.user.first_name || ''} ${item.user.last_name || ''}`.trim()
+        if (fullName) return fullName
       }
 
-      return fullName
+      if (item.user && item.user.email) {
+        return `${item.user.email}`
+      }
+
+      return 'Hubzz User'
     },
 
     deleteMessage() {
@@ -293,6 +304,26 @@ export default {
           return true
         }
       }
+    },
+
+    getAvatarUrl(user) {
+      if (!user) return require('~/assets/images/default-user-image.png')
+
+      try {
+        if (user.avatar && user.avatar.file && user.avatar.file.url) return user.avatar.file.url
+        if (user.locum_user && user.locum_user.avatar && user.locum_user.avatar.file && user.locum_user.avatar.file.url)
+          return user.locum_user.avatar.file.url
+        if (user.practice_user && user.practice_user.avatar && user.practice_user.avatar.file && user.practice_user.avatar.file.url)
+          return user.practice_user.avatar.file.url
+        if (user.avatar_url) return user.avatar_url
+
+        if (this.user && this.user.id === user.id) {
+          if (this.user.avatar && this.user.avatar.file && this.user.avatar.file.url) return this.user.avatar.file.url
+          if (this.user.avatar_url) return this.user.avatar_url
+        }
+      } catch (e) {}
+
+      return require('~/assets/images/default-user-image.png')
     }
   }
 }
@@ -311,35 +342,6 @@ export default {
   word-wrap: wrap;
   word-break: break-word;
 }
-
-/* bubble message */
-/* .chat-message-right, .chat-message-left  {
-    position: relative;
-  }
-  .chat-message-right::after, .chat-message-left::after{
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 0;
-    border: 8px solid transparent;
-    margin-top: -8.5px;
-    }
-  .chat-message-right::after{
-    right: 0;
-    bottom: 10px;
-    border-left-color: #4299e1;
-    border-right: 0;
-    border-bottom: 0;
-    margin-right: -8px;
-  }
-  .chat-message-left::after{
-    left: 0;
-    top: 16px;
-    border-right-color: #e2e8f0;
-    border-left: 0;
-    border-top: 0;
-    margin-left: -8px;
-  } */
 
 .panel-chat {
   scroll-behavior: smooth;

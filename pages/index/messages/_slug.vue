@@ -85,13 +85,34 @@ export default {
   mounted() {
     this.getActiveConversation()
 
-    this.$socket.on('newMessage', this.newMessageInConversationHandler)
+    // listen to a variety of server event names for compatibility
+    const messageEvents = [
+      'newMessage',
+      'newMessageLocum',
+      'newMessagePractice',
+      'newMessage:locum',
+      'newMessage:practice',
+      'message:new',
+      'new-message'
+    ]
+    messageEvents.forEach(evt => this.$socket.on(evt, this.newMessageInConversationHandler))
+
     this.$socket.on('presence-in', this.presenceHandler)
     this.$socket.on('presence-out', this.presenceHandler)
   },
 
   destroyed() {
-    this.$socket.removeListener('newMessage', this.newMessageInConversationHandler)
+    const messageEvents = [
+      'newMessage',
+      'newMessageLocum',
+      'newMessagePractice',
+      'newMessage:locum',
+      'newMessage:practice',
+      'message:new',
+      'new-message'
+    ]
+    messageEvents.forEach(evt => this.$socket.removeListener(evt, this.newMessageInConversationHandler))
+
     this.$socket.removeListener('presence-in', this.presenceHandler)
     this.$socket.removeListener('presence-out', this.presenceHandler)
   },

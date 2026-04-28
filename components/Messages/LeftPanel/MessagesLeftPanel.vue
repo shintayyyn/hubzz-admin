@@ -16,16 +16,16 @@
             <input
               :value="searchConversationText"
               :placeholder="'Search Messages'"
-              class="focus:outline-none pl-4 pr-6 py-3 font-bold text-xs w-full rounded-lg"
+              class="focus:outline-none pl-10 pr-6 py-3 font-bold text-xs w-full rounded-lg"
               @input="event => $emit('setSearchConversationText', event.target.value)"
             />
-            <!-- <span class="absolute right-0 px-2 py-2 bg-white">
-              <svgicon name="search" height="21" width="21" class="text-gray-500 fill-current" />
-            </span> -->
+            <span class="absolute  px-3 py-2 bg-white">
+              <svgicon name="search" height="15" width="15" class="text-gray-500 fill-current" />
+            </span>
           </div>
         </div>
 
-        <span class="ml-4 pb-2 flex items-center">
+        <span class="ml-4 pb-4 flex items-center">
           <svgicon
             name="create-message"
             class="fill-current text-gray-500 hover:text-gray-600 cursor-pointer"
@@ -66,24 +66,13 @@
                   ? 'bg-gray-300'
                   : !conversation.latest_conversation_message.seen_by_users.some(seenByUser => seenByUser.id === $auth.user.id) &&
                     conversation.latest_conversation_message.user_id !== $auth.user.id
-                    ? 'font-bold bg-gray-400'
-                    : 'hover:bg-gray-200'
+                  ? 'font-bold bg-gray-400'
+                  : 'hover:bg-gray-200'
               "
               @click="$router.push(`/messages/${conversation.id}`)"
             >
               <div>
-                <AppAvatar
-                  v-if="conversation.locum_user"
-                  :height="'50px'"
-                  :width="'50px'"
-                  :src="
-                    ['Deleted', 'Deactivated'].includes(conversation.locum_user.locum_user_status)
-                      ? ''
-                      : conversation.locum_user.avatar && conversation.locum_user.avatar.file
-                        ? conversation.locum_user.avatar.file.url
-                        : ''
-                  "
-                />
+                <AppAvatar :height="'50px'" :width="'50px'" :src="getConversationAvatar(conversation)" />
               </div>
 
               <div class="w-5/6 flex items-center justify-between">
@@ -95,7 +84,9 @@
 
                   <p v-if="conversation.locum_user" class="truncate" :class="activeConversationId === conversation.id ? 'font-bold' : ''">
                     <span v-if="['Deleted', 'Deactivated'].includes(conversation.locum_user.locum_user_status)">Hubzz User</span>
-                    <span v-if="!['Deleted', 'Deactivated'].includes(conversation.locum_user.locum_user_status)">{{ conversation.locum_user.first_name }} {{ conversation.locum_user.last_name }}</span>
+                    <span v-if="!['Deleted', 'Deactivated'].includes(conversation.locum_user.locum_user_status)"
+                      >{{ conversation.locum_user.first_name }} {{ conversation.locum_user.last_name }}</span
+                    >
                   </p>
 
                   <p
@@ -132,10 +123,11 @@
                       ? 'bg-gray-300'
                       : !conversation.latest_conversation_message.seen_by_users.some(seenByUser => seenByUser.id === $auth.user.id) &&
                         conversation.latest_conversation_message.user_id !== $auth.user.id
-                        ? 'font-bold bg-gray-400 hidden'
-                        : 'hover:bg-gray-200'
+                      ? 'font-bold bg-gray-400 hidden'
+                      : 'hover:bg-gray-200'
                   "
-                >{{ $moment(conversation.latest_conversation_message.created_at).fromNow() }}</span>
+                  >{{ $moment(conversation.latest_conversation_message.created_at).fromNow() }}</span
+                >
               </div>
             </div>
           </transition-group>
@@ -264,9 +256,44 @@ export default {
 
   methods: {
     senderFullName(conversation) {
-      return conversation.latest_conversation_message.user.id === this.$auth.user.id
-        ? 'You'
-        : `${conversation.latest_conversation_message.user.personal_detail.first_name} ${conversation.latest_conversation_message.user.personal_detail.last_name}`
+      const user = conversation.latest_conversation_message.user || {}
+      if (user.id === this.$auth.user.id) return 'You'
+
+      const pd = user.personal_detail || {}
+      const first = pd.first_name ? String(pd.first_name).trim() : ''
+      const last = pd.last_name ? String(pd.last_name).trim() : ''
+
+
+      if (!first && !last) return 'Hubzz Admin'
+
+      return `${first} ${last}`.trim()
+    },
+
+    getConversationAvatar(conversation) {
+      try {
+        if (conversation.locum_user) {
+          const lu = conversation.locum_user
+          if (['Deleted', 'Deactivated'].includes(lu.locum_user_status)) {
+            return require('~/assets/images/default-user-image.png')
+          }
+          if (lu.avatar && lu.avatar.file && lu.avatar.file.url) return lu.avatar.file.url
+          if (lu.avatar_url) return lu.avatar_url
+        }
+
+        if (conversation.practice) {
+          const p = conversation.practice
+          if (['Deleted', 'Deactivated'].includes(p.practice_status)) {
+            return require('~/assets/images/default-user-image.png')
+          }
+          if (p.avatar && p.avatar.file && p.avatar.file.url) return p.avatar.file.url
+          if (p.avatar_url) return p.avatar_url
+        }
+      } catch (e) {
+      
+        console.warn('getConversationAvatar error', e)
+      }
+
+      return require('~/assets/images/default-user-image.png')
     },
 
     scrollHandler({ target: { scrollTop, offsetHeight, scrollHeight } }) {
@@ -276,9 +303,9 @@ export default {
         if (this.conversations.length !== this.conversationsCount) {
           this.loadMoreConversation()
         } else {
-          //   this.$nextTick(() => {
-          //     this.$refs.chatList.scrollTop = this.$refs.chatList.scrollHeight
-          //   })
+          this.$nextTick(() => {
+            this.$refs.chatList.scrollTop = this.$refs.chatList.scrollHeight
+          })
         }
       }
     },

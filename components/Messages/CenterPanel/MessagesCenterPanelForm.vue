@@ -170,6 +170,8 @@ export default {
             this.message = ''
 
             this.$emit('newMessageInConversation', conversation)
+
+            this.emitSocketEvents(conversation)
           } else if (this.practice) {
             const response = await this.$axios.post(`/api/v1/conversations`, {
               type: 'Practice',
@@ -184,6 +186,7 @@ export default {
             this.$emit('newMessageInConversation', conversation)
 
             this.$router.push(`/messages/${conversation.id}`)
+            this.emitSocketEvents(conversation)
           } else {
             const response = await this.$axios.post(`/api/v1/conversations`, {
               user_id: this.user.id,
@@ -192,9 +195,6 @@ export default {
 
             if (this.user.id) {
               this.messageSent = true
-              // setTimeout(() => {
-              //   this.messageSent = false
-              // }, 1000)
             }
 
             const conversation = response.data.data.conversation
@@ -206,12 +206,45 @@ export default {
             if (!this.messageModal) {
               this.$router.push(`/messages/${conversation.id}`)
             }
+            this.emitSocketEvents(conversation)
           }
           this.sendingMessage = false
         } catch (err) {
           this.sendingMessage = false
           this.errorHandler(err)
         }
+      }
+    },
+
+
+    emitSocketEvents(conversation) {
+      try {
+        if (!this.$socket || !this.$socket.emit) return
+
+
+        this.$socket.emit('newMessage', conversation)
+
+        if (conversation.locum_user) {
+          this.$socket.emit('newMessageLocum', conversation)
+          this.$socket.emit('newMessage:locum', conversation)
+        }
+        if (conversation.practice) {
+          this.$socket.emit('newMessagePractice', conversation)
+          this.$socket.emit('newMessage:practice', conversation)
+        }
+
+     
+        const domain = this.$auth && this.$auth.user && this.$auth.user.domain
+        if (domain === 'Admin') {
+          this.$socket.emit('newMessageAdmin', conversation)
+          this.$socket.emit('newMessage:admin', conversation)
+        }
+        if (domain === 'Super Admin') {
+          this.$socket.emit('newMessageSuperAdmin', conversation)
+          this.$socket.emit('newMessage:superadmin', conversation)
+        }
+      } catch (e) {
+        console.log('socket emit error', e)
       }
     }
   }

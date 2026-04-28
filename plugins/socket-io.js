@@ -6,23 +6,33 @@ export default (ctx, inject) => {
   console.log('API_URL', API_URL)
 
   const socket = io(API_URL, {
-    transports: [ 'websocket' ]
+    transports: ['websocket']
   })
 
   socket.on('connect', () => {
     console.log('Socket Connected')
     console.log('Socket ID:', socket.id)
-    ctx.store.commit('SET_SOCKET',socket.id)
+    ctx.store.commit('SET_SOCKET', socket.id)
 
-    ctx.store.commit("SET_NOTIFICATION", {
+    ctx.store.commit('SET_NOTIFICATION', {
       enabled: false,
       status: '',
-      text: "",
+      text: ''
     })
-
   })
 
-  socket.on('connect_error', (reason) => {
+  // optional debug: log all incoming socket events when DEBUG_SOCKET=true
+  try {
+    if (process.env.DEBUG_SOCKET === 'true' && socket.onAny) {
+      socket.onAny((event, ...args) => {
+        console.log('SOCKET.EVENT', event, args)
+      })
+    }
+  } catch (e) {
+    console.log('socket onAny not available', e)
+  }
+
+  socket.on('connect_error', reason => {
     console.log('connect_error', reason)
     // ctx.store.commit("SET_NOTIFICATION", {
     //   enabled: true,
