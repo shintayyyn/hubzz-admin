@@ -1,9 +1,6 @@
 <template>
   <div>
-    <div
-      class="mx-4 md:mx-8 flex no-underline shadow-md rounded-lg mt-4 shadow"
-      style="position:relative;"
-    >
+    <div class="mx-4 md:mx-8 flex no-underline shadow-md rounded-lg mt-4 shadow" style="position:relative;">
       <div class="w-4/5 overflow-hidden text-sm m-4">
         <div>
           <p class="m-2">
@@ -13,7 +10,7 @@
             Email address: <span class="m-2">{{ user ? user.email : null }}</span>
           </p>
           <p class="m-2">
-            Mobile phone number: <span class="m-2">{{ user.contact_detail ? user.contact_detail.mobile_number : null }}</span> 
+            Mobile phone number: <span class="m-2">{{ user.contact_detail ? user.contact_detail.mobile_number : null }}</span>
           </p>
           <p class="m-2">
             Home phone number: <span class="m-2">{{ user.contact_detail ? user.contact_detail.home_number : null }}</span>
@@ -22,32 +19,20 @@
       </div>
     </div>
 
-    <input
-      ref="inputFile"
-      type="file"
-      class="hidden"
-      @input="fileChangedHandler"
-      @click.stop
-    >
+    <input ref="inputFile" type="file" class="hidden" @input="fileChangedHandler" @click.stop />
 
-    <input
-      ref="newInputFile"
-      type="file"
-      class="hidden"
-      @input="newFileChangedHandler"
-      @click.stop
-    >
+    <input ref="newInputFile" type="file" class="hidden" @input="newFileChangedHandler" @click.stop />
 
     <!--GMC / NMC NUMBER-->
     <div class="w-full overflow-x-auto p-4 md:px-8 md:py-2">
       <div v-for="(item, index) in referenceCompDocs" :key="`item-${index}`">
-        <nuxt-link 
-          :event="item.file == null ? disabled :'click'" 
-          :class="item.file == null ? 'cursor-auto':' hover:bg-gray-300 transition-hover ' "
-          :to="{path:`/locums/${user.id}/locum-compliance/${item ? item.id : null }`, query: $route.query}"
+        <nuxt-link
+          :event="item.file == null ? disabled : 'click'"
+          :class="item.file == null ? 'cursor-auto' : ' hover:bg-gray-300 transition-hover '"
+          :to="{ path: `/locums/${user.id}/locum-compliance/${item ? item.id : null}`, query: $route.query }"
           class="
             flex flex-col md:items-center md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0
-             no-underline shadow-md 
+             no-underline shadow-md
           "
           draggable="false"
         >
@@ -61,15 +46,16 @@
             <span :class="item && item.reference ? 'truncate' : 'break-word'">{{ item ? item.reference : null }}</span>
           </div>
 
-          <div v-if="item.status === 'Rejected'" class="flex flex-col md:justify-center md:items-center md:w-1/4 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
-            <span class="break-word">
-              Reason for Rejection: {{ item && item.note ? item.note : null }}
-            </span>
+          <div
+            v-if="item.status === 'Rejected'"
+            class="flex flex-col md:justify-center md:items-center md:w-1/4 px-1 xl:px-2 xl:pl-6 py-2 align-middle"
+          >
+            <span class="break-word"> Reason for Rejection: {{ item && item.note ? item.note : null }} </span>
           </div>
 
           <div class="flex-1 flex flex-col md:flex-row md:justify-end md:items-center md:w-1/4 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
             <div
-              v-if="authAdminPermissions.includes('Verify/Reject GMC/NMC/MPL/NPL Number') && item.id" 
+              v-if="authAdminPermissions.includes('Verify/Reject GMC/NMC/MPL/NPL Number') && item.id"
               class="flex flex-wrap md:justify-end mt-2 sm:m-0"
             >
               <button
@@ -79,11 +65,11 @@
                   rounded-full focus:outline-none
                   bg-transparent px-2
                 "
-                @click.prevent="locumComplianceDocumentId = item.id, $refs.inputFile.click()"
+                @click.prevent=";(locumComplianceDocumentId = item.id), $refs.inputFile.click()"
               >
                 {{ updatingFile && locumComplianceDocumentId === item.id ? 'Updating File...' : 'Update File' }}
               </button>
-              
+
               <button
                 v-if="!item.file"
                 class="
@@ -91,7 +77,7 @@
                   rounded-full focus:outline-none
                   bg-transparent px-2
                 "
-                @click.prevent="locumComplianceDocumentId = item.id, $refs.inputFile.click()"
+                @click.prevent=";(locumComplianceDocumentId = item.id), $refs.inputFile.click()"
               >
                 {{ updatingFile && locumComplianceDocumentId === item.id ? 'Uploading File...' : 'Upload File' }}
               </button>
@@ -130,15 +116,13 @@
                     ? 'bg-red-600 border-red-600 text-white x-4 text-center cursor-default'
                     : 'bg-transparent px-2 hover:bg-red-600 hover:border-red-700'
                 ]"
-                @click.prevent="item.status === 'Rejected' ? null : locumReferenceComplianceDocumentIdToRejectId = item.id"
+                @click.prevent="item.status === 'Rejected' ? null : (locumReferenceComplianceDocumentIdToRejectId = item.id)"
               >
                 {{ item.status == 'Rejected' ? 'Rejected' : 'Reject' }}
               </button>
             </div>
 
-            <div
-              v-if="!authAdminPermissions.includes('Verify/Reject GMC/NMC/MPL/NPL Number') && item.id" 
-            >
+            <div v-if="!authAdminPermissions.includes('Verify/Reject GMC/NMC/MPL/NPL Number') && item.id">
               <div
                 class="w-1/2 sm:w-auto  text-sm ml-2 py-2 px-4 border border-gray-500 focus:bg-red-600 rounded-full focus:outline-none   px-4 text-center cursor-default"
                 :class="`${item.status === 'Rejected' ? 'bg-red-600 border-red-600' : 'bg-green-600 border-green-600'}`"
@@ -149,12 +133,13 @@
           </div>
         </nuxt-link>
 
-        <div v-if="item.child_locum_compliance_documents && item.child_locum_compliance_documents.length > 0 ">
+        <div v-if="item.child_locum_compliance_documents && item.child_locum_compliance_documents.length > 0">
           <nuxt-link
-            v-for="(childItem, childIndex) in item.child_locum_compliance_documents" :key="`item-${childIndex}`"
-            :event="childItem.file == null ? disabled :'click'" 
-            :class="childItem.file == null ? 'cursor-auto':' hover:bg-gray-300 transition-hover ' "
-            :to="{path:`/locums/${user.id}/locum-compliance/${childItem ? childItem.id : null }`, query: $route.query}"
+            v-for="(childItem, childIndex) in item.child_locum_compliance_documents"
+            :key="`item-${childIndex}`"
+            :event="childItem.file == null ? disabled : 'click'"
+            :class="childItem.file == null ? 'cursor-auto' : ' hover:bg-gray-300 transition-hover '"
+            :to="{ path: `/locums/${user.id}/locum-compliance/${childItem ? childItem.id : null}`, query: $route.query }"
             class="
               flex flex-col md:flex-row ml-4 px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0
                no-underline shadow-md  items-center
@@ -168,10 +153,7 @@
             </div>
 
             <div class="flex flex-col md:flex-row md:justify-end md:items-center md:w-1/2 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
-              <div
-                v-if="authAdminPermissions.includes('Verify/Reject GMC/NMC/MPL/NPL Number')" 
-                class="flex flex-wrap md:justify-end mt-2 sm:m-0"
-              >
+              <div v-if="authAdminPermissions.includes('Verify/Reject GMC/NMC/MPL/NPL Number')" class="flex flex-wrap md:justify-end mt-2 sm:m-0">
                 <button
                   v-if="childItem.file"
                   class="
@@ -179,7 +161,7 @@
                     rounded-full focus:outline-none
                     bg-transparent px-2
                   "
-                  @click.prevent="locumComplianceDocumentId = childItem.id, $refs.inputFile.click()"
+                  @click.prevent=";(locumComplianceDocumentId = childItem.id), $refs.inputFile.click()"
                 >
                   {{ updatingFile && locumComplianceDocumentId === childItem.id ? 'Updating File...' : 'Update File' }}
                 </button>
@@ -191,15 +173,13 @@
                     rounded-full focus:outline-none
                     bg-transparent px-2
                   "
-                  @click.prevent="complianceDocumentId = childItem.compliance_document_id, $refs.newInputFile.click()"
+                  @click.prevent=";(complianceDocumentId = childItem.compliance_document_id), $refs.newInputFile.click()"
                 >
                   {{ uploadingFile && complianceDocumentId === childItem.compliance_document_id ? 'Uploading File...' : 'Upload File' }}
                 </button>
               </div>
 
-              <div
-                v-if="!authAdminPermissions.includes('Verify/Reject GMC/NMC/MPL/NPL Number') && item.id" 
-              >
+              <div v-if="!authAdminPermissions.includes('Verify/Reject GMC/NMC/MPL/NPL Number') && item.id">
                 <div
                   class="w-1/2 sm:w-auto  text-sm ml-2 py-2 px-4 border border-gray-500 focus:bg-red-600 rounded-full focus:outline-none   px-4 text-center cursor-default"
                   :class="`${item.status === 'Rejected' ? 'bg-red-600 border-red-600' : 'bg-green-600 border-green-600'}`"
@@ -235,9 +215,9 @@
         <template v-if="selectedComplianceDocumentRejectReasonValue === ''">
           <div class="border rounded-lg p-2 h-full w-full">
             <textarea
-              v-model="notes" 
+              v-model="notes"
               class="flex-1 bg-transparent overflow-auto resize-none  focus:outline-none w-full"
-              rows="4" 
+              rows="4"
               name="complianceNote"
               maxlength="255"
             />
@@ -275,11 +255,11 @@
     </p>
 
     <div class="w-full overflow-x-auto p-4 md:px-8 md:py-2">
-      <!-- HEADER --> 
-      <div class="hidden md:flex items-center  justify-around font-semibold"> 
+      <!-- HEADER -->
+      <div class="hidden md:flex items-center  justify-around font-semibold">
         <div class="align-middle pl-6 pr-2 w-1/6">
           Title
-        </div> 
+        </div>
         <div class="align-middle px-2 text-center w-1/6">
           File size
         </div>
@@ -298,41 +278,32 @@
       </div>
       <!-- END HEADER -->
       <!-- BODY -->
-      <div
-        v-for="(item, index) in mandatoryCompDocs" :key="`item-${index}`"
-      >
+      <div v-for="(item, index) in mandatoryCompDocs" :key="`item-${index}`">
         <nuxt-link
-          :event="item.file == null ? disabled :'click'" 
-          :class="item.file == null ? 'cursor-auto':' hover:bg-gray-300 transition-hover ' "
-          :to="{path:`/locums/${user.id}/locum-compliance/${item ? item.id : null }`, query: $route.query}"
-          class="bg-yellow-500 flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow-md " 
+          :event="item.file == null ? disabled : 'click'"
+          :class="item.file == null ? 'cursor-auto' : ' hover:bg-gray-300 transition-hover '"
+          :to="{ path: `/locums/${user.id}/locum-compliance/${item ? item.id : null}`, query: $route.query }"
+          class="bg-yellow-500 flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow-md "
           draggable="false"
         >
           <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 xl:pl-6 py-2 align-middle">
             <strong class="block md:hidden text-sm uppercase">Title</strong>
-            <span 
-              :class="item && item.file ? 'truncate' : 'break-word'"
-            >
+            <span :class="item && item.file ? 'truncate' : 'break-word'">
               {{ item && item.compliance_document_name ? item.compliance_document_name : null }}
             </span>
-            <span
-              v-if="item && item.compliance_document_name === 'Passport'" 
-              :class="item && item.file ? 'truncate' : 'break-word'"
-            >
-              {{ item && item.country_name ? item.country_name + "("+item.country_code+")" : null }}
+            <span v-if="item && item.compliance_document_name === 'Passport'" :class="item && item.file ? 'truncate' : 'break-word'">
+              {{ item && item.country_name ? item.country_name + '(' + item.country_code + ')' : null }}
             </span>
           </div>
 
           <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
             <strong class="block md:hidden text-sm uppercase">File size</strong>
-            <span>{{ item.file ? (item.file.size / 1048576).toFixed(2) + 'Mb' : null }}
-            </span>
+            <span>{{ item.file ? (item.file.size / 1048576).toFixed(2) + 'Mb' : null }} </span>
           </div>
 
           <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
             <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
-            <span>{{ item && item.file ? item.uploaded_at_in_gb_formatted : null }}
-            </span>
+            <span>{{ item && item.file ? item.uploaded_at : null }} </span>
           </div>
 
           <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
@@ -349,48 +320,45 @@
             <strong class="block md:hidden">Status</strong>
             <div
               class="text-center text-black text-sm py-2 border border-gray-500 rounded-full"
-              :class="statusStyle(item && item.status ? item.status:null, true)"
+              :class="statusStyle(item && item.status ? item.status : null, true)"
             >
               <span>
-                {{ item && item.status ? item.status:null }}
+                {{ item && item.status ? item.status : null }}
               </span>
             </div>
           </div>
         </nuxt-link>
-        <div v-if="item.child_locum_compliance_documents && item.child_locum_compliance_documents.length > 0 ">
+        <div v-if="item.child_locum_compliance_documents && item.child_locum_compliance_documents.length > 0">
           <nuxt-link
-            v-for="(childItem, childIndex) in item.child_locum_compliance_documents" :key="`item-${childIndex}`"
-            :event="childItem.file == null ? disabled :'click'" 
-            :class="childItem.file == null ? 'cursor-auto':' hover:bg-gray-300 transition-hover ' "
-            :to="{path:`/locums/${user.id}/locum-compliance/${childItem ? childItem.id : null }`, query: $route.query}"
-            class="flex flex-col md:flex-row ml-4 px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow-md " 
+            v-for="(childItem, childIndex) in item.child_locum_compliance_documents"
+            :key="`item-${childIndex}`"
+            :event="childItem.file == null ? disabled : 'click'"
+            :class="childItem.file == null ? 'cursor-auto' : ' hover:bg-gray-300 transition-hover '"
+            :to="{ path: `/locums/${user.id}/locum-compliance/${childItem ? childItem.id : null}`, query: $route.query }"
+            class="flex flex-col md:flex-row ml-4 px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow-md "
             draggable="false"
           >
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
               <strong class="block md:hidden text-sm uppercase">Title</strong>
-              <span 
-                :class="childItem && childItem.file ? 'truncate' : 'break-word'"
-              >
+              <span :class="childItem && childItem.file ? 'truncate' : 'break-word'">
                 {{ childItem && childItem.compliance_document_name ? childItem.compliance_document_name : null }}
               </span>
               <span
-                v-if="childItem && childItem.compliance_document_name === 'Passport'" 
+                v-if="childItem && childItem.compliance_document_name === 'Passport'"
                 :class="childItem && childItem.file ? 'truncate' : 'break-word'"
               >
-                {{ childItem && childItem.country_name ? childItem.country_name + "("+childItem.country_code+")" : null }}
+                {{ childItem && childItem.country_name ? childItem.country_name + '(' + childItem.country_code + ')' : null }}
               </span>
             </div>
 
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">File size</strong>
-              <span>{{ childItem.file ? (childItem.file.size / 1048576).toFixed(2) + 'Mb' : null }}
-              </span>
+              <span>{{ childItem.file ? (childItem.file.size / 1048576).toFixed(2) + 'Mb' : null }} </span>
             </div>
 
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
-              <span>{{ childItem && childItem.file ? childItem.uploaded_at_in_gb_formatted : null }}
-              </span>
+              <span>{{ childItem && childItem.file ? childItem.uploaded_at : null }} </span>
             </div>
 
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
@@ -405,18 +373,16 @@
 
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 xl:pr-4 py-2 align-middle md:text-center">
               <strong class="block md:hidden">Status</strong>
-              <div v-if="childItem.file == null"
-                   class="text-center  text-sm py-2 px-8 sm:mx-2 border border-gray-500 bg-transparent rounded-full"
-              >
+              <div v-if="childItem.file == null" class="text-center  text-sm py-2 px-8 sm:mx-2 border border-gray-500 bg-transparent rounded-full">
                 <span>Empty</span>
               </div>
               <div
                 v-else
                 class="text-center text-black text-sm py-2 sm:mx-2 border border-gray-500 rounded-full"
-                :class="statusStyle(childItem && childItem.status ? childItem.status:null)"
+                :class="statusStyle(childItem && childItem.status ? childItem.status : null)"
               >
                 <span>
-                  {{ childItem && childItem.status ? childItem.status:null }}
+                  {{ childItem && childItem.status ? childItem.status : null }}
                 </span>
               </div>
             </div>
@@ -431,11 +397,11 @@
     </p>
 
     <div class="w-full overflow-x-auto p-4 md:px-8 md:py-2">
-      <!-- HEADER --> 
-      <div class="hidden md:flex items-center  justify-around font-semibold"> 
+      <!-- HEADER -->
+      <div class="hidden md:flex items-center  justify-around font-semibold">
         <div class="align-middle pl-6 pr-2 w-1/6">
           Title
-        </div> 
+        </div>
         <div class="align-middle px-2 text-center w-1/6">
           File size
         </div>
@@ -454,41 +420,32 @@
       </div>
       <!-- END HEADER -->
       <!-- BODY -->
-      <div
-        v-for="(item, index) in otherMandatoryCompDocs" :key="`item-${index}`"
-      >
+      <div v-for="(item, index) in otherMandatoryCompDocs" :key="`item-${index}`">
         <nuxt-link
-          :event="item.file == null ? disabled :'click'" 
-          :class="item.file == null ? 'cursor-auto':' hover:bg-gray-300 transition-hover ' "
-          :to="{path:`/locums/${user.id}/locum-compliance/${item ? item.id : null }`, query: $route.query}"
-          class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow-md " 
+          :event="item.file == null ? disabled : 'click'"
+          :class="item.file == null ? 'cursor-auto' : ' hover:bg-gray-300 transition-hover '"
+          :to="{ path: `/locums/${user.id}/locum-compliance/${item ? item.id : null}`, query: $route.query }"
+          class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow-md "
           draggable="false"
         >
           <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 xl:pl-6 py-2 align-middle">
             <strong class="block md:hidden text-sm uppercase">Title</strong>
-            <span 
-              :class="item && item.file ? 'truncate' : 'break-word'"
-            >
+            <span :class="item && item.file ? 'truncate' : 'break-word'">
               {{ item && item.compliance_document_name ? item.compliance_document_name : null }}
             </span>
-            <span
-              v-if="item && item.compliance_document_name === 'Passport'" 
-              :class="item && item.file ? 'truncate' : 'break-word'"
-            >
-              {{ item && item.country_name ? item.country_name + "("+item.country_code+")" : null }}
+            <span v-if="item && item.compliance_document_name === 'Passport'" :class="item && item.file ? 'truncate' : 'break-word'">
+              {{ item && item.country_name ? item.country_name + '(' + item.country_code + ')' : null }}
             </span>
           </div>
 
           <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
             <strong class="block md:hidden text-sm uppercase">File size</strong>
-            <span>{{ item.file ? (item.file.size / 1048576).toFixed(2) + 'Mb' : null }}
-            </span>
+            <span>{{ item.file ? (item.file.size / 1048576).toFixed(2) + 'Mb' : null }} </span>
           </div>
 
           <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
             <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
-            <span>{{ item && item.file ? item.uploaded_at_in_gb_formatted : null }}
-            </span>
+            <span>{{ item && item.file ? item.uploaded_at : null }} </span>
           </div>
 
           <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
@@ -505,48 +462,45 @@
             <strong class="block md:hidden">Status</strong>
             <div
               class="text-center text-black text-sm py-2 border border-gray-500 rounded-full"
-              :class="statusStyle(item && item.status ? item.status:null)"
+              :class="statusStyle(item && item.status ? item.status : null)"
             >
               <span>
-                {{ item && item.status ? item.status:null }}
+                {{ item && item.status ? item.status : null }}
               </span>
             </div>
           </div>
         </nuxt-link>
-        <div v-if="item.child_locum_compliance_documents && item.child_locum_compliance_documents.length > 0 ">
+        <div v-if="item.child_locum_compliance_documents && item.child_locum_compliance_documents.length > 0">
           <nuxt-link
-            v-for="(childItem, childIndex) in item.child_locum_compliance_documents" :key="`item-${childIndex}`"
-            :event="childItem.file == null ? disabled :'click'" 
-            :class="childItem.file == null ? 'cursor-auto':' hover:bg-gray-300 transition-hover ' "
-            :to="{path:`/locums/${user.id}/locum-compliance/${childItem ? childItem.id : null }`, query: $route.query}"
-            class="flex flex-col md:flex-row ml-4 px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow-md " 
+            v-for="(childItem, childIndex) in item.child_locum_compliance_documents"
+            :key="`item-${childIndex}`"
+            :event="childItem.file == null ? disabled : 'click'"
+            :class="childItem.file == null ? 'cursor-auto' : ' hover:bg-gray-300 transition-hover '"
+            :to="{ path: `/locums/${user.id}/locum-compliance/${childItem ? childItem.id : null}`, query: $route.query }"
+            class="flex flex-col md:flex-row ml-4 px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow-md "
             draggable="false"
           >
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
               <strong class="block md:hidden text-sm uppercase">Title</strong>
-              <span 
-                :class="childItem && childItem.file ? 'truncate' : 'break-word'"
-              >
+              <span :class="childItem && childItem.file ? 'truncate' : 'break-word'">
                 {{ childItem && childItem.compliance_document_name ? childItem.compliance_document_name : null }}
               </span>
               <span
-                v-if="childItem && childItem.compliance_document_name === 'Passport'" 
+                v-if="childItem && childItem.compliance_document_name === 'Passport'"
                 :class="childItem && childItem.file ? 'truncate' : 'break-word'"
               >
-                {{ childItem && childItem.country_name ? childItem.country_name + "("+childItem.country_code+")" : null }}
+                {{ childItem && childItem.country_name ? childItem.country_name + '(' + childItem.country_code + ')' : null }}
               </span>
             </div>
 
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">File size</strong>
-              <span>{{ childItem.file ? (childItem.file.size / 1048576).toFixed(2) + 'Mb' : null }}
-              </span>
+              <span>{{ childItem.file ? (childItem.file.size / 1048576).toFixed(2) + 'Mb' : null }} </span>
             </div>
 
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
-              <span>{{ childItem && childItem.file ? childItem.uploaded_at_in_gb_formatted : null }}
-              </span>
+              <span>{{ childItem && childItem.file ? childItem.uploaded_at : null }} </span>
             </div>
 
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
@@ -561,18 +515,16 @@
 
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 xl:pr-4 py-2 align-middle md:text-center">
               <strong class="block md:hidden">Status</strong>
-              <div v-if="childItem.file == null"
-                   class="text-center  text-sm py-2 px-8 sm:mx-2 border border-gray-500 bg-transparent rounded-full"
-              >
+              <div v-if="childItem.file == null" class="text-center  text-sm py-2 px-8 sm:mx-2 border border-gray-500 bg-transparent rounded-full">
                 <span>Empty</span>
               </div>
               <div
                 v-else
                 class="text-center text-black text-sm py-2 sm:mx-2 border border-gray-500 rounded-full"
-                :class="statusStyle(childItem && childItem.status ? childItem.status:null)"
+                :class="statusStyle(childItem && childItem.status ? childItem.status : null)"
               >
                 <span>
-                  {{ childItem && childItem.status ? childItem.status:null }}
+                  {{ childItem && childItem.status ? childItem.status : null }}
                 </span>
               </div>
             </div>
@@ -587,76 +539,67 @@
     </p>
 
     <div class="w-full overflow-x-auto p-4 md:px-8 md:py-2">
-      <!-- HEADER --> 
-      <div class="hidden md:flex items-center  justify-around font-semibold"> 
-        <div class="align-middle pl-6 pr-2 w-1/6">
+      <!-- HEADER -->
+      <div class="hidden md:flex items-center font-semibold px-4 py-2">
+        <div class="w-1/4 pl-6 pr-2">
           Title
-        </div> 
-        <div class="align-middle px-2 text-center w-1/6">
+        </div>
+
+        <div class="w-1/4 px-2 text-center">
           File size
         </div>
-        <div class="align-middle px-2 text-center w-1/6">
+
+        <div class="w-1/4 px-2 text-center">
           File uploaded
         </div>
-        <div class="align-middle px-2 text-center w-1/6">
-          Expiry Date
-        </div>
-        <div class="align-middle px-2 text-center w-1/6">
-          Days to expire
-        </div>
-        <div class="align-middle px-2 text-center w-1/6">
+
+        <div class="w-1/4 px-2 text-center">
           Status
         </div>
       </div>
       <!-- END HEADER -->
+
       <!-- BODY -->
       <nuxt-link
-        v-for="(item, index) in optionalCompDocs" :key="`item-${index}`"
-        :event="item.file == null ? disabled :'click'" 
-        :class="item.file == null ? 'cursor-auto':' hover:bg-gray-300 transition-hover ' "
-        :to="{path:`/locums/${user.id}/locum-compliance/${item ? item.id : null }`, query: $route.query}"
-        class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow-md " 
+        v-for="(item, index) in optionalCompDocs"
+        :key="`item-${index}`"
+        :event="item.file == null ? disabled : 'click'"
+        :class="item.file == null ? 'cursor-auto' : 'hover:bg-gray-300 transition-hover'"
+        :to="{ path: `/locums/${user.id}/locum-compliance/${item ? item.id : null}`, query: $route.query }"
+        class="flex flex-col md:flex-row items-center px-4 md:px-4 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 no-underline shadow-md"
         draggable="false"
       >
-        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 xl:pl-6 py-2 align-middle">
+        <div class="flex flex-col justify-center w-full md:w-1/4 px-1 md:px-2 xl:pl-6 py-2">
           <strong class="block md:hidden text-sm uppercase">Title</strong>
-          <span 
-            :class="item && item.file ? 'truncate' : 'break-word'"
-          >
+
+          <span :class="item && item.file ? 'truncate' : 'break-word'">
             {{ item && item.compliance_document_name ? item.compliance_document_name : null }}
           </span>
-          <span
-            v-if="item && item.compliance_document_name === 'Passport'" 
-            :class="item && item.file ? 'truncate' : 'break-word'"
-          >
-            {{ item && item.country_name ? item.country_name + "("+item.country_code+")" : null }}
+
+          <span v-if="item && item.compliance_document_name === 'Passport'" :class="item && item.file ? 'truncate' : 'break-word'">
+            {{ item && item.country_name ? item.country_name + '(' + item.country_code + ')' : null }}
           </span>
         </div>
 
-        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
+        <div class="flex flex-col justify-center w-full md:w-1/4 px-1 md:px-2 py-2 text-left md:text-center">
           <strong class="block md:hidden text-sm uppercase">File size</strong>
-          <span>{{ item.file ? (item.file.size / 1048576).toFixed(2) + 'Mb' : null }}
+
+          <span>
+            {{ item.file ? (item.file.size / 1048576).toFixed(2) + 'Mb' : null }}
           </span>
         </div>
 
-        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
+        <div class="flex flex-col justify-center w-full md:w-1/4 px-1 md:px-2 py-2 text-left md:text-center">
           <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
-          <span>{{ item && item.file ? item.uploaded_at_in_gb_formatted : null }}
+
+          <span>
+            {{ item && item.file ? item.uploaded_at : null }}
           </span>
         </div>
 
-        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
-          <strong class="block md:hidden text-sm uppercase">Expiry Date</strong>
-          <span class="break-all">{{ item.expired_at_in_gb_formatted }}</span>
-        </div>
-
-        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
-          <strong class="block md:hidden text-sm uppercase">Days to expire</strong>
-          <span class="break-all">{{ item.days_to_expire }}</span>
-        </div>
-
-        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 xl:pr-4 py-2 align-middle md:text-center">
+        <div class="flex flex-col justify-center w-full md:w-1/4 px-1 md:px-2 py-2">
           <strong class="block md:hidden">Status</strong>
+
           <div
             class="text-center text-black text-sm py-2 sm:mx-2 border border-gray-500 rounded-full"
             :class="statusStyle(item && item.file ? 'Present' : 'Empty')"
@@ -668,7 +611,7 @@
         </div>
       </nuxt-link>
     </div>
-    
+
     <!-- MANDATORY TRAININGS -->
     <p class=" text-sm  px-4 md:px-8 md:pt-8 font-semibold">
       Mandatory Trainings
@@ -681,11 +624,11 @@
     </div>
 
     <!-- TABLE RESPONSIVE MANDATORY TRAININGS-->
-    <div v-if="locumMandatoryTrainings.length > 0" class="w-full overflow-x-auto p-4 md:px-8 md:py-2"> 
-      <div class="hidden md:flex items-center  justify-around font-semibold"> 
+    <div v-if="locumMandatoryTrainings.length > 0" class="w-full overflow-x-auto p-4 md:px-8 md:py-2">
+      <div class="hidden md:flex items-center  justify-around font-semibold">
         <div class="align-middle pl-6 pr-2 text-left w-1/4">
           Title
-        </div> 
+        </div>
         <div class="align-middle px-2 text-center w-1/4">
           File size
         </div>
@@ -696,11 +639,12 @@
       </div>
       <!-- BODY -->
       <nuxt-link
-        v-for="(item, index) in locumMandatoryTrainings" :key="`item-${index}`"
-        :event="item.file==null ? disabled :'click'"
-        :to="{path:`/locums/${user.id}/locum-compliance/mandatory-training/${item ? item.id : null }`, query: $route.query}"
-        class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow-md " 
-        :class="item.file==null ? 'cursor-auto':' hover:bg-gray-300 transition-hover ' "
+        v-for="(item, index) in locumMandatoryTrainings"
+        :key="`item-${index}`"
+        :event="item.file == null ? disabled : 'click'"
+        :to="{ path: `/locums/${user.id}/locum-compliance/mandatory-training/${item ? item.id : null}`, query: $route.query }"
+        class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow-md "
+        :class="item.file == null ? 'cursor-auto' : ' hover:bg-gray-300 transition-hover '"
         draggable="false"
       >
         <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 md:px-4 xl:pl-6 py-2 align-middle">
@@ -711,15 +655,15 @@
         <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 md:px-4 py-2 align-middle md:text-center">
           <strong class="block md:hidden text-sm uppercase">File size</strong>
           <span>
-            {{ ( item.file ? item.file.size : 0 / 1048576).toFixed(2) + 'Bytes' }}
+            {{ (item.file ? item.file.size : 0 / 1048576).toFixed(2) + 'Bytes' }}
           </span>
         </div>
-        <!-- $moment(document.practiceSpecificDoc.updated_at 
+        <!-- $moment(document.practiceSpecificDoc.updated_at
           ? document.practiceSpecificDoc.updated_at
           : document.practiceSpecificDoc.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYYY, h:mm:ss a'):null }} -->
         <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 md:px-4 xl:pr-4 py-2 align-middle md:text-center">
           <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
-          <span class="break-all">{{ item.uploaded_at_in_gb_formatted }}</span>
+          <span class="break-all">{{ item.uploaded_at }}</span>
         </div>
 
         <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 md:px-4 xl:pr-4 py-2 align-middle md:text-center">
@@ -736,42 +680,38 @@
       </nuxt-link>
       <!-- END BODY -->
     </div>
-    
-    <div
-      v-if="locumReferenceComplianceDocumentIdToRejectId"
-      class="shield"
-      @click="locumReferenceComplianceDocumentIdToRejectId = null"
-    />
+
+    <div v-if="locumReferenceComplianceDocumentIdToRejectId" class="shield" @click="locumReferenceComplianceDocumentIdToRejectId = null" />
 
     <nuxt-child />
   </div>
 </template>
 
 <script>
-import AppInput from "@/components/Base/AppInput"
+import AppInput from '@/components/Base/AppInput'
 
 export default {
   components: {
-    AppInput,
+    AppInput
   },
 
   props: {
     user: {
       type: Object,
-      default: () => null,
+      default: () => null
     }
   },
 
-  data () {
+  data() {
     return {
       locumUser: {
         locum_detail: {
-          gmc_or_nmc_number:'',
+          gmc_or_nmc_number: '',
           mpl_or_npl_number: ''
         }
       },
       referenceCompDocs: null,
-      
+
       rejectMplNpl: false,
 
       professionCategoryId: null,
@@ -784,50 +724,54 @@ export default {
       professionCategory: null,
       disabled: 'true',
       query: null,
-      
+
       locumReferenceComplianceDocumentIdToRejectId: null,
       selectedComplianceDocumentRejectReasonValue: null,
-      notes:'',
+      notes: '',
       formErrors: [],
       locumComplianceDocumentId: null,
       complianceDocumentId: null,
       updatingFile: false,
-      uploadingFile: false,
+      uploadingFile: false
     }
   },
 
   computed: {
-    mandatoryComplianceDocuments () {
+    mandatoryComplianceDocuments() {
       return this.$store.state.locums.mandatoryComplianceDocuments
     },
 
-    authAdminPermissions () {
-      return this.$store.getters["permissions"]
+    authAdminPermissions() {
+      return this.$store.getters['permissions']
     },
 
-    complianceDocumentRejectReasonSeletionList () {
+    complianceDocumentRejectReasonSeletionList() {
       if (!this.locumReferenceComplianceDocumentIdToRejectId) {
         return []
       }
 
-      const locumReferenceComplianceDocumentIdToReject = this.referenceCompDocs
-        .find(({ id }) => id === this.locumReferenceComplianceDocumentIdToRejectId)
+      const locumReferenceComplianceDocumentIdToReject = this.referenceCompDocs.find(
+        ({ id }) => id === this.locumReferenceComplianceDocumentIdToRejectId
+      )
 
       return locumReferenceComplianceDocumentIdToReject
         ? (locumReferenceComplianceDocumentIdToReject.compliance_document_reject_reasons || [])
-          .map(({ reject_reason: rejectReason }) => ({
-            label: rejectReason,
-            value: rejectReason,
-          })).concat([{
-            label: 'Other',
-            value: '',
-          }])
+            .map(({ reject_reason: rejectReason }) => ({
+              label: rejectReason,
+              value: rejectReason
+            }))
+            .concat([
+              {
+                label: 'Other',
+                value: ''
+              }
+            ])
         : []
-    },
+    }
   },
-  
+
   watch: {
-    selectedComplianceDocumentRejectReasonValue (newVal, oldVal) {
+    selectedComplianceDocumentRejectReasonValue(newVal, oldVal) {
       if (!newVal && oldVal) {
         this.notes = ''
       }
@@ -835,28 +779,30 @@ export default {
       this.formErrors = []
     },
 
-    locumReferenceComplianceDocumentIdToRejectId () {
+    locumReferenceComplianceDocumentIdToRejectId() {
       if (!this.locumReferenceComplianceDocumentIdToRejectId) {
         this.selectedComplianceDocumentRejectReasonValue = ''
         this.notes = ''
         return
       }
 
-      const locumReferenceComplianceDocumentIdToReject = this.referenceCompDocs
-        .find(({ id }) => id === this.locumReferenceComplianceDocumentIdToRejectId)
+      const locumReferenceComplianceDocumentIdToReject = this.referenceCompDocs.find(
+        ({ id }) => id === this.locumReferenceComplianceDocumentIdToRejectId
+      )
 
       if (locumReferenceComplianceDocumentIdToReject) {
-        const selectedComplianceDocumentRejectReason = locumReferenceComplianceDocumentIdToReject.compliance_document_reject_reasons
-          .find(({ reject_reason: rejectReason }) => rejectReason === locumReferenceComplianceDocumentIdToReject.note)
+        const selectedComplianceDocumentRejectReason = locumReferenceComplianceDocumentIdToReject.compliance_document_reject_reasons.find(
+          ({ reject_reason: rejectReason }) => rejectReason === locumReferenceComplianceDocumentIdToReject.note
+        )
 
         this.selectedComplianceDocumentRejectReasonValue = selectedComplianceDocumentRejectReason
           ? selectedComplianceDocumentRejectReason.reject_reason
           : locumReferenceComplianceDocumentIdToReject.note
-            ? ''
-            : null
+          ? ''
+          : null
       }
     },
-    notes () {
+    notes() {
       this.formErrors = []
 
       if (!(this.selectedComplianceDocumentRejectReasonValue || this.notes)) {
@@ -864,14 +810,14 @@ export default {
           {
             field: 'note',
             message: 'Note is required.',
-            validation: 'required',
-          },
+            validation: 'required'
+          }
         ]
       }
-    },
+    }
   },
 
-  async created () {
+  async created() {
     // let route = this.$route.params.id
     // await this.getData()
     this.query = {
@@ -880,8 +826,8 @@ export default {
     await this.getCompliances()
   },
 
-  methods:{
-    fileChangedHandler () {
+  methods: {
+    fileChangedHandler() {
       console.log('fileChangedHandler')
 
       const inputFile = this.$refs.inputFile
@@ -897,7 +843,7 @@ export default {
       if (!this.locumComplianceDocumentId) {
         return
       }
-      
+
       // vnd.openxmlformats-officedocument.wordprocessingml.document - docx type
       const types = [
         'pdf',
@@ -907,7 +853,7 @@ export default {
         'vnd.openxmlformats-officedocument.wordprocessingml.document',
         'vnd.openxmlformats-officedocument.wordprocessingml.template',
         'vnd.ms-word.document.macroEnabled.12',
-        'vnd.ms-word.template.macroEnabled.12',
+        'vnd.ms-word.template.macroEnabled.12'
       ]
 
       const file = inputFile.files[0]
@@ -918,7 +864,7 @@ export default {
         this.$store.commit('SET_NOTIFICATION', {
           enabled: true,
           status: 'alert',
-          text: 'Invalid File Format',
+          text: 'Invalid File Format'
         })
 
         return
@@ -934,7 +880,7 @@ export default {
         .then(() => {
           return this.getCompliances()
         })
-        .catch((err) => {
+        .catch(err => {
           console.log('err', err.response || err)
 
           let message = null
@@ -951,7 +897,7 @@ export default {
             this.$store.commit('SET_NOTIFICATION', {
               enabled: true,
               status: 'danger',
-              text: message,
+              text: message
             })
           }
         })
@@ -961,7 +907,7 @@ export default {
         })
     },
 
-    newFileChangedHandler () {
+    newFileChangedHandler() {
       console.log('newFileChangedHandler')
 
       const newInputFile = this.$refs.newInputFile
@@ -981,7 +927,7 @@ export default {
       if (!this.complianceDocumentId) {
         return
       }
-      
+
       // vnd.openxmlformats-officedocument.wordprocessingml.document - docx type
       const types = [
         'pdf',
@@ -991,7 +937,7 @@ export default {
         'vnd.openxmlformats-officedocument.wordprocessingml.document',
         'vnd.openxmlformats-officedocument.wordprocessingml.template',
         'vnd.ms-word.document.macroEnabled.12',
-        'vnd.ms-word.template.macroEnabled.12',
+        'vnd.ms-word.template.macroEnabled.12'
       ]
 
       const file = newInputFile.files[0]
@@ -1002,7 +948,7 @@ export default {
         this.$store.commit('SET_NOTIFICATION', {
           enabled: true,
           status: 'alert',
-          text: 'Invalid File Format',
+          text: 'Invalid File Format'
         })
 
         return
@@ -1022,7 +968,7 @@ export default {
         .then(() => {
           return this.getCompliances()
         })
-        .catch((err) => {
+        .catch(err => {
           console.log('err', err.response || err)
 
           let message = null
@@ -1039,7 +985,7 @@ export default {
             this.$store.commit('SET_NOTIFICATION', {
               enabled: true,
               status: 'danger',
-              text: message,
+              text: message
             })
           }
         })
@@ -1049,29 +995,26 @@ export default {
         })
     },
 
-    getQuery (){
+    getQuery() {
       const query = {
         ...this.$route.query
       }
-      const offset = parseInt(query.page)*10 - 10 
+      const offset = parseInt(query.page) * 10 - 10
       return offset
     },
-    
-    async getData (){
-      try{
+
+    async getData() {
+      try {
         // this.professionCategoryId = this.user.locum_detail.profession.profession_category.id
-
         // this.locumMandatoryTrainings = this.user.locum_detail.mandatory_trainings
-
         // const proCat = await this.$axios.$get(`/api/v1/admin/profession-categories/${this.professionCategoryId}`).then(res =>{
         //   this.professionCategory = res.data.profession_category
         // })
-
         // const mandatoryComplianceDocuments = await this.professionCategory.mandatory_compliance_documents.map((mandatoryComplianceDocument)=>{
         //   const locumMandatoryComplianceDocument = this.user.locum_detail.compliance_documents.find((complianceDocument) => {
         //     return complianceDocument.compliance_document.id === mandatoryComplianceDocument.id
         //   })
-        //   return{ 
+        //   return{
         //     mandatoryComplianceDocument,
         //     locumMandatoryComplianceDocument
         //   }
@@ -1085,52 +1028,71 @@ export default {
         //     locumOptionalComplianceDocument
         //   }
         // })
-
         // const allLocumComplianceDocuments = await this.user.locum_detail.compliance_documents //====> USE THIS FOR LATER AS REPLACEMENT FOR STATE
-
         // await this.$store.commit('locums/SET_MANDATORY_DOCS', mandatoryComplianceDocuments)
         // await this.$store.commit('locums/SET_LOCUM_COMP_DOCS', allLocumComplianceDocuments)
-      }catch(err){
-
-        // this.$store.commit('SET_NOTIFICATION',{ 
-        //   enabled: true, 
-        //   status:'danger', 
+      } catch (err) {
+        // this.$store.commit('SET_NOTIFICATION',{
+        //   enabled: true,
+        //   status:'danger',
         //   text:err.response.data.message
         // })
-        console.log("get data error!!", err)
+        console.log('get data error!!', err)
       }
     },
 
-    async getCompliances (){
+    async getCompliances() {
       try {
         this.$emit('loadingCompliances', true)
+
         await this.$axios.$get(`/api/v1/admin/locum-user-compliances/${this.user.id}`).then(res => {
-          this.referenceCompDocs = res.data.user.reference_locum_compliance_documents
-          this.mandatoryCompDocs = res.data.user.mandatory_locum_compliance_documents
-          this.otherMandatoryCompDocs = res.data.user.other_mandatory_locum_compliance_documents
-          this.optionalCompDocs = res.data.user.optional_locum_compliance_documents
-          this.locumMandatoryTrainings = res.data.user.locum_mandatory_trainings
+          const formatUploadedAt = (docs = []) => {
+            return docs.map(doc => ({
+              ...doc,
+
+              uploaded_at: doc.uploaded_at ? new Date(doc.uploaded_at).toLocaleDateString('en-GB') : null,
+
+              child_locum_compliance_documents: (doc.child_locum_compliance_documents || []).map(child => ({
+                ...child,
+
+                uploaded_at: child.uploaded_at ? new Date(child.uploaded_at).toLocaleDateString('en-GB') : null
+              }))
+            }))
+          }
+
+          this.referenceCompDocs = formatUploadedAt(res.data.user.reference_locum_compliance_documents)
+
+          this.mandatoryCompDocs = formatUploadedAt(res.data.user.mandatory_locum_compliance_documents)
+
+          this.otherMandatoryCompDocs = formatUploadedAt(res.data.user.other_mandatory_locum_compliance_documents)
+
+          this.optionalCompDocs = formatUploadedAt(res.data.user.optional_locum_compliance_documents)
+
+          this.locumMandatoryTrainings = formatUploadedAt(res.data.user.locum_mandatory_trainings)
         })
+
         this.$emit('loadingCompliances', false)
       } catch (err) {
         console.log('err', err.response || err)
-        this.$store.commit('SET_NOTIFICATION',{ 
-          enabled: true, 
-          status:'danger', 
-          text:err.response.data.message
+
+        this.$store.commit('SET_NOTIFICATION', {
+          enabled: true,
+          status: 'danger',
+          text: err.response.data.message
         })
+
         this.$emit('loadingCompliances', false)
       }
     },
 
-    async toUpdateReferenceNums (id, status, note) {
+    async toUpdateReferenceNums(id, status, note) {
       if (status === 'Rejected' && !(this.selectedComplianceDocumentRejectReasonValue || note)) {
         this.formErrors = [
           {
             field: 'note',
             message: 'Note is required.',
-            validation: 'required',
-          },
+            validation: 'required'
+          }
         ]
 
         return
@@ -1138,9 +1100,9 @@ export default {
 
       this.$emit('loadingCompliances', true)
       try {
-        const res = await this.$axios.$put(`/api/v1/admin/locum-compliance-documents/${id}/update-status`,{
+        const res = await this.$axios.$put(`/api/v1/admin/locum-compliance-documents/${id}/update-status`, {
           status: status,
-          note: this.selectedComplianceDocumentRejectReasonValue || note,
+          note: this.selectedComplianceDocumentRejectReasonValue || note
         })
 
         this.$emit('complianceUpdated')
@@ -1149,10 +1111,10 @@ export default {
 
         this.getCompliances()
 
-        this.$store.commit('SET_NOTIFICATION',{ 
-          enabled: true, 
-          status: 'success', 
-          text: res.message,
+        this.$store.commit('SET_NOTIFICATION', {
+          enabled: true,
+          status: 'success',
+          text: res.message
         })
 
         this.$emit('loadingCompliances', false)
@@ -1181,7 +1143,7 @@ export default {
           this.$store.commit('SET_NOTIFICATION', {
             enabled: true,
             status: 'danger',
-            text: message,
+            text: message
           })
         }
 
@@ -1189,8 +1151,8 @@ export default {
       }
     },
 
-    statusStyle (status, reverseYellow) {
-      switch(status){
+    statusStyle(status, reverseYellow) {
+      switch (status) {
         case 'Approved':
           return 'bg-green-500 border-green-500 text-white lg:px-8 sm:px-4'
         case 'Expiring':
@@ -1217,28 +1179,28 @@ export default {
         default:
           return ''
       }
-    },
+    }
   }
 }
 </script>
 
 <style>
-  .note-modal {
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 10px;
-    max-height: 80%;
-    overflow: auto;
-    transition: all 0.3s ease-in-out;
-    background-color: white;
-    z-index: 512;
-  }
+.note-modal {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+  max-height: 80%;
+  overflow: auto;
+  transition: all 0.3s ease-in-out;
+  background-color: white;
+  z-index: 512;
+}
 
-  @media screen and (min-width: 768px) {
-    .note-modal {
-      min-width: 600px;
-    }
+@media screen and (min-width: 768px) {
+  .note-modal {
+    min-width: 600px;
   }
+}
 </style>
