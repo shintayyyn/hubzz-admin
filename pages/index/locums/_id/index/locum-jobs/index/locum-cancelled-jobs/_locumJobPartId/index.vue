@@ -1,36 +1,34 @@
 <template>
   <div>
-    <JobPartModal :specificJobPart="specificJobPart" :isNuxtChild="true"/>
+    <JobPartModal :specificJobPart="specificJobPart" :isNuxtChild="true" />
   </div>
 </template>
 <script>
 import JobPartModal from '@/components/Base/JobPartModal'
 export default {
-  components:{
-    JobPartModal,
+  components: {
+    JobPartModal
   },
-  data (){
-    return{
-      specificJobPart:'',
+  data() {
+    return {
+      specificJobPart: '',
       locumUserId: ''
     }
   },
-  computed:{
-
-  },
-  async asyncData ({ app, store, route, error }){
-    try{
+  computed: {},
+  async asyncData({ app, store, route, error }) {
+    try {
       let response = await app.$axios.$get(`/api/v1/admin/job-parts/${route.params.locumJobPartId}`)
       const specificJobPart = response.data.job_part
       const locumUserId = route.params.id
-      return{
+      return {
         specificJobPart,
         locumUserId
       }
-    }catch(err){
-      error({statusCode: 404})
-      store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
-      console.log('get job error!',err)
+    } catch (err) {
+      error({ statusCode: 404 })
+      store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+      console.log('get job error!', err)
     }
   }
 }
@@ -44,9 +42,9 @@ export default {
   width: 100%;
   height: 100%;
   overflow: auto;
-  border-left: solid 2px #FFC72C;
+  border-left: solid 2px #ffc72c;
   transition: all 0.3s ease-in-out;
-  background-color:#505561;
+  background-color: #505561;
   z-index: 512;
 }
 @media screen and (min-width: 1200px) {

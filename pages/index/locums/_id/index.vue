@@ -14,7 +14,7 @@
 
         <nuxt-link
           v-if="authAdminPermissions.includes('View Locum Jobs')"
-          :to="{ name: 'index-locums-id-index-locum-jobs-index', params: { id: $route.params.id } }"
+          :to="{ name: 'index-locums-id-index-locum-jobs-index-locum-allocated-jobs', params: { id: $route.params.id } }"
           class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
           :class="$route.path.includes(`/locums/${$route.params.id}/locum-jobs`) ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
         >
@@ -66,7 +66,7 @@ export default {
    async asyncData ({ store, error }) {
     try {
       const authAdminPermissions = store.getters["permissions"]
-      
+
       const locumPermissions = authAdminPermissions.filter(item => item.includes('View Locum'))
 
       return {

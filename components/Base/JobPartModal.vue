@@ -625,6 +625,15 @@ export default {
           if (res.data && res.data.job_parts) {
             this.jobParts = res.data.job_parts
             this.totalPages = Math.ceil((res.data.total || res.data.job_parts.length) / params.limit)
+
+            if (this.jobParts.length === 1) {
+              // Only one job part — auto-select it
+              this.show(this.jobParts[0].id)
+            } else if (this.jobParts.length > 1 && this.specificJobPart) {
+              // Multiple job parts — match by specificJobPart.id
+              const matched = this.jobParts.find(jp => jp.id == this.specificJobPart.id)
+              this.show(matched ? matched.id : this.jobParts[0].id)
+            }
           }
         })
         .catch(err => {
