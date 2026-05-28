@@ -3,62 +3,62 @@
     <div>
       <AppLoading :loading="loading" spinner />
 
-      <div v-if="!$route.params.pracUserId && !$route.params.roleId && !$route.params.pracDocId && !$route.params.practiceSessionPartId && !$route.params.invitationId" 
-      class="flex flex-row justify-start overflow-x-auto border-b border-yellow-500 pt-1">
+      <div
+        v-if="
+          !$route.params.pracUserId &&
+            !$route.params.roleId &&
+            !$route.params.pracDocId &&
+            !$route.params.practiceSessionPartId &&
+            !$route.params.invitationId
+        "
+        class="flex flex-row justify-start overflow-x-auto border-b border-yellow-500 pt-1"
+      >
         <nuxt-link
           v-if="practicePermissions.includes('View Practices')"
           :to="`/practices/${$route.params.id}`"
           class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
-          :class="
-            $route.name === 'index-practices-id-index'
-              ? 'border-b-4 border-yellow-500' : 'text-gray-600'
-          "
+          :class="$route.name === 'index-practices-id-index' ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
         >
           Practice
         </nuxt-link>
 
         <nuxt-link
           v-if="
-            practice 
-              && practice.type === 'Hub'
-              && practice.status !== 'Inactive'
-              && practice.status !== 'Bogus'
-              && practice.status !== 'Deleted'
-              && practicePermissions.includes('View Surgery Management')
+            practice &&
+              practice.type === 'Hub' &&
+              practice.status !== 'Inactive' &&
+              practice.status !== 'Bogus' &&
+              practice.status !== 'Deleted' &&
+              practicePermissions.includes('View Surgery Management')
           "
           :to="`/practices/${$route.params.id}/practice-surgeries`"
           class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
-          :class="
-            $route.path.includes(`/practices/${$route.params.id}/practice-surgeries`)
-              ? 'border-b-4 border-yellow-500' : 'text-gray-600'
-          "
+          :class="$route.path.includes(`/practices/${$route.params.id}/practice-surgeries`) ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
         >
           Surgery Management
         </nuxt-link>
 
         <nuxt-link
           v-if="
-            practice 
-              && practice.type === 'Spoke' 
-              && (practice.status !== 'Inactive' 
-              && practice.status !== 'Bogus' 
-              && practice.status !== 'Deleted')
-              && practicePermissions.includes('View Surgery Management')
+            practice &&
+              practice.type === 'Spoke' &&
+              practice.status !== 'Inactive' && practice.status !== 'Bogus' && practice.status !== 'Deleted' &&
+              practicePermissions.includes('View Surgery Management')
           "
           :to="`/practices/${$route.params.id}/practice-hub`"
           class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
-          :class="$route.path == `/practices/${$route.params.id}/practice-hub`? 'border-b-4 border-yellow-500' : 'text-gray-600'"
+          :class="$route.path == `/practices/${$route.params.id}/practice-hub` ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
         >
           Hub
         </nuxt-link>
 
         <nuxt-link
           v-if="
-            practice 
-              && practice.status !== 'Inactive' 
-              && practice.status !== 'Bogus' 
-              && practice.status !== 'Deleted'
-              && practicePermissions.includes('View Surgery Management')
+            practice &&
+              practice.status !== 'Inactive' &&
+              practice.status !== 'Bogus' &&
+              practice.status !== 'Deleted' &&
+              practicePermissions.includes('View Surgery Management')
           "
           :to="`/practices/${$route.params.id}/practice-invitations`"
           class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
@@ -68,12 +68,7 @@
         </nuxt-link>
 
         <nuxt-link
-          v-if="
-            practice 
-              && practice.status !== 'Inactive' 
-              && practice.status !== 'Bogus'
-              && practicePermissions.includes('View Practice Sessions')
-          "
+          v-if="practice && practice.status !== 'Inactive' && practice.status !== 'Bogus' && practicePermissions.includes('View Practice Sessions')"
           :to="`/practices/${$route.params.id}/practice-sessions`"
           class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
           :class="$route.path.includes(`/practices/${$route.params.id}/practice-sessions`) ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
@@ -82,11 +77,7 @@
         </nuxt-link>
 
         <nuxt-link
-          v-if="
-            practice 
-              && practice.status !== 'Deleted'
-              && practicePermissions.includes('View Practice Users')
-          "
+          v-if="practice && practice.status !== 'Deleted' && practicePermissions.includes('View Practice Users')"
           :to="`/practices/${$route.params.id}/practice-users`"
           class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
           :class="$route.path.includes(`/practices/${$route.params.id}/practice-users`) ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
@@ -95,13 +86,8 @@
         </nuxt-link>
 
         <nuxt-link
-          v-if="
-            practice 
-              && practice.status !== 'Bogus' 
-              && practice.status !== 'Deleted'
-              && practicePermissions.includes('View Practice Documents')
-          "
-          :to="`/practices/${$route.params.id}/practice-documents` "
+          v-if="practice && practice.status !== 'Bogus' && practice.status !== 'Deleted' && practicePermissions.includes('View Practice Documents')"
+          :to="`/practices/${$route.params.id}/practice-documents`"
           class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
           :class="$route.path == `/practices/${$route.params.id}/practice-documents` ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
         >
@@ -109,12 +95,7 @@
         </nuxt-link>
 
         <nuxt-link
-          v-if="
-            practice 
-              && practice.status !== 'Bogus' 
-              && practice.status !== 'Deleted'
-              && practicePermissions.includes('View Practice Rates')
-          "
+          v-if="practice && practice.status !== 'Bogus' && practice.status !== 'Deleted' && practicePermissions.includes('View Practice Rates')"
           :to="`/practices/${$route.params.id}/practice-rates`"
           class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
           :class="$route.path == `/practices/${$route.params.id}/practice-rates` ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
@@ -124,11 +105,7 @@
       </div>
     </div>
 
-    <nuxt-child
-      :practice="practice"
-      :professionComplianceCategories="professionComplianceCategories"
-      @practiceUpdated="practiceUpdatedHandler"
-    />
+    <nuxt-child :practice="practice" :professionComplianceCategories="professionComplianceCategories" @practiceUpdated="practiceUpdatedHandler" />
   </section>
 </template>
 
@@ -136,29 +113,29 @@
 import AppLoading from '@/components/Base/AppLoading'
 export default {
   components: {
-    AppLoading,
+    AppLoading
   },
 
   props: {
     professionComplianceCategories: {
       type: Array,
-      default: () => null,
-    },
+      default: () => null
+    }
   },
 
-  data () {
+  data() {
     return {
       loading: false,
       practice: null,
-      practicePermissions: null,
+      practicePermissions: null
     }
   },
 
   computed: {
-    getRoute () {
+    getRoute() {
       return tab => {
         if (!tab) {
-          tab = ""
+          tab = ''
         }
         const query = {
           ...this.$route.query
@@ -166,65 +143,64 @@ export default {
         delete query.order_by
         delete query.status
         return {
-          path: tab
-            ? `/practices/${this.$route.params.id}/${tab}`
-            : `/practices/${this.$route.params.id}`,
+          path: tab ? `/practices/${this.$route.params.id}/${tab}` : `/practices/${this.$route.params.id}`,
           query
         }
       }
     }
   },
 
-  async asyncData ({ app, route ,store }) {
+  async asyncData({ app, route, store }) {
     try {
       let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}`)
 
       const practice = response.data.practice
 
-      const authAdminPermissions = await store.getters["permissions"]
-      
-      const practicePermissions = await authAdminPermissions.filter(item => item.includes('View Practice') || item.includes('View Surgery Management'))
+      const authAdminPermissions = await store.getters['permissions']
 
-      await store.commit("practices/SET_SPECIFIC_PRACTICE", practice)
-      
+      const practicePermissions = await authAdminPermissions.filter(
+        item => item.includes('View Practice') || item.includes('View Surgery Management')
+      )
+
+      await store.commit('practices/SET_SPECIFIC_PRACTICE', practice)
+
       return {
         practice,
         practicePermissions
       }
-
     } catch (err) {
-      store.commit("SET_NOTIFICATION", {
-				enabled: true,
-				status: "danger",
-				text: "Something went wrong!"
-			})
-			console.log("Get hubzz invoices error!", err)
+      store.commit('SET_NOTIFICATION', {
+        enabled: true,
+        status: 'danger',
+        text: 'Something went wrong!'
+      })
+      console.log('Get hubzz invoices error!', err)
     }
   },
 
-  created () {
+  created() {
     let toRedirect = ''
     if (this.practicePermissions.find(item => item === 'View Practices') === undefined) {
       console.log('redirecting')
       switch (this.practicePermissions[0]) {
-        case "View Practice Sessions":
-          toRedirect = "practice-sessions"
+        case 'View Practice Sessions':
+          toRedirect = 'practice-sessions'
           break
-        case "View Surgery Management":
+        case 'View Surgery Management':
           if (this.practice.type !== 'Hub') {
-            toRedirect = "practice-hub"
+            toRedirect = 'practice-hub'
           } else {
-            toRedirect = "practice-surgeries"
+            toRedirect = 'practice-surgeries'
           }
           break
-        case "View Practice Users":
-          toRedirect = "practice-users"
+        case 'View Practice Users':
+          toRedirect = 'practice-users'
           break
-        case "View Practice Documents":
-          toRedirect = "practice-documents"
+        case 'View Practice Documents':
+          toRedirect = 'practice-documents'
           break
-        case "View Practice Rates":
-          toRedirect = "practice-rates"
+        case 'View Practice Rates':
+          toRedirect = 'practice-rates'
           break
         default:
           toRedirect = ''
@@ -234,9 +210,9 @@ export default {
   },
 
   methods: {
-    practiceUpdatedHandler (practice) {
+    practiceUpdatedHandler(practice) {
       console.log('practiceUpdatedHandler', practice)
-      
+
       if (practice) {
         this.practice = practice
       } else {
@@ -246,51 +222,51 @@ export default {
       this.$emit('practiceUpdated', practice)
     },
 
-    async getPractice () {
+    async getPractice() {
       await this.$axios.$get(`/api/v1/admin/practices/${this.$route.params.id}`).then(res => {
         const practice = res.data.practice
-        this.$store.commit("practices/SET_SPECIFIC_PRACTICE", practice)
+        this.$store.commit('practices/SET_SPECIFIC_PRACTICE', practice)
       })
-    },
-  },
+    }
+  }
 }
 </script>
 
 <style>
-  .card {
-    min-width: 100px;
-    height: 250px;
-    box-sizing: content-box;
-  }
+.card {
+  min-width: 100px;
+  height: 250px;
+  box-sizing: content-box;
+}
 
-  .practice-shield {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #333;
-    opacity: 0.5;
-    z-index: 511;
-  }
+.practice-shield {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #333;
+  opacity: 0.5;
+  z-index: 511;
+}
 
+.practice-modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin-right: 0%;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  border-left: solid 2px #ffc72c;
+  transition: all 0.3s ease-in-out;
+  background-color: #505561;
+  z-index: 512;
+}
+
+@media screen and (min-width: 1200px) {
   .practice-modal {
-    position: fixed;
-    top: 0;
-    right: 0;
-    margin-right: 0%;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    border-left: solid 2px #ffc72c;
-    transition: all 0.3s ease-in-out;
-    background-color: #505561;
-    z-index: 512;
+    width: 80%;
   }
-
-  @media screen and (min-width: 1200px) {
-    .practice-modal {
-      width: 80%;
-    }
-  }
+}
 </style>

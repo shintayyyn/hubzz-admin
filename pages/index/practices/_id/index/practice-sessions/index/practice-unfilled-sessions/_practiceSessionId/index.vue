@@ -8,7 +8,7 @@ import PracticeSessionModal from '@/components/Practices/PracticeSessionModal'
 export default {
     components:{
         PracticeSessionModal
-    },  
+    },
     data (){
         return{
             job:'',

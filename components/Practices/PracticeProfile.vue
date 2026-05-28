@@ -1,10 +1,7 @@
 <template>
   <div class="flex flex-col rounded-lg">
     <div class="flex flex-col lg:flex-row">
-      <form
-        class="order-2 lg:order-1 flex flex-col  p-4 my-1 lg:my-0 border rounded-lg w-full"
-        @submit.prevent
-      >
+      <form class="order-2 lg:order-1 flex flex-col  p-4 my-1 lg:my-0 border rounded-lg w-full" @submit.prevent>
         <div class="flex flex-wrap">
           <!-- VIEW PRIMARY INFORMATION -->
           <div class="w-full md:w-1/3 text-gray-800 text-sm">
@@ -20,10 +17,9 @@
             </p>
             <p class="flex flex-wrap items-center  text-sm mb-2 md:px-2">
               <span class="mr-2">{{ practice.name }}</span>
-              <span
-                class="inline-flex px-4 py-1 mr-2 mb-1 rounded-lg text-sm md:px-2"
-                :class="practiceTypeStyle(practice.type)"
-              >{{ practice.type }}</span>
+              <span class="inline-flex px-4 py-1 mr-2 mb-1 rounded-lg text-sm md:px-2" :class="practiceTypeStyle(practice.type)">{{
+                practice.type
+              }}</span>
               <span
                 v-if="practice.type === 'Hub' && practice.hub_type === 'Type 2'"
                 class="inline-flex px-4 py-1 mr-2 mb-1 rounded-lg text-sm md:px-2"
@@ -59,9 +55,7 @@
             <p class="flex font-bold">
               CCG
             </p>
-            <p
-              class="flex  text-sm md:px-2 mb-2"
-            >
+            <p class="flex  text-sm md:px-2 mb-2">
               {{ practice.clinical_commissioning_group_name }}
             </p>
 
@@ -69,10 +63,7 @@
               Practice Types
             </p>
 
-            <div
-              v-if="practice.practice_types && practice.practice_types.length > 0"
-              class="flex flex-wrap mb-2"
-            >
+            <div v-if="practice.practice_types && practice.practice_types.length > 0" class="flex flex-wrap mb-2">
               <p
                 v-for="practiceType in practice.practice_types"
                 :key="practiceType.id"
@@ -90,34 +81,29 @@
 
             <template
               v-if="
-                practice.practice_profession_compliance_category_compliance_documents
-                  && practice.practice_profession_compliance_category_compliance_documents.length > 0
+                practice.practice_profession_compliance_category_compliance_documents &&
+                  practice.practice_profession_compliance_category_compliance_documents.length > 0
               "
             >
-              <div
-                v-for="professionComplianceCategory in professionComplianceCategories"
-                :key="professionComplianceCategory.id"
-                class="mb-4"
-              >
-                <p
-                  class="flex font-bold"
-                >
+              <div v-for="professionComplianceCategory in professionComplianceCategories" :key="professionComplianceCategory.id" class="mb-4">
+                <p class="flex font-bold">
                   Compliance Requirements for {{ professionComplianceCategory.name }}:
                 </p>
 
                 <div
-                  v-for="
-                    referenceComplianceDocument in professionComplianceCategory.reference_compliance_documents
-                      .filter((referenceComplianceDocument) => {
-                        return practice.practice_profession_compliance_category_compliance_documents
-                          .some(practiceProfessionComplianceCategoryComplianceDocument => {
-                            return practiceProfessionComplianceCategoryComplianceDocument.compliance_document_id
-                              === referenceComplianceDocument.id
-                              && practiceProfessionComplianceCategoryComplianceDocument.profession_compliance_category_id
-                                === professionComplianceCategory.id
-                          })
-                      })
-                  "
+                  v-for="referenceComplianceDocument in professionComplianceCategory.reference_compliance_documents.filter(
+                    referenceComplianceDocument => {
+                      return practice.practice_profession_compliance_category_compliance_documents.some(
+                        practiceProfessionComplianceCategoryComplianceDocument => {
+                          return (
+                            practiceProfessionComplianceCategoryComplianceDocument.compliance_document_id === referenceComplianceDocument.id &&
+                            practiceProfessionComplianceCategoryComplianceDocument.profession_compliance_category_id ===
+                            professionComplianceCategory.id
+                          )
+                        }
+                      )
+                    }
+                  )"
                   :key="referenceComplianceDocument.id"
                   class=" text-sm m-1 mb-2"
                 >
@@ -130,14 +116,16 @@
                 >
                   <div
                     v-if="
-                      mandatoryComplianceDocument.compliance_document_type_name !== 'Safeguarding'
-                        && practice.practice_profession_compliance_category_compliance_documents
-                          .some(practiceProfessionComplianceCategoryComplianceDocument => {
-                            return practiceProfessionComplianceCategoryComplianceDocument.compliance_document_id
-                              === mandatoryComplianceDocument.id
-                              && practiceProfessionComplianceCategoryComplianceDocument.profession_compliance_category_id
-                                === professionComplianceCategory.id
-                          })
+                      mandatoryComplianceDocument.compliance_document_type_name !== 'Safeguarding' &&
+                        practice.practice_profession_compliance_category_compliance_documents.some(
+                          practiceProfessionComplianceCategoryComplianceDocument => {
+                            return (
+                              practiceProfessionComplianceCategoryComplianceDocument.compliance_document_id === mandatoryComplianceDocument.id &&
+                              practiceProfessionComplianceCategoryComplianceDocument.profession_compliance_category_id ===
+                              professionComplianceCategory.id
+                            )
+                          }
+                        )
                     "
                     class=" text-sm m-1 mb-2"
                   >
@@ -145,14 +133,16 @@
                   </div>
                   <template
                     v-if="
-                      mandatoryComplianceDocument.compliance_document_type_name === 'Safeguarding'
-                        && practice.practice_profession_compliance_category_compliance_documents
-                          .some(practiceProfessionComplianceCategoryComplianceDocument => {
-                            return practiceProfessionComplianceCategoryComplianceDocument.compliance_document_id
-                              === childComplianceDocument.id
-                              && practiceProfessionComplianceCategoryComplianceDocument.profession_compliance_category_id
-                                === professionComplianceCategory.id
-                          })
+                      mandatoryComplianceDocument.compliance_document_type_name === 'Safeguarding' &&
+                        practice.practice_profession_compliance_category_compliance_documents.some(
+                          practiceProfessionComplianceCategoryComplianceDocument => {
+                            return (
+                              practiceProfessionComplianceCategoryComplianceDocument.compliance_document_id === childComplianceDocument.id &&
+                              practiceProfessionComplianceCategoryComplianceDocument.profession_compliance_category_id ===
+                              professionComplianceCategory.id
+                            )
+                          }
+                        )
                     "
                   >
                     <div
@@ -171,14 +161,16 @@
                 >
                   <div
                     v-if="
-                      optionalComplianceDocument.compliance_document_type_name !== 'Safeguarding'
-                        && practice.practice_profession_compliance_category_compliance_documents
-                          .some(practiceProfessionComplianceCategoryComplianceDocument => {
-                            return practiceProfessionComplianceCategoryComplianceDocument.compliance_document_id
-                              === optionalComplianceDocument.id
-                              && practiceProfessionComplianceCategoryComplianceDocument.profession_compliance_category_id
-                                === professionComplianceCategory.id
-                          })
+                      optionalComplianceDocument.compliance_document_type_name !== 'Safeguarding' &&
+                        practice.practice_profession_compliance_category_compliance_documents.some(
+                          practiceProfessionComplianceCategoryComplianceDocument => {
+                            return (
+                              practiceProfessionComplianceCategoryComplianceDocument.compliance_document_id === optionalComplianceDocument.id &&
+                              practiceProfessionComplianceCategoryComplianceDocument.profession_compliance_category_id ===
+                              professionComplianceCategory.id
+                            )
+                          }
+                        )
                     "
                     class=" text-sm m-1 mb-2"
                   >
@@ -186,14 +178,16 @@
                   </div>
                   <template
                     v-if="
-                      optionalComplianceDocument.compliance_document_type_name === 'Safeguarding'
-                        && practice.practice_profession_compliance_category_compliance_documents
-                          .some(practiceProfessionComplianceCategoryComplianceDocument => {
-                            return practiceProfessionComplianceCategoryComplianceDocument.compliance_document_id
-                              === childComplianceDocument.id
-                              && practiceProfessionComplianceCategoryComplianceDocument.profession_compliance_category_id
-                                === professionComplianceCategory.id
-                          })
+                      optionalComplianceDocument.compliance_document_type_name === 'Safeguarding' &&
+                        practice.practice_profession_compliance_category_compliance_documents.some(
+                          practiceProfessionComplianceCategoryComplianceDocument => {
+                            return (
+                              practiceProfessionComplianceCategoryComplianceDocument.compliance_document_id === childComplianceDocument.id &&
+                              practiceProfessionComplianceCategoryComplianceDocument.profession_compliance_category_id ===
+                              professionComplianceCategory.id
+                            )
+                          }
+                        )
                     "
                   >
                     <div
@@ -213,19 +207,15 @@
                 Mandatory Trainings
               </p>
 
-              <div
-                v-for="mandatoryTraining in practice.mandatory_trainings"
-                :key="mandatoryTraining.id"
-                class=" text-sm m-1 mb-2"
-              >
+              <div v-for="mandatoryTraining in practice.mandatory_trainings" :key="mandatoryTraining.id" class=" text-sm m-1 mb-2">
                 <span>{{ mandatoryTraining.name }}</span>
               </div>
             </div>
 
             <div
               v-if="
-                practice.practice_profession_compliance_category_compliance_documents
-                  && practice.practice_profession_compliance_category_compliance_documents.length === 0
+                practice.practice_profession_compliance_category_compliance_documents &&
+                  practice.practice_profession_compliance_category_compliance_documents.length === 0
               "
             >
               <p class="flex  md:text-base py-2 font-bold leading-tight">
@@ -255,9 +245,7 @@
                     Vat Number
                   </p>
 
-                  <p
-                    class="flex  text-sm md:px-2 mb-2"
-                  >
+                  <p class="flex  text-sm md:px-2 mb-2">
                     {{ practice.vat_number ? practice.vat_number : 'N/A' }}
                   </p>
 
@@ -265,9 +253,7 @@
                     Tax Year End Date
                   </p>
 
-                  <p
-                    class="flex  text-sm md:px-2 mb-2"
-                  >
+                  <p class="flex  text-sm md:px-2 mb-2">
                     {{ practice.tax_year_end_date ? $moment(practice.tax_year_end_date, 'YYYY-MM-DD').format('DD/MM/YYYY') : 'N/A' }}
                   </p>
                 </template>
@@ -281,9 +267,7 @@
                     Account name
                   </p>
 
-                  <p
-                    class="flex md:mx-2 mb-2"
-                  >
+                  <p class="flex md:mx-2 mb-2">
                     {{ practice && practice.account_name ? practice.account_name : 'N/A' }}
                   </p>
 
@@ -291,9 +275,7 @@
                     Bank name
                   </p>
 
-                  <p
-                    class="flex md:mx-2 mb-2"
-                  >
+                  <p class="flex md:mx-2 mb-2">
                     {{ practice && practice.bank_name ? practice.bank_name : 'N/A' }}
                   </p>
 
@@ -301,9 +283,7 @@
                     Sort code
                   </p>
 
-                  <p
-                    class="flex md:mx-2 mb-2"
-                  >
+                  <p class="flex md:mx-2 mb-2">
                     {{ practice && practice.sort_code ? practice.sort_code : 'N/A' }}
                   </p>
 
@@ -311,9 +291,7 @@
                     Account number
                   </p>
 
-                  <p
-                    class="flex md:mx-2 mb-2"
-                  >
+                  <p class="flex md:mx-2 mb-2">
                     {{ practice && practice.account_number ? practice.account_number : 'N/A' }}
                   </p>
                 </div>
@@ -334,36 +312,26 @@
                   <p class="flex font-bold">
                     Sage reference
                   </p>
-                  <p
-                    class="flex  text-sm md:px-2 mb-2"
-                  >
+                  <p class="flex  text-sm md:px-2 mb-2">
                     {{ practice.sage_ref ? practice.sage_ref : 'N/A' }}
                   </p>
                 </template>
                 <p class="flex text-gray-800 font-bold">
                   Phone Number
                 </p>
-                <p
-                  class="flex md:mx-2 mb-2"
-                >
+                <p class="flex md:mx-2 mb-2">
                   {{ practice && practice.phone_number ? practice.phone_number : 'N/A' }}
                 </p>
                 <p class="flex text-gray-800 font-bold">
                   Full name to report to
                 </p>
-                <p
-                  class="flex md:mx-2 mb-2"
-                >
+                <p class="flex md:mx-2 mb-2">
                   {{ practice && practice.report_to ? practice.report_to : 'N/A' }}
                 </p>
-                <p
-                  class="flex text-gray-800 font-bold"
-                >
+                <p class="flex text-gray-800 font-bold">
                   Extra information (Parking restrictions, transport links, etc.)
                 </p>
-                <p
-                  class="flex md:mx-2 mb-2"
-                >
+                <p class="flex md:mx-2 mb-2">
                   {{ practice && practice.extra_information ? practice.extra_information : 'N/A' }}
                 </p>
                 <!-- <div class="flex items-center mb-2">
@@ -456,25 +424,10 @@
               <!-- EDITING OTHER INFORMATION -->
               <div v-if="toEdit && authAdminPermissions.includes('Edit Practice Other Information')">
                 <template v-if="['true', true].includes(toPutPractice.direct_debit)">
-                  <AppInput
-                    v-model="toPutPractice.sage_ref"
-                    :type="'text'"
-                    :name="'sage_ref'"
-                    :label="'Sage reference'"
-                  />
+                  <AppInput v-model="toPutPractice.sage_ref" :type="'text'" :name="'sage_ref'" :label="'Sage reference'" />
                 </template>
-                <AppInput
-                  v-model="toPutPractice.phone_number"
-                  :type="'text'"
-                  :name="'phonenumber'"
-                  :label="'Phone Number'"
-                />
-                <AppInput
-                  v-model="toPutPractice.report_to"
-                  :type="'text'"
-                  :name="'report_to'"
-                  :label="'Full name to report to'"
-                />
+                <AppInput v-model="toPutPractice.phone_number" :type="'text'" :name="'phonenumber'" :label="'Phone Number'" />
+                <AppInput v-model="toPutPractice.report_to" :type="'text'" :name="'report_to'" :label="'Full name to report to'" />
                 <AppInput
                   v-model="toPutPractice.extra_information"
                   :type="'textarea'"
@@ -505,26 +458,30 @@
                 <AppButton
                   v-if="authAdminPermissions.includes('Edit Practice Other Information')"
                   :label="toEditPracticeStatus ? 'Cancel Editing' : 'Edit'"
+                  :disabled="isDormant"
                   @click="editPracticeStatus()"
                 />
               </div>
               <div v-if="!toEditPracticeStatus" class="flex flex-col mb-2">
                 <div class="flex flex-row items-center m-2">
                   <span class="text-gray-800 mr-2 font-bold">Status:</span>
-                  <span
-                    class=" px-4 py-1 rounded-lg"
-                    :class="practice.status == 'Active' ? 'bg-green-500' : 'bg-red-600 text-white'"
-                  >{{ practice.status }}</span>
+                  <span class=" px-4 py-1 rounded-lg" :class="practice.status == 'Active' ? 'bg-green-500' : 'bg-red-600 text-white'">{{
+                    practice.status
+                  }}</span>
                 </div>
                 <div class="m-2">
                   <template v-if="practice.status === 'Active'">
                     <p class="text-gray-800 font-bold">
                       Active Until
                     </p>
-                    <p
-                      class="flex md:mx-2 mb-2"
-                    >
-                      {{ practice && practice.actived_until ? $moment(practice.actived_until, 'YYYY-MM-DD[T]').utc().format('DD/MM/YYYY') : 'N/A' }}
+                    <p class="flex md:mx-2 mb-2">
+                      {{
+                        practice && practice.actived_until
+                          ? $moment(practice.actived_until, 'YYYY-MM-DD[T]')
+                            .utc()
+                            .format('DD/MM/YYYY')
+                          : 'N/A'
+                      }}
                     </p>
                   </template>
                 </div>
@@ -550,12 +507,16 @@
                     :name="'actived_until'"
                     :label="'Active Until'"
                     is-after
-                    @blur="CheckEmptyField(toPutPractice.actived_until,'actived_until')"
+                    @blur="CheckEmptyField(toPutPractice.actived_until, 'actived_until')"
                   />
                 </div>
 
                 <div>
-                  <AppButton :label="'Change'" @click="toPutPracticeInfo" />
+                  <AppButton
+                    v-if="authAdminPermissions.includes('Edit Practice Other Information')"
+                    :label="toEditPracticeStatus ? 'Cancel Editing' : 'Edit'"
+                    @click="editPracticeStatus()"
+                  />
                 </div>
               </div>
 
@@ -573,10 +534,9 @@
               <div v-if="!toEditPracticeType">
                 <span>Practice Type:</span>
 
-                <span
-                  class="inline-flex px-4 py-1 mr-2 mb-1 rounded-lg text-sm md:px-2"
-                  :class="practiceTypeStyle(practice.type)"
-                >{{ practice.type }}</span>
+                <span class="inline-flex px-4 py-1 mr-2 mb-1 rounded-lg text-sm md:px-2" :class="practiceTypeStyle(practice.type)">{{
+                  practice.type
+                }}</span>
 
                 <span
                   v-if="practice.type === 'Hub' && practice.hub_type === 'Type 2'"
@@ -608,23 +568,16 @@
                   :placeholder="'Select...'"
                   :items="[
                     { label: 'Type 1', value: 'Type 1' },
-                    { label: 'Type 2', value: 'Type 2' },
+                    { label: 'Type 2', value: 'Type 2' }
                   ]"
                 />
 
-                <AppButton :label="'Change'" @click="toChangePracticeType(practice.id,toPutPracticeType)" />
+                <AppButton :label="'Change'" @click="toChangePracticeType(practice.id, toPutPracticeType)" />
               </div>
 
               <!-- HUBZZ PRACTICE NOTES -->
               <div class="">
-                <AppInput
-                  v-model="hubzzPracticeNotes"
-                  :type="'textarea'"
-                  :name="'hubzz_practice_notes'"
-                  :label="'Notes'"
-                  :resize="false"
-                  :rows="4"
-                />
+                <AppInput v-model="hubzzPracticeNotes" :type="'textarea'" :name="'hubzz_practice_notes'" :label="'Notes'" :resize="false" :rows="4" />
                 <AppButton :label="'Save Notes'" class="mx-1" @click="toPutPracticeNotes" />
               </div>
             </div>
@@ -665,15 +618,8 @@
                 </span>
               </li>
 
-              <li
-                v-if="practice.manual_status === 'Active' && practice.past_actived_until"
-                class="flex px-2"
-              >
-                <span
-                  class="tool flex"
-                  data-tip="Edit Profile and change practice active until."
-                  tabindex="1"
-                >
+              <li v-if="practice.manual_status === 'Active' && practice.past_actived_until" class="flex px-2">
+                <span class="tool flex" data-tip="Edit Profile and change practice active until." tabindex="1">
                   <span class="hover:font-bold">Practice expires.</span>
                 </span>
               </li>
@@ -694,11 +640,7 @@
                 </p>
 
                 <li class="flex px-2">
-                  <span
-                    class="tool flex"
-                    data-tip="Go to Documents Tab and upload the documents specified below."
-                    tabindex="1"
-                  >
+                  <span class="tool flex" data-tip="Go to Documents Tab and upload the documents specified below." tabindex="1">
                     <span class="hover:font-bold">Documents must be filled out.</span>
                   </span>
                 </li>
@@ -821,61 +763,61 @@
 </template>
 
 <script>
-import AppDate from "@/components/Base/AppDate"
-import AppInput from "@/components/Base/AppInput"
-import AppButton from "@/components/Base/AppButton"
-import AppConfirm from "@/components/Base/AppConfirm"
+import AppDate from '@/components/Base/AppDate'
+import AppInput from '@/components/Base/AppInput'
+import AppButton from '@/components/Base/AppButton'
+import AppConfirm from '@/components/Base/AppConfirm'
 
 export default {
-	components: {
-		AppDate,
-		AppInput,
-		AppButton,
-		AppConfirm
-	},
+  components: {
+    AppDate,
+    AppInput,
+    AppButton,
+    AppConfirm
+  },
 
-	props: {
-		practice: {
-			type: Object,
-			default: () => null
-		},
+  props: {
+    practice: {
+      type: Object,
+      default: () => null
+    },
 
-		professionComplianceCategories: {
-			type: Array,
-			default: () => []
-		}
-	},
+    professionComplianceCategories: {
+      type: Array,
+      default: () => []
+    }
+  },
 
-	data () {
-		return {
-			practiceStatusChoices: [],
+  data() {
+    return {
+      practiceStatusChoices: [],
 
-			toBogus: false,
-			toPutPractice: {
-				direct_debit: "",
-				sage_ref: "",
-				phone_number: "",
-				report_to: "",
-				extra_information: "",
-				status: "",
-				actived_until: "",
-			},
+      toBogus: false,
+      toPutPractice: {
+        direct_debit: '',
+        sage_ref: '',
+        phone_number: '',
+        report_to: '',
+        extra_information: '',
+        status: '',
+        actived_until: ''
+      },
 
-			toEdit: false,
-			toEditPracticeType: false,
-			toPutPracticeType: {
-				type: this.practice.type,
-				hub_type: this.practice.hub_type
-			},
+      toEdit: false,
+      toEditPracticeType: false,
+      toPutPracticeType: {
+        type: this.practice.type,
+        hub_type: this.practice.hub_type
+      },
 
-			toEditPracticeStatus: false,
-			toPutPracticeStatus: {
-				status: this.practice.status
-			},
+      toEditPracticeStatus: false,
+      toPutPracticeStatus: {
+        status: this.practice.status
+      },
 
-			hubzzPracticeNotes: "",
+      hubzzPracticeNotes: '',
 
-			showDeletePracticeModal: false,
+      showDeletePracticeModal: false,
       deletingPractice: false,
 
       showRejectDeletePracticeModal: false,
@@ -885,26 +827,29 @@ export default {
       deactivatingPractice: false,
 
       showReactivatePracticeModal: false,
-      reactivatingPractice: false,
-		}
-	},
-
-	computed: {
-		authAdminPermissions () {
-			return this.$store.getters["permissions"]
-		}
-	},
-
-  watch: {
-    practice () {
-      this.setPracticeStatusChoices()
-    },
+      reactivatingPractice: false
+    }
   },
 
-	mounted () {
+  computed: {
+    authAdminPermissions() {
+      return this.$store.getters['permissions']
+    },
+    isDormant() {
+      return this.practice?.status === 'Dormant'
+    }
+  },
+
+  watch: {
+    practice() {
+      this.setPracticeStatusChoices()
+    }
+  },
+
+  mounted() {
     this.setPracticeStatusChoices()
-		
-		console.log("practice", this.practice)
+
+    console.log('practice', this.practice)
 
     this.$socket.on('Admin Notification Practice Deactivated', this.emitUpdatePractice)
     this.$socket.on('Admin Notification Practice Deactivated By Admin', this.emitUpdatePractice)
@@ -916,7 +861,7 @@ export default {
     this.$socket.on('Admin Notification Practice Deleted', this.emitUpdatePractice)
   },
 
-  destroyed () {
+  destroyed() {
     this.$socket.removeListener('Admin Notification Practice Deactivated', this.emitUpdatePractice)
     this.$socket.removeListener('Admin Notification Practice Deactivated By Admin', this.emitUpdatePractice)
     this.$socket.removeListener('Admin Notification Practice Reactivated', this.emitUpdatePractice)
@@ -927,65 +872,60 @@ export default {
     this.$socket.removeListener('Admin Notification Practice Deleted', this.emitUpdatePractice)
   },
 
-	created () {
-		this.toPutPractice.direct_debit = this.practice.direct_debit
-		this.toPutPractice.sage_ref = this.practice.sage_ref
-		this.toPutPractice.phone_number = this.practice.phone_number
-		this.toPutPractice.report_to = this.practice.report_to
-		this.toPutPractice.extra_information = this.practice.extra_information
-		this.toPutPractice.status = this.practice.status
-		this.toPutPractice.actived_until = this.practice.actived_until
+  created() {
+    this.toPutPractice.direct_debit = this.practice.direct_debit
+    this.toPutPractice.sage_ref = this.practice.sage_ref
+    this.toPutPractice.phone_number = this.practice.phone_number
+    this.toPutPractice.report_to = this.practice.report_to
+    this.toPutPractice.extra_information = this.practice.extra_information
+    this.toPutPractice.status = this.practice.status
+    this.toPutPractice.actived_until = this.practice.actived_until
 
-		this.toPutPracticeStatus.status = this.practice.status
-		this.toPutPracticeType.type = this.practice.type
-		this.toPutPracticeType.hub_type = this.practice.hub_type
+    this.toPutPracticeStatus.status = this.practice.status
+    this.toPutPracticeType.type = this.practice.type
+    this.toPutPracticeType.hub_type = this.practice.hub_type
 
-		this.hubzzPracticeNotes = this.practice.hubzz_practice_notes
-	},
+    this.hubzzPracticeNotes = this.practice.hubzz_practice_notes
+  },
 
-	methods: {
-    setPracticeStatusChoices () {
+  methods: {
+    setPracticeStatusChoices() {
       if (
-        this.practice
-        && this.practice.complete_rate
-        && this.practice.complete_document
-        && this.practice.has_active_user
-        && this.practice.sage_ref
+        this.practice &&
+        this.practice.complete_rate &&
+        this.practice.complete_document &&
+        this.practice.has_active_user &&
+        this.practice.sage_ref
       ) {
         this.practiceStatusChoices = [
-          { label: "Active", value: "Active" },
-          { label: "Inactive", value: "Inactive" },
-          { label: "Account Suspension", value: "Account Suspension" }
+          { label: 'Active', value: 'Active' },
+          { label: 'Inactive', value: 'Inactive' },
+          { label: 'Account Suspension', value: 'Account Suspension' }
         ]
       } else {
         this.toBogus = true
         this.practiceStatusChoices = [
-          { label: "Inactive", value: "Inactive" },
-          { label: "Account Suspension", value: "Account Suspension" }
+          { label: 'Inactive', value: 'Inactive' },
+          { label: 'Account Suspension', value: 'Account Suspension' }
         ]
       }
     },
 
-    emitUpdatePractice ({ notification }) {
-      if (
-        notification
-        && notification.payload_type === 'practice'
-        && this.practice
-        && notification.payload.id === this.practice.id
-      ) {
+    emitUpdatePractice({ notification }) {
+      if (notification && notification.payload_type === 'practice' && this.practice && notification.payload.id === this.practice.id) {
         this.$emit('practiceUpdated', notification.payload)
       }
     },
 
-		getQuery () {
-			const query = {
-				...this.$route.query
-			}
-			const offset = parseInt(query.page) * 8 - 8
-			return offset
-		},
+    getQuery() {
+      const query = {
+        ...this.$route.query
+      }
+      const offset = parseInt(query.page) * 8 - 8
+      return offset
+    },
 
-    errorHandler (err) {
+    errorHandler(err) {
       console.log('err', err.response || err)
 
       let message = null
@@ -1002,285 +942,296 @@ export default {
         this.$store.commit('SET_NOTIFICATION', {
           enabled: true,
           status: 'danger',
-          text: message,
+          text: message
         })
       }
     },
 
-		toPutPracticeInfo () {
+    toPutPracticeInfo() {
       if (!this.practice.complete_document || !this.practice.complete_rate) {
-        this.$store.commit("SET_NOTIFICATION", {
+        this.$store.commit('SET_NOTIFICATION', {
           enabled: true,
-          status: "danger",
-          text: "Upload practice documents and set the practice rates first."
+          status: 'danger',
+          text: 'Upload practice documents and set the practice rates first.'
         })
 
         return
       }
 
-      this.toPutPractice.status = this.toPutPractice.status === "Dormant"
-        ? "Active"
-        : this.toPutPractice.status
-      
-      if (
-        this.practice.status !== this.toPutPractice.status &&
-        this.toPutPractice.status === "Active" &&
-        !this.toPutPractice.actived_until
-      ) {
-        this.$store.commit("SET_NOTIFICATION", {
+      this.toPutPractice.status = this.toPutPractice.status === 'Dormant' ? 'Active' : this.toPutPractice.status
+
+      if (this.practice.status !== this.toPutPractice.status && this.toPutPractice.status === 'Active' && !this.toPutPractice.actived_until) {
+        this.$store.commit('SET_NOTIFICATION', {
           enabled: true,
-          status: "danger",
-          text: "Actived Until is Required"
+          status: 'danger',
+          text: 'Actived Until is Required'
         })
 
         return
       }
 
-      this.$axios.put(`/api/v1/admin/practices/${this.$route.params.id}`, this.toPutPractice).then((response) => {
-        const practice = response.data.data.practice
+      this.$axios
+        .put(`/api/v1/admin/practices/${this.$route.params.id}`, this.toPutPractice)
+        .then(response => {
+          const practice = response.data.data.practice
 
-        this.$store.commit("SET_NOTIFICATION", {
-          enabled: true,
-          status: "success",
-          text: "Saved"
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'success',
+            text: 'Saved'
+          })
+
+          this.$emit('practiceUpdated', practice)
+
+          this.toEdit = false
+          this.toEditPracticeStatus = false
         })
+        .catch(this.errorHandler)
+    },
 
-        this.$emit("practiceUpdated", practice)
+    async toChangePracticeType(practiceID) {
+      await this.$axios
+        .put(`/api/v1/admin/practices/${practiceID}/practice-type`, this.toPutPracticeType)
+        .then(response => {
+          const practice = response.data.data.practice
 
-        this.toEdit = false
-        this.toEditPracticeStatus = false
-      }).catch(this.errorHandler)
-		},
+          this.$emit('practiceUpdated', practice)
 
-		async toChangePracticeType (practiceID) {
-			await this.$axios
-				.put(
-					`/api/v1/admin/practices/${practiceID}/practice-type`,
-					this.toPutPracticeType
-				)
-				.then(response => {
-					const practice = response.data.data.practice
+          this.toEdit = false
 
-					this.$emit("practiceUpdated", practice)
+          this.toEditPracticeType = false
 
-					this.toEdit = false
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'success',
+            text: 'Saved'
+          })
+        })
+        .catch(err => {
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'danger',
+            text: err.response.data.message
+          })
+        })
+    },
 
-					this.toEditPracticeType = false
+    toMarkBogus() {
+      this.$axios
+        .put(`/api/v1/admin/practices/${this.practice.id}/bogus`)
+        .then(response => {
+          const practice = response.data.data.practice
 
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "success",
-						text: "Saved"
-					})
-				})
-				.catch(err => {
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "danger",
-						text: err.response.data.message
-					})
-				})
-		},
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'success',
+            text: 'Practice Successfully Marked as Bogus'
+          })
 
-		toMarkBogus () {
-			this.$axios
-				.put(`/api/v1/admin/practices/${this.practice.id}/bogus`)
-				.then(response => {
-					const practice = response.data.data.practice
+          this.$emit('practiceUpdated', practice)
+        })
+        .catch(err => {
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'danger',
+            text: err.response.data.message
+          })
+        })
+    },
 
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "success",
-						text: "Practice Successfully Marked as Bogus"
-					})
+    toUnmarkBogus() {
+      this.$axios
+        .put(`/api/v1/admin/practices/${this.practice.id}/unbogus`)
+        .then(response => {
+          const practice = response.data.data.practice
 
-					this.$emit("practiceUpdated", practice)
-				})
-				.catch(err => {
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "danger",
-						text: err.response.data.message
-					})
-				})
-		},
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'success',
+            text: 'Practice Successfully Unmarked Bogus'
+          })
 
-		toUnmarkBogus () {
-			this.$axios
-				.put(`/api/v1/admin/practices/${this.practice.id}/unbogus`)
-				.then(response => {
-					const practice = response.data.data.practice
+          this.$emit('practiceUpdated', practice)
+        })
+        .catch(err => {
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'danger',
+            text: err.response.data.message
+          })
+        })
+    },
 
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "success",
-						text: "Practice Successfully Unmarked Bogus"
-					})
-
-					this.$emit("practiceUpdated", practice)
-				})
-				.catch(err => {
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "danger",
-						text: err.response.data.message
-					})
-				})
-		},
-
-		deletePractice () {
+    deletePractice() {
       this.deletingPractice = true
-			this.$axios.put(`/api/v1/admin/practices/${this.practice.id}/delete`).then((response) => {
-        const practice = response.data.data.practice
+      this.$axios
+        .put(`/api/v1/admin/practices/${this.practice.id}/delete`)
+        .then(response => {
+          const practice = response.data.data.practice
 
-        const message = response.data.message
+          const message = response.data.message
 
-        this.$store.commit("SET_NOTIFICATION", {
-          enabled: true,
-          status: "success",
-          text: message || "Practice Deleted Successfully",
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'success',
+            text: message || 'Practice Deleted Successfully'
+          })
+
+          this.$emit('practiceUpdated', practice)
         })
+        .catch(this.errorHandler)
+        .finally(() => {
+          this.showDeletePracticeModal = false
+          this.deletingPractice = false
+        })
+    },
 
-        this.$emit("practiceUpdated", practice)
-      }).catch(this.errorHandler).finally(() => {
-        this.showDeletePracticeModal = false
-        this.deletingPractice = false
-      })
-		},
-
-    rejectDeletePractice () {
+    rejectDeletePractice() {
       this.rejectingDeletePractice = true
-      this.$axios.put(`/api/v1/admin/practices/${this.practice.id}/reject-delete-request`).then((response) => {
-        const practice = response.data.data.practice
+      this.$axios
+        .put(`/api/v1/admin/practices/${this.practice.id}/reject-delete-request`)
+        .then(response => {
+          const practice = response.data.data.practice
 
-        const message = response.data.message
+          const message = response.data.message
 
-        this.$store.commit("SET_NOTIFICATION", {
-          enabled: true,
-          status: "success",
-          text: message || "Delete Request Rejected Successfully",
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'success',
+            text: message || 'Delete Request Rejected Successfully'
+          })
+
+          this.$emit('practiceUpdated', practice)
         })
-
-        this.$emit("practiceUpdated", practice)
-      }).catch(this.errorHandler).finally(() => {
-        this.showRejectDeletePracticeModal = false
-        this.rejectingDeletePractice = false
-      })
+        .catch(this.errorHandler)
+        .finally(() => {
+          this.showRejectDeletePracticeModal = false
+          this.rejectingDeletePractice = false
+        })
     },
 
-    deactivatePractice () {
+    deactivatePractice() {
       this.deactivatingPractice = true
-      this.$axios.put(`/api/v1/admin/practices/${this.practice.id}/deactivate`).then((response) => {
-        const practice = response.data.data.practice
+      this.$axios
+        .put(`/api/v1/admin/practices/${this.practice.id}/deactivate`)
+        .then(response => {
+          const practice = response.data.data.practice
 
-        const message = response.data.message
+          const message = response.data.message
 
-        this.$store.commit("SET_NOTIFICATION", {
-          enabled: true,
-          status: "success",
-          text: message || "Practice Successfully Deactivated",
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'success',
+            text: message || 'Practice Successfully Deactivated'
+          })
+
+          this.$emit('practiceUpdated', practice)
         })
-
-        this.$emit("practiceUpdated", practice)
-      }).catch(this.errorHandler).finally(() => {
-        this.showDeactivatePracticeModal = false
-        this.deactivatingPractice = false
-      })
+        .catch(this.errorHandler)
+        .finally(() => {
+          this.showDeactivatePracticeModal = false
+          this.deactivatingPractice = false
+        })
     },
 
-    reactivatePractice () {
+    reactivatePractice() {
       this.reactivatingPractice = true
-      this.$axios.put(`/api/v1/admin/practices/${this.practice.id}/reactivate`).then((response) => {
-        const practice = response.data.data.practice
+      this.$axios
+        .put(`/api/v1/admin/practices/${this.practice.id}/reactivate`)
+        .then(response => {
+          const practice = response.data.data.practice
 
-        const message = response.data.message
+          const message = response.data.message
 
-        this.$store.commit("SET_NOTIFICATION", {
-          enabled: true,
-          status: "success",
-          text: message || "Practice Successfully Reactivated",
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'success',
+            text: message || 'Practice Successfully Reactivated'
+          })
+
+          this.$emit('practiceUpdated', practice)
         })
-
-        this.$emit("practiceUpdated", practice)
-      }).catch(this.errorHandler).finally(() => {
-        this.showReactivatePracticeModal = false
-        this.reactivatingPractice = false
-      })
+        .catch(this.errorHandler)
+        .finally(() => {
+          this.showReactivatePracticeModal = false
+          this.reactivatingPractice = false
+        })
     },
 
-		async toPutPracticeNotes () {
-			try {
-				await this.$axios.$put(`/api/v1/admin/practices/${this.$route.params.id}/hubzz-practice-notes`,{
-            hubzz_practice_notes: this.hubzzPracticeNotes,
+    async toPutPracticeNotes() {
+      try {
+        await this.$axios
+          .$put(`/api/v1/admin/practices/${this.$route.params.id}/hubzz-practice-notes`, {
+            hubzz_practice_notes: this.hubzzPracticeNotes
           })
           .then(res => {
-						this.hubzzPracticeNotes = res.data.practice.hubzz_practice_notes
-						
-						const practice = res.data.practice
+            this.hubzzPracticeNotes = res.data.practice.hubzz_practice_notes
 
-						this.$emit("practiceUpdated", practice)
+            const practice = res.data.practice
 
-            this.$store.commit("SET_NOTIFICATION", {
+            this.$emit('practiceUpdated', practice)
+
+            this.$store.commit('SET_NOTIFICATION', {
               enabled: true,
-              status: "success",
-              text: res.data.message || "Saved",
+              status: 'success',
+              text: res.data.message || 'Saved'
             })
           })
-			} catch (err) {
-				console.log("put practice info error", err)
-				this.$store.commit("SET_NOTIFICATION", {
-					enabled: true,
-					status: "danger",
-					text: err.response.data.message
-				})	
-			}
-		},
+      } catch (err) {
+        console.log('put practice info error', err)
+        this.$store.commit('SET_NOTIFICATION', {
+          enabled: true,
+          status: 'danger',
+          text: err.response.data.message
+        })
+      }
+    },
 
-		practiceTypeStyle (type) {
-			switch (type) {
-				case "Stand Alone":
-					return "bg-indigo-500 lg:px-4 sm:px-2"
-				case "Hub":
-					return "bg-red-500 text-white lg:px-8 sm:px-2"
-				case "Spoke":
-					return "bg-blue-500 lg:px-8 sm:px-2"
-				case "Type 2":
-					return "bg-purple-500 lg:px-8 sm:px-2"
-				default:
-			}
-		},
+    practiceTypeStyle(type) {
+      switch (type) {
+        case 'Stand Alone':
+          return 'bg-indigo-500 lg:px-4 sm:px-2'
+        case 'Hub':
+          return 'bg-red-500 text-white lg:px-8 sm:px-2'
+        case 'Spoke':
+          return 'bg-blue-500 lg:px-8 sm:px-2'
+        case 'Type 2':
+          return 'bg-purple-500 lg:px-8 sm:px-2'
+        default:
+      }
+    },
 
-		edit () {
-			this.toEdit = !this.toEdit
-			if (this.toEdit) {
-				this.toPutPractice.phone_number = this.practice.phone_number
-				this.toPutPractice.report_to = this.practice.report_to
-				this.toPutPractice.extra_information = this.practice.extra_information
-				this.toPutPractice.status = this.practice.status
-				this.toPutPractice.actived_until = this.practice.actived_until
-			}
-		},
+    edit() {
+      this.toEdit = !this.toEdit
+      if (this.toEdit) {
+        this.toPutPractice.phone_number = this.practice.phone_number
+        this.toPutPractice.report_to = this.practice.report_to
+        this.toPutPractice.extra_information = this.practice.extra_information
+        this.toPutPractice.status = this.practice.status
+        this.toPutPractice.actived_until = this.practice.actived_until
+      }
+    },
 
-		editPracticeStatus () {
-			this.toEditPracticeStatus = !this.toEditPracticeStatus
-			if (this.toEditPracticeStatus) {
-				this.toPutPracticeStatus = this.practice.status
-			}
-		},
+    editPracticeStatus() {
+      this.toEditPracticeStatus = !this.toEditPracticeStatus
+      if (this.toEditPracticeStatus) {
+        this.toPutPracticeStatus = this.practice.status
+      }
+    },
 
-		editPracticeType () {
-			this.toEditPracticeType = !this.toEditPracticeType
-			if (this.toEditPracticeType) {
-				this.toPutPracticeType.type = this.practice.type
-				this.toPutPracticeType.hub_type = this.practice.hub_type
-			}
-		}
-	}
+    editPracticeType() {
+      this.toEditPracticeType = !this.toEditPracticeType
+      if (this.toEditPracticeType) {
+        this.toPutPracticeType.type = this.practice.type
+        this.toPutPracticeType.hub_type = this.practice.hub_type
+      }
+    }
+  }
 }
 </script>
 
 <style>
 .shield {
-	z-index: 511;
+  z-index: 511;
 }
 </style>
