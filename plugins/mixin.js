@@ -11,7 +11,7 @@ Vue.mixin({
 			}
 			let displayFieldName = trimmedFieldName.charAt(0).toUpperCase() + trimmedFieldName.slice(1).replace(/_/g, " ")
 			
-			let index = this.formError.findIndex(item => item.field === fieldName);
+			let index = this.formError.findIndex(item => item.field === fieldName)
 			
 			if (index >= 0) {
 				this.formError.splice(index, 1)
@@ -25,35 +25,35 @@ Vue.mixin({
 				this.formError.push({
 					field: fieldName,
 					message: `${displayFieldName} is required`
-				});
+				})
 			}
 			if (inputField instanceof Array && !inputField.length) {
 				this.formError.push({
 					field: fieldName,
 					message: `${displayFieldName} is required`
-				});
+				})
 			}
 			if (typeof inputField === "boolean" && inputField === false) {
 				this.formError.push({
 					field: fieldName,
 					message: `${displayFieldName} is required`
-				});
+				})
 			}
 			if (fieldName.includes("password")) {
 				if (inputField.length < 6) {
 					this.formError.push({
 						field: fieldName,
 						message: "Password Must Be At Least 6 Characters"
-					});
+					})
 				}
 			}
 			if (fieldName === 'email') {
-				let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+				let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 				if (!re.test(String(inputField).toLowerCase())) {
 					this.formError.push({
 						field: fieldName,
 						message: "This is not a valid email"
-					});
+					})
 				}
 			}
 		},
@@ -88,7 +88,7 @@ Vue.mixin({
 							this.formError.push({
 								field: key,
 								message: `${displayFieldName} is required`
-							});
+							})
 						}
 						if (lists && !lists.includes(key)) {
 							this.formError.push({
@@ -119,7 +119,7 @@ Vue.mixin({
 			}
 		},
 		ValidateEmail (email) {
-			let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+			let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 			if (email && !re.test(String(email).toLowerCase())) {
 				return {
 					field: "email",

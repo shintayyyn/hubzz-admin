@@ -10,7 +10,7 @@
       :cancelLabel="'Cancel'"
       :modal="confirmApply ? true : false"
       @confirm="
-        ['job_part', 'dates'].includes(confirmApply.type)
+        ;['job_part', 'dates'].includes(confirmApply.type)
           ? applyToAll(confirmApply.type, confirmApply.data)
           : clearShifts(confirmApply.data.shifts, confirmApply.data.index)
       "
@@ -20,35 +20,24 @@
     <div class="flex">
       <div v-if="type === 'create'" class="pl-0 p-4">
         <div class="border rounded-lg w-full h-full">
-          <p class="text-white text-center text-lg font-bold pt-6">
+          <p class=" text-center text-lg font-bold pt-6">
             <span>DATES</span>
           </p>
 
-          <p class="text-center text-xs text-white">
+          <p class="text-center text-xs ">
             <span>Select date range or use the calendar</span>
-            <br>
+            <br />
             <span>to pick out specific dates</span>
           </p>
 
           <div class="px-4 pb-4 pt-6">
             <div v-if="jobSeederType && jobSeederType !== 'Completed'" class="flex">
               <div class="px-1 w-full md:w-1/2">
-                <AppDate 
-                  v-model="start_date" 
-                  :name="'date_start'" 
-                  :label="'Start Date'" 
-                  isAfter
-                />
+                <AppDate v-model="start_date" :name="'date_start'" :label="'Start Date'" />
               </div>
 
               <div class="px-1 w-full md:w-1/2">
-                <AppDate
-                  v-model="end_date"
-                  :name="'date_end'"
-                  :label="'End Date'"
-                  :startDate="start_date"
-                  isAfter
-                />
+                <AppDate v-model="end_date" :name="'date_end'" :label="'End Date'" :startDate="start_date" />
               </div>
             </div>
 
@@ -57,7 +46,8 @@
               :name="'dates'"
               :isAfter="jobSeederType === 'Ongoing' ? false : true"
               :isBefore="jobSeederType === 'Completed' ? true : false"
-              :maxYearBefore="0"
+              :maxYearBefore="jobSeederType === 'Ongoing' ? 1 : 0"
+              :defaultDate="$moment().format('DD/MM/YYYY')"
               multipleSelection
               isDisplay
               class="multiple-date-picker"
@@ -92,55 +82,70 @@
           :class="['complete', 'terminate', 'invoice'].includes(type) ? '' : 'border rounded-lg '"
         >
           <div>
-            <p v-if="type === 'create'" class="text-white text-center text-lg font-bold py-6">
+            <p v-if="type === 'create'" class=" text-center text-lg font-bold py-6">
               <span>SHIFTS &amp; RATES</span>
             </p>
 
             <template v-if="schedules && schedules.length">
-              <div
-                v-if="type === 'create'"
-                class="flex items-center w-2/5 mx-auto mb-6 text-white"
-              >
+              <!-- REPLACE the job part selector div with this -->
+              <div v-if="type === 'create'" class="flex items-center w-2/5 mx-auto mb-6  ">
                 <p class="text-sm whitespace-no-wrap mr-2 font-bold">
                   <span>Job Part</span>
                 </p>
 
-                <div class="flex flex-col justify-center w-full">
-                  <div
-                    class="flex border border-gray-500 justify-between items-center w-full px-2 py-1 text-sm rounded cursor-pointer"
+                <div class="flex items-center gap-1 w-full">
+                  <!-- PREV button -->
+                  <button
+                    class="px-2 py-1 rounded border border-gray-500 text-sm focus:outline-none"
+                    :disabled="job_part_id <= 1"
+                    :class="job_part_id <= 1 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-gray-200 cursor-pointer'"
+                    @click="job_part_id > 1 && job_part_id--"
                   >
-                    <div
-                      v-if="activeJobPart"
-                      class="flex justify-between items-center xl:w-11/12 font-bold"
-                    >
-                      <p>{{ `${activeJobPart.id}/${job_parts.length}` }}</p>
+                    ‹
+                  </button>
 
-                      <p v-if="activeJobPart.total_days > 1">
-                        <span>{{ activeJobPart.start_date }} to {{ activeJobPart.end_date }}</span>
-                      </p>
+                  <div class="flex flex-col justify-center w-full">
+                    <div class="flex border border-gray-500 justify-between items-center w-full px-2 py-1 text-sm rounded cursor-pointer">
+                      <div v-if="activeJobPart" class="flex justify-between items-center xl:w-11/12 font-bold">
+                        <p>{{ `${activeJobPart.id}/${job_parts.length}` }}</p>
 
-                      <p v-if="activeJobPart.total_days === 1">
-                        <span>{{ activeJobPart.start_date }}</span>
-                      </p>
+                        <p v-if="activeJobPart.total_days > 1">
+                          <span>{{ activeJobPart.start_date }} to {{ activeJobPart.end_date }}</span>
+                        </p>
 
-                      <p class="mr-2">
-                        <span>{{ activeJobPart.total_days }} day{{ activeJobPart.total_days > 1 ? 's' : '' }}</span>
-                      </p>
+                        <p v-if="activeJobPart.total_days === 1">
+                          <span>{{ activeJobPart.start_date }}</span>
+                        </p>
+
+                        <p class="mr-2">
+                          <span>{{ activeJobPart.total_days }} day{{ activeJobPart.total_days > 1 ? 's' : '' }}</span>
+                        </p>
+                      </div>
+
+                      <svgicon name="down" width="12" height="12" class="fill-current" />
                     </div>
 
-                    <svgicon name="down" width="12" height="12" class="fill-current" />
+                    <select v-model="job_part_id" class="custom-select -mt-8 py-1 text-sm px-2">
+                      <option v-for="part in job_parts" :key="part.id" :value="part.value">
+                        <span>{{ part.label }}</span>
+                      </option>
+                    </select>
                   </div>
 
-                  <select v-model="job_part_id" class="custom-select -mt-8 py-1 text-sm px-2">
-                    <option v-for="part in job_parts" :key="part.id" :value="part.value">
-                      <span>{{ part.label }}</span>
-                    </option>
-                  </select>
+                  <!-- NEXT button -->
+                  <button
+                    class="px-2 py-1 rounded border border-gray-500 text-sm focus:outline-none"
+                    :disabled="job_part_id >= job_parts.length"
+                    :class="job_part_id >= job_parts.length ? 'opacity-30 cursor-not-allowed' : 'hover:bg-gray-200 cursor-pointer'"
+                    @click="job_part_id < job_parts.length && job_part_id++"
+                  >
+                    ›
+                  </button>
                 </div>
               </div>
 
               <div v-if="error" class="flex px-4 mb-4">
-                <p class="py-2 px-4 bg-red-500 text-white text-sm rounded-lg">
+                <p class="py-2 px-4 bg-red-500  text-sm rounded-lg">
                   <span>{{ error.message }}</span>
                 </p>
               </div>
@@ -151,10 +156,7 @@
                     Date
                   </p>
 
-                  <div
-                    class="flex items-end text-center"
-                    :class="type === 'create' ? 'w-9/12 ' : 'w-11/12 pr-2'"
-                  >
+                  <div class="flex items-end text-center" :class="type === 'create' ? 'w-9/12 ' : 'w-11/12 pr-2'">
                     <p :class="type === 'create' ? 'w-3/12' : 'w-2/12'">
                       Shift
                     </p>
@@ -180,33 +182,21 @@
                     </p>
 
                     <!-- FOR COMPLETING JOB -->
-                    <p
-                      v-if="['complete', 'terminate', 'invoice'].includes(type)"
-                      class="w-2/12"
-                    >
+                    <p v-if="['complete', 'terminate', 'invoice'].includes(type)" class="w-2/12">
                       Final Start
                     </p>
 
-                    <p
-                      v-if="['complete', 'terminate', 'invoice'].includes(type)"
-                      class="w-2/12"
-                    >
+                    <p v-if="['complete', 'terminate', 'invoice'].includes(type)" class="w-2/12">
                       Final End
                     </p>
 
-                    <p
-                      v-if="['complete', 'terminate', 'invoice'].includes(type)"
-                      class="w-2/12"
-                    >
+                    <p v-if="['complete', 'terminate', 'invoice'].includes(type)" class="w-2/12">
                       Has Late?
                     </p>
 
                     <p v-if="['complete', 'terminate'].includes(type)" class="w-2/12" />
 
-                    <p
-                      v-if="['complete', 'terminate', 'invoice'].includes(type)"
-                      class="w-2/12"
-                    >
+                    <p v-if="['complete', 'terminate', 'invoice'].includes(type)" class="w-2/12">
                       Any Absences?
                     </p>
 
@@ -233,16 +223,9 @@
                   </p>
                 </div>
 
-                <div
-                  v-for="(item, index) in filteredSchedule"
-                  :key="index"
-                  class="flex text-sm mb-2"
-                >
+                <div v-for="(item, index) in filteredSchedule" :key="index" class="flex text-sm mb-2">
                   <template v-if="['complete', 'terminate'].includes(type)">
-                    <div
-                      class="w-1/12 rounded-l-lg p-2 border-l border-t border-b pt-4"
-                      :class="index % 2 ? 'bg-lighter-gray' : 'bg-light-gray'"
-                    >
+                    <div class="w-1/12 rounded-l-lg p-2 border-l border-t border-b pt-4" :class="index % 2 ? 'bg-lighter-gray' : 'bg-light-gray'">
                       {{ item.date }}
                     </div>
 
@@ -252,8 +235,8 @@
                           class="w-2/12 flex items-center justify-center px-2"
                           :class="[
                             index % 2 ? 'bg-lighter-gray' : 'bg-light-gray',
-                            item.shifts.length !== 1 ?
-                              i === 0
+                            item.shifts.length !== 1
+                              ? i === 0
                                 ? 'border-t'
                                 : i === item.shifts.length - 1
                                   ? 'border-b pb-2'
@@ -261,15 +244,8 @@
                               : 'border-t border-b'
                           ]"
                         >
-                          <p
-                            class="rounded px-2 w-full text-center py-1 font-bold"
-                            :class="shiftColor(shift.shift_id)"
-                          >
-                            {{
-                              shifts.find(item => item.value === shift.shift_id)
-                                ? shifts.find(item => item.value === shift.shift_id).label
-                                : ''
-                            }}
+                          <p class="rounded px-2 w-full text-center py-1 font-bold" :class="shiftColor(shift.shift_id)">
+                            {{ shifts.find(item => item.value === shift.shift_id) ? shifts.find(item => item.value === shift.shift_id).label : '' }}
                           </p>
                         </div>
 
@@ -363,33 +339,35 @@
                             v-model="shift.final_time_start"
                             :name="`final_time_start-s${index}-${i}`"
                             :wrapperClass="'px-1 mt-2 mb-2'"
-                            :inStyle="`
+                            :inStyle="
+                              `
                               background-color: transparent;
                             ${
-                              (shift.final_time_start && shift.final_time_end)
-                              && totalHours(shift.final_time_start, shift.final_time_end, item.date) <= 0
-                                ? 'border-color: #f56565;'
-                                : ''
-                            }`"
-                            
+                                shift.final_time_start &&
+                                shift.final_time_end &&
+                                totalHours(shift.final_time_start, shift.final_time_end, item.date) <= 0
+                                  ? 'border-color: #f56565;'
+                                  : ''
+                              }`
+                            "
                             :error="shiftErrors.find(err => err.field === `final_time_start-s${index}-${i}`)"
                             :disabled="[true, 'true'].includes(shift.has_absences)"
-                            
                             :optionsContainerClass="'bg-trout'"
                             @change="
                               CheckIfEmpty(shift.final_time_start, `final_time_start-s${index}-${i}`),
                               changeStartTime(shift, true),
-                              ((shift.final_time_start && shift.final_time_start === shift.time_start))
-                                || $moment(`${item.date} ${shift.final_time_start}`).isBefore(`${item.date} ${shift.time_start}`)
-                                ? [shift.has_late = false, shift.late_hours_reason='']
+                              (shift.final_time_start && shift.final_time_start === shift.time_start) ||
+                                $moment(`${item.date} ${shift.final_time_start}`).isBefore(`${item.date} ${shift.time_start}`)
+                                ? [(shift.has_late = false), (shift.late_hours_reason = '')]
                                 : ''
                             "
                             @blur="CheckIfEmpty(shift.final_time_start, `final_time_start-s${index}-${i}`)"
                           />
                           <p
                             v-if="
-                              (shift.final_time_start && shift.final_time_end)
-                                && totalHours(shift.final_time_start, shift.final_time_end, item.date) <= 0
+                              shift.final_time_start &&
+                                shift.final_time_end &&
+                                totalHours(shift.final_time_start, shift.final_time_end, item.date) <= 0
                             "
                             class="text-xs text-red-500 px-2 pt-1"
                           >
@@ -402,15 +380,15 @@
                             v-model="shift.final_time_end"
                             :name="`final_time_end-s${index}-${i}`"
                             :wrapperClass="'px-1 mt-2 mb-2'"
-                            :inStyle="`
+                            :inStyle="
+                              `
                               background-color: transparent;
                             ${
-                              (shift.final_time_end && shift.time_end)
-                              && totalHours(shift.final_time_start, shift.final_time_end, item.date) <= 0
-                                ? 'border-color: #f56565;'
-                                : ''
-                            }`"
-                            
+                                shift.final_time_end && shift.time_end && totalHours(shift.final_time_start, shift.final_time_end, item.date) <= 0
+                                  ? 'border-color: #f56565;'
+                                  : ''
+                              }`
+                            "
                             :error="
                               shiftErrors.find(err => err.field === `final_time_end-s${index}-${i}`)
                                 ? shiftErrors.find(err => err.field === `final_time_end-s${index}-${i}`)
@@ -425,7 +403,7 @@
 
                         <div class="px-2 w-2/12 flex items-center px-1">
                           <button
-                            class="px-2 py-1 text-white focus:outline-none rounded uppercase w-full"
+                            class="px-2 py-1  focus:outline-none rounded uppercase w-full"
                             :disabled="[true, 'true'].includes(shift.has_absences)"
                             :class="
                               ![true, 'true'].includes(shift.has_absences)
@@ -435,14 +413,12 @@
                                 : 'bg-gray-500 cursor-not-allowed'
                             "
                             @click="
-                              [
-                                ![true, 'true'].includes(shift.has_absences)
-                                  ? shift.has_late=!shift.has_late
-                                  : '',
+                              ;[
+                                ![true, 'true'].includes(shift.has_absences) ? (shift.has_late = !shift.has_late) : '',
                                 ![true, 'true'].includes(shift.has_absences)
                                   ? shift.has_late
                                     ? lateChange(shift, index, i, 'late')
-                                    : shift.late_hours_reason = ''
+                                    : (shift.late_hours_reason = '')
                                   : ''
                               ]
                             "
@@ -454,7 +430,7 @@
                         <div class="w-2/12 flex items-center px-1">
                           <button
                             v-if="[true, 'true'].includes(shift.has_late) && shift.late_hours_reason"
-                            class="px-2 py-1 text-white border-2 border-orange-500 cursor-pointer focus:outline-none rounded w-full"
+                            class="px-2 py-1   border-2 border-orange-500 cursor-pointer focus:outline-none rounded w-full"
                             @click="lateChange(shift, index, i, 'late')"
                           >
                             Reason
@@ -463,14 +439,12 @@
 
                         <div class="px-2 w-2/12 flex items-center px-1">
                           <button
-                            class="px-2 py-1 text-white cursor-pointer focus:outline-none rounded uppercase w-full"
+                            class="px-2 py-1   cursor-pointer focus:outline-none rounded uppercase w-full"
                             :class="shift.has_absences ? 'bg-orange-500' : 'bg-gray-600'"
                             @click="
-                              [
-                                shift.has_absences =! shift.has_absences,
-                                shift.has_absences
-                                  ? lateChange(shift, index, i, 'absent')
-                                  : shift.absent_reason = ''
+                              ;[
+                                (shift.has_absences = !shift.has_absences),
+                                shift.has_absences ? lateChange(shift, index, i, 'absent') : (shift.absent_reason = '')
                               ]
                             "
                           >
@@ -481,7 +455,7 @@
                         <div class="w-2/12 flex items-center px-1">
                           <button
                             v-if="[true, 'true'].includes(shift.has_absences) && shift.absent_reason"
-                            class="px-2 py-1 text-white border-2 border-orange-500 cursor-pointer focus:outline-none rounded w-full"
+                            class="px-2 py-1   border-2 border-orange-500 cursor-pointer focus:outline-none rounded w-full"
                             @click="lateChange(shift, index, i, 'absent')"
                           >
                             Reason
@@ -499,34 +473,23 @@
                       {{ item.date }}
                     </div>
 
-                    <div
-                      class="w-11/12 py-2 rounded-r-lg border-r border-t border-b"
-                      :class="index % 2 ? 'bg-lighter-gray' : 'bg-light-gray'"
-                    >
+                    <div class="w-11/12 py-2 rounded-r-lg border-r border-t border-b" :class="index % 2 ? 'bg-lighter-gray' : 'bg-light-gray'">
                       <div v-for="(shift, i) in item.shifts" :key="i" class="flex w-full">
-                        <div
-                          class="flex items-center justify-center text-center w-2/12"
-                        >
+                        <div class="flex items-center justify-center text-center w-2/12">
                           {{ shift.shift.name }}
                         </div>
 
-                        <div
-                          class="flex items-center justify-center text-center w-2/12"
-                        >
+                        <div class="flex items-center justify-center text-center w-2/12">
                           {{ shift.orig_time_start ? shift.orig_time_start : shift.time_start }}
                         </div>
 
-                        <div
-                          class="flex items-center justify-center text-center w-2/12"
-                        >
+                        <div class="flex items-center justify-center text-center w-2/12">
                           {{ shift.orig_time_end ? shift.orig_time_end : shift.time_end }}
                         </div>
 
                         <div class="flex items-center justify-center text-center w-2/12">
                           <template v-if="shift.orig_time_start && shift.orig_time_end">
-                            <template
-                              v-if="totalHours(shift.orig_time_start, shift.orig_time_end, item.date) > 0"
-                            >
+                            <template v-if="totalHours(shift.orig_time_start, shift.orig_time_end, item.date) > 0">
                               {{ totalHours(shift.orig_time_start, shift.orig_time_end, item.date) | hoursMinutes }}
                             </template>
 
@@ -536,9 +499,7 @@
                           </template>
 
                           <template v-else>
-                            <template
-                              v-if="totalHours(shift.time_start, shift.time_end, item.date) > 0"
-                            >
+                            <template v-if="totalHours(shift.time_start, shift.time_end, item.date) > 0">
                               {{ totalHours(shift.time_start, shift.time_end, item.date) | hoursMinutes }}
                             </template>
 
@@ -548,15 +509,11 @@
                           </template>
                         </div>
 
-                        <div
-                          class="flex items-center justify-center text-center w-2/12"
-                        >
+                        <div class="flex items-center justify-center text-center w-2/12">
                           {{ shift.locum_detail_rate_type.name }}
                         </div>
 
-                        <div
-                          class="flex items-center justify-center text-center w-2/12"
-                        >
+                        <div class="flex items-center justify-center text-center w-2/12">
                           {{ shift.rate }}
                         </div>
 
@@ -656,9 +613,7 @@
                         </div>
 
                         <!-- HAS LATE -->
-                        <div
-                          class="flex items-center justify-center text-center w-2/12"
-                        >
+                        <div class="flex items-center justify-center text-center w-2/12">
                           {{ getLate(shift, item.date) }}
                         </div>
 
@@ -667,7 +622,7 @@
                           <button
                             v-if="$auth.user.domain === 'Locum' ? !toDisplay : shift.dispute && !['issued', 'approved'].includes(invoiceStatus)"
                             :disabled="[false, 'false'].includes(shift.dispute)"
-                            class="px-2 py-1 text-white cursor-pointer focus:outline-none rounded uppercase w-full mx-2"
+                            class="px-2 py-1   cursor-pointer focus:outline-none rounded uppercase w-full mx-2"
                             :class="[
                               shift.has_absences ? 'bg-orange-500' : 'bg-gray-600',
                               [false, 'false'].includes(shift.dispute) ? 'opacity-50 cursor-not-allowed' : ''
@@ -682,25 +637,20 @@
                         </div>
 
                         <!-- FINAL HOURS -->
-                        <div
-                          class="flex items-center justify-center text-center w-2/12"
-                        >
+                        <div class="flex items-center justify-center text-center w-2/12">
                           {{ finalHours(shift, item.date) }}
                         </div>
 
                         <!-- FINAL RATE -->
                         <div class="flex items-center justify-center text-center w-2/12">
-                          £ {{ getRate(shift,
-                                       shift.final_time_start,
-                                       shift.final_time_end,
-                                       item.date) | currency }}
+                          £ {{ getRate(shift, shift.final_time_start, shift.final_time_end, item.date) | currency }}
                         </div>
 
                         <!-- DISPUTE? -->
                         <div class="flex items-center justify-center text-center w-2/12">
                           <button
                             v-if="$auth.user.domain === 'Locum' ? !toDisplay : false"
-                            class="px-2 py-1 text-white cursor-pointer focus:outline-none rounded uppercase w-full mx-2"
+                            class="px-2 py-1   cursor-pointer focus:outline-none rounded uppercase w-full mx-2"
                             :class="shift.dispute ? 'bg-orange-500' : 'bg-gray-600'"
                             @click="dispute(shift, index, i)"
                           >
@@ -708,9 +658,7 @@
                           </button>
 
                           <template v-else>
-                            <div
-                              :class="shift.dispute ? 'bg-sunglow px-2 py-1 rounded-lg' : ''"
-                            >
+                            <div :class="shift.dispute ? 'bg-sunglow px-2 py-1 rounded-lg' : ''">
                               {{ shift.dispute ? 'YES' : 'NO' }}
                             </div>
                           </template>
@@ -765,19 +713,15 @@
                               class="custom-select -mt-8 py-1 text-sm px-2 text-black"
                               @change="changeShiftId(shift.shift_id, item.shifts, i, shift)"
                             >
-                              <option
-                                v-for="option in shifts_option"
-                                :key="option.value"
-                                :value="option.value"
-                              >
+                              <option v-for="option in shifts_option" :key="option.value" :value="option.value">
                                 {{ option.label }}
                               </option>
                             </select>
 
                             <div
                               v-if="
-                                formError.find(err => err.field === `shift_id-s${index}-${i}`)
-                                  || (shiftErrors && shiftErrors.find(err => err.field === `shift_id-s${index}-${i}`))
+                                formError.find(err => err.field === `shift_id-s${index}-${i}`) ||
+                                  (shiftErrors && shiftErrors.find(err => err.field === `shift_id-s${index}-${i}`))
                               "
                               class="text-xs text-red-500 pt-2"
                             >
@@ -796,15 +740,16 @@
                               v-model="shift.time_start"
                               :name="`time_start-s${index}-${i}`"
                               :wrapperClass="'mb-1 py-1'"
-                              :inStyle="`
+                              :inStyle="
+                                `
                                 background-color: transparent;
                               ${
-                                (shift.time_start && shift.time_end)
-                                && totalHours(shift.time_start, shift.time_end, item.date) <= 0
-                                  ? 'border-color: #f56565;'
-                                  : ''
-                              }
-                              `"
+                                  shift.time_start && shift.time_end && totalHours(shift.time_start, shift.time_end, item.date) <= 0
+                                    ? 'border-color: #f56565;'
+                                    : ''
+                                }
+                              `
+                              "
                               :error="
                                 formError.find(err => err.field === `time_start-s${index}-${i}`)
                                   ? formError.find(err => err.field === `time_start-s${index}-${i}`)
@@ -813,12 +758,8 @@
                                     : null
                               "
                               :optionsContainerClass="'bg-trout'"
-                              @change="
-                                emitSchedule(),
-                                CheckIfEmptyFormError(shift.time_start, `time_start-s${index}-${i}`),
-                                changeStartTime(shift)
-                              "
-                              @blur="CheckEmptyField(form.phone_number,'phone_number')"
+                              @change="emitSchedule(), CheckIfEmptyFormError(shift.time_start, `time_start-s${index}-${i}`), changeStartTime(shift)"
+                              @blur="CheckEmptyField(form.phone_number, 'phone_number')"
                             />
                           </div>
 
@@ -827,15 +768,16 @@
                               v-model="shift.time_end"
                               :name="`time_end-s${index}-${i}`"
                               :wrapperClass="'mb-1 py-1'"
-                              :inStyle="`
+                              :inStyle="
+                                `
                                 background-color: transparent;
                               ${
-                                (shift.time_start && shift.time_end)
-                                && totalHours(shift.time_start, shift.time_end, item.date) <= 0
-                                  ? 'border-color: #f56565;'
-                                  : ''
-                              }
-                              `"
+                                  shift.time_start && shift.time_end && totalHours(shift.time_start, shift.time_end, item.date) <= 0
+                                    ? 'border-color: #f56565;'
+                                    : ''
+                                }
+                              `
+                              "
                               :error="
                                 formError.find(err => err.field === `time_end-s${index}-${i}`)
                                   ? formError.find(err => err.field === `time_end-s${index}-${i}`)
@@ -844,32 +786,24 @@
                                     : null
                               "
                               :optionsContainerClass="'bg-trout'"
-                              @change="
-                                emitSchedule(),
-                                CheckIfEmptyFormError(shift.time_end, `time_end-s${index}-${i}`)
-                              "
+                              @change="emitSchedule(), CheckIfEmptyFormError(shift.time_end, `time_end-s${index}-${i}`)"
                             />
                           </div>
 
                           <div class="w-2/12 px-2 py-4 text-center">
-                            <template
-                              v-if="totalHours(shift.time_start, shift.time_end, item.date) > 0"
-                            >
+                            <template v-if="totalHours(shift.time_start, shift.time_end, item.date) > 0">
                               <p>{{ totalHours(shift.time_start, shift.time_end, item.date) | hoursMinutes }}</p>
                             </template>
 
                             <template
                               v-else-if="
-                                (shift.time_start && shift.time_end && shift.time_start === shift.time_end)
-                                  || (
-                                    (shift.time_start && shift.time_end)
-                                  && (totalHours(shift.time_start, shift.time_end, item.date) <= 0)
-                                  )
+                                (shift.time_start && shift.time_end && shift.time_start === shift.time_end) ||
+                                  (shift.time_start && shift.time_end && totalHours(shift.time_start, shift.time_end, item.date) <= 0)
                               "
                             >
                               <span class="text-red-500 leading-none text-sm">
                                 Invalid
-                                <br>End Time
+                                <br />End Time
                               </span>
                             </template>
                           </div>
@@ -890,8 +824,7 @@
                                     : null
                               "
                               @change="
-                                emitSchedule(),
-                                CheckIfEmptyFormError(shift.locum_detail_rate_type_id, `locum_detail_rate_type_id-s${index}-${i}`)
+                                emitSchedule(), CheckIfEmptyFormError(shift.locum_detail_rate_type_id, `locum_detail_rate_type_id-s${index}-${i}`)
                               "
                             />
                           </div>
@@ -913,19 +846,16 @@
                                     ? shiftErrors.find(err => err.field === `rate-s${index}-${i}`)
                                     : null
                               "
-                              @blur="shift.rate === '' ? shift.rate = 0 : shift.rate"
-                              @focus="shift.rate === 0 ? shift.rate = '' : shift.rate"
+                              @blur="shift.rate === '' ? (shift.rate = 0) : shift.rate"
+                              @focus="shift.rate === 0 ? (shift.rate = '') : shift.rate"
                               @keydown="isNumber($event)"
                               @change="emitSchedule(), CheckIfEmptyFormError(shift.rate, `rate-s${index}-${i}`)"
                             />
                           </div>
                         </div>
 
-                        <div
-                          v-if="shiftErrors.find(err=>err.field === `conflict-${item.date}-${i}`)"
-                          class="px-1 text-sm w-full text-red-500"
-                        >
-                          {{ shiftErrors.find(err=>err.field === `conflict-${item.date}-${i}`).message }}
+                        <div v-if="shiftErrors.find(err => err.field === `conflict-${item.date}-${i}`)" class="px-1 text-sm w-full text-red-500">
+                          {{ shiftErrors.find(err => err.field === `conflict-${item.date}-${i}`).message }}
                         </div>
                       </div>
 
@@ -933,16 +863,10 @@
                       <div class="flex justify-start items-center mt-3 mb-4 w-1/4">
                         <button
                           class="whitespace-no-wrap w-1/2 flex items-center justify-center border border-gray-500 hover:bg-gray-200 text-black font-bold bg-sunglow py-1 rounded-lg text-xs transition-hover px-4 focus:outline-none ml-1"
-                          :class="rowNotFilled(item.shifts)?'cursor-not-allowed bg-sunglow text-gray-500':''"
+                          :class="rowNotFilled(item.shifts) ? 'cursor-not-allowed bg-sunglow text-gray-500' : ''"
                           @click="addShift(item.shifts, index, item.date)"
                         >
-                          <svgicon
-                            name="times-solid"
-                            width="8"
-                            height="8"
-                            class="fill-current mr-1"
-                            style="transform: rotate(45deg);"
-                          />Add Shift
+                          <svgicon name="times-solid" width="8" height="8" class="fill-current mr-1" style="transform: rotate(45deg);" />Add Shift
                         </button>
 
                         <p
@@ -959,14 +883,14 @@
                     <template v-if="item.shifts && item.shifts.length">
                       <button
                         class="w-full border border-gray-500 hover:bg-gray-200 leading-tight px-2 py-1 mb-2 rounded-lg"
-                        @click="confirmApply={type: 'job_part', data: item}"
+                        @click="confirmApply = { type: 'job_part', data: item }"
                       >
                         Apply to Job Part
                       </button>
 
                       <button
                         class="w-full border border-gray-500 hover:bg-gray-200 leading-tight px-2 py-1 rounded-lg"
-                        @click="confirmApply={type: 'dates', data: item}"
+                        @click="confirmApply = { type: 'dates', data: item }"
                       >
                         Apply to All Dates
                       </button>
@@ -977,32 +901,24 @@
             </template>
 
             <template v-else>
-              <p
-                v-if="type === 'create'"
-                class="text-center py-20 italic text-gray-500"
-              >
+              <p v-if="type === 'create'" class="text-center py-20 italic text-gray-500">
                 Select dates first
               </p>
             </template>
           </div>
 
           <div
-            v-if="(schedules && schedules.length) && type !== 'invoice'"
+            v-if="schedules && schedules.length && type !== 'invoice'"
             class="pl-4 pt-4 flex flex-col items-end"
             :class="type === 'create' ? 'w-10/12' : 'w-full px-4'"
           >
-            <div
-              class="flex flex-col text-lg text-white font-bold text-right"
-              :class="type === 'create' ? ' w-2/4' : 'w-2/5'"
-            >
+            <div class="flex flex-col text-lg   font-bold text-right" :class="type === 'create' ? ' w-2/4' : 'w-2/5'">
               <div class="flex justify-between">
                 <p class="w-2/3">
                   Job Part {{ job_part_id }}/{{ job_parts.length }} Total Hours:
                 </p>
 
-                <p
-                  class="w-1/3"
-                >
+                <p class="w-1/3">
                   {{ getTotalHours(filteredSchedule) > 0 ? '' : '-' }} {{ getTotalHours(filteredSchedule) | hoursMinutes }}
                 </p>
               </div>
@@ -1012,9 +928,7 @@
                   Job Part {{ job_part_id }}/{{ job_parts.length }} Gross Rate:
                 </p>
 
-                <p
-                  class="w-1/3"
-                >
+                <p class="w-1/3">
                   £ {{ getJobGrossRate(filteredSchedule, ['complete', 'terminate'].includes(type)) | currency }}
                 </p>
               </div>
@@ -1088,31 +1002,21 @@
 
               <div class="flex justify-end">
                 <AppButton
-                  :label="
-                    type === 'invoice'
-                      ? $auth.user.domain === 'Locum'
-                        ? 'Cancel'
-                        : 'Close'
-                      : 'Cancel'
-                  "
+                  :label="type === 'invoice' ? ($auth.user.domain === 'Locum' ? 'Cancel' : 'Close') : 'Cancel'"
                   class="mr-2"
                   @click="
                     type === 'invoice'
                       ? $auth.user.domain === 'Locum'
                         ? cancelReason()
-                        : show_late_reason = false
+                        : (show_late_reason = false)
                       : toDisplay
-                        ? show_late_reason = false
+                        ? (show_late_reason = false)
                         : cancelReason()
                   "
                 />
 
                 <AppButton
-                  v-if="
-                    type === 'invoice'
-                      ? $auth.user.domain === 'Locum'
-                      : !toDisplay
-                  "
+                  v-if="type === 'invoice' ? $auth.user.domain === 'Locum' : !toDisplay"
                   :label="'Save'"
                   @click="saveLateReason(selectedShift)"
                 />
@@ -1128,12 +1032,12 @@
 </template>
 
 <script>
-import AppInput from "@/components/Base/AppInput"
-import AppDate from "@/components/Base/AppDate"
-import AppTime from "@/components/Base/AppTime"
-import AppButton from "@/components/Base/AppButton"
-import AppMultipleDates from "@/components/Base/AppMultipleDates"
-import AppConfirmationModal from "@/components/Base/AppConfirmationModal"
+import AppInput from '@/components/Base/AppInput'
+import AppDate from '@/components/Base/AppDate'
+import AppTime from '@/components/Base/AppTime'
+import AppButton from '@/components/Base/AppButton'
+import AppMultipleDates from '@/components/Base/AppMultipleDates'
+import AppConfirmationModal from '@/components/Base/AppConfirmationModal'
 
 export default {
   components: {
@@ -1142,97 +1046,97 @@ export default {
     AppDate,
     AppButton,
     AppTime,
-    AppConfirmationModal,
+    AppConfirmationModal
   },
 
   props: {
     shifts: {
       type: Array,
-      default: () => null,
+      default: () => null
     },
 
     rateLists: {
       type: Array,
-      default: () => [],
+      default: () => []
     },
 
     schedule: {
       type: Array,
-      default: () => null,
+      default: () => null
     },
 
     error: {
       type: Object,
-      default: () => null,
+      default: () => null
     },
 
     type: {
       type: String,
-      default: null,
+      default: null
     },
 
     toTerminate: {
       type: Boolean,
-      default: false,
+      default: false
     },
 
     toComplete: {
       type: Boolean,
-      default: false,
+      default: false
     },
 
     toInvoice: {
       type: Boolean,
-      default: false,
+      default: false
     },
 
     shiftErrors: {
       type: Array,
-      default: () => null,
+      default: () => null
     },
 
     practiceRate: {
       type: Number,
-      default: 0,
+      default: 0
     },
 
     noDisputeReason: {
       type: Boolean,
-      default: false,
+      default: false
     },
 
     toDisplay: {
       type: Boolean,
-      default: false,
+      default: false
     },
 
     invoiceDetails: {
       type: Object,
-      default: () => null,
+      default: () => null
     },
 
     invoiceStatus: {
       type: String,
-      default: null,
+      default: null
     },
 
     locumVatRegistered: {
       type: Boolean,
-      default: false,
+      default: false
     },
 
     taxRates: {
       type: Object,
-      default: () => null,
+      default: () => null
     },
 
     jobSeederType: {
       type: String,
-      default: null,
+      default: null
     }
   },
 
-  data () {
+  data() {
     return {
       loading: false,
       scheduleDates: [],
@@ -1240,27 +1144,24 @@ export default {
       toggleCalendar: false,
       schedules: [],
       job_part_id: 1,
-      confirmApply: "",
+      confirmApply: '',
       formError: [],
       show_late_reason: false,
       selectedShift: null,
       cannotAddShift: [],
-      original_schedule: [],
+      original_schedule: []
     }
   },
 
   computed: {
-    hasChanges () {
-      return (
-        JSON.stringify(this.original_schedule)
-        !== JSON.stringify(this.schedules)
-      )
+    hasChanges() {
+      return JSON.stringify(this.original_schedule) !== JSON.stringify(this.schedules)
     },
 
-    sortedDates () {
-      return [...this.scheduleDates,].sort((dateA, dateB) => {
-        const datetimeA = this.$moment(dateA, "DD/MM/YYYY")
-        const datetimeB = this.$moment(dateB, "DD/MM/YYYY")
+    sortedDates() {
+      return [...this.scheduleDates].sort((dateA, dateB) => {
+        const datetimeA = this.$moment(dateA, 'DD/MM/YYYY')
+        const datetimeB = this.$moment(dateB, 'DD/MM/YYYY')
 
         if (datetimeA.isBefore(datetimeB)) {
           return -1
@@ -1275,89 +1176,70 @@ export default {
     },
 
     start_date: {
-      get () {
-        return this.sortedDates.length > 0
-          ? this.$moment(this.sortedDates[0], "DD/MM/YYYY").format("YYYY-MM-DD")
-          : ""
+      get() {
+        return this.sortedDates.length > 0 ? this.$moment(this.sortedDates[0], 'DD/MM/YYYY').format('YYYY-MM-DD') : ''
       },
 
-      set (startDate) {
+      set(startDate) {
         if (!startDate) {
           return
         }
 
         if (!this.start_date) {
-          this.scheduleDates.push(
-            this.$moment(startDate, "YYYY-MM-DD").format("DD/MM/YYYY")
-          )
+          this.scheduleDates.push(this.$moment(startDate, 'YYYY-MM-DD').format('DD/MM/YYYY'))
 
           return
         }
 
-        const newStartDate = this.$moment(startDate, "YYYY-MM-DD")
+        const newStartDate = this.$moment(startDate, 'YYYY-MM-DD')
 
-        const oldStartDate = this.$moment(this.start_date, "YYYY-MM-DD")
+        const oldStartDate = this.$moment(this.start_date, 'YYYY-MM-DD')
 
         if (newStartDate.isBefore(oldStartDate)) {
           let tempDate = newStartDate
 
           while (tempDate.isBefore(oldStartDate)) {
-            this.scheduleDates.push(tempDate.format("DD/MM/YYYY"))
-            tempDate = tempDate.add(1, "days")
+            this.scheduleDates.push(tempDate.format('DD/MM/YYYY'))
+            tempDate = tempDate.add(1, 'days')
           }
 
           return
         }
 
         if (newStartDate.isAfter(oldStartDate)) {
-          this.scheduleDates = this.scheduleDates.filter(
-            date => !newStartDate.isAfter(this.$moment(date, "DD/MM/YYYY"))
-          )
+          this.scheduleDates = this.scheduleDates.filter(date => !newStartDate.isAfter(this.$moment(date, 'DD/MM/YYYY')))
 
-          this.scheduleDates.push(
-            this.$moment(startDate, "YYYY-MM-DD").format("DD/MM/YYYY")
-          )
+          this.scheduleDates.push(this.$moment(startDate, 'YYYY-MM-DD').format('DD/MM/YYYY'))
 
           return
         }
-      },
+      }
     },
 
     end_date: {
-      get () {
-        return this.sortedDates.length > 0
-          ? this.$moment(
-            this.sortedDates[this.sortedDates.length - 1],
-            "DD/MM/YYYY"
-          ).format("YYYY-MM-DD")
-          : ""
+      get() {
+        return this.sortedDates.length > 0 ? this.$moment(this.sortedDates[this.sortedDates.length - 1], 'DD/MM/YYYY').format('YYYY-MM-DD') : ''
       },
 
-      set (endDate) {
+      set(endDate) {
         if (!endDate) {
           return
         }
 
         if (!this.end_date) {
-          this.scheduleDates.push(
-            this.$moment(endDate, "YYYY-MM-DD").format("DD/MM/YYYY")
-          )
+          this.scheduleDates.push(this.$moment(endDate, 'YYYY-MM-DD').format('DD/MM/YYYY'))
 
           return
         }
 
-        const newEndDate = this.$moment(endDate, "YYYY-MM-DD")
+        const newEndDate = this.$moment(endDate, 'YYYY-MM-DD')
 
-        const oldEndDate = this.$moment(this.end_date, "YYYY-MM-DD")
+        const oldEndDate = this.$moment(this.end_date, 'YYYY-MM-DD')
 
         if (newEndDate.isBefore(oldEndDate)) {
-          this.scheduleDates = this.scheduleDates.filter(
-            date => !newEndDate.isSameOrBefore(this.$moment(date, "DD/MM/YYYY"))
-          )
+          this.scheduleDates = this.scheduleDates.filter(date => !newEndDate.isSameOrBefore(this.$moment(date, 'DD/MM/YYYY')))
 
-          this.scheduleDates.push(
-            this.$moment(endDate, "YYYY-MM-DD").format("DD/MM/YYYY")
-          )
+          this.scheduleDates.push(this.$moment(endDate, 'YYYY-MM-DD').format('DD/MM/YYYY'))
 
           return
         }
@@ -1366,91 +1248,81 @@ export default {
           let tempDate = newEndDate
 
           while (tempDate.isAfter(oldEndDate)) {
-            this.scheduleDates.push(tempDate.format("DD/MM/YYYY"))
-            tempDate = tempDate.subtract(1, "days")
+            this.scheduleDates.push(tempDate.format('DD/MM/YYYY'))
+            tempDate = tempDate.subtract(1, 'days')
           }
 
           return
         }
-      },
+      }
     },
 
-    shifts_option () {
-      return [...this.shifts, { label: "Remove", value: 5, },]
+    shifts_option() {
+      return [...this.shifts, { label: 'Remove', value: 5 }]
     },
 
-    job_parts () {
+    job_parts() {
       let dates = []
       let jobParts = []
       let job_part_dates = []
 
       this.schedules.forEach(item => {
-        dates.push(this.$moment(item.date, "DD/MM/YYYY").format("YYYY-MM-DD"))
+        dates.push(this.$moment(item.date, 'DD/MM/YYYY').format('YYYY-MM-DD'))
       })
 
       job_part_dates = this.datesToJobParts(dates)
 
       this.datesToJobParts(dates).forEach((item, index) => {
         let moments = item.dates.map(d => this.$moment(d))
-        let maxDate = this.$moment.max(moments).format("DD/MM/YYYY")
-        let minDate = this.$moment.min(moments).format("DD/MM/YYYY")
+        let maxDate = this.$moment.max(moments).format('DD/MM/YYYY')
+        let minDate = this.$moment.min(moments).format('DD/MM/YYYY')
 
         jobParts.push({
           dates: item.dates,
-          label: `${index + 1}/${job_part_dates.length} | ${
-            item.dates.length > 1 ? `${minDate} - ${maxDate}` : maxDate
-          } | ${item.dates.length} day${item.dates.length > 1 ? "s" : ""}`,
+          label: `${index + 1}/${job_part_dates.length} | ${item.dates.length > 1 ? `${minDate} - ${maxDate}` : maxDate} | ${item.dates.length} day${
+            item.dates.length > 1 ? 's' : ''
+          }`,
           id: index + 1,
           start_date: minDate,
           end_date: maxDate,
           total_days: item.dates.length,
-          value: index + 1,
+          value: index + 1
         })
       })
 
       return jobParts
     },
 
-    filteredSchedule () {
+    filteredSchedule() {
       this.emitSchedule()
 
       let job_parts_schedule = []
 
       let jobPartId = this.job_part_id
 
-      let activeJobPart = this.job_parts.find(
-        part => part.value.toString() === jobPartId.toString()
-      )
+      let activeJobPart = this.job_parts.find(part => part.value.toString() === jobPartId.toString())
 
       if (!activeJobPart) {
         jobPartId -= 1
 
-        activeJobPart = this.job_parts.find(
-          part => part.value.toString() === jobPartId.toString()
-        )
+        activeJobPart = this.job_parts.find(part => part.value.toString() === jobPartId.toString())
       }
 
-      job_parts_schedule = this.schedules.filter(item =>
-        activeJobPart.dates.includes(
-          this.$moment(item.date, "DD/MM/YYYY").format("YYYY-MM-DD")
-        )
-      )
+      job_parts_schedule = this.schedules.filter(item => activeJobPart.dates.includes(this.$moment(item.date, 'DD/MM/YYYY').format('YYYY-MM-DD')))
 
       return job_parts_schedule
     },
 
-    hasShiftError () {
+    hasShiftError() {
       let errors = 0
 
       this.schedules.forEach(item => {
         if (item.shifts.length) {
           item.shifts.forEach(shift => {
-            this.totalHours(shift.time_start, shift.time_end, item.date) <= 0
-              ? (errors += 1)
-              : ""
-            !shift.locum_detail_rate_type_id ? (errors += 1) : ""
-            !shift.shift_id ? (errors += 1) : ""
-            shift.rate === 0 ? (errors += 1) : ""
+            this.totalHours(shift.time_start, shift.time_end, item.date) <= 0 ? (errors += 1) : ''
+            !shift.locum_detail_rate_type_id ? (errors += 1) : ''
+            !shift.shift_id ? (errors += 1) : ''
+            shift.rate === 0 ? (errors += 1) : ''
           })
         }
       })
@@ -1462,13 +1334,11 @@ export default {
       return errors > 0 ? true : false
     },
 
-    activeJobPart () {
-      return this.job_parts.find(
-        part => part.value.toString() === this.job_part_id.toString()
-      )
+    activeJobPart() {
+      return this.job_parts.find(part => part.value.toString() === this.job_part_id.toString())
     },
 
-    hubzz_fee () {
+    hubzz_fee() {
       return this.filteredSchedule
         .reduce((scheduleTotal, sched) => {
           const shiftTotal = sched.shifts.reduce((shiftTotal, shift) => {
@@ -1476,24 +1346,13 @@ export default {
 
             const time_end = shift.time_end
 
-            const total_hours = this.totalHours(
-              time_start,
-              time_end,
-              sched.date
-            )
+            const total_hours = this.totalHours(time_start, time_end, sched.date)
 
             if (total_hours > 0) {
               const num = parseInt(total_hours)
 
               if (!isNaN(num)) {
-                shiftTotal
-                  = shiftTotal
-                  + Math.round(
-                    (Math.round((num / 60) * 100) / 100)
-                      * this.practice_rate
-                      * 100
-                  )
-                    / 100
+                shiftTotal = shiftTotal + Math.round((Math.round((num / 60) * 100) / 100) * this.practice_rate * 100) / 100
               }
             }
 
@@ -1505,18 +1364,18 @@ export default {
         .toFixed(2)
     },
 
-    errors () {
-      return [...this.formError, ...this.shiftErrors,]
-    },
+    errors() {
+      return [...this.formError, ...this.shiftErrors]
+    }
   },
 
   watch: {
-    scheduleDates (value) {
+    scheduleDates(value) {
       if (!this.schedules.length) {
         value.forEach(date => {
           this.schedules.push({
             date: date,
-            shifts: [],
+            shifts: []
           })
         })
       } else {
@@ -1526,7 +1385,7 @@ export default {
             if (!dateExist) {
               this.schedules.push({
                 date: date,
-                shifts: [],
+                shifts: []
               })
             }
           })
@@ -1540,11 +1399,7 @@ export default {
         }
       }
 
-      this.schedules.sort(
-        (a, b) =>
-          this.$moment(a.date, "DD/MM/YYYY")
-          - this.$moment(b.date, "DD/MM/YYYY")
-      )
+      this.schedules.sort((a, b) => this.$moment(a.date, 'DD/MM/YYYY') - this.$moment(b.date, 'DD/MM/YYYY'))
 
       // return
       // if (value.length) {
@@ -1577,28 +1432,24 @@ export default {
       // )
     },
 
-    schedules () {
+    schedules() {
       this.emitSchedule()
     },
 
-    shiftErrors (value) {
-      console.log("shiftErrors", value)
-    },
+    shiftErrors(value) {
+      console.log('shiftErrors', value)
+    }
   },
 
-  created () {
+  created() {
     if (this.schedule.length) {
-      let status = this.$route.query.status ? this.$route.query.status : ""
+      let status = this.$route.query.status ? this.$route.query.status : ''
 
       this.schedule.forEach(sched => {
-        let isExisting = this.schedules.find(
-          item =>
-            item.date
-            === this.$moment(sched.date, "YYYY-MM-DD").format("DD/MM/YYYY")
-        )
+        let isExisting = this.schedules.find(item => item.date === this.$moment(sched.date, 'YYYY-MM-DD').format('DD/MM/YYYY'))
 
         if (isExisting) {
-          if (this.type === "complete") {
+          if (this.type === 'complete') {
             isExisting.shifts.push({
               id: sched.id,
               rate: sched.rate,
@@ -1610,11 +1461,11 @@ export default {
               final_time_start: sched.time_start,
               final_time_end: sched.time_end,
               has_late: false,
-              late_hours_reason: "",
+              late_hours_reason: '',
               has_absences: false,
-              absent_reason: "",
+              absent_reason: ''
             })
-          } else if (this.type === "terminate") {
+          } else if (this.type === 'terminate') {
             isExisting.shifts.push({
               id: sched.id,
               rate: sched.rate,
@@ -1623,22 +1474,20 @@ export default {
               time_start: sched.time_start,
               locum_detail_rate_type_name: sched.locum_detail_rate_type.name,
               locum_detail_rate_type_id: sched.locum_detail_rate_type_id,
-              final_time_start: "",
-              final_time_end: "",
+              final_time_start: '',
+              final_time_end: '',
               has_late: false,
-              late_hours_reason: "",
+              late_hours_reason: '',
               has_absences: false,
-              absent_reason: "",
+              absent_reason: ''
             })
-          } else if (this.type === "invoice") {
-            let isAbsent = !this.invoiceDetails
-              ? sched.final_time_start === sched.final_time_end
-              : sched.time_start === sched.time_end
+          } else if (this.type === 'invoice') {
+            let isAbsent = !this.invoiceDetails ? sched.final_time_start === sched.final_time_end : sched.time_start === sched.time_end
             let finalRate = this.getRate(
               sched,
               sched.fina_time_start,
               sched.final_time_end,
-              this.$moment(sched.date, "YYYY-MM-DD").format("DD/MM/YYYY")
+              this.$moment(sched.date, 'YYYY-MM-DD').format('DD/MM/YYYY')
             )
             let isDisputed = sched.remarks ? true : false
             isExisting.shifts.push({
@@ -1646,12 +1495,8 @@ export default {
               rate: sched.rate,
               shift_id: sched.shift.id,
               shift: sched.shift,
-              time_end:
-                status === "issued" ? sched.original_time_end : sched.time_end,
-              time_start:
-                status === "issued"
-                  ? sched.original_time_start
-                  : sched.time_start,
+              time_end: status === 'issued' ? sched.original_time_end : sched.time_end,
+              time_start: status === 'issued' ? sched.original_time_start : sched.time_start,
               locum_detail_rate_type: sched.locum_detail_rate_type,
               locum_detail_rate_type_name: sched.locum_detail_rate_type.name,
               locum_detail_rate_type_id: sched.locum_detail_rate_type.id,
@@ -1660,21 +1505,13 @@ export default {
               orig_time_start: sched.original_time_start,
               orig_time_end: sched.original_time_end,
               orig_has_absences: isAbsent,
-              final_time_start: isAbsent
-                ? ""
-                : !this.invoiceDetails
-                  ? sched.final_time_start
-                  : sched.time_start,
-              final_time_end: isAbsent
-                ? ""
-                : !this.invoiceDetails
-                  ? sched.final_time_end
-                  : sched.time_end,
+              final_time_start: isAbsent ? '' : !this.invoiceDetails ? sched.final_time_start : sched.time_start,
+              final_time_end: isAbsent ? '' : !this.invoiceDetails ? sched.final_time_end : sched.time_end,
               late_hours: sched.late_hours_in_minutes,
               has_absences: isAbsent,
               dispute: isDisputed,
-              remarks: sched.remarks ? sched.remarks : "",
-              total: finalRate,
+              remarks: sched.remarks ? sched.remarks : '',
+              total: finalRate
             })
           } else {
             isExisting.shifts.push({
@@ -1682,16 +1519,14 @@ export default {
               shift_id: sched.shift_id,
               time_end: sched.time_end,
               time_start: sched.time_start,
-              locum_detail_rate_type_id: sched.locum_detail_rate_type_id,
+              locum_detail_rate_type_id: sched.locum_detail_rate_type_id
             })
           }
         } else {
-          this.scheduleDates.push(
-            this.$moment(sched.date, "YYYY-MM-DD").format("DD/MM/YYYY")
-          )
-          if (this.type === "complete") {
+          this.scheduleDates.push(this.$moment(sched.date, 'YYYY-MM-DD').format('DD/MM/YYYY'))
+          if (this.type === 'complete') {
             this.schedules.push({
-              date: this.$moment(sched.date, "YYYY-MM-DD").format("DD/MM/YYYY"),
+              date: this.$moment(sched.date, 'YYYY-MM-DD').format('DD/MM/YYYY'),
               shifts: [
                 {
                   id: sched.id,
@@ -1699,21 +1534,20 @@ export default {
                   shift_id: sched.shift_id,
                   time_end: sched.time_end,
                   time_start: sched.time_start,
-                  locum_detail_rate_type_name:
-                    sched.locum_detail_rate_type.name,
+                  locum_detail_rate_type_name: sched.locum_detail_rate_type.name,
                   locum_detail_rate_type_id: sched.locum_detail_rate_type_id,
                   final_time_start: sched.time_start,
                   final_time_end: sched.time_end,
                   has_late: false,
-                  late_hours_reason: "",
+                  late_hours_reason: '',
                   has_absences: false,
-                  absent_reason: "",
-                },
-              ],
+                  absent_reason: ''
+                }
+              ]
             })
-          } else if (this.type === "terminate") {
+          } else if (this.type === 'terminate') {
             this.schedules.push({
-              date: this.$moment(sched.date, "YYYY-MM-DD").format("DD/MM/YYYY"),
+              date: this.$moment(sched.date, 'YYYY-MM-DD').format('DD/MM/YYYY'),
               shifts: [
                 {
                   id: sched.id,
@@ -1721,31 +1555,28 @@ export default {
                   shift_id: sched.shift_id,
                   time_end: sched.time_end,
                   time_start: sched.time_start,
-                  locum_detail_rate_type_name:
-                    sched.locum_detail_rate_type.name,
+                  locum_detail_rate_type_name: sched.locum_detail_rate_type.name,
                   locum_detail_rate_type_id: sched.locum_detail_rate_type_id,
-                  final_time_start: "",
-                  final_time_end: "",
+                  final_time_start: '',
+                  final_time_end: '',
                   has_late: false,
-                  late_hours_reason: "",
+                  late_hours_reason: '',
                   has_absences: false,
-                  absent_reason: "",
-                },
-              ],
+                  absent_reason: ''
+                }
+              ]
             })
-          } else if (this.type === "invoice") {
-            let isAbsent = !this.invoiceDetails
-              ? sched.final_time_start === sched.final_time_end
-              : sched.time_start === sched.time_end
+          } else if (this.type === 'invoice') {
+            let isAbsent = !this.invoiceDetails ? sched.final_time_start === sched.final_time_end : sched.time_start === sched.time_end
             let finalRate = this.getRate(
               sched,
               sched.final_time_start,
               sched.final_time_end,
-              this.$moment(sched.date, "YYYY-MM-DD").format("DD/MM/YYYY")
+              this.$moment(sched.date, 'YYYY-MM-DD').format('DD/MM/YYYY')
             )
             let isDisputed = sched.remarks ? true : false
             this.schedules.push({
-              date: this.$moment(sched.date, "YYYY-MM-DD").format("DD/MM/YYYY"),
+              date: this.$moment(sched.date, 'YYYY-MM-DD').format('DD/MM/YYYY'),
               shifts: [
                 {
                   id: sched.id,
@@ -1754,65 +1585,46 @@ export default {
                   shift_id: sched.shift.id,
                   orig_time_start: sched.original_time_start,
                   orig_time_end: sched.original_time_end,
-                  time_end:
-                    status === "issued"
-                      ? sched.original_time_end
-                      : sched.time_end,
-                  time_start:
-                    status === "issued"
-                      ? sched.original_time_start
-                      : sched.time_start,
+                  time_end: status === 'issued' ? sched.original_time_end : sched.time_end,
+                  time_start: status === 'issued' ? sched.original_time_start : sched.time_start,
                   locum_detail_rate_type: sched.locum_detail_rate_type,
-                  locum_detail_rate_type_name:
-                    sched.locum_detail_rate_type.name,
+                  locum_detail_rate_type_name: sched.locum_detail_rate_type.name,
                   locum_detail_rate_type_id: sched.locum_detail_rate_type.id,
                   orig_final_start: sched.final_time_start,
                   orig_final_end: sched.final_time_end,
                   orig_has_absences: isAbsent,
-                  final_time_start: isAbsent
-                    ? ""
-                    : !this.invoiceDetails
-                      ? sched.final_time_start
-                      : sched.time_start,
-                  final_time_end: isAbsent
-                    ? ""
-                    : !this.invoiceDetails
-                      ? sched.final_time_end
-                      : sched.time_end,
+                  final_time_start: isAbsent ? '' : !this.invoiceDetails ? sched.final_time_start : sched.time_start,
+                  final_time_end: isAbsent ? '' : !this.invoiceDetails ? sched.final_time_end : sched.time_end,
                   late_hours: sched.late_hours_in_minutes,
                   has_absences: isAbsent,
                   dispute: isDisputed,
-                  remarks: sched.remarks ? sched.remarks : "",
-                  total: finalRate,
-                },
-              ],
+                  remarks: sched.remarks ? sched.remarks : '',
+                  total: finalRate
+                }
+              ]
             })
           } else {
             this.schedules.push({
-              date: this.$moment(sched.date, "YYYY-MM-DD").format("DD/MM/YYYY"),
+              date: this.$moment(sched.date, 'YYYY-MM-DD').format('DD/MM/YYYY'),
               shifts: [
                 {
                   rate: sched.rate,
                   shift_id: sched.shift_id,
                   time_end: sched.time_end,
                   time_start: sched.time_start,
-                  locum_detail_rate_type_id: sched.locum_detail_rate_type_id,
-                },
-              ],
+                  locum_detail_rate_type_id: sched.locum_detail_rate_type_id
+                }
+              ]
             })
           }
         }
 
         // for original copy to check if has changes
-        if (this.type !== "create") {
-          let isExisting_original = this.original_schedule.find(
-            item =>
-              item.date
-              === this.$moment(sched.date, "YYYY-MM-DD").format("DD/MM/YYYY")
-          )
+        if (this.type !== 'create') {
+          let isExisting_original = this.original_schedule.find(item => item.date === this.$moment(sched.date, 'YYYY-MM-DD').format('DD/MM/YYYY'))
 
           if (isExisting_original) {
-            if (this.type === "complete") {
+            if (this.type === 'complete') {
               isExisting_original.shifts.push({
                 id: sched.id,
                 rate: sched.rate,
@@ -1824,11 +1636,11 @@ export default {
                 final_time_start: sched.time_start,
                 final_time_end: sched.time_end,
                 has_late: false,
-                late_hours_reason: "",
+                late_hours_reason: '',
                 has_absences: false,
-                absent_reason: "",
+                absent_reason: ''
               })
-            } else if (this.type === "terminate") {
+            } else if (this.type === 'terminate') {
               isExisting_original.shifts.push({
                 id: sched.id,
                 rate: sched.rate,
@@ -1837,22 +1649,20 @@ export default {
                 time_start: sched.time_start,
                 locum_detail_rate_type_name: sched.locum_detail_rate_type.name,
                 locum_detail_rate_type_id: sched.locum_detail_rate_type_id,
-                final_time_start: "",
-                final_time_end: "",
+                final_time_start: '',
+                final_time_end: '',
                 has_late: false,
-                late_hours_reason: "",
+                late_hours_reason: '',
                 has_absences: false,
-                absent_reason: "",
+                absent_reason: ''
               })
-            } else if (this.type === "invoice") {
-              let isAbsent_orig = !this.invoiceDetails
-                ? sched.final_time_start === sched.final_time_end
-                : sched.time_start === sched.time_end
+            } else if (this.type === 'invoice') {
+              let isAbsent_orig = !this.invoiceDetails ? sched.final_time_start === sched.final_time_end : sched.time_start === sched.time_end
               let finalRate_orig = this.getRate(
                 sched,
                 sched.fina_time_start,
                 sched.final_time_end,
-                this.$moment(sched.date, "YYYY-MM-DD").format("DD/MM/YYYY")
+                this.$moment(sched.date, 'YYYY-MM-DD').format('DD/MM/YYYY')
               )
               let isDisputed = sched.remarks ? true : false
               isExisting_original.shifts.push({
@@ -1860,14 +1670,8 @@ export default {
                 rate: sched.rate,
                 shift_id: sched.shift.id,
                 shift: sched.shift,
-                time_end:
-                  status === "issued"
-                    ? sched.original_time_end
-                    : sched.time_end,
-                time_start:
-                  status === "issued"
-                    ? sched.original_time_start
-                    : sched.time_start,
+                time_end: status === 'issued' ? sched.original_time_end : sched.time_end,
+                time_start: status === 'issued' ? sched.original_time_start : sched.time_start,
                 locum_detail_rate_type: sched.locum_detail_rate_type,
                 locum_detail_rate_type_name: sched.locum_detail_rate_type.name,
                 locum_detail_rate_type_id: sched.locum_detail_rate_type.id,
@@ -1876,21 +1680,13 @@ export default {
                 orig_time_start: sched.original_time_start,
                 orig_time_end: sched.original_time_end,
                 orig_has_absences: isAbsent_orig,
-                final_time_start: isAbsent_orig
-                  ? ""
-                  : !this.invoiceDetails
-                    ? sched.final_time_start
-                    : sched.time_start,
-                final_time_end: isAbsent_orig
-                  ? ""
-                  : !this.invoiceDetails
-                    ? sched.final_time_end
-                    : sched.time_end,
+                final_time_start: isAbsent_orig ? '' : !this.invoiceDetails ? sched.final_time_start : sched.time_start,
+                final_time_end: isAbsent_orig ? '' : !this.invoiceDetails ? sched.final_time_end : sched.time_end,
                 late_hours: sched.late_hours_in_minutes,
                 has_absences: isAbsent_orig,
                 dispute: isDisputed,
-                remarks: sched.remarks ? sched.remarks : "",
-                total: finalRate_orig,
+                remarks: sched.remarks ? sched.remarks : '',
+                total: finalRate_orig
               })
             } else {
               isExisting_original.shifts.push({
@@ -1898,19 +1694,15 @@ export default {
                 shift_id: sched.shift_id,
                 time_end: sched.time_end,
                 time_start: sched.time_start,
-                locum_detail_rate_type_id: sched.locum_detail_rate_type_id,
+                locum_detail_rate_type_id: sched.locum_detail_rate_type_id
               })
             }
           } else {
-            this.scheduleDates.push(
-              this.$moment(sched.date, "YYYY-MM-DD").format("DD/MM/YYYY")
-            )
+            this.scheduleDates.push(this.$moment(sched.date, 'YYYY-MM-DD').format('DD/MM/YYYY'))
 
-            if (this.type === "complete") {
+            if (this.type === 'complete') {
               this.original_schedule.push({
-                date: this.$moment(sched.date, "YYYY-MM-DD").format(
-                  "DD/MM/YYYY"
-                ),
+                date: this.$moment(sched.date, 'YYYY-MM-DD').format('DD/MM/YYYY'),
                 shifts: [
                   {
                     id: sched.id,
@@ -1918,23 +1710,20 @@ export default {
                     shift_id: sched.shift_id,
                     time_end: sched.time_end,
                     time_start: sched.time_start,
-                    locum_detail_rate_type_name:
-                      sched.locum_detail_rate_type.name,
+                    locum_detail_rate_type_name: sched.locum_detail_rate_type.name,
                     locum_detail_rate_type_id: sched.locum_detail_rate_type_id,
                     final_time_start: sched.time_start,
                     final_time_end: sched.time_end,
                     has_late: false,
-                    late_hours_reason: "",
+                    late_hours_reason: '',
                     has_absences: false,
-                    absent_reason: "",
-                  },
-                ],
+                    absent_reason: ''
+                  }
+                ]
               })
-            } else if (this.type === "terminate") {
+            } else if (this.type === 'terminate') {
               this.original_schedule.push({
-                date: this.$moment(sched.date, "YYYY-MM-DD").format(
-                  "DD/MM/YYYY"
-                ),
+                date: this.$moment(sched.date, 'YYYY-MM-DD').format('DD/MM/YYYY'),
                 shifts: [
                   {
                     id: sched.id,
@@ -1942,33 +1731,28 @@ export default {
                     shift_id: sched.shift_id,
                     time_end: sched.time_end,
                     time_start: sched.time_start,
-                    locum_detail_rate_type_name:
-                      sched.locum_detail_rate_type.name,
+                    locum_detail_rate_type_name: sched.locum_detail_rate_type.name,
                     locum_detail_rate_type_id: sched.locum_detail_rate_type_id,
-                    final_time_start: "",
-                    final_time_end: "",
+                    final_time_start: '',
+                    final_time_end: '',
                     has_late: false,
-                    late_hours_reason: "",
+                    late_hours_reason: '',
                     has_absences: false,
-                    absent_reason: "",
-                  },
-                ],
+                    absent_reason: ''
+                  }
+                ]
               })
-            } else if (this.type === "invoice") {
-              let isAbsent_orig = !this.invoiceDetails
-                ? sched.final_time_start === sched.final_time_end
-                : sched.time_start === sched.time_end
+            } else if (this.type === 'invoice') {
+              let isAbsent_orig = !this.invoiceDetails ? sched.final_time_start === sched.final_time_end : sched.time_start === sched.time_end
               let finalRate_orig = this.getRate(
                 sched,
                 sched.final_time_start,
                 sched.final_time_end,
-                this.$moment(sched.date, "YYYY-MM-DD").format("DD/MM/YYYY")
+                this.$moment(sched.date, 'YYYY-MM-DD').format('DD/MM/YYYY')
               )
               let isDisputed = sched.remarks ? true : false
               this.original_schedule.push({
-                date: this.$moment(sched.date, "YYYY-MM-DD").format(
-                  "DD/MM/YYYY"
-                ),
+                date: this.$moment(sched.date, 'YYYY-MM-DD').format('DD/MM/YYYY'),
                 shifts: [
                   {
                     id: sched.id,
@@ -1977,53 +1761,36 @@ export default {
                     shift_id: sched.shift.id,
                     orig_time_start: sched.original_time_start,
                     orig_time_end: sched.original_time_end,
-                    time_end:
-                      status === "issued"
-                        ? sched.original_time_end
-                        : sched.time_end,
-                    time_start:
-                      status === "issued"
-                        ? sched.original_time_start
-                        : sched.time_start,
+                    time_end: status === 'issued' ? sched.original_time_end : sched.time_end,
+                    time_start: status === 'issued' ? sched.original_time_start : sched.time_start,
                     locum_detail_rate_type: sched.locum_detail_rate_type,
-                    locum_detail_rate_type_name:
-                      sched.locum_detail_rate_type.name,
+                    locum_detail_rate_type_name: sched.locum_detail_rate_type.name,
                     locum_detail_rate_type_id: sched.locum_detail_rate_type.id,
                     orig_final_start: sched.final_time_start,
                     orig_final_end: sched.final_time_end,
                     orig_has_absences: isAbsent_orig,
-                    final_time_start: isAbsent_orig
-                      ? ""
-                      : !this.invoiceDetails
-                        ? sched.final_time_start
-                        : sched.time_start,
-                    final_time_end: isAbsent_orig
-                      ? ""
-                      : !this.invoiceDetails
-                        ? sched.final_time_end
-                        : sched.time_end,
+                    final_time_start: isAbsent_orig ? '' : !this.invoiceDetails ? sched.final_time_start : sched.time_start,
+                    final_time_end: isAbsent_orig ? '' : !this.invoiceDetails ? sched.final_time_end : sched.time_end,
                     late_hours: sched.late_hours_in_minutes,
                     has_absences: isAbsent_orig,
                     dispute: isDisputed,
-                    remarks: sched.remarks ? sched.remarks : "",
-                    total: finalRate_orig,
-                  },
-                ],
+                    remarks: sched.remarks ? sched.remarks : '',
+                    total: finalRate_orig
+                  }
+                ]
               })
             } else {
               this.original_schedule.push({
-                date: this.$moment(sched.date, "YYYY-MM-DD").format(
-                  "DD/MM/YYYY"
-                ),
+                date: this.$moment(sched.date, 'YYYY-MM-DD').format('DD/MM/YYYY'),
                 shifts: [
                   {
                     rate: sched.rate,
                     shift_id: sched.shift_id,
                     time_end: sched.time_end,
                     time_start: sched.time_start,
-                    locum_detail_rate_type_id: sched.locum_detail_rate_type_id,
-                  },
-                ],
+                    locum_detail_rate_type_id: sched.locum_detail_rate_type_id
+                  }
+                ]
               })
             }
           }
@@ -2033,10 +1800,10 @@ export default {
   },
 
   methods: {
-    emitSchedule () {
-      if (this.type === "invoice") {
+    emitSchedule() {
+      if (this.type === 'invoice') {
         this.$emit(
-          "getSchedule",
+          'getSchedule',
           this.schedules,
           this.getJobGrossRate(this.schedules, true),
           this.getJobTaxRate(this.schedules, true),
@@ -2049,7 +1816,7 @@ export default {
         )
       } else {
         this.$emit(
-          "getSchedule",
+          'getSchedule',
           this.schedules,
           this.getJobGrossRate(this.schedules),
           this.getTotalHours(this.schedules),
@@ -2061,15 +1828,11 @@ export default {
       }
     },
 
-    cancelReason () {
-      if (this.selectedShift.type === "late") {
-        let sched = this.schedules.find(
-          (item, index) => index === this.selectedShift.index
-        )
+    cancelReason() {
+      if (this.selectedShift.type === 'late') {
+        let sched = this.schedules.find((item, index) => index === this.selectedShift.index)
 
-        let shift = sched.shifts.find(
-          (item, index) => index === this.selectedShift.i
-        )
+        let shift = sched.shifts.find((item, index) => index === this.selectedShift.i)
 
         if (this.selectedShift.late_hours_reason) {
           if (!shift.late_hours_reason) {
@@ -2081,15 +1844,11 @@ export default {
           this.selectedShift = null
         } else {
           if (shift.late_hours_reason) {
-            let errIndex = this.formError.findIndex(
-              err =>
-                err.field
-                === `late_hours_reason-${this.selectedShift.index}-${this.selectedShift.i}`
-            )
+            let errIndex = this.formError.findIndex(err => err.field === `late_hours_reason-${this.selectedShift.index}-${this.selectedShift.i}`)
             if (errIndex < 0) {
               this.formError.push({
                 field: `late_hours_reason-${this.selectedShift.index}-${this.selectedShift.i}`,
-                message: "Late Reason is required.",
+                message: 'Late Reason is required.'
               })
             }
           } else {
@@ -2098,31 +1857,23 @@ export default {
             this.selectedShift = null
           }
         }
-      } else if (this.selectedShift.type === "absent") {
-        let sched = this.schedules.find(
-          (item, index) => index === this.selectedShift.index
-        )
-        let shift = sched.shifts.find(
-          (item, index) => index === this.selectedShift.i
-        )
+      } else if (this.selectedShift.type === 'absent') {
+        let sched = this.schedules.find((item, index) => index === this.selectedShift.index)
+        let shift = sched.shifts.find((item, index) => index === this.selectedShift.i)
         if (!shift.absent_reason) {
           shift.has_absences = false
         }
         this.show_late_reason = false
         this.selectedShift = null
-      } else if (this.selectedShift.type === "dispute") {
-        let sched = this.schedules.find(
-          (item, index) => index === this.selectedShift.index
-        )
-        let shift = sched.shifts.find(
-          (item, index) => index === this.selectedShift.i
-        )
+      } else if (this.selectedShift.type === 'dispute') {
+        let sched = this.schedules.find((item, index) => index === this.selectedShift.index)
+        let shift = sched.shifts.find((item, index) => index === this.selectedShift.i)
 
         if (!shift.remarks) {
           shift.dispute = false
           if (shift.orig_has_absences) {
-            shift.final_time_start = ""
-            shift.final_time_end = ""
+            shift.final_time_start = ''
+            shift.final_time_end = ''
           } else {
             shift.final_time_start = shift.orig_final_start
             shift.final_time_end = shift.orig_final_end
@@ -2133,7 +1884,7 @@ export default {
       }
     },
 
-    getDeductions (schedules) {
+    getDeductions(schedules) {
       let deductions = []
       schedules.forEach(sched => {
         sched.shifts.forEach(shift => {
@@ -2141,26 +1892,16 @@ export default {
             deductions.push(
               this.getRate(
                 shift,
-                shift.orig_time_start
-                  ? shift.orig_time_start
-                  : shift.time_start,
+                shift.orig_time_start ? shift.orig_time_start : shift.time_start,
                 shift.orig_time_end ? shift.orig_time_end : shift.time_end,
                 sched.date,
-                "deduction"
+                'deduction'
               )
             )
           } else {
-            if (this.getLate(shift, sched.date) !== "NO") {
+            if (this.getLate(shift, sched.date) !== 'NO') {
               deductions.push(
-                this.getRate(
-                  shift,
-                  shift.orig_time_start
-                    ? shift.orig_time_start
-                    : shift.time_start,
-                  shift.final_time_start,
-                  sched.date,
-                  "deduction"
-                )
+                this.getRate(shift, shift.orig_time_start ? shift.orig_time_start : shift.time_start, shift.final_time_start, sched.date, 'deduction')
               )
             }
           }
@@ -2169,46 +1910,33 @@ export default {
       return deductions.reduce((acc, item) => acc + item, 0)
     },
 
-    lateChange (shift, index, i, type) {
-      let value
-        = type === "late"
-          ? shift.has_late
-          : type === "absent"
-            ? shift.has_absences
-            : shift.dispute
-      if (["true", true,].includes(value)) {
+    lateChange(shift, index, i, type) {
+      let value = type === 'late' ? shift.has_late : type === 'absent' ? shift.has_absences : shift.dispute
+      if (['true', true].includes(value)) {
         let errIndex = -1
-        if (type === "late") {
-          errIndex = this.formError.findIndex(
-            err => err.field === `late_hours_reason-${index}-${i}`
-          )
-        } else if (type === "absent") {
-          errIndex = this.formError.findIndex(
-            err => err.field === `absent_reason-${index}-${i}`
-          )
-        } else if (type === "dispute") {
-          errIndex = this.formError.findIndex(
-            err => err.field === `remarks-${index}-${i}`
-          )
+        if (type === 'late') {
+          errIndex = this.formError.findIndex(err => err.field === `late_hours_reason-${index}-${i}`)
+        } else if (type === 'absent') {
+          errIndex = this.formError.findIndex(err => err.field === `absent_reason-${index}-${i}`)
+        } else if (type === 'dispute') {
+          errIndex = this.formError.findIndex(err => err.field === `remarks-${index}-${i}`)
         }
         if (errIndex > -1) {
           this.formError.splice(errIndex, 1)
         }
-        this.selectedShift = { ...shift, index: index, i: i, type: type, }
+        this.selectedShift = { ...shift, index: index, i: i, type: type }
         this.show_late_reason = true
       } else {
         let sched = this.schedules.find((item, i) => i === index)
         let selectedShift = sched.shifts.find((item, ind) => ind === i)
-        selectedShift.late_hours_reason = ""
+        selectedShift.late_hours_reason = ''
       }
     },
 
-    saveLateReason (selectedShift) {
-      let sched = this.schedules.find(
-        (item, index) => index === selectedShift.index
-      )
+    saveLateReason(selectedShift) {
+      let sched = this.schedules.find((item, index) => index === selectedShift.index)
       let shift = sched.shifts.find((item, index) => index === selectedShift.i)
-      if (selectedShift.type === "late") {
+      if (selectedShift.type === 'late') {
         if (selectedShift.late_hours_reason) {
           shift.late_hours_reason = selectedShift.late_hours_reason
           this.selectedShift = null
@@ -2216,25 +1944,25 @@ export default {
         } else {
           this.formError.push({
             field: `late_hours_reason-${selectedShift.index}-${selectedShift.i}`,
-            message: "Late Reason is required.",
+            message: 'Late Reason is required.'
           })
         }
-      } else if (selectedShift.type === "absent") {
+      } else if (selectedShift.type === 'absent') {
         if (selectedShift.absent_reason) {
           shift.absent_reason = selectedShift.absent_reason
-          shift.late_hours_reason = ""
+          shift.late_hours_reason = ''
           shift.has_late = false
-          shift.final_time_start = ""
-          shift.final_time_end = ""
+          shift.final_time_start = ''
+          shift.final_time_end = ''
           this.selectedShift = null
           this.show_late_reason = false
         } else {
           this.formError.push({
             field: `absent_reason-${selectedShift.index}-${selectedShift.i}`,
-            message: "Absent Reason is required.",
+            message: 'Absent Reason is required.'
           })
         }
-      } else if (selectedShift.type === "dispute") {
+      } else if (selectedShift.type === 'dispute') {
         if (selectedShift.remarks) {
           shift.remarks = selectedShift.remarks
           this.selectedShift = null
@@ -2242,13 +1970,13 @@ export default {
         } else {
           this.formError.push({
             field: `remarks-${selectedShift.index}-${selectedShift.i}`,
-            message: "Remarks is required.",
+            message: 'Remarks is required.'
           })
         }
       }
     },
 
-    CheckIfEmptyFormError (field, name) {
+    CheckIfEmptyFormError(field, name) {
       if (field) {
         let errIndex = this.formError.findIndex(err => err.field === name)
         if (errIndex > -1) {
@@ -2257,7 +1985,7 @@ export default {
       }
     },
 
-    CheckIfEmpty (field, name) {
+    CheckIfEmpty(field, name) {
       if (field) {
         let errIndex = this.shiftErrors.findIndex(err => err.field === name)
         if (errIndex > -1) {
@@ -2267,30 +1995,24 @@ export default {
     },
 
     //
-    applyToAll (type, item) {
-      if (type === "job_part") {
-        let activeJobPart = this.job_parts.find(
-          part => part.value.toString() === this.job_part_id.toString()
-        )
+    applyToAll(type, item) {
+      if (type === 'job_part') {
+        let activeJobPart = this.job_parts.find(part => part.value.toString() === this.job_part_id.toString())
         this.schedules
-          .filter(item =>
-            activeJobPart.dates.includes(
-              this.$moment(item.date, "DD/MM/YYYY").format("YYYY-MM-DD")
-            )
-          )
+          .filter(item => activeJobPart.dates.includes(this.$moment(item.date, 'DD/MM/YYYY').format('YYYY-MM-DD')))
           .forEach(sched => {
             if (sched.date !== item.date) {
               if (sched.shifts.length) {
                 sched.shifts.splice(0, sched.shifts.length)
               }
-              if (this.type === "create") {
+              if (this.type === 'create') {
                 item.shifts.forEach(shift => {
                   sched.shifts.push({
                     shift_id: shift.shift_id,
                     time_start: shift.time_start,
                     time_end: shift.time_end,
                     locum_detail_rate_type_id: shift.locum_detail_rate_type_id,
-                    rate: shift.rate,
+                    rate: shift.rate
                   })
                 })
               } else {
@@ -2311,7 +2033,7 @@ export default {
               }
             }
           })
-      } else if (type === "dates") {
+      } else if (type === 'dates') {
         this.schedules.forEach(sched => {
           if (sched.date !== item.date) {
             if (sched.shifts.length) {
@@ -2323,51 +2045,45 @@ export default {
                 time_start: shift.time_start,
                 time_end: shift.time_end,
                 locum_detail_rate_type_id: shift.locum_detail_rate_type_id,
-                rate: shift.rate,
+                rate: shift.rate
               })
             })
           }
         })
       }
-      this.confirmApply = ""
+      this.confirmApply = ''
     },
 
-    getLate (shift) {
+    getLate(shift) {
       const originalTimeStart = shift.orig_time_start || shift.time_start
       const finalTimeStart = shift.final_time_start || shift.time_start
 
-      const timeDiff = this.$moment(finalTimeStart, "HH:mm").diff(this.$moment(originalTimeStart, "HH:mm"))
+      const timeDiff = this.$moment(finalTimeStart, 'HH:mm').diff(this.$moment(originalTimeStart, 'HH:mm'))
 
       const lateInMinutes = this.$moment.duration(timeDiff).asMinutes()
 
       let hour = lateInMinutes / 60 > 0 ? parseInt(lateInMinutes / 60) : 0
       let minute = lateInMinutes % 60
 
-      let total_late_hours = "NO"
+      let total_late_hours = 'NO'
 
       if (hour > 0 || minute > 0) {
-        total_late_hours = `${
-          hour > 0 ? (hour > 9 ? `${hour}h` : `0${hour > -1 ? hour : 0}h`) : ""
-        } ${
-          minute > 0
-            ? minute > 9
-              ? `${minute}m`
-              : `0${minute > -1 ? minute : 0}m`
-            : ""
+        total_late_hours = `${hour > 0 ? (hour > 9 ? `${hour}h` : `0${hour > -1 ? hour : 0}h`) : ''} ${
+          minute > 0 ? (minute > 9 ? `${minute}m` : `0${minute > -1 ? minute : 0}m`) : ''
         }`
       }
 
       return total_late_hours
     },
 
-    getTotalLates (schedule) {
+    getTotalLates(schedule) {
       let late_in_minutes = []
       schedule.forEach(sched => {
         sched.shifts.forEach(shift => {
           const originalTimeStart = shift.orig_time_start || shift.time_start
           const finalTimeStart = shift.final_time_start || shift.time_start
 
-          const timeDiff = this.$moment(finalTimeStart, "HH:mm").diff(this.$moment(originalTimeStart, "HH:mm"))
+          const timeDiff = this.$moment(finalTimeStart, 'HH:mm').diff(this.$moment(originalTimeStart, 'HH:mm'))
 
           const lateInMinutes = this.$moment.duration(timeDiff).asMinutes()
 
@@ -2375,40 +2091,28 @@ export default {
         })
       })
 
-      let hour
-        = late_in_minutes.reduce((a, b) => a + b, 0) / 60 > 0
-          ? parseInt(late_in_minutes.reduce((a, b) => a + b, 0) / 60)
-          : 0
-          
+      let hour = late_in_minutes.reduce((a, b) => a + b, 0) / 60 > 0 ? parseInt(late_in_minutes.reduce((a, b) => a + b, 0) / 60) : 0
+
       let minute = late_in_minutes.reduce((a, b) => a + b, 0) % 60
 
-      let total_late_hours = `${
-        hour > 0 ? (hour > 9 ? `${hour}h` : `0${hour > -1 ? hour : 0}h`) : ""
-      } ${
-        minute > 0
-          ? minute > 9
-            ? `${minute}m`
-            : `0${minute > -1 ? minute : 0}m`
-          : ""
+      let total_late_hours = `${hour > 0 ? (hour > 9 ? `${hour}h` : `0${hour > -1 ? hour : 0}h`) : ''} ${
+        minute > 0 ? (minute > 9 ? `${minute}m` : `0${minute > -1 ? minute : 0}m`) : ''
       }`
 
       if (hour <= 0 && minute <= 0) {
-        total_late_hours = "None"
+        total_late_hours = 'None'
       }
 
       return total_late_hours
     },
 
-    finalHours (shift, date) {
-      let origTotalHours
-        = shift.orig_time_start && shift.orig_time_end
+    finalHours(shift, date) {
+      let origTotalHours =
+        shift.orig_time_start && shift.orig_time_end
           ? this.totalHours(shift.orig_time_start, shift.orig_time_end, date)
           : this.totalHours(shift.time_start, shift.time_end, date)
 
-      let finalTotalHours
-        = shift.final_time_start === shift.final_time_end
-          ? 0
-          : this.totalHours(shift.final_time_start, shift.final_time_end, date)
+      let finalTotalHours = shift.final_time_start === shift.final_time_end ? 0 : this.totalHours(shift.final_time_start, shift.final_time_end, date)
 
       let origHours = Math.floor(origTotalHours / 60)
 
@@ -2418,73 +2122,39 @@ export default {
 
       let finalMinutes = Math.floor(finalTotalHours % 60)
 
-      let totalFinalHours
-        = finalHours === 0 && finalMinutes === 0
-          ? "0h"
-          : `${
-            finalHours > 0
-              ? finalHours > 9
-                ? `${finalHours}h`
-                : `0${finalHours}h`
-              : ""
-          }${
-            finalMinutes > 0
-              ? finalMinutes > 9
-                ? ` ${finalMinutes}m`
-                : ` 0${finalMinutes}m`
-              : ""
-          }`
+      let totalFinalHours =
+        finalHours === 0 && finalMinutes === 0
+          ? '0h'
+          : `${finalHours > 0 ? (finalHours > 9 ? `${finalHours}h` : `0${finalHours}h`) : ''}${
+              finalMinutes > 0 ? (finalMinutes > 9 ? ` ${finalMinutes}m` : ` 0${finalMinutes}m`) : ''
+            }`
 
-      let totalOrigHours
-        = origHours === 0 && origMinutes === 0
-          ? "0h"
-          : `${
-            origHours > 0
-              ? origHours > 9
-                ? `${origHours}h`
-                : `0${origHours}h`
-              : ""
-          }${
-            origMinutes > 0
-              ? origMinutes > 9
-                ? ` ${origMinutes}m`
-                : ` 0${origMinutes}m`
-              : ""
-          }`
+      let totalOrigHours =
+        origHours === 0 && origMinutes === 0
+          ? '0h'
+          : `${origHours > 0 ? (origHours > 9 ? `${origHours}h` : `0${origHours}h`) : ''}${
+              origMinutes > 0 ? (origMinutes > 9 ? ` ${origMinutes}m` : ` 0${origMinutes}m`) : ''
+            }`
 
       return `${totalFinalHours}/${totalOrigHours}`
     },
 
-    getRate (shift, startTime, endTime, date, type) {
-      let rate_type_name
-        = this.type === "create"
+    getRate(shift, startTime, endTime, date, type) {
+      let rate_type_name =
+        this.type === 'create'
           ? this.rateLists && shift.locum_detail_rate_type_id
-            ? this.rateLists.find(
-              item =>
-                item.value.toString()
-                  === shift.locum_detail_rate_type_id.toString()
-            ).label
-            : ""
+            ? this.rateLists.find(item => item.value.toString() === shift.locum_detail_rate_type_id.toString()).label
+            : ''
           : shift.locum_detail_rate_type_name
 
-      let total_hours
-        = Math.round((this.totalHours(startTime, endTime, date) / 60) * 100)
-        / 100
+      let total_hours = Math.round((this.totalHours(startTime, endTime, date) / 60) * 100) / 100
 
       let orig_total_hours = 0
 
       if (shift.orig_time_start && shift.orig_time_end) {
-        orig_total_hours
-          = Math.round(
-            (this.totalHours(shift.orig_time_start, shift.orig_time_end, date)
-              / 60)
-              * 100
-          ) / 100
+        orig_total_hours = Math.round((this.totalHours(shift.orig_time_start, shift.orig_time_end, date) / 60) * 100) / 100
       } else {
-        orig_total_hours
-          = Math.round(
-            (this.totalHours(shift.time_start, shift.time_end, date) / 60) * 100
-          ) / 100
+        orig_total_hours = Math.round((this.totalHours(shift.time_start, shift.time_end, date) / 60) * 100) / 100
       }
 
       const calculatePerSessionAmount = (rate, originalHours, finalHours) => {
@@ -2492,77 +2162,49 @@ export default {
           return 0
         }
 
-        return originalHours === finalHours
-          ? rate
-          : Math.round(
-            (Math.round((rate / originalHours) * 100) / 100)
-                * finalHours
-                * 100
-          ) / 100
+        return originalHours === finalHours ? rate : Math.round((Math.round((rate / originalHours) * 100) / 100) * finalHours * 100) / 100
       }
 
       switch (rate_type_name) {
-      case "Hourly":
-        return type !== "deduction"
-          ? !shift.has_absences && startTime && endTime && total_hours !== 0
-            ? Math.round(shift.rate * total_hours * 100) / 100
-            : 0
-          : Math.round(shift.rate * total_hours * 100) / 100
+        case 'Hourly':
+          return type !== 'deduction'
+            ? !shift.has_absences && startTime && endTime && total_hours !== 0
+              ? Math.round(shift.rate * total_hours * 100) / 100
+              : 0
+            : Math.round(shift.rate * total_hours * 100) / 100
 
-      case "Half Day":
-      case "Whole Day":
-        return type !== "deduction"
-          ? !shift.has_absences && startTime && endTime && total_hours !== 0
-            ? this.type === "create"
-              ? shift.rate
-              : calculatePerSessionAmount(
-                shift.rate,
-                orig_total_hours,
-                total_hours
-              )
-            : 0
-          : calculatePerSessionAmount(
-            shift.rate,
-            orig_total_hours,
-            total_hours
-          )
-      default:
-        return 0
+        case 'Half Day':
+        case 'Whole Day':
+          return type !== 'deduction'
+            ? !shift.has_absences && startTime && endTime && total_hours !== 0
+              ? this.type === 'create'
+                ? shift.rate
+                : calculatePerSessionAmount(shift.rate, orig_total_hours, total_hours)
+              : 0
+            : calculatePerSessionAmount(shift.rate, orig_total_hours, total_hours)
+        default:
+          return 0
       }
     },
 
-    getJobGrossRate (schedules, final) {
+    getJobGrossRate(schedules, final) {
       let rate = 0
       let rates = []
 
       schedules.map(item => {
         if (item.shifts && item.shifts.length) {
-          if (this.type === "invoice" || final) {
+          if (this.type === 'invoice' || final) {
             rates.push(
               ...item.shifts.map(shift =>
                 shift.has_absences
                   ? 0
                   : final
-                    ? this.getRate(
-                      shift,
-                      shift.final_time_start,
-                      shift.final_time_end,
-                      item.date
-                    )
-                    : this.getRate(
-                      shift,
-                      shift.time_start,
-                      shift.time_end,
-                      item.date
-                    )
+                  ? this.getRate(shift, shift.final_time_start, shift.final_time_end, item.date)
+                  : this.getRate(shift, shift.time_start, shift.time_end, item.date)
               )
             )
           } else {
-            rates.push(
-              ...item.shifts.map(shift =>
-                this.getRate(shift, shift.time_start, shift.time_end, item.date)
-              )
-            )
+            rates.push(...item.shifts.map(shift => this.getRate(shift, shift.time_start, shift.time_end, item.date)))
           }
         }
       })
@@ -2580,44 +2222,32 @@ export default {
       return qwe
     },
 
-    getJobTaxRate (schedules, final) {
+    getJobTaxRate(schedules, final) {
       const grossRate = this.getJobGrossRate(schedules, final)
-      const locum_tax_rate
-        = this.tax_rates && this.tax_rates.locum_tax_rate_formatted
-          ? this.tax_rates.locum_tax_rate_formatted
-          : 0
+      const locum_tax_rate = this.tax_rates && this.tax_rates.locum_tax_rate_formatted ? this.tax_rates.locum_tax_rate_formatted : 0
       const taxAmount = parseFloat(grossRate) * parseFloat(locum_tax_rate)
 
       return taxAmount.toFixed(2)
     },
 
-    getJobTaxedGrossRate (schedules, final) {
+    getJobTaxedGrossRate(schedules, final) {
       const grossRate = this.getJobGrossRate(schedules, final)
       const taxRate = this.getJobTaxRate(schedules, final)
       const taxedGrossRate = parseFloat(grossRate) + parseFloat(taxRate)
       return taxedGrossRate.toFixed(2)
     },
 
-    getTotalHours (schedule, final) {
+    getTotalHours(schedule, final) {
       let hour = 0
       let hours = []
 
       schedule.forEach(sched => {
         sched.shifts.forEach(shift => {
-          let time_start
-            = ["complete", "terminate",].includes(this.type) || final
-              ? shift.final_time_start
-              : shift.time_start
+          let time_start = ['complete', 'terminate'].includes(this.type) || final ? shift.final_time_start : shift.time_start
 
-          let time_end
-            = ["complete", "terminate",].includes(this.type) || final
-              ? shift.final_time_end
-              : shift.time_end
+          let time_end = ['complete', 'terminate'].includes(this.type) || final ? shift.final_time_end : shift.time_end
 
-          let total_hours
-            = time_start === time_end
-              ? 0
-              : this.totalHours(time_start, time_end, sched.date)
+          let total_hours = time_start === time_end ? 0 : this.totalHours(time_start, time_end, sched.date)
 
           if (total_hours > 0) {
             hours.push(total_hours)
@@ -2635,7 +2265,7 @@ export default {
       return hour
     },
 
-    totalHours (timeStart, timeEnd, date) {
+    totalHours(timeStart, timeEnd, date) {
       if (!timeStart) {
         return 0
       }
@@ -2652,90 +2282,72 @@ export default {
         return 0
       }
 
-      const datetimeStart = this.$moment(`${date} ${timeStart}`, "DD/MM/YYYY HH:mm")
+      const datetimeStart = this.$moment(`${date} ${timeStart}`, 'DD/MM/YYYY HH:mm')
 
-      const dateTimeEnd
-        = timeStart >= timeEnd
-          ? this.$moment(`${date} ${timeEnd}`, "DD/MM/YYYY HH:mm").add(1, "days")
-          : this.$moment(`${date} ${timeEnd}`, "DD/MM/YYYY HH:mm")
+      const dateTimeEnd =
+        timeStart >= timeEnd
+          ? this.$moment(`${date} ${timeEnd}`, 'DD/MM/YYYY HH:mm').add(1, 'days')
+          : this.$moment(`${date} ${timeEnd}`, 'DD/MM/YYYY HH:mm')
 
       return this.$moment.duration(dateTimeEnd.diff(datetimeStart)).asMinutes()
     },
 
-    changeShiftId (id, shifts, index, shift) {
-      if (["5", 5,].includes(id)) {
+    changeShiftId(id, shifts, index, shift) {
+      if (['5', 5].includes(id)) {
         shifts.splice(index, 1)
-        let rowError = this.formError.filter(err =>
-          err.field.includes(`s${index}`)
-        )
+        let rowError = this.formError.filter(err => err.field.includes(`s${index}`))
         let errNames = rowError.map(err => err.field)
         this.formError.forEach((err, i) => {
           if (errNames.includes(err.field)) {
             this.formError.splice(i, errNames.length)
           }
         })
-      } else if (["1", 1, "2", 2,].includes(id)) {
-        shift.time_start = ""
-        shift.time_end = ""
+      } else if (['1', 1, '2', 2].includes(id)) {
+        shift.time_start = ''
+        shift.time_end = ''
       }
       this.emitSchedule()
     },
 
-    shiftColor (shift, condition) {
+    shiftColor(shift, condition) {
       switch (shift) {
-      case "1":
-      case 1:
-        return condition === "colorOnly"
-          ? "shift-color-am"
-          : "border-shift-am shift-color-am"
-      case "2":
-      case 2:
-        return condition === "colorOnly"
-          ? "shift-color-pm"
-          : "border-shift-pm shift-color-pm"
-      case "3":
-      case 3:
-        return condition === "colorOnly"
-          ? "shift-color-wholeday"
-          : "border-shift-whole-day shift-color-wholeday"
-      case "4":
-      case 4:
-        return condition === "colorOnly"
-          ? "shift-color-ooh"
-          : "border-shift-ooh shift-color-ooh"
-      default:
-        return "border-gray-500"
+        case '1':
+        case 1:
+          return condition === 'colorOnly' ? 'shift-color-am' : 'border-shift-am shift-color-am'
+        case '2':
+        case 2:
+          return condition === 'colorOnly' ? 'shift-color-pm' : 'border-shift-pm shift-color-pm'
+        case '3':
+        case 3:
+          return condition === 'colorOnly' ? 'shift-color-wholeday' : 'border-shift-whole-day shift-color-wholeday'
+        case '4':
+        case 4:
+          return condition === 'colorOnly' ? 'shift-color-ooh' : 'border-shift-ooh shift-color-ooh'
+        default:
+          return 'border-gray-500'
       }
     },
 
-    generateDates () {
-      if (
-        this.start_date
-        && !this.$moment(this.start_date).isSameOrAfter(
-          this.$moment(this.end_date)
-        )
-      ) {
-        let diff = this.$moment(this.end_date).diff(
-          this.$moment(this.start_date),
-          "days"
-        )
+    generateDates() {
+      if (this.start_date && !this.$moment(this.start_date).isSameOrAfter(this.$moment(this.end_date))) {
+        let diff = this.$moment(this.end_date).diff(this.$moment(this.start_date), 'days')
 
         for (let i = 0; i <= diff; i++) {
           let date = this.$moment(this.start_date)
-            .add(i, "days")
-            .format("DD/MM/YYYY")
+            .add(i, 'days')
+            .format('DD/MM/YYYY')
           if (!this.schedules.find(item => item.date === date)) {
             this.scheduleDates.push(date)
             this.schedules.push({
               date: date,
-              shifts: [],
+              shifts: []
             })
           }
         }
       }
     },
 
-    addShift (shifts, index) {
+    addShift(shifts, index) {
       let rowError = []
 
       if (shifts.length) {
@@ -2746,12 +2358,10 @@ export default {
         if (!last_shift.shift_id) {
           rowError.push({
             field: `shift_id-s${index}-${i}`,
-            message: "Shift is required.",
+            message: 'Shift is required.'
           })
         } else {
-          errIndex = rowError.findIndex(
-            err => err.field === `shift_id-s${index}-${i}`
-          )
+          errIndex = rowError.findIndex(err => err.field === `shift_id-s${index}-${i}`)
           if (errIndex > -1) {
             rowError.splice(errIndex, 1)
           }
@@ -2759,12 +2369,10 @@ export default {
         if (!last_shift.time_start) {
           rowError.push({
             field: `time_start-s${index}-${i}`,
-            message: "Start Time is required.",
+            message: 'Start Time is required.'
           })
         } else {
-          errIndex = rowError.findIndex(
-            err => err.field === `time_start-s${index}-${i}`
-          )
+          errIndex = rowError.findIndex(err => err.field === `time_start-s${index}-${i}`)
           if (errIndex > -1) {
             rowError.splice(errIndex, 1)
           }
@@ -2773,12 +2381,10 @@ export default {
         if (!last_shift.time_end) {
           rowError.push({
             field: `time_end-s${index}-${i}`,
-            message: "End Time is required.",
+            message: 'End Time is required.'
           })
         } else {
-          errIndex = rowError.findIndex(
-            err => err.field === `time_end-s${index}-${i}`
-          )
+          errIndex = rowError.findIndex(err => err.field === `time_end-s${index}-${i}`)
           if (errIndex > -1) {
             rowError.splice(errIndex, 1)
           }
@@ -2787,12 +2393,10 @@ export default {
         if (!last_shift.locum_detail_rate_type_id) {
           rowError.push({
             field: `locum_detail_rate_type_id-s${index}-${i}`,
-            message: "Rate type is required.",
+            message: 'Rate type is required.'
           })
         } else {
-          errIndex = rowError.findIndex(
-            err => err.field === `locum_detail_rate_type_id-s${index}-${i}`
-          )
+          errIndex = rowError.findIndex(err => err.field === `locum_detail_rate_type_id-s${index}-${i}`)
           if (errIndex > -1) {
             rowError.splice(errIndex, 1)
           }
@@ -2801,31 +2405,29 @@ export default {
         if (!last_shift.rate) {
           rowError.push({
             field: `rate-s${index}-${i}`,
-            message: "Rate is required.",
+            message: 'Rate is required.'
           })
         } else {
-          errIndex = rowError.findIndex(
-            err => err.field === `rate-s${index}-${i}`
-          )
+          errIndex = rowError.findIndex(err => err.field === `rate-s${index}-${i}`)
           if (errIndex > -1) {
             rowError.splice(errIndex, 1)
           }
         }
       }
 
-      this.formError = [...this.formError, ...rowError,]
+      this.formError = [...this.formError, ...rowError]
       if (!rowError.length) {
         shifts.push({
           shift_id: 0,
-          time_start: "",
-          time_end: "",
+          time_start: '',
+          time_end: '',
           locum_detail_rate_type_id: 0,
-          rate: 0,
+          rate: 0
         })
       }
     },
 
-    rowNotFilled () {
+    rowNotFilled() {
       // let shift = shifts[shifts.length - 1]
       // if (
       // 	!shift.shift_id ||
@@ -2839,12 +2441,10 @@ export default {
       // return false
     },
 
-    clearShifts (shifts, index) {
+    clearShifts(shifts, index) {
       let schedule = this.schedules.find((sched, ind) => ind === index)
       schedule.shifts = []
-      let rowError = this.formError.filter(err =>
-        err.field.includes(`s${index}`)
-      )
+      let rowError = this.formError.filter(err => err.field.includes(`s${index}`))
       let errNames = rowError.map(err => err.field)
 
       this.formError.forEach((err, i) => {
@@ -2852,26 +2452,22 @@ export default {
           this.formError.splice(i, errNames.length)
         }
       })
-      this.confirmApply = ""
+      this.confirmApply = ''
     },
 
-    absent (shift) {
+    absent(shift) {
       shift.has_absences = !shift.has_absences
       if (shift.has_absences) {
-        shift.final_time_start = ""
-        shift.final_time_end = ""
+        shift.final_time_start = ''
+        shift.final_time_end = ''
         // if (shift.has_absences == shift.orig_has_absences) {
         // 	shift.dispute = false;
         // } else {
         // 	shift.dispute = true;
         // }
       } else {
-        shift.final_time_start = shift.orig_has_absences
-          ? ""
-          : shift.orig_final_start
-        shift.final_time_end = shift.orig_has_absences
-          ? ""
-          : shift.orig_final_end
+        shift.final_time_start = shift.orig_has_absences ? '' : shift.orig_final_start
+        shift.final_time_end = shift.orig_has_absences ? '' : shift.orig_final_end
 
         // if (
         // 	shift.final_time_start === shift.orig_final_start &&
@@ -2885,11 +2481,11 @@ export default {
       }
     },
 
-    isAbsent (shift) {
+    isAbsent(shift) {
       return shift.orig_final_start === shift.orig_final_end
     },
 
-    onChangeField () {
+    onChangeField() {
       // if (shift.final_time_start && shift.final_time_end) {
       // 	shift.total = this.getRate(
       // 		shift,
@@ -2908,41 +2504,41 @@ export default {
       // }
     },
 
-    dispute (shift, index, i) {
+    dispute(shift, index, i) {
       shift.dispute = !shift.dispute
       if (shift.dispute === false) {
         if (shift.orig_final_start === shift.orig_final_end) {
           shift.has_absences = true
-          shift.final_time_start = ""
-          shift.final_time_end = ""
+          shift.final_time_start = ''
+          shift.final_time_end = ''
         } else {
           shift.has_absences = false
           shift.final_time_start = shift.orig_final_start
           shift.final_time_end = shift.orig_final_end
         }
-        shift.remarks = ""
+        shift.remarks = ''
       } else {
-        this.lateChange(shift, index, i, "dispute")
-        shift.final_time_start = ""
-        shift.final_time_end = ""
+        this.lateChange(shift, index, i, 'dispute')
+        shift.final_time_start = ''
+        shift.final_time_end = ''
         shift.total = 0
       }
     },
 
-    isDisputed (shift) {
+    isDisputed(shift) {
       if (!shift.has_absences) {
         if (
-          shift.final_time_start === shift.orig_final_start
-          && shift.orig_final_end === shift.final_time_end
-          && shift.has_absences == shift.orig_has_absences
+          shift.final_time_start === shift.orig_final_start &&
+          shift.orig_final_end === shift.final_time_end &&
+          shift.has_absences == shift.orig_has_absences
         ) {
           shift.dispute = false
         } else {
           shift.dispute = true
         }
       } else {
-        shift.final_time_start = ""
-        shift.final_time_end = ""
+        shift.final_time_start = ''
+        shift.final_time_end = ''
         if (shift.has_absences == shift.orig_has_absences) {
           shift.dispute = false
         } else {
@@ -2951,46 +2547,46 @@ export default {
       }
     },
 
-    changeStartTime (shift, final) {
+    changeStartTime(shift, final) {
       let timeStart = final ? shift.final_time_start : shift.time_start
       let timeEnd = final ? shift.final_time_end : shift.time_end
-      let time_start_hour = timeStart.split(":")[0]
-      let time_start_minute = timeStart.split(":")[1]
-      let time_end_hour = timeEnd.split(":")[0]
-      let time_end_minute = timeEnd.split(":")[1]
+      let time_start_hour = timeStart.split(':')[0]
+      let time_start_minute = timeStart.split(':')[1]
+      let time_end_hour = timeEnd.split(':')[0]
+      let time_end_minute = timeEnd.split(':')[1]
       if (parseInt(time_start_hour) > parseInt(time_end_hour)) {
         if (final) {
-          shift.final_time_end = ""
+          shift.final_time_end = ''
         } else {
-          shift.time_end = ""
+          shift.time_end = ''
         }
       } else if (parseInt(time_start_hour) === parseInt(time_end_hour)) {
         if (parseInt(time_start_minute) > parseInt(time_end_minute)) {
           if (final) {
-            shift.final_time_end = ""
+            shift.final_time_end = ''
           } else {
-            shift.time_end = ""
+            shift.time_end = ''
           }
         }
       }
-    },
-  },
+    }
+  }
 }
 </script>
 
 <style>
 .message-modal.mini-modal {
-	z-index: 56;
-	position: fixed;
-	left: 50%;
-	top: 50%;
-	transform: translate(-50%, -50%);
-	border-radius: 25px;
-	min-width: 25vw;
-	min-height: 15vw;
-	overflow: auto;
-	transition: all 0.3s ease-in-out;
-	z-index: 512;
+  z-index: 56;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 25px;
+  min-width: 25vw;
+  min-height: 15vw;
+  overflow: auto;
+  transition: all 0.3s ease-in-out;
+  z-index: 512;
 }
 select.custom-select {
   background: transparent;

@@ -36,7 +36,7 @@
 
             <div class="px-2 flex flex-wrap items-center">
               <div class="px-2">
-                <AppDate v-model="overrideCreatedDate" isAfter />
+                <AppDate v-model="overrideCreatedDate" isBefore />
               </div>
 
               <div class="px-2">
@@ -63,7 +63,7 @@
 
             <div class="px-2 flex flex-wrap items-center">
               <div class="px-2">
-                <AppDate v-model="overrideLastJobApplicationDateDate" isAfter />
+                <AppDate v-model="overrideLastJobApplicationDateDate" isBefore />
               </div>
 
               <div class="px-2">

@@ -1,4 +1,4 @@
-import * as supportApi from "@/api/supports";
+import * as supportApi from "@/api/supports"
 export default {
 	async fetchSupports ({ commit }, payload) {
 		commit("TOGGLE_LOADING", true)
@@ -20,4 +20,4 @@ export default {
     return commit("SET_UNACKNOWLEDGED_EMAILS_COUNT", response.data.count)
 
   }
-};
+}
