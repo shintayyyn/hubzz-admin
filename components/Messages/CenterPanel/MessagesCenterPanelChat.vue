@@ -98,8 +98,7 @@
                     <span
                       class="chat-message rounded-lg p-2 mx-2 whitespace-pre-line"
                       :class="isReceiver(item) ? 'bg-gray-300 chat-message-left' : 'chat-message-right bg-blue-500 text-white'"
-                      >{{ item.message }}</span
-                    >
+                    >{{ item.message }}</span>
 
                     <transition name="fade" mode="out-in">
                       <div

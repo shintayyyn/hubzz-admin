@@ -7,16 +7,18 @@
           :to="getRoute()"
           class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
           :class="$route.path == `/user-management` ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
-          >Users</nuxt-link
         >
+          Users
+        </nuxt-link>
 
         <nuxt-link
           v-if="authAdminPermissions.includes('View Roles')"
           :to="getRoute('roles-and-permissions')"
           class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
           :class="$route.path.includes(`/user-management/roles-and-permissions`) ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
-          >Roles and Permissions</nuxt-link
         >
+          Roles and Permissions
+        </nuxt-link>
       </div>
     </template>
     <nuxt-child />

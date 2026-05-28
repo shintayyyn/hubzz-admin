@@ -66,8 +66,8 @@
                   ? 'bg-gray-300'
                   : !conversation.latest_conversation_message.seen_by_users.some(seenByUser => seenByUser.id === $auth.user.id) &&
                     conversation.latest_conversation_message.user_id !== $auth.user.id
-                  ? 'font-bold bg-gray-400'
-                  : 'hover:bg-gray-200'
+                    ? 'font-bold bg-gray-400'
+                    : 'hover:bg-gray-200'
               "
               @click="$router.push(`/messages/${conversation.id}`)"
             >
@@ -84,9 +84,7 @@
 
                   <p v-if="conversation.locum_user" class="truncate" :class="activeConversationId === conversation.id ? 'font-bold' : ''">
                     <span v-if="['Deleted', 'Deactivated'].includes(conversation.locum_user.locum_user_status)">Hubzz User</span>
-                    <span v-if="!['Deleted', 'Deactivated'].includes(conversation.locum_user.locum_user_status)"
-                      >{{ conversation.locum_user.first_name }} {{ conversation.locum_user.last_name }}</span
-                    >
+                    <span v-if="!['Deleted', 'Deactivated'].includes(conversation.locum_user.locum_user_status)">{{ conversation.locum_user.first_name }} {{ conversation.locum_user.last_name }}</span>
                   </p>
 
                   <p
@@ -123,11 +121,10 @@
                       ? 'bg-gray-300'
                       : !conversation.latest_conversation_message.seen_by_users.some(seenByUser => seenByUser.id === $auth.user.id) &&
                         conversation.latest_conversation_message.user_id !== $auth.user.id
-                      ? 'font-bold bg-gray-400 hidden'
-                      : 'hover:bg-gray-200'
+                        ? 'font-bold bg-gray-400 hidden'
+                        : 'hover:bg-gray-200'
                   "
-                  >{{ $moment(conversation.latest_conversation_message.created_at).fromNow() }}</span
-                >
+                >{{ $moment(conversation.latest_conversation_message.created_at).fromNow() }}</span>
               </div>
             </div>
           </transition-group>

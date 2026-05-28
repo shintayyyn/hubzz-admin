@@ -45,7 +45,7 @@
             </span>
 
             <span v-if="navigationTab.name === 'Inquiries' && unacknowledgedCount > 0" class="text-white rounded-sm p-1 bg-red-700 text-xs">
-              {{unacknowledgedCount }}
+              {{ unacknowledgedCount }}
             </span>
 
             <span v-if="navigationTab.name === 'Change Email Requests' && pendingChangeEmailRequestIds.length > 0" class="text-white rounded-sm p-1 bg-red-700 text-xs font-bold flex items-center justify-center" style="min-width: 20px; height: 20px;">

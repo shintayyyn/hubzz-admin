@@ -1,20 +1,20 @@
 <template>
-  <div class="flex-1 flex-col py-2 px-2" ref="wrapper">
+  <div ref="wrapper" class="flex-1 flex-col py-2 px-2">
     <div class="px-4 md:px-6">
       <div class="flex flex-row justify-start overflow-x-auto border-b border-yellow-500 mb-4 pt-1">
         <div
           style="font-family:Nunito"
-          @click.prevent="goTo('termsAndConditions')"
           class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
           :class="$route.query.active_tab === 'termsAndConditions' ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
+          @click.prevent="goTo('termsAndConditions')"
         >
           Terms & Conditions
         </div>
         <div
           style="font-family:Nunito"
-          @click.prevent="goTo('privacyPolicy')"
           class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
           :class="$route.query.active_tab === 'privacyPolicy' ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
+          @click.prevent="goTo('privacyPolicy')"
         >
           Privacy Policy
         </div>
@@ -36,19 +36,19 @@ export default {
     TermsAndConditions,
     PrivacyPolicy
   },
+  data() {
+    return {
+      terms: null,
+      tnc: null,
+      privacypolicy: null
+    }
+  },
   computed: {
     activeComponent() {
       return this.$route.query.active_tab
     },
     authAdminPermissions() {
       return this.$store.getters['permissions']
-    }
-  },
-  data() {
-    return {
-      terms: null,
-      tnc: null,
-      privacypolicy: null
     }
   },
   watch: {

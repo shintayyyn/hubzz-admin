@@ -1,8 +1,12 @@
 <template>
   <div class="px-4 md:px-8">
     <div class="m-32 px-8">
-      <h1 class="font-bold text-white">Session Expired. Please Log In again.</h1>
-      <div class="text-black cursor-pointer underline text-sm" @click="logOut()">Log In</div>
+      <h1 class="font-bold text-white">
+        Session Expired. Please Log In again.
+      </h1>
+      <div class="text-black cursor-pointer underline text-sm" @click="logOut()">
+        Log In
+      </div>
     </div>
   </div>
 </template>

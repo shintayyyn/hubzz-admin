@@ -5,14 +5,16 @@
         :to="`/account`"
         class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
         :class="$route.path == `/account` ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
-        >General</nuxt-link
       >
+        General
+      </nuxt-link>
       <nuxt-link
         :to="`/account/change-password`"
         class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
         :class="$route.path == `/account/change-password` ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
-        >Change Password</nuxt-link
       >
+        Change Password
+      </nuxt-link>
     </div>
     <nuxt-child />
   </div>

@@ -6,7 +6,7 @@
         class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
         :class="
           (!$route.query.status || ($route.query.status && $route.query.status.toLowerCase() === 'entries')) &&
-          $route.name !== 'index-referral-lottery-email-template'
+            $route.name !== 'index-referral-lottery-email-template'
             ? 'border-b-4 border-yellow-500'
             : 'text-gray-600'
         "

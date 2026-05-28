@@ -2,11 +2,11 @@
   <div class="px-4 md:px-8">
     <div class="py-4">
       <svgicon
-        @click="$router.go(-1)"
         name="arrow-left-solid"
         height="32"
         widht="32"
         class="text-white hover:text-sunglow fill-current cursor-pointer"
+        @click="$router.go(-1)"
       />
     </div>
     <div class="lg:mx-auto w-full xl:w-2/3">
@@ -17,7 +17,9 @@
         </div>
       </template>
       <template v-if="sendRequest">
-        <div class="px-2 text-xl md:text-2xl text-white mb-4">Forgot Password</div>
+        <div class="px-2 text-xl md:text-2xl text-white mb-4">
+          Forgot Password
+        </div>
         <div class="flex flex-col items-start p-4 md:px-10 md:py-6 rounded-lg shadow-lg" style="background-color: #55565A;">
           <p class="text-white mb-2">
             Please enter the email address of your account at Hubzz. If your email address matches our records, you'll receive an email with further
