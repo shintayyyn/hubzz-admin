@@ -3,6 +3,7 @@
     <JobPartModal :specificJobPart="specificJobPart" :isNuxtChild="true" />
   </div>
 </template>
+
 <script>
 import JobPartModal from '@/components/Base/JobPartModal'
 export default {
@@ -11,14 +12,13 @@ export default {
   },
   data() {
     return {
-      specificJobPart: '',
+      specificJobPart: null,
       locumUserId: ''
     }
   },
-  computed: {},
   async asyncData({ app, store, route, error }) {
     try {
-      let response = await app.$axios.$get(`/api/v1/admin/job-parts/${route.params.locumJobPartId}`)
+      const response = await app.$axios.$get(`/api/v1/admin/job-parts/${route.params.locumJobId}`)
       const specificJobPart = response.data.job_part
       const locumUserId = route.params.id
       return {
@@ -33,6 +33,7 @@ export default {
   }
 }
 </script>
+
 <style>
 .job-modal {
   position: fixed;

@@ -1,7 +1,6 @@
 <template>
   <div>
     <JobPartModal v-if="syntheticJobPart" :specificJobPart="syntheticJobPart" :isNuxtChild="false" />
-    <nuxt-child />
   </div>
 </template>
 
