@@ -181,7 +181,7 @@ export default {
           if (this.locumUser) {
             count = this.$store.state.jobs.locum_applied_jobs_count
           } else if (this.practice || this.practiceSurgery) {
-            count = this.$store.state.jobs.practice_applied_sessions
+            count = this.$store.state.jobs.practice_applied_sessions_count
           }
           break
         case 'Ongoing':
@@ -251,7 +251,10 @@ export default {
           if (this.locumUser) {
             records = this.$store.state.jobs.locum_applied_jobs
           } else if (this.practice || this.practiceSurgery) {
-            records = this.$store.state.jobs.practice_applied_sessions
+            records = this.$store.state.jobs.practice_applied_sessions.map(item => ({
+              ...item,
+              invoice_status: null
+            }))
           }
           break
         case 'Ongoing':
@@ -458,7 +461,15 @@ export default {
           this.$route.params.practiceSurgeryId
         }/surgery-sessions/surgery-${this.status[0].replace(/^(.)|\s+(.)/g, c => c.toLowerCase())}-sessions`
       }
-      return route
+
+      if (!route) {
+        return null
+      }
+
+      return item => ({
+        path: `${route}/${this.routeItemId(item)}`,
+        query: { ...this.$route.query }
+      })
     }
   },
 
@@ -666,6 +677,18 @@ export default {
         case 'Invoiced':
           return 'bg-green-500 text-white opacity-75'
       }
+    },
+
+    routeItemId(item) {
+      if (this.status[0] === 'Applied') {
+        return item.job_id || (item.job && item.job.id) || item.id
+      }
+
+      if (this.jobDenom === 'Job Parts') {
+        return item.job_part_id || (item.job_part && item.job_part.id) || item.id
+      }
+
+      return item.id
     },
 
     pagechanged(e) {

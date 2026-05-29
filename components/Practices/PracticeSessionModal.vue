@@ -32,7 +32,7 @@
         <div class="order-2 lg:order-1 lg:w-55p md:mr-2">
           <!-- LOCUM DETAILS -->
           <!--  v-if="job.platform_job && job.platform_job.appointed_to_locum && locumUser" -->
-          <div v-if="locumUser && jobPart" class="w-full flex flex-col">
+          <div v-if="jobPart" class="w-full flex flex-col">
             <div
               v-if="modalJobPart.status === 'Cancelled'"
               class="flex flex-col rounded-lg leading-tight border mb-4 p-4"
@@ -186,7 +186,7 @@
                 <p class="pb-2 no-underline">
                   £ {{ modalJobPart.job_part_hubzz_fee_formatted }}
                 </p>
-                  
+
                 <p class="mt-5 font-semibold">
                   Total Original Hours
                 </p>
@@ -517,80 +517,18 @@
             </div>
             <!-- SCHEDULES -->
             <JobSchedules
-              v-if="jobPart"        
+              v-if="jobPart"
               :locumInvoiceable="jobPart.locum_invoiceable"
               :status="jobPart.status"
               :schedules="jobPart.schedules"
             />
 
             <JobSchedules
-              v-if="!jobPart && job"        
+              v-if="!jobPart && job"
               :locumInvoiceable="job.locum_invoiceable || job.status === 'Completed'"
               :status="job.status"
               :schedules="job.schedules"
             />
-          </div>
-          <!-- :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'md:w-2/6 my-2':'md:w-1/5 w-full my-2'}`" -->
-          <div
-            v-if="(job && job.platform_job || job && job.private_job) && !['Unfilled'].includes(status)"
-            class="p-4 my-4 text-sm no-underline border rounded-lg"
-          >
-            <div v-if="job && job.platform_job" class="w-full">
-              <div class="pb-2">
-                <p class="font-semibold">
-                  Practice
-                  <br>
-                  {{ job.platform_job.practice.surgery.name }}
-                </p>
-                <p>
-                  {{ job.platform_job.practice.surgery.address.line_1 }}
-                  {{ job.platform_job.practice.surgery.address.line_2 }}
-                  {{ job.platform_job.practice.surgery.address.line_3 }}
-                </p>
-              </div>
-
-              <div class="w-full">
-                <!-- google map -->
-                <GmapMap
-                  :center="{lat:latLangPlatform.y,lng:latLangPlatform.x}"
-                  :zoom="15"
-                  map-type-id="terrain"
-                  style="width: 100%; height:350px"
-                >
-                  <GmapMarker
-                    :position="google && new google.maps.LatLng(latLangPlatform.y, latLangPlatform.x)"
-                  />
-                </GmapMap>
-              </div>
-            </div>
-            <div v-if="job && job.private_job" class="w-full">
-              <div class="pb-2">
-                <p class="font-semibold">
-                  Practice
-                  <br>
-                  {{ job.private_job.private_practice.surgery.name }}
-                </p>
-                <p>
-                  {{ job.private_job.private_practice.surgery.address.line_1 }}
-                  {{ job.private_job.private_practice.surgery.address.line_2 }}
-                  {{ job.private_job.private_practice.surgery.address.line_3 }}
-                </p>
-              </div>
-
-              <div class="w-full">
-                <!-- google map -->
-                <GmapMap
-                  :center="{lat:latLangPrivate.y,lng:latLangPrivate.x}"
-                  :zoom="15"
-                  map-type-id="terrain"
-                  style="width: 100%; height:250px "
-                >
-                  <GmapMarker
-                    :position="google && new google.maps.LatLng(latLangPrivate.y, latLangPrivate.x)"
-                  />
-                </GmapMap>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -598,7 +536,7 @@
         <div class="order-1 lg:order-2 lg:w-45p md:ml-2">
           <div class="flex flex-col relative">
             <!-- JOB PARTS -->
-            
+
             <div v-if="jobParts.length > 0" class="w-full flex flex-col">
               <div class="mt-2 md:my-0 md:mx-2 font-semibold">
                 Job Parts
@@ -658,6 +596,68 @@
                   :perPage="perPage"
                   @pagechanged="pagechanged"
                 />
+              </div>
+            </div>
+
+            <div
+              v-if="(job && job.platform_job || job && job.private_job) && !['Unfilled'].includes(status)"
+              class="p-4 my-4 text-sm no-underline border rounded-lg"
+            >
+              <div v-if="job && job.platform_job" class="w-full">
+                <div class="pb-2">
+                  <p class="font-semibold">
+                    Practice
+                    <br>
+                    {{ job.platform_job.practice.surgery.name }}
+                  </p>
+                  <p>
+                    {{ job.platform_job.practice.surgery.address.line_1 }}
+                    {{ job.platform_job.practice.surgery.address.line_2 }}
+                    {{ job.platform_job.practice.surgery.address.line_3 }}
+                  </p>
+                </div>
+
+                <div class="w-full">
+                  <!-- google map -->
+                  <GmapMap
+                    :center="{lat:latLangPlatform.y,lng:latLangPlatform.x}"
+                    :zoom="15"
+                    map-type-id="terrain"
+                    style="width: 100%; height:350px"
+                  >
+                    <GmapMarker
+                      :position="google && new google.maps.LatLng(latLangPlatform.y, latLangPlatform.x)"
+                    />
+                  </GmapMap>
+                </div>
+              </div>
+              <div v-if="job && job.private_job" class="w-full">
+                <div class="pb-2">
+                  <p class="font-semibold">
+                    Practice
+                    <br>
+                    {{ job.private_job.private_practice.surgery.name }}
+                  </p>
+                  <p>
+                    {{ job.private_job.private_practice.surgery.address.line_1 }}
+                    {{ job.private_job.private_practice.surgery.address.line_2 }}
+                    {{ job.private_job.private_practice.surgery.address.line_3 }}
+                  </p>
+                </div>
+
+                <div class="w-full">
+                  <!-- google map -->
+                  <GmapMap
+                    :center="{lat:latLangPrivate.y,lng:latLangPrivate.x}"
+                    :zoom="15"
+                    map-type-id="terrain"
+                    style="width: 100%; height:250px "
+                  >
+                    <GmapMarker
+                      :position="google && new google.maps.LatLng(latLangPrivate.y, latLangPrivate.x)"
+                    />
+                  </GmapMap>
+                </div>
               </div>
             </div>
 
@@ -846,7 +846,7 @@
                         {{ spokenLanguage ? spokenLanguage.name:null }}
                       </p>
 
-                    
+
                       <p class="m-2 mt-4 font-semibold">
                         Mandatory Training Documents
                       </p>
@@ -974,7 +974,7 @@ export default {
     JobSchedules,
     AppAvatar
   },
-  
+
   props: {
     job: {
       type: Object,
@@ -986,7 +986,7 @@ export default {
       default: () => null,
     },
   },
-  
+
   data () {
     return {
       locumUser: null,
@@ -1191,10 +1191,6 @@ export default {
         // }
         this.loading = false
 
-        const practiceId = this.$route.params.id
-
-        const status = this.modalJobPart.status.toLowerCase()
-        
         // this.$router.push(`/practices/${practiceId}/practice-sessions/practice-${status}-sessions/${itemId}`)
       })
     },

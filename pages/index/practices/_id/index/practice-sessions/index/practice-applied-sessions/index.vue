@@ -3,7 +3,7 @@
     <JobsLists
       :practice="practice"
       :status="['Applied']"
-      :jobDenom="'Jobs'"
+      :jobDenom="'Job Parts'"
     />
   </div>
 </template>

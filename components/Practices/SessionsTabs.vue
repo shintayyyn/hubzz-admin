@@ -9,7 +9,7 @@
       Pending
     </nuxt-link>
 
-    <nuxt-link 
+    <nuxt-link
       :to="getRoute(practiceSurgery ? 'surgery-live-sessions' : 'practice-live-sessions')"
       class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
       :class="$route.path.includes(`practice-live-sessions`) || $route.path.includes(`surgery-live-sessions`) ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
@@ -34,7 +34,7 @@
     </nuxt-link> <!--may locum na, pero hindi pa nag sstart-->
 
     <!--Ongoing , nag start na, by job parts -->
-    <nuxt-link 
+    <nuxt-link
       :to="getRoute(practiceSurgery ? 'surgery-ongoing-sessions' : 'practice-ongoing-sessions')"
       class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
       :class="$route.path.includes(`practice-ongoing-sessions`) || $route.path.includes(`surgery-ongoing-sessions`) ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
@@ -44,7 +44,7 @@
 
     <!--loob ng completed(specific completed), tabs: to be invoiced, disputed(na-invoice na pero may problema), invoiced--->
     <!--approved - job parts din ang naka display-->
-    <nuxt-link 
+    <nuxt-link
       :to="getRoute(practiceSurgery ? 'surgery-completed-sessions' : 'practice-completed-sessions')"
       class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
       :class="$route.path.includes(`practice-completed-sessions`) || $route.path.includes(`surgery-completed-sessions`) ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
@@ -75,7 +75,7 @@
     >
       Cancelled
     </nuxt-link>
-    
+
     <nuxt-link
       :to="getRoute(practiceSurgery ? 'surgery-withdrawn-sessions' : 'practice-withdrawn-sessions')"
       class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
@@ -99,7 +99,7 @@ export default {
       default: () => null,
     }
   },
-  
+
   computed:{
     getRoute () {
       return(tab) => {
