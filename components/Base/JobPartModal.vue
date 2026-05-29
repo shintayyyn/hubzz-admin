@@ -1,11 +1,11 @@
 <template>
   <div class="m-4">
     <!-- HEADER -->
-    <div v-if="!isNuxtChild" class="flex justify-between text-sm ">
-      <div class="cursor-pointer" @click="$emit('close')">
+    <!-- <div class="flex justify-between text-sm ">
+      <div @click="goBack()" class="cursor-pointer m-6">
         <svgicon name="arrow-left-solid" height="32" width="32" class=" hover:text-sunglow fill-current" />
       </div>
-    </div>
+    </div> -->
     <div class="flex flex-wrap font-semibold my-4">
       <div class="text-2xl  mr-4">
         {{ job_part.job && job_part.job.title ? job_part.job.title : '(none)' }}
@@ -476,22 +476,18 @@ export default {
       type: [Number, String],
       default: () => null
     },
-
     specificJobPart: {
       type: Object,
       default: () => null
     },
-
     isNuxtChild: {
       type: Boolean,
       default: false
     },
-
     isInvoice: {
       type: Boolean,
       default: false
     },
-
     jobId: {
       type: [Number, String],
       default: () => null
@@ -510,35 +506,20 @@ export default {
         order_by: ['created_at:desc']
       },
       columns: [
-        {
-          name: 'Job Part Number',
-          dataIndex: 'job_part_number'
-        },
-        {
-          name: 'Status',
-          dataIndex: 'status',
-          class: 'text-center'
-        },
-        {
-          name: 'Date Start',
-          dataIndex: 'date_start',
-          class: 'text-center localDate'
-        },
-        {
-          name: 'Date End',
-          dataIndex: 'date_end',
-          class: 'text-center localDate'
-        }
+        { name: 'Job Part Number', dataIndex: 'job_part_number' },
+        { name: 'Status', dataIndex: 'status', class: 'text-center' },
+        { name: 'Date Start', dataIndex: 'date_start', class: 'text-center localDate' },
+        { name: 'Date End', dataIndex: 'date_end', class: 'text-center localDate' }
       ],
       loading: false
     }
   },
+
   computed: {
     activePracticeTypes() {
       return this.specificJobPart?.practice_types ?? this.job_part?.practice_types ?? this.specificJobPart?.job?.practice_types ?? []
     },
     latLangPlatform() {
-      // Safely check every level
       if (
         this.specificJobPart &&
         this.specificJobPart.job &&
@@ -547,64 +528,53 @@ export default {
       ) {
         return this.specificJobPart.job.platform_job.practice.surgery.address.coordinates
       }
-      return { x: 0, y: 0 } // Fallback
+      return { x: 0, y: 0 }
     },
     latLangPrivate() {
       if (this.specificJobPart && this.specificJobPart.job && this.specificJobPart.job.private_job) {
         return this.specificJobPart.job.private_job.private_practice.surgery.address.coordinates
       }
-      return { x: 0, y: 0 } // Fallback
+      return { x: 0, y: 0 }
     }
   },
+
   watch: {
     specificJobPart: {
       immediate: true,
       handler(newVal) {
         if (newVal && (newVal.job_id || (newVal.job && newVal.job.id))) {
-          // Use job_id if available, otherwise fallback to job.id
           const id = newVal.job_id || newVal.job.id
-          console.log('Detected Job ID from object:', id)
           this.getJobParts(id)
         }
       }
     }
   },
-  // computed: {
-  //   loadingPractices() {
-  //     return this.$store.state.practices.loading_practices
-  //   },
-  //   google: gmapApi,
-  //   latLangPlatform() {
-  //     return this.specificJobPart.job.platform_job.practice.surgery.address.coordinates
-  //   },
-  //   latLangPrivate() {
-  //     return this.specificJobPart.job.private_job.private_practice.surgery.address.coordinates
-  //   }
-  // },
-  // created() {
-  //   this.totalPages = Math.ceil(this.specificJobPart.job.job_parts.length / this.params.limit)
-  //   this.job_part = this.specificJobPart
-  //   this.getJobParts(this.params)
 
-  //   console.log('jobpart', this.job_part)
-  // },
   created() {
     if (this.specificJobPart && this.specificJobPart.job) {
       this.job_part = this.specificJobPart
-
-      // If we have a jobId prop, fetch.
-      // If jobId prop is missing, try to get it from specificJobPart
       const idToUse = this.jobId || this.specificJobPart.job_id
       if (idToUse) {
         this.getJobParts(this.params)
       }
     }
   },
+
   mounted() {
     console.log('Component Mounted. jobId Prop:', this.jobId)
     console.log('specificJobPart Prop:', this.specificJobPart)
   },
+
   methods: {
+    goBack() {
+      const path = this.$route.path
+      const query = { ...this.$route.query }
+
+      const listPath = path.substring(0, path.lastIndexOf('/'))
+
+      this.$router.push({ path: listPath, query })
+    },
+
     async show(id) {
       this.loading = true
       this.$axios.$get(`/api/v1/admin/job-parts/${id}`).then(res => {
@@ -612,6 +582,7 @@ export default {
         this.loading = false
       })
     },
+
     getJobParts(id) {
       if (!id) return
 
@@ -627,10 +598,8 @@ export default {
             this.totalPages = Math.ceil((res.data.total || res.data.job_parts.length) / params.limit)
 
             if (this.jobParts.length === 1) {
-              // Only one job part — auto-select it
               this.show(this.jobParts[0].id)
             } else if (this.jobParts.length > 1 && this.specificJobPart) {
-              // Multiple job parts — match by specificJobPart.id
               const matched = this.jobParts.find(jp => jp.id == this.specificJobPart.id)
               this.show(matched ? matched.id : this.jobParts[0].id)
             }
@@ -643,19 +612,20 @@ export default {
           this.loading = false
         })
     },
+
     unclickableJobPart() {
       if (!this.specificJobPart || !this.specificJobPart.job) return true
-
       const statuses = ['Live', 'Applied', 'Allocated', 'Unfilled', 'Cancelled', 'Declined']
-
       return statuses.includes(this.specificJobPart.job.status)
     },
+
     pagechanged(page) {
       this.params.offset = this.params.limit * (page - 1)
       this.currentPage = page
       const id = this.jobId || (this.specificJobPart ? this.specificJobPart.job_id || this.specificJobPart.job.id : null)
       this.getJobParts(id)
     },
+
     sorted(order_by) {
       this.currentPage = 1
       this.params.order_by = order_by
