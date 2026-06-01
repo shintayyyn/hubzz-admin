@@ -1,7 +1,6 @@
 <template>
   <div class="text-black">
     <AppLoading :loading="loading" spinner :message="'Processing'" />
-
     <!-- HEADER -->
     <div class="flex flex-wrap overflow-hidden m-4 text-sm">
       <AppButton
@@ -21,18 +20,12 @@
         @click="toSageCSV()"
       />
 
-      <div
-        v-if="practice && practiceInvoice && practiceInvoice.exported_at"
-        class="text-white m-2"
-      >
+      <div v-if="practice && practiceInvoice && practiceInvoice.exported_at" class="text-white m-2">
         *This Invoice has already been exported on {{ practiceInvoice.exported_at_in_gb_formatted }}
       </div>
     </div>
 
-    <div
-      v-if="practice && practiceInvoice && practice.direct_debit === false"
-      class="text-white mx-4 mb-2"
-    >
+    <div v-if="practice && practiceInvoice && practice.direct_debit === false" class="text-white mx-4 mb-2">
       *Assign a SAGE Reference Number to this Practice to proceed with the file export.
     </div>
     <!-- HEADER ENDS HERE -->
@@ -43,38 +36,18 @@
       </div>
 
       <div class="w-full flex flex-col items-start md:flex-row md:items-center mx-1">
-        <AppDate
-          v-model="forPeriodDateStart"
-          class="w-full md:w-1/2 md:mx-2"
-          :name="'date_start'"
-          :label="'From'"
-        />
+        <AppDate v-model="forPeriodDateStart" class="w-full md:w-1/2 md:mx-2" :name="'date_start'" :label="'From'" />
 
-        <AppDate
-          v-model="forPeriodDateEnd"
-          class="w-full md:w-1/2 md:mx-2"
-          :name="'date_end'"
-          :label="'To'"
-          :isAfterDate="forPeriodDateStart"
-        />
+        <AppDate v-model="forPeriodDateEnd" class="w-full md:w-1/2 md:mx-2" :name="'date_end'" :label="'To'" :isAfterDate="forPeriodDateStart" />
 
-        <AppDate 
-          v-model="toPostPracticeInvoice.due_date"
-          class="w-full md:w-1/2 md:mx-2"
-          :name="'due_date'" 
-          :label="'Due Date'" 
-          is-after 
-        />
+        <AppDate v-model="toPostPracticeInvoice.due_date" class="w-full md:w-1/2 md:mx-2" :name="'due_date'" :label="'Due Date'" is-after />
       </div>
     </div>
 
     <!-- BODY -->
-    <!-- FIRST PAGE --> 
-    <div
-      id="toPrint"
-      class="invoice md:mx-1 max-w-xl h-full flex flex-col justify-between bg-white border"
-      :class="!doNotShow && 'display'"
-    >
+
+    <!-- FIRST PAGE -->
+    <div id="toPrint" class="invoice md:mx-1 max-w-xl h-full flex flex-col justify-between bg-white border" :class="!doNotShow && 'display'">
       <!--HQ INVOICE  -->
       <div>
         <div ref="pdf-header" class="flex flex-col p-4">
@@ -84,22 +57,19 @@
               <p>{{ locumInvoice ? locumInvoice.address_line_1 : null }}</p>
               <p>{{ locumInvoice ? locumInvoice.address_line_2 : null }}</p>
               <p>{{ locumInvoice ? locumInvoice.address_line_3 : '601 London Road' }}</p>
-              <p>{{ locumInvoice ? 'Tel '+locumInvoice.mobile_number : 'Westcliff-On-Sea SS0 9PE' }}</p>
-              <p>{{ locumInvoice ? null :'billing@hubzz.co.uk' }}</p>
+              <p>{{ locumInvoice ? 'Tel ' + locumInvoice.mobile_number : 'Westcliff-On-Sea SS0 9PE' }}</p>
+              <p>{{ locumInvoice ? null : 'billing@hubzz.co.uk' }}</p>
               <p v-if="!locumInvoice">
                 Registered Company
               </p>
               <p>{{ locumInvoice ? locumInvoice.locum_user.email : '10832559' }}</p>
-              <p>{{ locumInvoice ? 'UTR '+locumInvoice.utr_number : '10832559' }}</p>
+              <p>{{ locumInvoice ? 'UTR ' + locumInvoice.utr_number : '10832559' }}</p>
             </div>
           </div>
 
           <div class="flex">
             <div class="w-full">
-              <div
-                class="border-2 border-gray-300 rounded-lg p-4 text-sm"
-                :class="doNotShow ? 'md:w-full' : 'w-full'"
-              >
+              <div class="border-2 border-gray-300 rounded-lg p-4 text-sm" :class="doNotShow ? 'md:w-full' : 'w-full'">
                 <div class="">
                   <div class="text-base py-1">
                     To: Accounts Department
@@ -132,11 +102,9 @@
 
             <div v-if="practiceInvoice || locumInvoice" class="w-full flex flex-col-reverse">
               <div class="flex justify-end items-center">
-                <div>Invoice Number: </div>
+                <div>Invoice Number:</div>
 
-                <div
-                  class="pl-1 font-semibold"
-                >
+                <div class="pl-1 font-semibold">
                   {{ practiceInvoice && !locumInvoice ? practiceInvoice.invoice_number : locumInvoice.invoice_number }}
                 </div>
               </div>
@@ -146,11 +114,7 @@
 
         <!-------------------- FOR INVOICES - INVOICE ITEMS ------------------------>
         <div v-if="invoiceItems && invoiceItems.length > 0" class="flex flex-col overflow-x-auto" :class="doNotShow && 'mx-4'">
-          <div
-            :ref="'items-header'"
-            :class="!doNotShow && 'px-4'"
-            :style="`min-width: ${doNotShow ? '733px' : ''}`"
-          >
+          <div :ref="'items-header'" :class="!doNotShow && 'px-4'" :style="`min-width: ${doNotShow ? '733px' : ''}`">
             <div class="flex items-center justify-center py-2 bg-gray-900">
               <div :class="!byLocum ? 'w-4/6' : 'w-full'">
                 <div class="text-white text-sm text-left px-4">
@@ -163,8 +127,8 @@
                   <strong>Total Hours</strong>
                 </div>
               </div>
-            
-              <div v-if="!byLocum" class="w-1/6"> 
+
+              <div v-if="!byLocum" class="w-1/6">
                 <div class="text-white text-sm text-right px-4">
                   <strong>£ Amount</strong>
                 </div>
@@ -187,7 +151,7 @@
             :ref="`item-${index}`"
             :class="!doNotShow && 'px-4'"
             :style="`min-width: ${doNotShow ? '733px' : ''}`"
-          > 
+          >
             <div class="flex w-full border-b border-gray-500 py-1">
               <!-- DESCRIPTION -->
               <div v-if="!forViewing" class="w-4/6 text-sm">
@@ -198,11 +162,8 @@
                   class="border-b-2 border-gray-300 w-full h-full focus:outline-none resize-none py-1 px-4"
                   placeholder="Enter Description"
                 />
-                <p
-                  v-else
-                  class="text-left px-2 py-1"
-                >
-                  {{ item.description ? item.description : "No Description" }}
+                <p v-else class="text-left px-2 py-1">
+                  {{ item.description ? item.description : 'No Description' }}
                 </p>
               </div>
 
@@ -212,16 +173,14 @@
 
               <!-- TOTAL HOURS -->
               <div v-if="!forViewing" class="w-1/6 text-sm">
-                <p
-                  class="w-full text-left px-2 py-1"
-                >
+                <p class="w-full text-left px-2 py-1">
                   {{ item.total_hours | currency }} Hours
                 </p>
               </div>
 
               <div v-if="forViewing" class="max-w px-2 py-1 w-1/6">
                 <div v-if="!byLocum">
-                  {{ item.total_hours | currency }} Hours 
+                  {{ item.total_hours | currency }} Hours
                 </div>
               </div>
 
@@ -237,7 +196,7 @@
                     step="any"
                     min="0"
                     placeholder="Enter Total"
-                  >
+                  />
                 </template>
 
                 <div v-if="forViewing" class="max-w px-2 py-1 text-right text-black ">
@@ -259,11 +218,7 @@
 
         <!----------------------- FOR DISPUTED ITEMS --------------------------->
         <div v-if="disputedItems && disputedItems.length > 0" class="flex flex-col overflow-x-auto" :class="doNotShow && 'mx-4'">
-          <div
-            :ref="'items-header'"
-            :class="!doNotShow && 'px-4'"
-            :style="`min-width: ${doNotShow ? '733px' : ''}`"
-          >
+          <div :ref="'items-header'" :class="!doNotShow && 'px-4'" :style="`min-width: ${doNotShow ? '733px' : ''}`">
             <div class="flex items-center justify-center py-2 bg-gray-900">
               <div class="w-4/6">
                 <div class="text-white text-sm text-left px-4">
@@ -296,11 +251,8 @@
                   class="border-b-2 border-gray-300 w-full h-full focus:outline-none resize-none py-1 px-4"
                   placeholder="Enter Description"
                 />
-                <p
-                  v-else
-                  class="text-left px-2 py-1"
-                >
-                  {{ item.description ? item.description : "No Description" }}
+                <p v-else class="text-left px-2 py-1">
+                  {{ item.description ? item.description : 'No Description' }}
                 </p>
               </div>
 
@@ -310,9 +262,7 @@
 
               <!-- TOTAL HOURS -->
               <div v-if="forViewing == false" class="w-1/6 text-sm">
-                <p
-                  class="w-full text-left px-2 py-1"
-                >
+                <p class="w-full text-left px-2 py-1">
                   {{ item.total_hours | currency }} Hours
                 </p>
               </div>
@@ -335,11 +285,11 @@
                     step="any"
                     min="0"
                     placeholder="Enter Total"
-                  >
+                  />
                 </template>
 
                 <p v-else class="px-2 py-1 text-right text-black">
-                  {{ item.total | currency }}  
+                  {{ item.total | currency }}
                 </p>
               </div>
 
@@ -357,11 +307,7 @@
 
         <!-- FOR DEBITS -->
         <div v-if="!locumInvoice" class="flex flex-col overflow-x-auto" :class="doNotShow && 'mx-4'">
-          <div
-            :ref="'items-header'"
-            :class="!doNotShow && 'px-4'"
-            :style="`min-width: ${doNotShow ? '733px' : ''}`"
-          >
+          <div :ref="'items-header'" :class="!doNotShow && 'px-4'" :style="`min-width: ${doNotShow ? '733px' : ''}`">
             <div class="flex items-center justify-center py-2 bg-gray-900">
               <div class="w-4/6">
                 <div class="text-white text-sm text-left px-4">
@@ -405,11 +351,8 @@
                     placeholder="Enter Description"
                   />
 
-                  <p
-                    v-else
-                    class="text-left px-2 py-1"
-                  >
-                    {{ item.description ? item.description : "No Description" }}
+                  <p v-else class="text-left px-2 py-1">
+                    {{ item.description ? item.description : 'No Description' }}
                   </p>
                 </div>
 
@@ -428,7 +371,7 @@
                       step="any"
                       min="0"
                       placeholder="Enter Total"
-                    >
+                    />
                   </template>
 
                   <p v-else class="px-2 py-1 text-right text-md font-semibold">
@@ -465,11 +408,7 @@
 
         <!-- FOR CREDITS -->
         <div v-if="!locumInvoice" class="flex flex-col overflow-x-auto" :class="doNotShow && 'mx-4'">
-          <div
-            :ref="'items-header'"
-            :class="!doNotShow && 'px-4'"
-            :style="`min-width: ${doNotShow ? '733px' : ''}`"
-          >
+          <div :ref="'items-header'" :class="!doNotShow && 'px-4'" :style="`min-width: ${doNotShow ? '733px' : ''}`">
             <div class="flex items-center justify-center py-2 bg-gray-900">
               <div class="w-4/6">
                 <div class="text-white text-sm text-left px-4">
@@ -511,11 +450,8 @@
                     class="border-b-2 border-gray-300 w-full h-full focus:outline-none resize-none py-1 px-4"
                     placeholder="Enter Description"
                   />
-                  <p
-                    v-else
-                    class="text-left px-2 py-1"
-                  >
-                    {{ item.description ? item.description : "No Description" }}
+                  <p v-else class="text-left px-2 py-1">
+                    {{ item.description ? item.description : 'No Description' }}
                   </p>
                 </div>
 
@@ -538,7 +474,7 @@
                       step="any"
                       min="0"
                       placeholder="Enter Total"
-                    >
+                    />
                   </template>
                   <p v-else class="px-2 py-1 text-right text-md font-semibold">
                     {{ item.total | currency }}
@@ -600,7 +536,7 @@
               £ {{ forViewing ? practiceInvoice.taxed_total : taxedAmountTotal | currency }}
             </div>
           </div>
-          
+
           <div class="flex flex-row justify-between w-full">
             <span class="my-1 px-1 font-bold">
               Total Hours
@@ -628,21 +564,21 @@
 
         <div v-if="locumInvoice.paid_under_payroll" class="border-2 border-gray-300 rounded-lg p-2 text-sm">
           Payment by BACS:
-          <br>Account name: {{ locumInvoice && locumInvoice.payroll_account_name ? locumInvoice.payroll_account_name : 'N/A' }}
-          <br>Bank: {{ locumInvoice && locumInvoice.payroll_bank_name ? locumInvoice.payroll_bank_name : 'N/A' }}
-          <br>Sort code: {{ locumInvoice && locumInvoice.payroll_sort_code ? locumInvoice.payroll_sort_code : 'N/A' }}
-          <br>Account number: {{ locumInvoice && locumInvoice.payroll_account_number ? locumInvoice.payroll_account_number : 'N/A' }}
-          <br>Payroll reference number: {{ locumInvoice && locumInvoice.payroll_reference_number ? locumInvoice.payroll_reference_number : 'N/A' }}
-          <br>
+          <br />Account name: {{ locumInvoice && locumInvoice.payroll_account_name ? locumInvoice.payroll_account_name : 'N/A' }} <br />Bank:
+          {{ locumInvoice && locumInvoice.payroll_bank_name ? locumInvoice.payroll_bank_name : 'N/A' }} <br />Sort code:
+          {{ locumInvoice && locumInvoice.payroll_sort_code ? locumInvoice.payroll_sort_code : 'N/A' }} <br />Account number:
+          {{ locumInvoice && locumInvoice.payroll_account_number ? locumInvoice.payroll_account_number : 'N/A' }} <br />Payroll reference number:
+          {{ locumInvoice && locumInvoice.payroll_reference_number ? locumInvoice.payroll_reference_number : 'N/A' }}
+          <br />
         </div>
-        
+
         <div v-else class="border-2 border-gray-300 rounded-lg p-2 text-sm">
           Payment by BACS:
-          <br>Account name: {{ locumInvoice && locumInvoice.account_name ? locumInvoice.account_name : 'N/A' }}
-          <br>Bank: {{ locumInvoice && locumInvoice.bank_name ? locumInvoice.bank_name : 'N/A' }}
-          <br>Sort code: {{ locumInvoice && locumInvoice.sort_code ? locumInvoice.sort_code : 'N/A' }}
-          <br>Account number: {{ locumInvoice && locumInvoice.account_number ? locumInvoice.account_number : 'N/A' }}
-          <br>
+          <br />Account name: {{ locumInvoice && locumInvoice.account_name ? locumInvoice.account_name : 'N/A' }} <br />Bank:
+          {{ locumInvoice && locumInvoice.bank_name ? locumInvoice.bank_name : 'N/A' }} <br />Sort code:
+          {{ locumInvoice && locumInvoice.sort_code ? locumInvoice.sort_code : 'N/A' }} <br />Account number:
+          {{ locumInvoice && locumInvoice.account_number ? locumInvoice.account_number : 'N/A' }}
+          <br />
         </div>
       </div>
     </div>
@@ -662,399 +598,288 @@
 </template>
 
 <script>
-import AppLoading from "@/components/Base/AppLoading"
-import AppButton from "@/components/Base/AppButton"
-import AppDate from "@/components/Base/AppDate"
+import AppLoading from '@/components/Base/AppLoading'
+import AppButton from '@/components/Base/AppButton'
+import AppDate from '@/components/Base/AppDate'
 
 export default {
-	components: {
-		AppLoading,
-		AppButton,
-		AppDate,
-	},
+  components: {
+    AppLoading,
+    AppButton,
+    AppDate
+  },
 
-	props: {
+  props: {
     forViewing: {
       type: Boolean,
-      default: false,
+      default: false
     },
 
     practice: {
       type: Object,
-      default: () => null,
+      default: () => null
     },
 
     practiceInvoice: {
       type: Object,
-      default: () => null,
+      default: () => null
     },
 
-		locumInvoice: {
+    locumInvoice: {
       type: Object,
-      default: () => null,
+      default: () => null
     },
 
-    invoiceItems: Array,
+    invoiceItems: {
+      type: Array,
+      default: () => []
+    },
 
-    disputedItems: Array,
+    disputedItems: {
+      type: Array,
+      default: () => []
+    },
 
-		debitItems: Array,
+    debitItems: {
+      type: Array,
+      default: () => []
+    },
 
-		creditItems: Array,
+    creditItems: {
+      type: Array,
+      default: () => []
+    },
 
-		dateStart: String,
+    dateStart: {
+      type: String,
+      default: ''
+    },
 
-    dateEnd: String,
-    
+    dateEnd: {
+      type: String,
+      default: ''
+    },
+
     byLocum: {
-      type: Boolean,
-    },
+      type: Boolean
+    }
   },
-  
-	data () {
-		return {
+
+  data() {
+    return {
       saveAsDisabled: false,
-      forPeriodDateStart: "",
-      forPeriodDateEnd: "",
-			toPostPracticeInvoice: {
-				practice_id: "",
-				date_start: "",
-				date_end: "",
-				items: [],
-        total_amount: "",
-        tax_amount: "",
-        due_date: "",
-      },
-      form: {
-        date_start: null,
-        date_end: null,
+      forPeriodDateStart: '',
+      forPeriodDateEnd: '',
+      toPostPracticeInvoice: {
+        practice_id: '',
+        date_start: '',
+        date_end: '',
         items: [],
-        total_amount: 0,
-        final: false,
-        ir35: false,
-        minutes: 0,
-        hours: 0,
-        late_hours: 0,
-        late_minutes: 0
+        total_amount: '',
+        tax_amount: '',
+        due_date: ''
       },
-      isAfterDate: null,
-      formError: [],
-			// createdInvoiceItems: [],
-			// createdDisputedItems: [],
-			createdDebitItems: [],
-			createdCreditItems: [],
-			invoice: {},
-			doNotShow: true,
-			practices: [],
-			chosenPractice: [],
+      createdDebitItems: [],
+      createdCreditItems: [],
+      doNotShow: true,
       loading: false,
-      
+
       // tax rate
-			practiceTaxRate: 0,
-			practiceTaxRateFormatted: 0,
+      practiceTaxRateFormatted: 0,
 
-			maxChars: 100
-		}
-	},
+      maxChars: 100
+    }
+  },
 
-	computed: {
-    authAdminPermissions () {
-			return this.$store.getters["permissions"]
+  computed: {
+    authAdminPermissions() {
+      return this.$store.getters['permissions']
     },
 
-    untaxedAmountTotal () {
+    untaxedAmountTotal() {
       let grossSum = 0
-			let invoiceItemTotal = 0
-			let disputedItemTotal = 0
-			let debitTotal = 0
-			let creditTotal = 0
+      let invoiceItemTotal = 0
+      let disputedItemTotal = 0
+      let debitTotal = 0
+      let creditTotal = 0
 
-			const reducer = (accumulator, currentValue) => accumulator + currentValue
+      const reducer = (accumulator, currentValue) => accumulator + currentValue
 
-			if (this.invoiceItems && this.invoiceItems.length > 0) {
-				let invoiceItems = this.invoiceItems.map(invoiceItem =>
-					parseFloat(invoiceItem.total ? invoiceItem.total : 0)
-				)
+      if (this.invoiceItems && this.invoiceItems.length > 0) {
+        let invoiceItems = this.invoiceItems.map(invoiceItem => parseFloat(invoiceItem.total ? invoiceItem.total : 0))
 
-				invoiceItemTotal = invoiceItems.reduce(reducer)
-			}
+        invoiceItemTotal = invoiceItems.reduce(reducer)
+      }
 
-			if (this.disputedItems && this.disputedItems.length > 0) {
-				let disputedItems = this.disputedItems.map(disputedItem =>
-					parseFloat(disputedItem.total ? disputedItem.total : 0)
-				)
+      if (this.disputedItems && this.disputedItems.length > 0) {
+        let disputedItems = this.disputedItems.map(disputedItem => parseFloat(disputedItem.total ? disputedItem.total : 0))
 
-				disputedItemTotal = disputedItems.reduce(reducer)
-			}
+        disputedItemTotal = disputedItems.reduce(reducer)
+      }
 
-			grossSum = parseFloat(invoiceItemTotal + disputedItemTotal)
+      grossSum = parseFloat(invoiceItemTotal + disputedItemTotal)
 
-			if (this.createdDebitItems && this.createdDebitItems.length > 0) {
-				let createdDebitItems = this.createdDebitItems.map(debitItem =>
-					parseFloat(debitItem.total ? debitItem.total : 0)
-				)
+      if (this.createdDebitItems && this.createdDebitItems.length > 0) {
+        let createdDebitItems = this.createdDebitItems.map(debitItem => parseFloat(debitItem.total ? debitItem.total : 0))
 
-				debitTotal = createdDebitItems.reduce(reducer)
-			}
+        debitTotal = createdDebitItems.reduce(reducer)
+      }
 
-			if (this.createdCreditItems && this.createdCreditItems.length > 0) {
-				let createdCreditItems = this.createdCreditItems.map(creditItem =>
-					parseFloat(creditItem.total ? creditItem.total : 0)
-				)
-        
-				creditTotal = createdCreditItems.reduce(reducer)
-			}
+      if (this.createdCreditItems && this.createdCreditItems.length > 0) {
+        let createdCreditItems = this.createdCreditItems.map(creditItem => parseFloat(creditItem.total ? creditItem.total : 0))
+
+        creditTotal = createdCreditItems.reduce(reducer)
+      }
 
       const untaxedNetSum = parseFloat(grossSum + debitTotal - creditTotal).toFixed(2)
 
       return untaxedNetSum
     },
 
-    taxAmount () {
+    taxAmount() {
       const tax_amount = parseFloat(this.untaxedAmountTotal).toFixed(2) * parseFloat(this.practiceTaxRateFormatted)
 
       return Math.round(tax_amount * 100) / 100
     },
 
-		taxedAmountTotal: function () {
+    taxedAmountTotal: function() {
       const total_amount = parseFloat(this.untaxedAmountTotal) + parseFloat(this.taxAmount)
-			return total_amount
+      return total_amount
     },
-    
-    totalHoursSum: function () {
+
+    totalHoursSum: function() {
       let totalHours = 0
       const reducer = (accumulator, currentValue) => accumulator + currentValue
       if (this.invoiceItems && this.invoiceItems.length > 0) {
-        let invoiceItemHours = this.invoiceItems.map(invoiceItem => 
-          parseFloat(invoiceItem.total_hours ? invoiceItem.total_hours : 0)
-        )
+        let invoiceItemHours = this.invoiceItems.map(invoiceItem => parseFloat(invoiceItem.total_hours ? invoiceItem.total_hours : 0))
         totalHours = totalHours + invoiceItemHours.reduce(reducer)
       }
 
       if (this.disputedItems && this.disputedItems.length > 0) {
-        let disputedItemHours = this.disputedItems.map(disputedItem => 
-          parseFloat(disputedItem.total_hours ? disputedItem.total_hours : 0)
-        )
+        let disputedItemHours = this.disputedItems.map(disputedItem => parseFloat(disputedItem.total_hours ? disputedItem.total_hours : 0))
         totalHours = totalHours + disputedItemHours.reduce(reducer)
       }
-      
+
       return totalHours.toFixed(2)
-    },
-    subTotal () {
-      if (this.locumInvoice ) {
-        let type = this.locumInvoice.items[0].job_part.job.locum_detail_rate_type
-          .name
-
-        let finalHours =
-          (parseInt(this.form.hours) * 60 + parseInt(this.form.minutes)) / 60
-
-        let totalHours = this.locumInvoice.items[0].job_part.job.total_hours / 60
-
-        let total = 0
-
-        switch (type) {
-          case "Per Hour":
-            total = finalHours * this.locumInvoice.items[0].job_part.job.rate
-            break
-          default:
-            total =
-              finalHours *
-              (this.locumInvoice.items[0].job_part.job.rate / totalHours)
-            break
-        }
-
-        return total
-      }
-
-      return 0
-    },
-    totalAmount () {
-      // Job Part Total Rate (Per Hour) = (Final Hours + (Final Minutes / 60)) * Rate
-      // Job Part Total Rate (Per Session) = (Final Hours + (Final Minutes / 60)) * (Rate / (Total Hours + (Total Minutes / 60)))
-
-      if (this.locumInvoice) {
-        let type = this.locumInvoice.items[0].job_part.job.locum_detail_rate_type
-          .name
-
-        let finalHours =
-          (parseInt(this.form.hours) * 60 + parseInt(this.form.minutes)) / 60
-
-        let totalHours = this.locumInvoice.items[0].job_part.job.total_hours / 60
-
-        let total = 0
-
-        switch (type) {
-          case "Per Hour":
-            total = finalHours * this.locumInvoice.items[0].job_part.job.rate
-            break
-          default:
-            total =
-              finalHours *
-              (this.locumInvoice.items[0].job_part.job.rate / totalHours)
-            break
-        }
-
-        if (this.locumInvoice) {
-          total =
-            total - this.locumInvoice.ni_amount - this.locumInvoice.paye_amount
-        }
-
-        return total
-      }
-
-      return 0
-    },
+    }
   },
 
   watch: {
-    forPeriodDateStart: function (value) {
-      console.log('value', value)
-      if (value > this.forPeriodDateEnd) { 
-        this.forPeriodDateEnd = ""
+    forPeriodDateStart: function(value) {
+      if (value > this.forPeriodDateEnd) {
+        this.forPeriodDateEnd = ''
       }
-    },
-    forPeriodDateEnd: function (value) {
-      console.log('value datend', value)
     }
   },
-  
-	created () {
-    console.log('locumInvoice', this.locumInvoice)
-    console.log('practice invoice', this.practiceInvoice)
-    console.log("practice", this.practice)
-    console.log("invoice items", this.invoiceItems)
-    console.log("disputed items", this.disputedItems)
+
+  created() {
     this.$axios.$get(`/api/v1/admin/tax-rates`).then(res => {
-      console.log('tax rates',res.data.tax_rates )
-      this.practiceTaxRate = res.data.tax_rates.practice_tax_rate
       this.practiceTaxRateFormatted = res.data.tax_rates.practice_tax_rate_formatted
     })
 
-    if(this.locumInvoice) {
-      this.setInitialState()
+    if (this.debitItems) {
+      this.createdDebitItems = this.debitItems
     }
-    
-		if (this.debitItems) {
-			this.createdDebitItems = this.debitItems
-		}
-		if (this.creditItems) {
-			this.createdCreditItems = this.creditItems
-		}
-	},
+    if (this.creditItems) {
+      this.createdCreditItems = this.creditItems
+    }
+  },
 
-	methods: {
-		toPDF () {
-			if (this.locumInvoice) {
-				window.open(
-					`${process.env.API_URL}/api/v1/locum-invoices/${this.locumInvoice.id}/pdf`
-				)
-			} else if (this.practiceInvoice) {
-				window.open(
-					`${process.env.API_URL}/api/v1/practice-invoices/${
-						this.practiceInvoice.id
-					}/pdf?filename=${"hubzz_" +
-						this.$moment(this.practiceInvoice.issued_at, 'YYYY-MM-DD[T]').utc().format("DD/MM/YYYY") +
-						"_" +
-						this.practiceInvoice.invoice_number +
-						"_" +
-						this.practiceInvoice.practice.code}`
-				)
-			}
-		},
+  methods: {
+    addItemWithGeneratedId(targetItems, newItem) {
+      newItem.id = targetItems.length + 1
+      targetItems.push(newItem)
+    },
 
-		toSageCSV () {
-			if (this.practiceInvoice) {
+    deductItemById(targetItems, itemId) {
+      const mapItems = targetItems.map(item => item.id)
+      targetItems.splice(mapItems.indexOf(itemId), 1)
+    },
+
+    toPDF() {
+      if (this.locumInvoice) {
+        window.open(`${process.env.API_URL}/api/v1/locum-invoices/${this.locumInvoice.id}/pdf`)
+      } else if (this.practiceInvoice) {
+        window.open(
+          `${process.env.API_URL}/api/v1/practice-invoices/${this.practiceInvoice.id}/pdf?filename=${'hubzz_' +
+            this.$moment(this.practiceInvoice.issued_at, 'YYYY-MM-DD[T]')
+              .utc()
+              .format('DD/MM/YYYY') +
+            '_' +
+            this.practiceInvoice.invoice_number +
+            '_' +
+            this.practiceInvoice.practice.code}`
+        )
+      }
+    },
+
+    toSageCSV() {
+      if (this.practiceInvoice) {
         this.$axios.put(`/api/v1/admin/practice-invoices/export-invoices`, {
-          id: this.practiceInvoice.id,
+          id: this.practiceInvoice.id
         })
-				window.open(
-					`${process.env.API_URL}/api/v1/admin/practice-invoices/${
-						this.practiceInvoice.id
-					}/sage?filename=${"sage_" +
-						this.$moment(this.practiceInvoice.issued_at).format("DD/MM/YYYY") +
-						"_" +
-						this.practiceInvoice.invoice_number +
-						"_" +
-						this.practiceInvoice.practice.code}.csv`
-				)
-			}
-		},
+        window.open(
+          `${process.env.API_URL}/api/v1/admin/practice-invoices/${this.practiceInvoice.id}/sage?filename=${'sage_' +
+            this.$moment(this.practiceInvoice.issued_at).format('DD/MM/YYYY') +
+            '_' +
+            this.practiceInvoice.invoice_number +
+            '_' +
+            this.practiceInvoice.practice.code}.csv`
+        )
+      }
+    },
 
-		async addInvoiceItem () {
-			// deduct 1 when dealing with ID for array
-			const newItem = {
-				hours: "",
-				total: 0
-			}
-			newItem.id = this.invoiceItems.length + 1
-			await this.invoiceItems.push(newItem)
-		},
+    addInvoiceItem() {
+      const newItem = {
+        hours: '',
+        total: 0
+      }
+      this.addItemWithGeneratedId(this.invoiceItems, newItem)
+    },
 
-		async deductInvoiceItem (itemId) {
-			const mapInvoiceItems = this.invoiceItems.map(
-				invoiceItem => invoiceItem.id
-			)
-			await this.invoiceItems.splice(mapInvoiceItems.indexOf(itemId), 1)
-		},
+    deductInvoiceItem(itemId) {
+      this.deductItemById(this.invoiceItems, itemId)
+    },
 
-		async deductDisputedItem (itemId) {
-			const mapDisputedItems = this.disputedItems.map(
-				disputedItem => disputedItem.id
-			)
-			await this.disputedItems.splice(mapDisputedItems.indexOf(itemId), 1)
-		},
+    deductDisputedItem(itemId) {
+      this.deductItemById(this.disputedItems, itemId)
+    },
 
-		async addDebitItem () {
-			const newItem = {
-				type: "Debit",
-				description: "",
-				total: 0
-			}
-			newItem.id = this.createdDebitItems.length + 1
-			await this.createdDebitItems.push(newItem)
-		},
+    addDebitItem() {
+      const newItem = {
+        type: 'Debit',
+        description: '',
+        total: 0
+      }
+      this.addItemWithGeneratedId(this.createdDebitItems, newItem)
+    },
 
-		async deductDebitItem (itemId) {
-			const mapDebitItems = this.createdDebitItems.map(
-				debitItem => debitItem.id
-			)
-			await this.createdDebitItems.splice(mapDebitItems.indexOf(itemId), 1)
-		},
+    deductDebitItem(itemId) {
+      this.deductItemById(this.createdDebitItems, itemId)
+    },
 
-		async addCreditItem () {
-			const newItem = {
-				type: "Credit",
-				description: "",
-				total: 0
-			}
-			newItem.id = this.createdCreditItems.length + 1
-			await this.createdCreditItems.push(newItem)
-		},
+    addCreditItem() {
+      const newItem = {
+        type: 'Credit',
+        description: '',
+        total: 0
+      }
+      this.addItemWithGeneratedId(this.createdCreditItems, newItem)
+    },
 
-		async deductCreditItem (itemId) {
-			const mapCreditItems = this.createdCreditItems.map(
-				creditItem => creditItem.id
-			)
-			await this.createdCreditItems.splice(mapCreditItems.indexOf(itemId), 1)
-		},
+    deductCreditItem(itemId) {
+      this.deductItemById(this.createdCreditItems, itemId)
+    },
 
-		async createInvoice () {
+    async createInvoice() {
       this.createdDebitItems = this.createdDebitItems.filter(disputedItem => disputedItem.total !== 0)
 
       this.createdCreditItems = this.createdCreditItems.filter(creditItem => creditItem.total !== 0)
 
-      this.toPostPracticeInvoice.items = this.invoiceItems.concat(
-				this.disputedItems,
-				this.createdDebitItems,
-				this.createdCreditItems
-			)
-      
-			this.toPostPracticeInvoice.date_start = this.dateStart ? this.dateStart : null
+      this.toPostPracticeInvoice.items = this.invoiceItems.concat(this.disputedItems, this.createdDebitItems, this.createdCreditItems)
 
-      this.toPostPracticeInvoice.date_end = this.dateEnd ? this.dateEnd : null
-      
-			this.toPostPracticeInvoice.practice_id = this.practice ? this.practice.id : null
-        
+      this.toPostPracticeInvoice.practice_id = this.practice ? this.practice.id : null
+
       this.toPostPracticeInvoice.total_amount = this.taxedAmountTotal
 
       this.toPostPracticeInvoice.tax_amount = this.taxAmount
@@ -1065,134 +890,94 @@ export default {
 
       this.toPostPracticeInvoice.tax_rate = this.practiceTaxRateFormatted
 
-      console.log(this.toPostPracticeInvoice)
-
-			if (this.toPostPracticeInvoice.items.length > 0) {
+      if (this.toPostPracticeInvoice.items.length > 0) {
         this.saveAsDisabled = true
-				await this.$axios
-					.post(`/api/v1/admin/practice-invoices`, this.toPostPracticeInvoice)
-					.then(() => {
-            this.$emit("goBack")
-						this.$store.commit("SET_NOTIFICATION", {
-							enabled: true,
-							status: "success",
-							text: "Invoice Posted"
+        await this.$axios
+          .post(`/api/v1/admin/practice-invoices`, this.toPostPracticeInvoice)
+          .then(() => {
+            this.$emit('goBack')
+            this.$store.commit('SET_NOTIFICATION', {
+              enabled: true,
+              status: 'success',
+              text: 'Invoice Posted'
             })
-					})
-					.catch(err => {
-            console.log('err', err)
-
-						this.$store.commit("SET_NOTIFICATION", {
-							enabled: true,
-							status: "danger",
-							text: err.response.data.message
+          })
+          .catch(err => {
+            this.$store.commit('SET_NOTIFICATION', {
+              enabled: true,
+              status: 'danger',
+              text: err.response.data.message
             })
-					})
+          })
           .finally(() => {
             this.saveAsDisabled = false
           })
-			} else {
-				this.$emit("formError")
-				this.$store.commit("SET_NOTIFICATION", {
-					enabled: true,
-					status: "danger",
-					text: "Items to be invoiced is required"
-				})
-			}
-    },
-    
-    setInitialState () {
-      this.saveAsDisabled = false
-      if (this.locumInvoice) {
-        this.form.locum_invoice_id = this.locumInvoice.id
-        this.form.date_start = this.locumInvoice.date_start
-        this.form.date_end = this.locumInvoice.date_end
-
-        this.form.items = [
-          {
-            type: "Job Part",
-            job_part_id: this.locumInvoice.items[0].job_part.id,
-            description: this.locumInvoice.items[0].description,
-            total: this.locumInvoice.items[0].total,
-
-            dispute: this.locumInvoice.items[0].disputed,
-            absent_days: this.locumInvoice.items[0].absent_days,
-            final_hours: this.locumInvoice.items[0].final_hours,
-            late_hours: this.locumInvoice.items[0].late_hours,
-            remarks: this.locumInvoice.items[0].remarks
-          }
-        ]
-
-        this.form.total_amount = this.locumInvoice.total_amount
-        this.form.final = false
-        this.form.ir35 = this.locumInvoice.ir35
+      } else {
+        this.$emit('formError')
+        this.$store.commit('SET_NOTIFICATION', {
+          enabled: true,
+          status: 'danger',
+          text: 'Items to be invoiced is required'
+        })
       }
-
-      this.form.hours = Math.floor(this.form.items[0].final_hours / 60)
-      this.form.minutes = Math.floor(this.form.items[0].final_hours % 60)
-      this.form.late_hours = Math.floor(this.form.items[0].late_hours / 60)
-      this.form.late_minutes = Math.floor(this.form.items[0].late_hours % 60)
-    },
-
-		async clearEntries () {}
+    }
   }
- 
 }
 </script>
 <style>
 .display {
-	width: 800px;
+  width: 800px;
 }
 @media (min-width: 480px) {
-	.right-side-header-content {
-		width: calc(100% - 0px);
-	}
+  .right-side-header-content {
+    width: calc(100% - 0px);
+  }
 }
 .page-overlap {
-	min-width: 100%;
+  min-width: 100%;
 }
 @media screen and (min-width: 768px) {
-	.page-overlap {
-		min-width: calc(100% - 70px);
-	}
-	.invoice {
-		max-width: 800px;
-		min-height: 850px;
-	}
+  .page-overlap {
+    min-width: calc(100% - 70px);
+  }
+  .invoice {
+    max-width: 800px;
+    min-height: 850px;
+  }
 }
 
 @media screen and (min-width: 1200px) {
-	.page-overlap {
-		min-width: calc(100% - 200px);
-	}
+  .page-overlap {
+    min-width: calc(100% - 200px);
+  }
 }
 
 .billing-modal {
-	position: fixed;
-	top: 0;
-	right: 0;
-	margin-right: 0%;
-	width: 100%;
-	height: 100%;
-	overflow: hidden auto;
-	border-left: solid 2px #ffc72c;
-	transition: all 0.3s ease-in-out;
-	background-color: #505561;
-	z-index: 512;
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin-right: 0%;
+  width: 100%;
+  height: 100%;
+  overflow: hidden auto;
+  border-left: solid 2px #ffc72c;
+  transition: all 0.3s ease-in-out;
+  background-color: #505561;
+  z-index: 512;
 }
 @media screen and (min-width: 1200px) {
-	.billing-modal {
-		width: 80%;
-	}
+  .billing-modal {
+    width: 80%;
+  }
 }
 .billing-shield {
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background-color: #333;
-	opacity: 0.5;
-	z-index: 511;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #333;
+  opacity: 0.5;
+  z-index: 511;
 }
 </style>

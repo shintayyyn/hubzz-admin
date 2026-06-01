@@ -100,7 +100,6 @@ export default {
       chosenJobParts: [],
       currentPage: 1,
       params: {},
-      loading: false,
       columns: [
         {
           name: 'Check',
@@ -177,46 +176,49 @@ export default {
     }
   },
   async created() {
-    await this.$store.commit('jobs/TOGGLE_LOADING', true)
+    this.$store.commit('jobs/TOGGLE_LOADING', true)
     let { page = 1, order_by = [] } = this.$route.query
-    page = parseInt(page)
-    const createdRoute = this.$route.query
+    page = parseInt(page, 10)
     const limit = 10
     const offset = page * limit - limit
-    order_by = createdRoute && createdRoute.order_by ? createdRoute.order_by : ['status:desc']
+    order_by = this.$route.query && this.$route.query.order_by ? this.$route.query.order_by : ['status:desc']
     this.params = {
       job_practice_id: this.filter.job_practice_id,
       practice_billable_date_start: this.filter.practice_billable_date_start,
       practice_billable_date_end: this.filter.practice_billable_date_end,
-      practice_invoiceable_status: ['Approved'],
+      practice_invoiceable_status: this.getPracticeInvoiceableStatusFilters(),
       limit,
       offset,
       order_by
     }
-    if (this.showDisputed) {
-      this.params.practice_invoiceable_status.push('Disputed')
-    }
-    if (this.showCompleted) {
-      this.params.practice_invoiceable_status.push('Completed')
-    }
-    if (this.showCancelled) {
-      this.params.practice_invoiceable_status.push('Cancelled')
-    }
-    if (this.showInvoiced) {
-      this.params.practice_invoiceable_status.push('Invoiced')
-    }
     await this.getJobParts()
   },
   methods: {
+    getPracticeInvoiceableStatusFilters() {
+      const statuses = ['Approved']
+
+      if (this.showDisputed) {
+        statuses.push('Disputed')
+      }
+      if (this.showCompleted) {
+        statuses.push('Completed')
+      }
+      if (this.showCancelled) {
+        statuses.push('Cancelled')
+      }
+      if (this.showInvoiced) {
+        statuses.push('Invoiced')
+      }
+
+      return statuses
+    },
+
     isRowDisabled(item) {
       const hasNoInvoice = !item.locum_invoice_item?.locum_invoice?.invoice_number
 
       const isToBeInvoiced = item.invoice_status === 'To Be Invoiced' || item.status === 'To Be Invoiced'
 
       return hasNoInvoice || isToBeInvoiced
-    },
-    viewJobPart(jobPartId) {
-      this.$router.push(`/billings/hubzz-billing/${this.$route.params.id}/practice-hubzz-invoices/issue-hubzz-invoice/${jobPartId}`)
     },
 
     toggleCheck(item) {
@@ -232,11 +234,7 @@ export default {
     },
 
     emitChosenJobParts() {
-      if (this.showDisputed === false) {
-        this.$emit('chosenJobParts', this.chosenJobParts, false)
-      } else if (this.showDisputed === true) {
-        this.$emit('chosenJobParts', this.chosenJobParts, true)
-      }
+      this.$emit('chosenJobParts', this.chosenJobParts, this.showDisputed)
     },
 
     close() {
@@ -272,7 +270,7 @@ export default {
     sorted(order_by) {
       this.currentPage = 1
       this.params.order_by = order_by
-      this.getJobParts(this.params)
+      this.getJobParts()
     },
 
     statusStyle(status) {

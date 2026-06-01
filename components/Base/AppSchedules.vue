@@ -53,8 +53,6 @@
               class="multiple-date-picker"
               :format="'DD/MM/YYYY'"
               :overlayData="overlayData"
-              @focus="toggleCalendar = true"
-              @blur="toggleCalendar = false"
             />
 
             <div v-if="scheduleDates.length">
@@ -575,38 +573,6 @@
 
                         <!-- FINAL END -->
                         <div class="flex items-center justify-center text-center w-2/12">
-                          <!-- <AppTime
-                            v-if="$auth.user.domain === 'Locum' ? !toDisplay : (shift.dispute && !['issued', 'approved'].includes(invoiceStatus))"
-                            v-model="shift.final_time_end"
-                            :name="`final_time_end-s${index}-${i}`"
-                            :wrapperClass="'px-1 mt-2 mb-2'"
-                            :inStyle="`
-                            ${
-                              !isAbsent(shift)
-                              && (shift.final_time_end && shift.time_end)
-                              && totalHours(shift.final_time_start, shift.final_time_end, item.date) <= 0
-                                ? 'border-color: #f56565;'
-                                : ''
-                            }
-                            ${
-                              !shift.has_absences && shift.dispute
-                                ? 'background-color: #f1d130;'
-                                : 'background-color: transparent;'
-                            }
-                            `"
-                            :error="
-                              shiftErrors.find(err => err.field === `final_time_end-s${index}-${i}`)
-                                ? shiftErrors.find(err => err.field === `final_time_end-s${index}-${i}`)
-                                : formError.find(err => err.field === `final_time_end-s${index}-${i}`)
-                            "
-                            :disabled="[true, 'true'].includes(shift.has_absences) || [false, 'false'].includes(shift.dispute)"
-                            @change="
-                              CheckIfEmpty(shift.final_time_end, `final_time_end-s${index}-${i}`),
-                              emitSchedule(),
-                              onChangeField(shift, item.date)
-                            "
-                            @blur="CheckIfEmpty(shift.final_time_end, `final_time_end-s${index}-${i}`)"
-                          /> -->
                           <template>
                             {{ shift.final_time_end ? shift.final_time_end : '-' }}
                           </template>
@@ -759,7 +725,6 @@
                               "
                               :optionsContainerClass="'bg-trout'"
                               @change="emitSchedule(), CheckIfEmptyFormError(shift.time_start, `time_start-s${index}-${i}`), changeStartTime(shift)"
-                              @blur="CheckEmptyField(form.phone_number, 'phone_number')"
                             />
                           </div>
 
@@ -1138,17 +1103,14 @@ export default {
 
   data() {
     return {
-      loading: false,
       scheduleDates: [],
       overlayData: [],
-      toggleCalendar: false,
       schedules: [],
       job_part_id: 1,
       confirmApply: '',
       formError: [],
       show_late_reason: false,
       selectedShift: null,
-      cannotAddShift: [],
       original_schedule: []
     }
   },
@@ -1434,10 +1396,6 @@ export default {
 
     schedules() {
       this.emitSchedule()
-    },
-
-    shiftErrors(value) {
-      console.log('shiftErrors', value)
     }
   },
 
@@ -2328,25 +2286,6 @@ export default {
       }
     },
 
-    generateDates() {
-      if (this.start_date && !this.$moment(this.start_date).isSameOrAfter(this.$moment(this.end_date))) {
-        let diff = this.$moment(this.end_date).diff(this.$moment(this.start_date), 'days')
-
-        for (let i = 0; i <= diff; i++) {
-          let date = this.$moment(this.start_date)
-            .add(i, 'days')
-            .format('DD/MM/YYYY')
-          if (!this.schedules.find(item => item.date === date)) {
-            this.scheduleDates.push(date)
-            this.schedules.push({
-              date: date,
-              shifts: []
-            })
-          }
-        }
-      }
-    },
-
     addShift(shifts, index) {
       let rowError = []
 
@@ -2481,29 +2420,6 @@ export default {
       }
     },
 
-    isAbsent(shift) {
-      return shift.orig_final_start === shift.orig_final_end
-    },
-
-    onChangeField() {
-      // if (shift.final_time_start && shift.final_time_end) {
-      // 	shift.total = this.getRate(
-      // 		shift,
-      // 		shift.final_time_start,
-      // 		shift.final_time_end,
-      // 		date
-      // 	);
-      // 	if (
-      // 		shift.final_time_start === shift.orig_final_start &&
-      // 		shift.final_time_end === shift.orig_final_end
-      // 	) {
-      // 		shift.dispute = false;
-      // 	} else {
-      // 		shift.dispute = true;
-      // 	}
-      // }
-    },
-
     dispute(shift, index, i) {
       shift.dispute = !shift.dispute
       if (shift.dispute === false) {
@@ -2522,28 +2438,6 @@ export default {
         shift.final_time_start = ''
         shift.final_time_end = ''
         shift.total = 0
-      }
-    },
-
-    isDisputed(shift) {
-      if (!shift.has_absences) {
-        if (
-          shift.final_time_start === shift.orig_final_start &&
-          shift.orig_final_end === shift.final_time_end &&
-          shift.has_absences == shift.orig_has_absences
-        ) {
-          shift.dispute = false
-        } else {
-          shift.dispute = true
-        }
-      } else {
-        shift.final_time_start = ''
-        shift.final_time_end = ''
-        if (shift.has_absences == shift.orig_has_absences) {
-          shift.dispute = false
-        } else {
-          shift.dispute = true
-        }
       }
     },
 
