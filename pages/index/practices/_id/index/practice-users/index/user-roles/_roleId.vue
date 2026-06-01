@@ -4,11 +4,13 @@
       <div class="flex flex-wrap overflow-hidden">
         <div
           v-for="section in categorySections"
-          :key="section.category"
           v-if="section.permissions.length > 0"
+          :key="section.category"
           class="w-full md:w-1/2 xl:w-1/3 overflow-hidden pb-3 md:p-1"
         >
-          <div class="text-lg font-semibold">{{ section.title }}</div>
+          <div class="text-lg font-semibold">
+            {{ section.title }}
+          </div>
           <div
             v-for="permission in section.permissions"
             :key="permission.id"

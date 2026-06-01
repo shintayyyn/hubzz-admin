@@ -20,11 +20,15 @@
           >
             Accept
           </div>
-          <div class="text-white ml-2 px-4 py-2 rounded-lg bg-red-600 hover:bg-yellow-700" @click="toggleRejectModal(slotProps.item.id)">Reject</div>
+          <div class="text-white ml-2 px-4 py-2 rounded-lg bg-red-600 hover:bg-yellow-700" @click="toggleRejectModal(slotProps.item.id)">
+            Reject
+          </div>
         </div>
       </template>
     </AppTable>
-    <div class="text-center text-white text-lg font-bold" v-if="spokes.length === 0">No invitations from spokes.</div>
+    <div v-if="spokes.length === 0" class="text-center text-white text-lg font-bold">
+      No invitations from spokes.
+    </div>
     <AppConfirm
       v-if="toggle_reject_modal"
       :message="'Reject this spoke invitation to this Practice?'"

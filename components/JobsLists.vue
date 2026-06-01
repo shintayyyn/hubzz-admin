@@ -5,7 +5,7 @@
         <p class="mx-2">
           Filter
         </p>
-        <span class="mx-2"><svgicon name="caret-down" width="10" :style="filterModal ? 'transform: rotate(180deg)' : ''"/></span>
+        <span class="mx-2"><svgicon name="caret-down" width="10" :style="filterModal ? 'transform: rotate(180deg)' : ''" /></span>
       </button>
       <transition name="fade">
         <div v-if="filterModal" class="flex items-center">

@@ -10,7 +10,9 @@
       :routerLink="`/practices/${$route.params.id}/practice-users/user-roles`"
       @pagechanged="pagechanged"
     />
-    <p class="text-center py-4" v-if="!practice_roles.length">No roles.</p>
+    <p v-if="!practice_roles.length" class="text-center py-4">
+      No roles.
+    </p>
   </div>
 </template>
 <script>
@@ -54,11 +56,6 @@ export default {
       this.getPracticeRoles()
     }
   },
-  beforeDestroy() {
-    let query = Object.assign({}, this.$route.query)
-    delete query.practice_roles_page
-    this.$router.push({ query })
-  },
   async asyncData({ app, route, store }) {
     try {
       let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}/practice-roles/count`)
@@ -81,6 +78,11 @@ export default {
         text: err.response.data.message
       })
     }
+  },
+  beforeDestroy() {
+    let query = Object.assign({}, this.$route.query)
+    delete query.practice_roles_page
+    this.$router.push({ query })
   },
   methods: {
     pagechanged(e) {

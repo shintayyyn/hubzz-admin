@@ -45,10 +45,10 @@
             </div>
             <!-- SPOKE PERMISSIONS - PERMISSIONS OF THE SPOKE BEING VIEWED. -->
             <div class="w-1/2  my-2">
-            <div class="flex flex-row items-center">
-              <div class="text-lg  font-semibold">
-                Spoke Permissions
-              </div>
+              <div class="flex flex-row items-center">
+                <div class="text-lg  font-semibold">
+                  Spoke Permissions
+                </div>
               </div>
 
               <div class="mt-2 mb-4 mx-2">
@@ -213,7 +213,7 @@
           @click="confirm=true"
         />
       </div>
-      <div class="mt-4" v-else-if="hubInvitations && hubInvitations.length > 0">
+      <div v-else-if="hubInvitations && hubInvitations.length > 0" class="mt-4">
         <AppTableNew
           :total="hubInvitationsCount"
           :items="hubInvitations"

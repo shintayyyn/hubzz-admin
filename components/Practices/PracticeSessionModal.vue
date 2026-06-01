@@ -22,7 +22,9 @@
         </div>
       </div>
 
-      <div class="mt-2 md:mx-2">Date Posted: {{ jobDatePosted }}</div>
+      <div class="mt-2 md:mx-2">
+        Date Posted: {{ jobDatePosted }}
+      </div>
 
       <div class="flex flex-col lg:flex-row md:m-2 overflow-hidden mb-4">
         <!-- JOB / JOB DETAILS -->
@@ -32,7 +34,9 @@
             <div v-if="modalJobPart.status === 'Cancelled'" class="flex flex-col rounded-lg leading-tight border mb-4 p-4">
               <div class="flex">
                 <div class="md:w-1/2">
-                  <div class="font-bold text-sm sm:text-md">Reason for {{ modalJobPart.terminated ? 'Termination' : 'Cancellation' }}</div>
+                  <div class="font-bold text-sm sm:text-md">
+                    Reason for {{ modalJobPart.terminated ? 'Termination' : 'Cancellation' }}
+                  </div>
                   <div class="text-xs sm:text-sm">
                     {{ modalJobPart.job.platform_job.cancelled_reason }}
                   </div>
@@ -47,8 +51,8 @@
                         modalJobPart.cancelled_by_practice === 'Hub'
                           ? modalJobPart.parent_practice_name
                           : modalJobPart.cancelled_by_practice === 'Spoke'
-                          ? modalJobPart.practice_name
-                          : modalJobPart.practice_name
+                            ? modalJobPart.practice_name
+                            : modalJobPart.practice_name
                       }}
                     </div>
                     <div v-if="modalJobPart.cancelled_by_user" class="mx-1">
@@ -130,19 +134,25 @@
                     Job Part
                   </p>
 
-                  <p class="">{{ modalJobPart.part }} of {{ modalJobPart.parts }}</p>
+                  <p class="">
+                    {{ modalJobPart.part }} of {{ modalJobPart.parts }}
+                  </p>
                 </div>
               </div>
               <div class="md:w-1/3 w-full">
                 <p class="font-semibold">
                   Job Part Gross Rate
                 </p>
-                <p class="pb-2 no-underline">£ {{ modalJobPart.job_part_gross_rate_formatted }}</p>
+                <p class="pb-2 no-underline">
+                  £ {{ modalJobPart.job_part_gross_rate_formatted }}
+                </p>
 
                 <p class="mt-5 font-semibold">
                   Job Part Hubzz Fee
                 </p>
-                <p class="pb-2 no-underline">£ {{ modalJobPart.job_part_hubzz_fee_formatted }}</p>
+                <p class="pb-2 no-underline">
+                  £ {{ modalJobPart.job_part_hubzz_fee_formatted }}
+                </p>
 
                 <p class="mt-5 font-semibold">
                   Total Original Hours
@@ -209,13 +219,17 @@
                     Job Gross Rate
                   </p>
 
-                  <p class="pb-2 no-underline">£ {{ job.job_gross_rate_formatted }}</p>
+                  <p class="pb-2 no-underline">
+                    £ {{ job.job_gross_rate_formatted }}
+                  </p>
 
                   <p class="font-semibold">
                     Job Hubzz Fee
                   </p>
 
-                  <p class="pb-2 no-underline">£ {{ job.job_hubzz_fee_formatted }}</p>
+                  <p class="pb-2 no-underline">
+                    £ {{ job.job_hubzz_fee_formatted }}
+                  </p>
 
                   <p class="font-semibold">
                     Total Hours
