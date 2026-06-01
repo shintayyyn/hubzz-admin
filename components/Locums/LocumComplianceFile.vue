@@ -2,7 +2,7 @@
   <section class="absolute flex flex-col w-full" style="max-width: calc(100% - 220px);">
     <header class="flex items-center text-sm md:px-4">
       <button
-        v-if="authAdminPermissions.includes('Download Locum Compliance Documents')"
+        v-if="canDownloadComplianceDocuments"
         :disabled="downloading"
         class="inline-flex items-center cursor-pointer border hover:border-none hover:text-black hover:bg-sunglow rounded-lg p-2 m-1"
         @click.prevent="downloadItem(locumComplianceDocument.file.url, locumComplianceDocument.file.filename)"
@@ -68,15 +68,7 @@
             </p>
           </div>
 
-          <template
-            v-if="
-              locumComplianceDocument &&
-                locumComplianceDocument.compliance_document &&
-                locumComplianceDocument.compliance_document.compliance_document_type &&
-                locumComplianceDocument.compliance_document.compliance_document_type.name !== 'Reference' &&
-                locumComplianceDocument.compliance_document.compliance_document_type.name !== 'MPL'
-            "
-          >
+          <template v-if="hasComplianceTypeDetails">
             <div
               v-if="locumComplianceDocument && locumComplianceDocument.has_reference && locumComplianceDocument.reference"
               class="leading-tight pb-4"
@@ -96,13 +88,7 @@
               </p>
             </div>
 
-            <div
-              v-if="
-                (locumComplianceDocument.type === 'Mandatory' || locumComplianceDocument.type !== 'Optional') &&
-                  !locumComplianceDocument.mandatory_training
-              "
-              class="w-full"
-            >
+            <div v-if="shouldShowExpiryFields" class="w-full">
               <div class="leading-tight pb-4">
                 <p class="font-bold">
                   Expired At
@@ -127,7 +113,7 @@
               </div>
 
               <!-- UPDATE COMPLIANCE FILE STATUS -->
-              <div v-if="authAdminPermissions.includes('Approve/Deny Compliance Documents')">
+              <div v-if="canApproveOrDenyComplianceDocuments">
                 <!-- CHANGE STATUS  -->
                 <div>
                   <AppInput
@@ -140,7 +126,7 @@
                       { label: 'Approve', value: 'Approved' },
                       { label: 'Reject', value: 'Rejected' }
                     ]"
-                    :error="formError.find(item => item.field === 'status')"
+                    :error="fieldError('status')"
                     :label="'Status'"
                     required
                     @change="setStatusData($event)"
@@ -148,7 +134,7 @@
                 </div>
 
                 <!-- PUT NOTES IF REJECTING -->
-                <div v-if="toPutLocumDetailCompliance && toPutLocumDetailCompliance.status === 'Rejected'" class="w-full">
+                <div v-if="isRejectedSelection" class="w-full">
                   <AppInput
                     v-model="selectedComplianceDocumentRejectReasonValue"
                     class="w-full mr-2"
@@ -156,7 +142,7 @@
                     :name="'complianceNote'"
                     :placeholder="'Select...'"
                     :items="complianceDocumentRejectReasonSeletionList"
-                    :error="selectedComplianceDocumentRejectReasonValue === '' ? null : formError.find(item => item.field === 'note')"
+                    :error="selectedComplianceDocumentRejectReasonValue === '' ? null : fieldError('note')"
                     :label="'Reason for Rejection'"
                     required
                   />
@@ -169,12 +155,12 @@
                     :type="'textarea'"
                     :rows="2"
                     :class="'font-normal'"
-                    :error="formError.find(item => item.field === 'note')"
+                    :error="fieldError('note')"
                   />
                 </div>
 
                 <!-- PICK EXPIRATION DATE -->
-                <div v-if="toPutLocumDetailCompliance && toPutLocumDetailCompliance.status !== 'Rejected'" class="my-4">
+                <div v-if="!isRejectedSelection" class="my-4">
                   <!-- IF NOT APPLICABLE -->
                   <div
                     v-if="
@@ -188,13 +174,13 @@
                   <!--re-commit-->
                   <AppDate
                     v-model="toPutLocumDetailCompliance.expired_at"
-                    :disabled="expiration_not_applicable === false ? false : true"
-                    :isDisabled="expiration_not_applicable === false ? false : true"
+                    :disabled="expiration_not_applicable"
+                    :isDisabled="expiration_not_applicable"
                     isAfter
                     :name="'expired_at'"
                     :label="'Change Expiration Date'"
-                    :error="formError.find(item => item.field === 'expired_at')"
-                    :required="expiration_not_applicable === false ? true : false"
+                    :error="fieldError('expired_at')"
+                    :required="!expiration_not_applicable"
                   />
                 </div>
 
@@ -229,13 +215,12 @@
                 style="max-height: 70vh;"
               />
               <embed
-                v-if="locumComplianceDocument.file.type !== 'image' && authAdminPermissions.includes('Download Locum Compliance Documents') === true"
+                v-if="locumComplianceDocument.file.type !== 'image' && canDownloadComplianceDocuments"
                 :src="fileUrl"
                 class="object-contain object-left-top w-full document h-full"
               />
-              <!-- <iframe :src="disabledFileUrl"/> -->
               <embed
-                v-if="locumComplianceDocument.file.type !== 'image' && authAdminPermissions.includes('Download Locum Compliance Documents') === false"
+                v-if="locumComplianceDocument.file.type !== 'image' && !canDownloadComplianceDocuments"
                 :src="disabledFileUrl"
                 class="object-contain object-left-top w-full document h-full"
               />
@@ -280,6 +265,12 @@
 import AppDate from '@/components/Base/AppDate'
 import AppInput from '@/components/Base/AppInput'
 import AppButton from '@/components/Base/AppButton'
+
+const DOC_STATUS_TO_FORM_STATUS = {
+  Expiring: 'Approved',
+  Expired: 'Rejected',
+  Pending: null
+}
 
 export default {
   components: {
@@ -346,6 +337,32 @@ export default {
       return this.$store.getters['permissions']
     },
 
+    canDownloadComplianceDocuments() {
+      return this.authAdminPermissions.includes('Download Locum Compliance Documents')
+    },
+
+    canApproveOrDenyComplianceDocuments() {
+      return this.authAdminPermissions.includes('Approve/Deny Compliance Documents')
+    },
+
+    hasComplianceTypeDetails() {
+      const typeName =
+        this.locumComplianceDocument &&
+        this.locumComplianceDocument.compliance_document &&
+        this.locumComplianceDocument.compliance_document.compliance_document_type &&
+        this.locumComplianceDocument.compliance_document.compliance_document_type.name
+
+      return typeName !== 'Reference' && typeName !== 'MPL'
+    },
+
+    shouldShowExpiryFields() {
+      return this.locumComplianceDocument.type !== 'Optional' && !this.locumComplianceDocument.mandatory_training
+    },
+
+    isRejectedSelection() {
+      return this.toPutLocumDetailCompliance && this.toPutLocumDetailCompliance.status === 'Rejected'
+    },
+
     complianceDocumentRejectReasonSeletionList() {
       return this.locumComplianceDocument
         ? [
@@ -387,31 +404,21 @@ export default {
   },
 
   created() {
-    if (this.locumComplianceDocument.expired_at === null && this.locumComplianceDocument.status === 'Approved') {
-      this.expiration_not_applicable = true
-    } else {
-      this.expiration_not_applicable = false
-    }
+    this.expiration_not_applicable = this.locumComplianceDocument.expired_at === null && this.locumComplianceDocument.status === 'Approved'
 
     this.toPutLocumDetailCompliance.expired_at = this.locumComplianceDocument.expired_at
     this.toPutLocumDetailCompliance.status = this.locumComplianceDocument.status
     this.toPutLocumDetailCompliance.note = this.locumComplianceDocument.note
 
-    if (this.locumComplianceDocument.status === 'Expiring') {
-      this.toPutLocumDetailCompliance.status = 'Approved'
-    }
-    if (this.locumComplianceDocument.status === 'Expired') {
-      this.toPutLocumDetailCompliance.status = 'Rejected'
-    }
-    if (this.locumComplianceDocument.status === 'Pending') {
-      this.toPutLocumDetailCompliance.status = null
+    if (Object.prototype.hasOwnProperty.call(DOC_STATUS_TO_FORM_STATUS, this.locumComplianceDocument.status)) {
+      this.toPutLocumDetailCompliance.status = DOC_STATUS_TO_FORM_STATUS[this.locumComplianceDocument.status]
     }
 
     this.setStatusData(this.toPutLocumDetailCompliance.status)
   },
 
   mounted() {
-    if (this.authAdminPermissions.includes('Download Locum Compliance Documents') === false) {
+    if (!this.canDownloadComplianceDocuments) {
       window.addEventListener(
         'contextmenu',
         function(e) {
@@ -421,25 +428,30 @@ export default {
       )
     }
 
-    if (this.locumComplianceDocument) {
-      const complianceDocumentRejectReasonSeletionList = [
-        ...(this.locumComplianceDocument.compliance_document_reject_reasons || []),
-        ...(this.locumComplianceDocument.parent_compliance_document
-          ? this.locumComplianceDocument.parent_compliance_document.compliance_document_reject_reasons || []
-          : [])
-      ]
-        .map(({ reject_reason: rejectReason }) => ({
-          label: rejectReason,
-          value: rejectReason
-        }))
-        .concat([
-          {
-            label: 'Other',
-            value: ''
-          }
-        ])
+    if (this.locumComplianceDocument && this.locumComplianceDocument.file) {
+      this.loadDocumentFile()
+    }
 
-      const selectedComplianceDocumentRejectReason = complianceDocumentRejectReasonSeletionList.find(
+    this.initializeRejectReasonSelection()
+  },
+
+  methods: {
+    onEditorBlur() {},
+
+    onEditorFocus() {},
+
+    onEditorReady() {},
+
+    fieldError(field) {
+      return this.formError.find(item => item.field === field)
+    },
+
+    initializeRejectReasonSelection() {
+      if (!this.locumComplianceDocument) {
+        return
+      }
+
+      const selectedComplianceDocumentRejectReason = this.complianceDocumentRejectReasonSeletionList.find(
         ({ value }) => value === this.locumComplianceDocument.note
       )
 
@@ -448,18 +460,11 @@ export default {
         : this.locumComplianceDocument.note
         ? ''
         : null
-    }
+    },
 
-    if (this.locumComplianceDocument && this.locumComplianceDocument.file) {
+    loadDocumentFile() {
       this.loadingFile = true
       const { url: fileUrl, type, subtype } = this.getFileUrl(this.locumComplianceDocument.file)
-
-      console.log('qweqwe asdasd', this.locumComplianceDocument.file, {
-        url: fileUrl,
-        type,
-        subtype
-      })
-
       const axios = require('axios')
 
       axios
@@ -474,17 +479,8 @@ export default {
           )
 
           this.disabledFileUrl = `${this.fileUrl}#toolbar=0`
-
-          console.log('fileUrl', `${this.fileUrl}#toolbar=0`)
-
-          // const fileReader = new window.FileReader()
-          // fileReader.onload = function () {
-          //   this.fileUrl = fileReader.result
-          // }
-          // fileReader.readAsDataURL(response.data)
         })
         .catch(err => {
-          console.log('err', err.response || err)
           let message = 'Something went wrong!'
           if (err.response && err.response.data && err.response.data.message) {
             message = err.response.data.message
@@ -498,20 +494,6 @@ export default {
         .finally(() => {
           this.loadingFile = false
         })
-    }
-  },
-
-  methods: {
-    onEditorBlur(editor) {
-      console.log('editor blur!', editor)
-    },
-
-    onEditorFocus(editor) {
-      console.log('editor focus!', editor)
-    },
-
-    onEditorReady(editor) {
-      console.log('editor ready!', editor)
     },
 
     publish() {
@@ -519,12 +501,9 @@ export default {
 
       this.toPutLocumDetailCompliance.note = this.selectedComplianceDocumentRejectReasonValue || this.toPutLocumDetailCompliance.note
 
-      console.log('toPutLocumDetailCompliance', this.toPutLocumDetailCompliance)
-
       let notRequired = []
 
       if (this.toPutLocumDetailCompliance.status === 'Approved') {
-        // notRequired.push("status");
         this.toPutLocumDetailCompliance.note = ''
         notRequired.push('note')
         if (this.locumComplianceDocument.compliance_document_name && this.expiration_not_applicable === true) {
@@ -533,14 +512,11 @@ export default {
       }
 
       if (this.toPutLocumDetailCompliance.status === 'Rejected') {
-        // notRequired.push("note");
         this.toPutLocumDetailCompliance.expired_at = null
         notRequired.push('expired_at')
       }
 
       this.Validate(this.toPutLocumDetailCompliance, notRequired)
-      console.log(this.toPutLocumDetailCompliance)
-      console.log('errors', this.formError)
       if (!this.formError.length) {
         this.toPutLocumDetailComplianceDocs()
       }
@@ -551,7 +527,7 @@ export default {
     },
 
     downloadItem(fileUrl, fileFilename) {
-      if (this.authAdminPermissions.includes('Download Locum Compliance Documents')) {
+      if (this.canDownloadComplianceDocuments) {
         const axios = require('axios')
         this.downloading = true
         axios
@@ -568,7 +544,6 @@ export default {
             document.body.removeChild(link)
           })
           .catch(err => {
-            console.log('download file error', err)
             this.$store.commit('SET_NOTIFICATION', {
               enabled: true,
               status: 'danger',
@@ -578,14 +553,10 @@ export default {
           .finally(() => {
             this.downloading = false
           })
-      } else {
-        console.log('You are not allowed to perform such action.')
       }
     },
 
     getFileUrl(file) {
-      console.log('getFileUrl', file)
-
       const { url, type, subtype } = file
 
       if (type === 'application') {
@@ -596,7 +567,6 @@ export default {
           subtype === 'vnd.ms-word.document.macroEnabled.12' ||
           subtype === 'vnd.ms-word.template.macroEnabled.12'
         ) {
-          //   return this.convertDoc(url)
           return {
             url: `${process.env.API_URL}/docs-to-pdf?url=${url}`,
             type: 'application',
@@ -613,7 +583,6 @@ export default {
 
       if (type === 'image') {
         if (subtype === 'tiff') {
-          //   return this.convertDoc(url)
           return {
             url: `${process.env.API_URL}/image-to-jpeg?url=${url}`,
             type: 'image',
@@ -635,18 +604,6 @@ export default {
       }
     },
 
-    convertDoc(document) {
-      return `https://docs.google.com/gview?url=${document}&embedded=true`
-    },
-
-    getQuery() {
-      const query = {
-        ...this.$route.query
-      }
-      const offset = parseInt(query.page) * 10 - 10
-      return offset
-    },
-
     sendEmail(id, body) {
       this.$axios
         .post(`/api/v1/admin/locum-compliance-documents/${id}/send-email`, {
@@ -665,7 +622,6 @@ export default {
     },
 
     async toPutLocumDetailComplianceDocs() {
-      console.log(this.toPutLocumDetailCompliance)
       try {
         if (this.toPutLocumDetailCompliance.status === 'Rejected') {
           if (this.toPutLocumDetailCompliance.note) {
@@ -675,7 +631,6 @@ export default {
               note: this.toPutLocumDetailCompliance.note
             })
 
-            // await this.getLocums();
             this.$emit('complianceUpdated')
             this.$store.commit('SET_NOTIFICATION', {
               enabled: true,
@@ -700,7 +655,6 @@ export default {
           })
 
           this.$emit('complianceUpdated')
-          // await this.getLocums();
           this.$store.commit('SET_NOTIFICATION', {
             enabled: true,
             status: 'success',
@@ -710,7 +664,6 @@ export default {
 
         this.goBack()
       } catch (err) {
-        console.log('compliance file verification error', err)
         this.$store.commit('SET_NOTIFICATION', {
           enabled: true,
           status: 'danger',
@@ -767,7 +720,6 @@ export default {
   border-radius: 25px;
   width: 800px;
   max-width: 95%;
-  /* max-height: 80%; */
   min-height: 50%;
   overflow: auto;
   transition: all 0.3s ease-in-out;

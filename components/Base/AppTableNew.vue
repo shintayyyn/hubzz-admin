@@ -3,7 +3,7 @@
     <div class="relative">
       <AppLoading :loading="loading" spinner />
 
-      <div class="relative flex flex-col overflow-x-auto w-full" :style="`min-height: ${minHeight ? minHeight : '60vh'}`">
+      <div class="relative flex flex-col overflow-x-auto w-full" :style="tableStyle">
         <!-- HEADER -->
         <div
           v-if="disabledHeadings === false"
@@ -14,17 +14,8 @@
             v-for="(column, index) in columns"
             :key="`${column}-${index}`"
             class="flex-1 flex items-center"
-            :class="[
-              column.class && column.class.split(' ').includes('text-center') && 'justify-center text-center',
-              column.class && column.class.split(' ').includes('md:text-center') && 'md:justify-center md:text-center',
-              column.class && column.class,
-              column.sortable && 'cursor-pointer'
-            ]"
-            :style="
-              `min-width: ${column.slotName && column.slotName === 'checker' ? '50px' : '100px'}; ${
-                column.width ? `max-width: ${column.width}px` : ''
-              }`
-            "
+            :class="getHeadingClasses(column)"
+            :style="getHeadingStyle(column)"
             @click="column.sortable && sort(column.dataIndex)"
           >
             <span class="px-2">{{ column.name || column.title }}</span>
@@ -32,56 +23,27 @@
           </div>
         </div>
 
-        <div v-for="(item, rowIndex) in items" :key="item.id" :style="`${customWidth ? `min-width: ${customWidth}px` : ``}`" class="row">
-          <component
-            :is="isClickable(item) ? 'nuxt-link' : 'div'"
-            v-bind="
-              isClickable(item)
-                ? {
-                  to:
-                    routerLink && {}.toString.call(routerLink) === '[object Function]'
-                      ? routerLink(item)
-                      : {
-                        path: `${routerLink}/${routerId ? item[routerId] : item.id}`,
-                        query: { ...$route.query }
-                      }
-                }
-                : {}
-            "
-          >
-            <div
-              class="flex justify-start items-center text-xs py-2 border-l border-r stripe-hover"
-              :class="[
-                isClickable(item) ? 'cursor-pointer ' : 'opacity-60 cursor-not-allowed',
-                rowIndex % 2 === 0 ? 'stripe-gray' : 'bg-white',
-                rowIndex === items.length - 1 ? 'border-b' : ''
-              ]"
-            >
+        <div v-for="(item, rowIndex) in items" :key="item.id" :style="getRowStyle()" class="row">
+          <component :is="getRowComponent(item)" v-bind="getRowBindings(item)">
+            <div class="flex justify-start items-center text-xs py-2 border-l border-r stripe-hover" :class="getRowClasses(item, rowIndex)">
               <div
                 v-for="(column, index) in columns"
                 :key="index"
                 :ref="`col${index}`"
                 class="flex-1 px-1 break-word hyphens h-full"
                 :class="column.class"
-                :style="
-                  `min-width: ${column.slotName && (column.slotName === 'checker' || column.slotName === 'messageButton') ? '50px' : '100px'}; ${
-                    column.width ? `max-width: ${column.width}px` : ''
-                  }; ${column.dataIndex !== 'actions' ? countLines(index, column.width, rowIndex) : ''}`
-                "
+                :style="getCellStyle(column, index, rowIndex)"
                 style="line-height:20px; "
               >
                 <template v-if="Array.isArray(dataCell(item, column))">
-                  <div v-for="(item, index) in dataCell(item, column)" :key="`${item}-${index}`">
-                    {{ item }}
+                  <div v-for="(cellItem, cellIndex) in dataCell(item, column)" :key="`${cellItem}-${cellIndex}`">
+                    {{ cellItem }}
                   </div>
                 </template>
 
                 <template v-else>
                   <template v-if="column.slotName">
-                    <div
-                      v-if="column.slotName === 'checker' || column.slotName === 'messageButton'"
-                      @click.prevent.stop="$emit(column.eventName, item)"
-                    >
+                    <div v-if="isDirectActionSlot(column)" @click.prevent.stop="$emit(column.eventName, item)">
                       <slot :name="column.slotName" :item="item" />
                     </div>
 
@@ -91,26 +53,22 @@
                   </template>
 
                   <template v-if="column.dataIndex === 'actions'">
-                    <template v-if="column.class.includes('dropdown')">
-                      <div class="relative" @click="dropdownIndex === rowIndex ? (dropdownIndex = null) : (dropdownIndex = rowIndex)">
+                    <template v-if="isDropdownColumn(column)">
+                      <div class="relative" @click="toggleDropdown(rowIndex)">
                         <div class="flex items-center w-full">
                           <div class="flex flex-col relative w-full">
                             <div
                               class="cursor-pointer rounded flex items-center justify-between px-2 text-xs border border-gray-500 bg-white"
-                              :class="dropdownIndex !== null && dropdownIndex === rowIndex ? 'bg-white' : ''"
+                              :class="isDropdownOpen(rowIndex) ? 'bg-white' : ''"
                             >
                               <span>{{ column.initialDropdown ? column.initialDropdown : 'Select Action' }}</span>
-                              <span v-if="dropdownIndex !== rowIndex"><svgicon name="caret-down" width="8" /></span>
+                              <span v-if="!isDropdownOpen(rowIndex)"><svgicon name="caret-down" width="8" /></span>
                             </div>
-                            <div
-                              v-if="dropdownIndex !== null && dropdownIndex === rowIndex"
-                              class="absolute bottom-0 "
-                              :class="items.length > 1 && total > perPage - 5 && rowIndex === items.length - 1 ? 'dropdown-up' : 'dropdown'"
-                            >
+                            <div v-if="isDropdownOpen(rowIndex)" class="absolute bottom-0 " :class="getDropdownClasses(rowIndex)">
                               <slot name="actions" :item="item" @click="$emit('click', item)" />
                             </div>
                           </div>
-                          <span v-if="dropdownIndex !== null && dropdownIndex === rowIndex" class="p-1 bg-orange-400 ml-1 rounded">
+                          <span v-if="isDropdownOpen(rowIndex)" class="p-1 bg-orange-400 ml-1 rounded">
                             <svgicon name="left-arrow" style="transform:rotate(180deg)" width="8" />
                           </span>
                         </div>
@@ -166,6 +124,16 @@
 <script>
 import AppPagination from '@/components/Base/AppPagination'
 import AppLoading from '@/components/Base/AppLoading'
+
+const DEFAULT_MIN_HEIGHT = '60vh'
+const DEFAULT_COLUMN_WIDTH = '100px'
+const COMPACT_COLUMN_WIDTH = '50px'
+const CHECKER_SLOT = 'checker'
+const MESSAGE_BUTTON_SLOT = 'messageButton'
+const DROPDOWN_CLASS = 'dropdown'
+const INVOICE_NUMBER_COLUMN = 'Invoice Number'
+const NON_CLICKABLE_STATUS = 'To Be Invoiced'
+const NON_CLICKABLE_TYPE = 'Private'
 
 export default {
   components: {
@@ -237,36 +205,108 @@ export default {
     return {
       params: [],
       dropdownIndex: null
-      // totalPages: 0
     }
   },
 
   computed: {
     totalPages() {
       return Math.ceil(this.total / this.perPage)
+    },
+    tableStyle() {
+      return `min-height: ${this.minHeight ? this.minHeight : DEFAULT_MIN_HEIGHT}`
     }
   },
 
   mounted() {
     this.params = this.orderBy
-    // this.totalPages = Math.ceil(this.total / this.perPage);
   },
 
   methods: {
+    getHeadingClasses(column) {
+      const columnClasses = column.class ? column.class.split(' ') : []
+
+      return [
+        columnClasses.includes('text-center') && 'justify-center text-center',
+        columnClasses.includes('md:text-center') && 'md:justify-center md:text-center',
+        column.class && column.class,
+        column.sortable && 'cursor-pointer'
+      ]
+    },
+    getHeadingStyle(column) {
+      return `min-width: ${this.getColumnMinWidth(column, [CHECKER_SLOT])}; ${this.getColumnMaxWidth(column)}`
+    },
+    getRowStyle() {
+      return `${this.customWidth ? `min-width: ${this.customWidth}px` : ``}`
+    },
+    getRowClasses(item, rowIndex) {
+      return [
+        this.isClickable(item) ? 'cursor-pointer ' : 'opacity-60 cursor-not-allowed',
+        rowIndex % 2 === 0 ? 'stripe-gray' : 'bg-white',
+        rowIndex === this.items.length - 1 ? 'border-b' : ''
+      ]
+    },
+    getRowComponent(item) {
+      return this.isClickable(item) ? 'nuxt-link' : 'div'
+    },
+    getRowBindings(item) {
+      if (!this.isClickable(item)) {
+        return {}
+      }
+
+      return {
+        to: this.getRouterLink(item)
+      }
+    },
+    getRouterLink(item) {
+      if (this.routerLink && {}.toString.call(this.routerLink) === '[object Function]') {
+        return this.routerLink(item)
+      }
+
+      return {
+        path: `${this.routerLink}/${this.routerId ? item[this.routerId] : item.id}`,
+        query: { ...this.$route.query }
+      }
+    },
+    getCellStyle(column, index, rowIndex) {
+      return `min-width: ${this.getColumnMinWidth(column, [CHECKER_SLOT, MESSAGE_BUTTON_SLOT])}; ${this.getColumnMaxWidth(column)}; ${
+        column.dataIndex !== 'actions' ? this.countLines(index, column.width, rowIndex) : ''
+      }`
+    },
+    getColumnMinWidth(column, compactSlots) {
+      return column.slotName && compactSlots.includes(column.slotName) ? COMPACT_COLUMN_WIDTH : DEFAULT_COLUMN_WIDTH
+    },
+    getColumnMaxWidth(column) {
+      return column.width ? `max-width: ${column.width}px` : ''
+    },
+    isDirectActionSlot(column) {
+      return column.slotName === CHECKER_SLOT || column.slotName === MESSAGE_BUTTON_SLOT
+    },
+    isDropdownColumn(column) {
+      return column.class.includes(DROPDOWN_CLASS)
+    },
+    isDropdownOpen(rowIndex) {
+      return this.dropdownIndex !== null && this.dropdownIndex === rowIndex
+    },
+    toggleDropdown(rowIndex) {
+      this.dropdownIndex = this.isDropdownOpen(rowIndex) ? null : rowIndex
+    },
+    getDropdownClasses(rowIndex) {
+      return this.items.length > 1 && this.total > this.perPage - 5 && rowIndex === this.items.length - 1 ? 'dropdown-up' : DROPDOWN_CLASS
+    },
     isClickable(item) {
       if (!this.routerLink) return false
       if (this.routerId && item[this.routerId] === null) return false
 
-      const invoiceCol = this.columns.find(c => c.name === 'Invoice Number')
+      const invoiceCol = this.columns.find(c => c.name === INVOICE_NUMBER_COLUMN)
       if (invoiceCol && this.dataCell(item, invoiceCol) === '(none)') {
         return false
       }
 
       const currentStatus = item.invoice_status || item.status
-      if (currentStatus === 'To Be Invoiced') {
+      if (currentStatus === NON_CLICKABLE_STATUS) {
         return false
       }
-      if (item.type === 'Private') {
+      if (item.type === NON_CLICKABLE_TYPE) {
         return false
       }
       return true

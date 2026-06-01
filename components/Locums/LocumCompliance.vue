@@ -690,6 +690,17 @@
 <script>
 import AppInput from '@/components/Base/AppInput'
 
+const ACCEPTED_COMPLIANCE_FILE_TYPES = [
+  'pdf',
+  'jpeg',
+  'msword',
+  'tiff',
+  'vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'vnd.openxmlformats-officedocument.wordprocessingml.template',
+  'vnd.ms-word.document.macroEnabled.12',
+  'vnd.ms-word.template.macroEnabled.12'
+]
+
 export default {
   components: {
     AppInput
@@ -704,26 +715,13 @@ export default {
 
   data() {
     return {
-      locumUser: {
-        locum_detail: {
-          gmc_or_nmc_number: '',
-          mpl_or_npl_number: ''
-        }
-      },
       referenceCompDocs: null,
 
-      rejectMplNpl: false,
-
-      professionCategoryId: null,
       mandatoryCompDocs: null,
       otherMandatoryCompDocs: null,
       optionalCompDocs: null,
-      // mandatoryComplianceDocuments:[],
-      optionalComplianceDocuments: [],
       locumMandatoryTrainings: [],
-      professionCategory: null,
       disabled: 'true',
-      query: null,
 
       locumReferenceComplianceDocumentIdToRejectId: null,
       selectedComplianceDocumentRejectReasonValue: null,
@@ -737,10 +735,6 @@ export default {
   },
 
   computed: {
-    mandatoryComplianceDocuments() {
-      return this.$store.state.locums.mandatoryComplianceDocuments
-    },
-
     authAdminPermissions() {
       return this.$store.getters['permissions']
     },
@@ -818,18 +812,51 @@ export default {
   },
 
   async created() {
-    // let route = this.$route.params.id
-    // await this.getData()
-    this.query = {
-      ...this.$route.query
-    }
     await this.getCompliances()
   },
 
   methods: {
-    fileChangedHandler() {
-      console.log('fileChangedHandler')
+    isValidComplianceFile(file) {
+      if (!file || !file.type) {
+        return false
+      }
 
+      const fileType = file.type.split('/')[1]
+      return ACCEPTED_COMPLIANCE_FILE_TYPES.includes(fileType)
+    },
+
+    notifyInvalidFileFormat() {
+      this.$store.commit('SET_NOTIFICATION', {
+        enabled: true,
+        status: 'alert',
+        text: 'Invalid File Format'
+      })
+    },
+
+    extractRequestErrorMessage(err) {
+      if (err.response) {
+        return err.response.data.message
+      }
+
+      if (err.request) {
+        return 'Something went wrong!'
+      }
+
+      return err.message
+    },
+
+    formatUploadedAt(docs = []) {
+      return docs.map(doc => ({
+        ...doc,
+        uploaded_at: doc.uploaded_at ? new Date(doc.uploaded_at).toLocaleDateString('en-GB') : null,
+        child_locum_compliance_documents: (doc.child_locum_compliance_documents || []).map(child => ({
+          ...child,
+          uploaded_at: child.uploaded_at ? new Date(child.uploaded_at).toLocaleDateString('en-GB') : null
+        }))
+      }))
+    },
+
+    fileChangedHandler() {
       const inputFile = this.$refs.inputFile
 
       if (!inputFile) {
@@ -844,29 +871,10 @@ export default {
         return
       }
 
-      // vnd.openxmlformats-officedocument.wordprocessingml.document - docx type
-      const types = [
-        'pdf',
-        'jpeg',
-        'msword',
-        'tiff',
-        'vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'vnd.openxmlformats-officedocument.wordprocessingml.template',
-        'vnd.ms-word.document.macroEnabled.12',
-        'vnd.ms-word.template.macroEnabled.12'
-      ]
-
       const file = inputFile.files[0]
 
-      const fileType = file.type.split('/')[1]
-
-      if (!types.includes(fileType)) {
-        this.$store.commit('SET_NOTIFICATION', {
-          enabled: true,
-          status: 'alert',
-          text: 'Invalid File Format'
-        })
-
+      if (!this.isValidComplianceFile(file)) {
+        this.notifyInvalidFileFormat()
         return
       }
 
@@ -882,16 +890,7 @@ export default {
         })
         .catch(err => {
           console.log('err', err.response || err)
-
-          let message = null
-
-          if (err.response) {
-            message = err.response.data.message
-          } else if (err.request) {
-            message = 'Something went wrong!'
-          } else {
-            message = err.message
-          }
+          const message = this.extractRequestErrorMessage(err)
 
           if (message) {
             this.$store.commit('SET_NOTIFICATION', {
@@ -908,8 +907,6 @@ export default {
     },
 
     newFileChangedHandler() {
-      console.log('newFileChangedHandler')
-
       const newInputFile = this.$refs.newInputFile
 
       if (!newInputFile) {
@@ -928,29 +925,10 @@ export default {
         return
       }
 
-      // vnd.openxmlformats-officedocument.wordprocessingml.document - docx type
-      const types = [
-        'pdf',
-        'jpeg',
-        'msword',
-        'tiff',
-        'vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'vnd.openxmlformats-officedocument.wordprocessingml.template',
-        'vnd.ms-word.document.macroEnabled.12',
-        'vnd.ms-word.template.macroEnabled.12'
-      ]
-
       const file = newInputFile.files[0]
 
-      const fileType = file.type.split('/')[1]
-
-      if (!types.includes(fileType)) {
-        this.$store.commit('SET_NOTIFICATION', {
-          enabled: true,
-          status: 'alert',
-          text: 'Invalid File Format'
-        })
-
+      if (!this.isValidComplianceFile(file)) {
+        this.notifyInvalidFileFormat()
         return
       }
 
@@ -970,16 +948,7 @@ export default {
         })
         .catch(err => {
           console.log('err', err.response || err)
-
-          let message = null
-
-          if (err.response) {
-            message = err.response.data.message
-          } else if (err.request) {
-            message = 'Something went wrong!'
-          } else {
-            message = err.message
-          }
+          const message = this.extractRequestErrorMessage(err)
 
           if (message) {
             this.$store.commit('SET_NOTIFICATION', {
@@ -995,80 +964,16 @@ export default {
         })
     },
 
-    getQuery() {
-      const query = {
-        ...this.$route.query
-      }
-      const offset = parseInt(query.page) * 10 - 10
-      return offset
-    },
-
-    async getData() {
-      try {
-        // this.professionCategoryId = this.user.locum_detail.profession.profession_category.id
-        // this.locumMandatoryTrainings = this.user.locum_detail.mandatory_trainings
-        // const proCat = await this.$axios.$get(`/api/v1/admin/profession-categories/${this.professionCategoryId}`).then(res =>{
-        //   this.professionCategory = res.data.profession_category
-        // })
-        // const mandatoryComplianceDocuments = await this.professionCategory.mandatory_compliance_documents.map((mandatoryComplianceDocument)=>{
-        //   const locumMandatoryComplianceDocument = this.user.locum_detail.compliance_documents.find((complianceDocument) => {
-        //     return complianceDocument.compliance_document.id === mandatoryComplianceDocument.id
-        //   })
-        //   return{
-        //     mandatoryComplianceDocument,
-        //     locumMandatoryComplianceDocument
-        //   }
-        // })
-        // this.optionalComplianceDocuments = await this.professionCategory.optional_compliance_documents.map((optionalComplianceDocument)=>{
-        //   const locumOptionalComplianceDocument = this.user.locum_detail.compliance_documents.find((complianceDocument) => {
-        //     return complianceDocument.compliance_document.id === optionalComplianceDocument.id
-        //   })
-        //   return{
-        //     optionalComplianceDocument,
-        //     locumOptionalComplianceDocument
-        //   }
-        // })
-        // const allLocumComplianceDocuments = await this.user.locum_detail.compliance_documents //====> USE THIS FOR LATER AS REPLACEMENT FOR STATE
-        // await this.$store.commit('locums/SET_MANDATORY_DOCS', mandatoryComplianceDocuments)
-        // await this.$store.commit('locums/SET_LOCUM_COMP_DOCS', allLocumComplianceDocuments)
-      } catch (err) {
-        // this.$store.commit('SET_NOTIFICATION',{
-        //   enabled: true,
-        //   status:'danger',
-        //   text:err.response.data.message
-        // })
-        console.log('get data error!!', err)
-      }
-    },
-
     async getCompliances() {
       try {
         this.$emit('loadingCompliances', true)
 
         await this.$axios.$get(`/api/v1/admin/locum-user-compliances/${this.user.id}`).then(res => {
-          const formatUploadedAt = (docs = []) => {
-            return docs.map(doc => ({
-              ...doc,
-
-              uploaded_at: doc.uploaded_at ? new Date(doc.uploaded_at).toLocaleDateString('en-GB') : null,
-
-              child_locum_compliance_documents: (doc.child_locum_compliance_documents || []).map(child => ({
-                ...child,
-
-                uploaded_at: child.uploaded_at ? new Date(child.uploaded_at).toLocaleDateString('en-GB') : null
-              }))
-            }))
-          }
-
-          this.referenceCompDocs = formatUploadedAt(res.data.user.reference_locum_compliance_documents)
-
-          this.mandatoryCompDocs = formatUploadedAt(res.data.user.mandatory_locum_compliance_documents)
-
-          this.otherMandatoryCompDocs = formatUploadedAt(res.data.user.other_mandatory_locum_compliance_documents)
-
-          this.optionalCompDocs = formatUploadedAt(res.data.user.optional_locum_compliance_documents)
-
-          this.locumMandatoryTrainings = formatUploadedAt(res.data.user.locum_mandatory_trainings)
+          this.referenceCompDocs = this.formatUploadedAt(res.data.user.reference_locum_compliance_documents)
+          this.mandatoryCompDocs = this.formatUploadedAt(res.data.user.mandatory_locum_compliance_documents)
+          this.otherMandatoryCompDocs = this.formatUploadedAt(res.data.user.other_mandatory_locum_compliance_documents)
+          this.optionalCompDocs = this.formatUploadedAt(res.data.user.optional_locum_compliance_documents)
+          this.locumMandatoryTrainings = this.formatUploadedAt(res.data.user.locum_mandatory_trainings)
         })
 
         this.$emit('loadingCompliances', false)

@@ -22,55 +22,49 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       complianceReports: [
         {
           title: 'REP-015',
           subtitle: 'Onboarding - Documents Uploaded',
-          url: '/locums/compliance-reports/locum-uploaded-documents',
+          url: '/locums/compliance-reports/locum-uploaded-documents'
         },
         {
           title: 'REP-016',
           subtitle: 'Expiry Report',
-          url: '/locums/compliance-reports/locum-expiring-compliance-documents',
+          url: '/locums/compliance-reports/locum-expiring-compliance-documents'
         },
         {
           title: 'REP-017',
           subtitle: 'Locum Lead Time for Compliance Completed',
-          url: '/locums/compliance-reports/locum-completed-compliances',
-        },
-        // {
-        //   title: 'REP-018',
-        //   subtitle: 'Practice Lead Time for Activation',
-        //   url: '/locums/compliance-reports/activated-practices',
-        // },
-      ],
+          url: '/locums/compliance-reports/locum-completed-compliances'
+        }
+      ]
     }
   },
-  computed : {
-    authAdminPermissions () {
-			return this.$store.getters["permissions"]
-    },
+  computed: {
+    authAdminPermissions() {
+      return this.$store.getters['permissions']
+    }
   },
-  async asyncData ({ store, error }) {
+  async asyncData({ store, error }) {
     try {
-      const authAdminPermissions = store.getters["permissions"]
+      const authAdminPermissions = store.getters['permissions']
 
       if (authAdminPermissions.includes('View Reports') === false) {
         error({
           statusCode: 403,
-          message: 'You are not authorized to view this page.',
+          message: 'You are not authorized to view this page.'
         })
         return
       }
-
-    } catch(err) {
+    } catch (err) {
       error({ statusCode: 404 })
-      store.commit("SET_NOTIFICATION", {
+      store.commit('SET_NOTIFICATION', {
         enabled: true,
-        status: "danger",
-        text: "Something went wrong!"
+        status: 'danger',
+        text: 'Something went wrong!'
       })
     }
   }

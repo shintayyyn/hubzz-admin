@@ -1,118 +1,67 @@
 <template>
   <div class="flex flex-row justify-start overflow-x-auto border-b border-gray-500 mb-4 pt-1">
     <nuxt-link
-      :to="`/locums/${$route.params.id}/locum-jobs/locum-allocated-jobs`"
+      v-for="tab in tabs"
+      :key="tab.slug"
+      :to="tabTo(tab)"
       class="md:mr-3 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
-      style="display: flex; min-width: 80px; max-width: 250px; justify-content: center;"
-      :class="$route.path.startsWith(`/locums/${$route.params.id}/locum-jobs/locum-allocated-jobs`) ? 'border-b-4 border-gray-500' : 'text-gray-600'"
+      :style="tabStyle"
+      :class="isActiveTab(tab.slug) ? 'border-b-4 border-gray-500' : 'text-gray-600'"
     >
-      Allocated
+      {{ tab.label }}
     </nuxt-link>
-    <!-- Ongoing job is a job of the locum that has not yet started -->
-
-    <nuxt-link
-      :to="`/locums/${$route.params.id}/locum-jobs/locum-ongoing-jobs`"
-      class="md:mr-3 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
-      style="display: flex; min-width: 80px; max-width: 250px; justify-content: center;"
-      :class="$route.path.startsWith(`/locums/${$route.params.id}/locum-jobs/locum-ongoing-jobs`) ? 'border-b-4 border-gray-500' : 'text-gray-600'"
-    >
-      Ongoing
-    </nuxt-link>
-
-    <nuxt-link
-      :to="getRoute('locum-available-jobs')"
-      class="md:mr-3 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
-      style="display: flex; min-width: 80px; max-width: 250px; justify-content: center;"
-      :class="$route.path.startsWith(`/locums/${$route.params.id}/locum-jobs/locum-available-jobs`) ? 'border-b-4 border-gray-500' : 'text-gray-600'"
-    >
-      Available
-    </nuxt-link>
-
-    <nuxt-link
-      :to="getRoute('locum-applied-jobs')"
-      class="md:mr-3 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
-      style="display: flex; min-width: 80px; max-width: 250px; justify-content: center;"
-      :class="$route.path.startsWith(`/locums/${$route.params.id}/locum-jobs/locum-applied-jobs`) ? 'border-b-4 border-gray-500' : 'text-gray-600'"
-    >
-      Applied
-    </nuxt-link>
-
-    <nuxt-link
-      :to="getRoute('locum-cancelled-jobs')"
-      class="md:mr-3 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
-      style="display: flex; min-width: 80px; max-width: 250px; justify-content: center;"
-      :class="$route.path.startsWith(`/locums/${$route.params.id}/locum-jobs/locum-cancelled-jobs`) ? 'border-b-4 border-gray-500' : 'text-gray-600'"
-    >
-      Cancelled
-    </nuxt-link>
-
-    <nuxt-link
-      :to="getRoute('locum-unsuccessful-jobs')"
-      class="md:mr-3 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
-      style="display: flex; min-width: 80px; max-width: 250px; justify-content: center;"
-      :class="
-        $route.path.startsWith(`/locums/${$route.params.id}/locum-jobs/locum-unsuccessful-jobs`) ? 'border-b-4 border-gray-500' : 'text-gray-600'
-      "
-    >
-      Unsuccessful
-    </nuxt-link>
-
-    <nuxt-link
-      :to="getRoute('locum-withdrawn-jobs')"
-      class="md:mr-3 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
-      style="display: flex; min-width: 80px; max-width: 250px; justify-content: center;"
-      :class="$route.path.startsWith(`/locums/${$route.params.id}/locum-jobs/locum-withdrawn-jobs`) ? 'border-b-4 border-gray-500' : 'text-gray-600'"
-    >
-      Withdrawn
-    </nuxt-link>
-
-    <nuxt-link
-      :to="getRoute('locum-completed-jobs')"
-      class="md:mr-3 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
-      style="display: flex; min-width: 80px; max-width: 250px; justify-content: center;"
-      :class="$route.path.startsWith(`/locums/${$route.params.id}/locum-jobs/locum-completed-jobs`) ? 'border-b-4 border-gray-500' : 'text-gray-600'"
-    >
-      Completed
-    </nuxt-link>
-
-    <nuxt-link
-      :to="getRoute('locum-approved-jobs')"
-      class="md:mr-3 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
-      style="display: flex; min-width: 80px; max-width: 250px; justify-content: center;"
-      :class="$route.path.startsWith(`/locums/${$route.params.id}/locum-jobs/locum-approved-jobs`) ? 'border-b-4 border-gray-500' : 'text-gray-600'"
-    >
-      Approved
-    </nuxt-link>
-
-    <!-- <nuxt-link
-      :to="getRoute('locum-withrawn-jobs')"
-      class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
-      :class="$route.path === `/locums/${$route.params.id}/locum-jobs/locum-withrawn-jobs` ? 'border-b-4 border-gray-500' : 'text-gray-600'"
-    >
-      Withrawn
-    </nuxt-link> -->
   </div>
 </template>
 
 <script>
 export default {
   computed: {
-    getRoute() {
-      return tab => {
-        if (!tab) {
-          tab = ''
-        }
+    tabs() {
+      return [
+        { label: 'Allocated', slug: 'locum-allocated-jobs', keepQuery: false },
+        { label: 'Ongoing', slug: 'locum-ongoing-jobs', keepQuery: false },
+        { label: 'Available', slug: 'locum-available-jobs', keepQuery: true },
+        { label: 'Applied', slug: 'locum-applied-jobs', keepQuery: true },
+        { label: 'Cancelled', slug: 'locum-cancelled-jobs', keepQuery: true },
+        { label: 'Unsuccessful', slug: 'locum-unsuccessful-jobs', keepQuery: true },
+        { label: 'Withdrawn', slug: 'locum-withdrawn-jobs', keepQuery: true },
+        { label: 'Completed', slug: 'locum-completed-jobs', keepQuery: true },
+        { label: 'Approved', slug: 'locum-approved-jobs', keepQuery: true }
+      ]
+    },
 
-        const query = {
-          ...this.$route.query
-        }
+    tabStyle() {
+      return 'display: flex; min-width: 80px; max-width: 250px; justify-content: center;'
+    },
 
-        delete query.order_by
+    baseLocumJobsPath() {
+      return `/locums/${this.$route.params.id}/locum-jobs`
+    }
+  },
 
-        return {
-          path: `/locums/${this.$route.params.id}/locum-jobs/${tab}`,
-          query
-        }
+  methods: {
+    tabPath(slug) {
+      return `${this.baseLocumJobsPath}/${slug || ''}`
+    },
+
+    isActiveTab(slug) {
+      return this.$route.path.startsWith(this.tabPath(slug))
+    },
+
+    tabTo(tab) {
+      if (!tab.keepQuery) {
+        return this.tabPath(tab.slug)
+      }
+
+      const query = {
+        ...this.$route.query
+      }
+
+      delete query.order_by
+
+      return {
+        path: this.tabPath(tab.slug),
+        query
       }
     }
   }

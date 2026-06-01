@@ -10,17 +10,17 @@
           <div class="flex items-center">
             <!-- <div class="px-2 font-bold text-lg hover:text-black-500 cursor-pointer" @click="$emit('close')">x</div> -->
             <svgicon
-              v-if="conversation_id || profileOption"
+              v-if="hasDropdownMenu"
               name="menu"
               height="24"
               width="24"
               class="cursor-pointer fill-current p-1"
-              @click="showDropDown = !showDropDown"
+              @click="toggleDropDown"
             />
             <div
-              v-if="!conversation_id && !profileOption"
+              v-if="showCloseButton"
               class="font-bold text-lg px-2 cursor-pointer hover:text-yellow-500"
-              @click="$emit('close')"
+              @click="handleClose"
             >
               x
             </div>
@@ -28,17 +28,17 @@
         </div>
 
         <div class="relative">
-          <MessagesCenterPanelForm :messageModal="true" :wrapperClass="'flex-col custom'" :inClass="'min-height'" :user="user" />
+          <MessagesCenterPanelForm messageModal wrapperClass="flex-col custom" inClass="min-height" :user="user" />
 
           <transition name="drop-down">
             <ul v-if="showDropDown" class="absolute right-0 top-0 bg-white border-b border-l border-r text-sm">
               <li v-if="conversation_id" class="hover:bg-yellow-500 cursor-pointer px-3 py-1" @click="openConversation">
                 Conversation
               </li>
-              <li v-if="profileOption" class="hover:bg-yellow-500 cursor-pointer px-3 py-1" @click="$emit('showProfile'), $emit('close')">
+              <li v-if="profileOption" class="hover:bg-yellow-500 cursor-pointer px-3 py-1" @click="openProfile">
                 Profile
               </li>
-              <li class="hover:bg-gray-300 cursor-pointer px-3 py-1 border-t" @click="$emit('close'), (showDropDown = false)">
+              <li class="hover:bg-gray-300 cursor-pointer px-3 py-1 border-t" @click="closeDropDownAndModal">
                 Close
               </li>
             </ul>
@@ -81,6 +81,16 @@ export default {
     }
   },
 
+  computed: {
+    hasDropdownMenu() {
+      return this.conversation_id || this.profileOption
+    },
+
+    showCloseButton() {
+      return !this.conversation_id && !this.profileOption
+    }
+  },
+
   created() {
     this.showDropDown = false
     this.$axios.$get(`/api/v1/conversations?user_id=${this.user.id}`).then(res => {
@@ -92,6 +102,24 @@ export default {
     })
   },
   methods: {
+    handleClose() {
+      this.$emit('close')
+    },
+
+    toggleDropDown() {
+      this.showDropDown = !this.showDropDown
+    },
+
+    openProfile() {
+      this.$emit('showProfile')
+      this.$emit('close')
+    },
+
+    closeDropDownAndModal() {
+      this.$emit('close')
+      this.showDropDown = false
+    },
+
     openConversation() {
       if (this.conversation_id) {
         this.$router.push(`/messages/${this.conversation_id}`)

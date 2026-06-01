@@ -13,13 +13,15 @@
     <transition name="drop" mode="out-in">
       <AppConfirm
         v-if="showRejectDeleteAccountRequestModal"
-        :message="rejectingDeleteLocumAccountRequest ? 'Rejecting delete request....' : 'Are you sure you want to reject this delete account request?'"
+        :message="
+          rejectingDeleteLocumAccountRequest ? 'Rejecting delete request....' : 'Are you sure you want to reject this delete account request?'
+        "
         :loading="rejectingDeleteLocumAccountRequest"
         @cancel="showRejectDeleteAccountRequestModal = false"
         @confirm="rejectDeleteLocumAccountRequest()"
       />
     </transition>
-    
+
     <transition name="drop" mode="out-in">
       <AppConfirm
         v-if="showDeactivateModal"
@@ -29,7 +31,7 @@
         @confirm="deactivateLocumAccount()"
       />
     </transition>
-    
+
     <transition name="drop" mode="out-in">
       <AppConfirm
         v-if="showReactivateModal"
@@ -39,7 +41,7 @@
         @confirm="reactivateLocumAccount()"
       />
     </transition>
-    
+
     <transition name="fade" mode="out-in">
       <div v-if="showDeleteModal || showRejectDeleteAccountRequestModal || showDeactivateModal || showReactivateModal" class="shield" />
     </transition>
@@ -49,7 +51,7 @@
         v-if="confirmBogus"
         :message="'Are you sure you want to mark this Locum as Bogus?'"
         @cancel="confirmBogus = false"
-        @confirm="changeLocumUserStatus(user.id,'Bogus')"
+        @confirm="changeLocumUserStatus(user.id, 'Bogus')"
       />
     </transition>
 
@@ -65,81 +67,54 @@
             <p class="mt-2">
               Name
             </p>
-            <p
-              class="font-bold pl-2"
-              :class="!user.personal_detail.name && 'opacity-75'"
-            >
+            <p class="font-bold pl-2" :class="!user.personal_detail.name && 'opacity-75'">
               {{ user.personal_detail.name ? user.personal_detail.name : 'N/A' }}
             </p>
 
             <p class="mt-2">
               Email address
             </p>
-            <p
-              class="font-bold pl-2"
-              :class="!user.email && 'opacity-75'"
-            >
+            <p class="font-bold pl-2" :class="!user.email && 'opacity-75'">
               {{ user.email ? user.email : 'N/A' }}
             </p>
 
             <p class="mt-2">
               Mobile Number
             </p>
-            <p
-              class="font-bold pl-2"
-              :class="!user.contact_detail.mobile_number && 'opacity-75'"
-            >
+            <p class="font-bold pl-2" :class="!user.contact_detail.mobile_number && 'opacity-75'">
               {{ user.contact_detail && user.contact_detail.mobile_number ? user.contact_detail.mobile_number : 'N/A' }}
             </p>
 
             <p class="mt-2">
               Home Number
             </p>
-            <p
-              class="font-bold pl-2"
-              :class="!user.contact_detail.home_number && 'opacity-75'"
-            >
+            <p class="font-bold pl-2" :class="!user.contact_detail.home_number && 'opacity-75'">
               {{ user.contact_detail && user.contact_detail.home_number ? user.contact_detail.home_number : 'N/A' }}
             </p>
 
             <p class="mt-2">
               Work Number
             </p>
-            <p
-              class="font-bold pl-2"
-              :class="!user.contact_detail.work_number && 'opacity-75'"
-            >
+            <p class="font-bold pl-2" :class="!user.contact_detail.work_number && 'opacity-75'">
               {{ user.contact_detail && user.contact_detail.work_number ? user.contact_detail.work_number : 'N/A' }}
             </p>
 
             <p class="mt-2">
               Postal Code
             </p>
-            <p
-              class="font-bold pl-2"
-              :class="!user.address_detail && 'opacity-75'"
-            >
+            <p class="font-bold pl-2" :class="!user.address_detail && 'opacity-75'">
               {{ user.address_detail && user.address_detail.address.post_code ? user.address_detail.address.post_code : 'N/A' }}
             </p>
             <p class="mt-2">
               Postal Address
             </p>
-            <p
-              class="font-bold pl-2"
-              :class="!user.address_detail.address.line_1 && 'opacity-75'"
-            >
+            <p class="font-bold pl-2" :class="!user.address_detail.address.line_1 && 'opacity-75'">
               {{ user.address_detail ? user.address_detail.address.line_1 : 'N/A' }}
             </p>
-            <p
-              class="font-bold pl-2"
-              :class="!user.address_detail.address.line_2 && 'opacity-75'"
-            >
+            <p class="font-bold pl-2" :class="!user.address_detail.address.line_2 && 'opacity-75'">
               {{ user.address_detail ? user.address_detail.address.line_2 : 'N/A' }}
             </p>
-            <p
-              class="font-bold pl-2"
-              :class="!user.address_detail.address.line_3 && 'opacity-75'"
-            >
+            <p class="font-bold pl-2" :class="!user.address_detail.address.line_3 && 'opacity-75'">
               {{ user.address_detail ? user.address_detail.address.line_3 : 'N/A' }}
             </p>
 
@@ -150,7 +125,7 @@
               <p class="mt-2">
                 {{ referenceLocumComplianceDocument.compliance_document_name }}
               </p>
-              
+
               <p class="font-bold pl-2" :class="!referenceLocumComplianceDocument.reference && 'opacity-75'">
                 {{ referenceLocumComplianceDocument.reference ? referenceLocumComplianceDocument.reference : 'N/A' }}
               </p>
@@ -160,20 +135,14 @@
               <p class="mt-2">
                 GMC / NMC Number
               </p>
-              <p
-                class="font-bold pl-2"
-                :class="!locumDetails.gmc_or_nmc_number && 'opacity-75'"
-              >
+              <p class="font-bold pl-2" :class="!locumDetails.gmc_or_nmc_number && 'opacity-75'">
                 {{ locumDetails.gmc_or_nmc_number ? locumDetails.gmc_or_nmc_number.number : 'N/A' }}
               </p>
 
               <p class="mt-2">
                 MPL / NPL Number
               </p>
-              <p
-                class="font-bold pl-2"
-                :class="!locumDetails.mpl_or_npl_number && 'opacity-75'"
-              >
+              <p class="font-bold pl-2" :class="!locumDetails.mpl_or_npl_number && 'opacity-75'">
                 {{ locumDetails.mpl_or_npl_number ? locumDetails.mpl_or_npl_number.number : 'N/A' }}
               </p>
             </template>
@@ -181,30 +150,21 @@
             <p class="mt-2">
               NI Number
             </p>
-            <p
-              class="font-bold pl-2"
-              :class="!locumDetails.ni_number && 'opacity-75'"
-            >
+            <p class="font-bold pl-2" :class="!locumDetails.ni_number && 'opacity-75'">
               {{ locumDetails.ni_number ? locumDetails.ni_number : 'N/A' }}
             </p>
 
             <p class="mt-2">
               NHS Smart Card ID Number
             </p>
-            <p
-              class="font-bold pl-2"
-              :class="!locumDetails.nhs_smart_card_id_number && 'opacity-75'"
-            >
+            <p class="font-bold pl-2" :class="!locumDetails.nhs_smart_card_id_number && 'opacity-75'">
               {{ locumDetails.nhs_smart_card_id_number ? locumDetails.nhs_smart_card_id_number : 'N/A' }}
             </p>
 
             <p class="mt-2">
               Profession
             </p>
-            <p
-              class="font-bold pl-2"
-              :class="!locumDetails.profession && 'opacity-75'"
-            >
+            <p class="font-bold pl-2" :class="!locumDetails.profession && 'opacity-75'">
               {{ locumDetails.profession ? locumDetails.profession.name : 'N/A' }}
             </p>
 
@@ -217,7 +177,7 @@
               :class="!user.locum_detail.qualifications && 'opacity-75'"
               class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-500"
             >
-              {{ specialty ? specialty.name:'N/A' }}
+              {{ specialty ? specialty.name : 'N/A' }}
             </p>
             <p v-if="!user.locum_detail.qualifications.length" class="font-bold pl-2">
               N/A
@@ -231,7 +191,7 @@
               class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-500"
               :class="!user.locum_detail.clinical_systems && 'opacity-75'"
             >
-              {{ clinicalSystem ? clinicalSystem.name:'N/A' }}
+              {{ clinicalSystem ? clinicalSystem.name : 'N/A' }}
             </p>
             <p v-if="!user.locum_detail.clinical_systems.length" class="font-bold pl-2">
               N/A
@@ -249,7 +209,7 @@
               class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-500"
               :class="!user.locum_detail.spoken_languages && 'opacity-75'"
             >
-              {{ spokenLanguage ? spokenLanguage.name:'N/A' }}
+              {{ spokenLanguage ? spokenLanguage.name : 'N/A' }}
             </p>
           </div>
         </div>
@@ -261,33 +221,24 @@
               Headline
             </p>
 
-            <p
-              class="font-bold pl-2"
-              :class="!user.locum_detail.headline && 'opacity-75'"
-            >
-              {{ user.locum_detail.headline?user.locum_detail.headline:'N/A' }}
+            <p class="font-bold pl-2" :class="!user.locum_detail.headline && 'opacity-75'">
+              {{ user.locum_detail.headline ? user.locum_detail.headline : 'N/A' }}
             </p>
-            
+
             <p class="mt-2">
               Biography
             </p>
 
-            <p
-              class="font-bold pl-2"
-              :class="!user.locum_detail.short_biography && 'opacity-75'"
-            >
-              {{ user.locum_detail.short_biography?user.locum_detail.short_biography:'N/A' }}
+            <p class="font-bold pl-2" :class="!user.locum_detail.short_biography && 'opacity-75'">
+              {{ user.locum_detail.short_biography ? user.locum_detail.short_biography : 'N/A' }}
             </p>
 
             <p class="mt-2">
               Special requirements
             </p>
 
-            <p
-              class="font-bold pl-2"
-              :class="!user.locum_detail.special_requirements && 'opacity-75'"
-            >
-              {{ user.locum_detail.special_requirements?user.locum_detail.special_requirements:'N/A' }}
+            <p class="font-bold pl-2" :class="!user.locum_detail.special_requirements && 'opacity-75'">
+              {{ user.locum_detail.special_requirements ? user.locum_detail.special_requirements : 'N/A' }}
             </p>
 
             <p class="mt-2">
@@ -295,7 +246,7 @@
             </p>
 
             <p
-              v-for="rate in (user.locum_detail && user.locum_detail.rates ? user.locum_detail.rates : [])"
+              v-for="rate in user.locum_detail && user.locum_detail.rates ? user.locum_detail.rates : []"
               :key="`rates-${rate.id}`"
               class="font-bold pl-2"
             >
@@ -319,13 +270,11 @@
                   class="-300 flex items-center"
                   :class="authAdminPermissions.includes('Download Locum Compliance Documents') ? 'cursor-pointer hover:text-yellow-500' : ''"
                   title="Click to download"
-                  @click.prevent="downloadItem(userComplianceDoc.file.url,userComplianceDoc.file.filename)"
+                  @click.prevent="downloadItem(userComplianceDoc.file.url, userComplianceDoc.file.filename)"
                 >
                   <svgicon name="cloud-download" width="21" height="21" />
 
-                  <span
-                    class="w-full pl-2 leading-tight"
-                  >{{ userComplianceDoc.file ? userComplianceDoc.compliance_document.name:null }}</span>
+                  <span class="w-full pl-2 leading-tight">{{ userComplianceDoc.file ? userComplianceDoc.compliance_document.name : null }}</span>
                 </a>
               </div>
             </div>
@@ -335,10 +284,7 @@
                 Mandatory Training Documents
               </p>
 
-              <span
-                v-if="!userMandatoryTrainings.length"
-                class="opacity-75 pl-2"
-              >No Mandatory Training Documents</span>
+              <span v-if="!userMandatoryTrainings.length" class="opacity-75 pl-2">No Mandatory Training Documents</span>
 
               <div
                 v-for="(userMandatoryTraining, index) in user.locum_detail.mandatory_trainings"
@@ -350,18 +296,18 @@
                   class="-300 flex items-center cursor-pointer hover:text-yellow-500"
                   :class="authAdminPermissions.includes('Download Locum Compliance Documents') ? 'cursor-pointer hover:text-yellow-500' : ''"
                   title="Click to download"
-                  @click.prevent="downloadItem(userMandatoryTraining.file.url,userMandatoryTraining.file.filename)"
+                  @click.prevent="downloadItem(userMandatoryTraining.file.url, userMandatoryTraining.file.filename)"
                 >
                   <svgicon name="cloud-download" width="21" height="21" />
-                  
-                  <span
-                    class="w-full pl-2 leading-tight"
-                  >{{ userMandatoryTraining.mandatory_training && userMandatoryTraining.file ? userMandatoryTraining.mandatory_training.name:null }}</span>
+
+                  <span class="w-full pl-2 leading-tight">{{
+                    userMandatoryTraining.mandatory_training && userMandatoryTraining.file ? userMandatoryTraining.mandatory_training.name : null
+                  }}</span>
                 </a>
               </div>
             </div>
 
-            <br>
+            <br />
 
             <div>
               <p class="mt-2">
@@ -370,21 +316,21 @@
               <p class="font-bold pl-2" :class="!user.memorable_word_category_name && 'opacity-75'">
                 {{ user.memorable_word_category_name ? user.memorable_word_category_name : 'N/A' }}
               </p>
-  
+
               <p class="mt-2">
                 Memorable word
               </p>
               <p class="font-bold pl-2" :class="!user.memorable_word && 'opacity-75'">
                 {{ user.memorable_word ? user.memorable_word : 'N/A' }}
               </p>
-  
+
               <p class="mt-2">
                 Memorable date
               </p>
               <p class="font-bold pl-2" :class="!user.memorable_date && 'opacity-75'">
                 {{ user.memorable_date ? $moment(user.memorable_date, 'YYYY-MM-DD').format('DD/MM/YYYY') : 'N/A' }}
               </p>
-  
+
               <p class="mt-2">
                 Memorable 6 digit number
               </p>
@@ -398,23 +344,13 @@
         <!--COLUMN 3-->
         <div class="flex flex-col order-1 md:order-3 w-full md:w-1/3 overflow-hidden md:mb-2 md:px-4">
           <div class="mx-3 md:my-6 border-b text-center pb-3">
-            <AppAvatar
-              v-if="user.avatar"
-              class="m-auto"
-              :src="user && user.avatar ? user.avatar.file.url:null"
-            />
-            <img
-              v-else
-              class="w-48 rounded-full mx-auto"
-              src="~/assets/images/default-user-image.png"
-            >
+            <AppAvatar v-if="user.avatar" class="m-auto" :src="user && user.avatar ? user.avatar.file.url : null" />
+            <img v-else class="w-48 rounded-full mx-auto" src="~/assets/images/default-user-image.png" />
             <p class="m-2 ">
               Sign-up verified by email
             </p>
-            <p
-              class="mx-4 font-semibold"
-            >
-              {{ user.is_email_verified ? "Account is E-Mail Verified":"Account is not E-Mail Verified" }}
+            <p class="mx-4 font-semibold">
+              {{ user.is_email_verified ? 'Account is E-Mail Verified' : 'Account is not E-Mail Verified' }}
             </p>
             <!-- <p class="m-2 ">Active at </p> -->
             <div class="my-4">
@@ -481,39 +417,21 @@
               data-tip="Locum is automatically 'Active' once passed the Verification Process. You cannot set the Locum to 'Active' if the Locum is not Compliant."
               tabindex="1"
             >
-              <svgicon
-                name="info"
-                width="21"
-                height="21"
-                color="white transparent black"
-                class="-mb-1 ml-2"
-              />
+              <svgicon name="info" width="21" height="21" color="white transparent black" class="-mb-1 ml-2" />
             </span>
             <div class="flex flex-row justify-center items-center">
               <div class="w-full mx-2">
-                <AppInput
-                  v-model="selectedStatus"
-                  :type="'select'"
-                  :name="'status'"
-                  :placeholder="'Select...'"
-                  :items="locumStatusChoices"
-                />
+                <AppInput v-model="selectedStatus" :type="'select'" :name="'status'" :placeholder="'Select...'" :items="locumStatusChoices" />
               </div>
               <div class="mt-12 mx-2">
-                <AppButton :label="'Save'" @click="changeLocumUserStatus(user.id,selectedStatus)" />
+                <AppButton :label="'Save'" @click="changeLocumUserStatus(user.id, selectedStatus)" />
               </div>
             </div>
           </div>
 
           <!-- HUBZZ PRACTICE NOTES -->
           <div class="m-4">
-            <AppInput
-              v-model="hubzzLocumNotes"
-              :type="'textarea'"
-              :name="'hubzz_locum_notes'"
-              :label="'Notes'"
-              :resize="false"
-            />
+            <AppInput v-model="hubzzLocumNotes" :type="'textarea'" :name="'hubzz_locum_notes'" :label="'Notes'" :resize="false" />
             <AppButton :label="'Save Notes'" class="mx-1" @click="toPutHubzzLocumNotes" />
           </div>
         </div>
@@ -523,428 +441,418 @@
 </template>
 
 <script>
-  import AppInput from "@/components/Base/AppInput"
-  import AppButton from "@/components/Base/AppButton"
-  import AppConfirm from "@/components/Base/AppConfirm"
-  import AppAvatar from "@/components/Base/AppAvatar"
-  export default {
-    components: {
-      AppButton,
-      AppInput,
-      AppConfirm,
-      AppAvatar,
+import AppInput from '@/components/Base/AppInput'
+import AppButton from '@/components/Base/AppButton'
+import AppConfirm from '@/components/Base/AppConfirm'
+import AppAvatar from '@/components/Base/AppAvatar'
+
+const LOCUM_NOTIFICATION_EVENTS = [
+  'Admin Notification Locum Deactivated',
+  'Admin Notification Locum Deactivated By Admin',
+  'Admin Notification Locum Reactivated',
+  'Admin Notification Locum Reactivated By Admin',
+  'Admin Notification Locum Account Delete Requested',
+  'Admin Notification Locum Account Delete Request Cancelled',
+  'Admin Notification Locum Deleted'
+]
+
+export default {
+  components: {
+    AppButton,
+    AppInput,
+    AppConfirm,
+    AppAvatar
+  },
+
+  props: {
+    user: {
+      type: Object,
+      default: () => null
+    }
+  },
+
+  data() {
+    return {
+      showDeleteModal: false,
+      showRejectDeleteAccountRequestModal: false,
+      showDeactivateModal: false,
+      showReactivateModal: false,
+
+      deletingLocum: false,
+      rejectingDeleteLocumAccountRequest: false,
+      deactivatingLocum: false,
+      reactivatingLocum: false,
+
+      confirmBogus: false,
+
+      locumDetails: '',
+
+      selectedStatus: '',
+      userComplianceDocuments: [],
+      userMandatoryTrainings: [],
+
+      hubzzLocumNotes: ''
+    }
+  },
+
+  computed: {
+    authAdminPermissions() {
+      return this.$store.getters['permissions']
     },
 
-    props: {
-      user: {
-        type: Object,
-        default: () => null,
+    locumStatusChoices() {
+      if (!this.user || this.user.status === 'Deleted') {
+        return []
       }
-    },
 
-    data () {
-      return {
-        disabled: "true",
-
-        showDeleteModal: false,
-        showRejectDeleteAccountRequestModal: false,
-        showDeactivateModal: false,
-        showReactivateModal: false,
-
-        deletingLocum: false,
-        rejectingDeleteLocumAccountRequest: false,
-        deactivatingLocum: false,
-        reactivatingLocum: false,
-
-        confirmBogus: false,
-
-        locumDetails: "",
-
-        selectedStatus: "",
-        profileTab: true,
-        jobTab: false,
-
-        userComplianceDocuments: [],
-        userCurrentJobs: [],
-        qualifications: [],
-        clinicalSystems: [],
-        spokenLanguages: [],
-        specificLocumCompDocs: [],
-        userMandatoryTrainings: [],
-
-        hubzzLocumNotes: '',
-      }
-    },
-    
-    computed: {
-      authAdminPermissions () {
-        return this.$store.getters["permissions"]
-      },
-
-      locumStatusChoices () {
-        if (!this.user || this.user.status === 'Deleted') {
-          return []
-        }
-
-        if (this.user.status === 'Active' || this.user.status === 'Dormant') {
-          const locumStatusChoices = [
-            {
-              label: 'Inactive',
-              value: 'Inactive',
-            },
-            {
-              label: 'Bogus',
-              value: 'Bogus',
-            },
-            {
-              label: 'Account Suspension',
-              value: 'Account Suspension',
-            },
-          ]
-          return locumStatusChoices
-        }
-
-        if (
-          this.user.status === 'Compliance Suspension' 
-          && (this.user.compliance_status === 'Compliant' || this.user.compliance_status === 'Expiring')
-        ) {
-          const locumStatusChoices = [
-            {
-              label: 'Active',
-              value: 'Active',
-            },
-            {
-              label: 'Inactive',
-              value: 'Inactive',
-            },
-            {
-              label: 'Bogus',
-              value: 'Bogus',
-            },
-            {
-              label: 'Account Suspension',
-              value: 'Account Suspension',
-            },
-          ]
-
-          return locumStatusChoices
-        }
-        
-        if (
-          this.user.status === 'Compliance Suspension' 
-          && (this.user.compliance_status !== 'Compliant' || this.user.compliance_status !== 'Expiring')
-        ) {
-          const locumStatusChoices = [
-            {
-              label: 'Inactive',
-              value: 'Inactive',
-            },
-            {
-              label: 'Bogus',
-              value: 'Bogus',
-            },
-            {
-              label: 'Account Suspension',
-              value: 'Account Suspension',
-            },
-          ]
-
-          return locumStatusChoices
-        }
-
-        if (this.user.status === 'Bogus') {
-          const locumStatusChoices = [
-            {
-              label: 'Active',
-              value: 'Active',
-            },
-            {
-              label: 'Inactive',
-              value: 'Inactive',
-            },
-          ]
-
-          return locumStatusChoices
-        }
-
+      if (this.user.status === 'Active' || this.user.status === 'Dormant') {
         const locumStatusChoices = [
           {
-            label: 'Active',
-            value: 'Active',
+            label: 'Inactive',
+            value: 'Inactive'
           },
           {
             label: 'Bogus',
-            value: 'Bogus',
+            value: 'Bogus'
           },
+          {
+            label: 'Account Suspension',
+            value: 'Account Suspension'
+          }
         ]
         return locumStatusChoices
-      },
-      
-    },
+      }
 
-    watch: {
-      locumStatusChoices () {
-        this.selectedStatus = ''
-      },
-    },
+      if (
+        this.user.status === 'Compliance Suspension' &&
+        (this.user.compliance_status === 'Compliant' || this.user.compliance_status === 'Expiring')
+      ) {
+        const locumStatusChoices = [
+          {
+            label: 'Active',
+            value: 'Active'
+          },
+          {
+            label: 'Inactive',
+            value: 'Inactive'
+          },
+          {
+            label: 'Bogus',
+            value: 'Bogus'
+          },
+          {
+            label: 'Account Suspension',
+            value: 'Account Suspension'
+          }
+        ]
 
-    created () {
-      console.log("locum", this.user)
-      this.locumDetails = this.user.locum_detail
-      this.userComplianceDocuments = this.user.locum_detail.compliance_documents
-      this.qualifications = this.user.locum_detail.qualifications
-      this.clinicalSystems = this.user.locum_detail.clinical_systems
-      this.spokenLanguages = this.user.locum_detail.spoken_languages
-      this.hubzzLocumNotes = this.user.hubzz_locum_notes
-    },
+        return locumStatusChoices
+      }
 
-    mounted () {
-      this.$socket.on('Admin Notification Locum Deactivated', this.emitUpdateLocumUsers)
-      this.$socket.on('Admin Notification Locum Deactivated By Admin', this.emitUpdateLocumUsers)
-      this.$socket.on('Admin Notification Locum Reactivated', this.emitUpdateLocumUsers)
-      this.$socket.on('Admin Notification Locum Reactivated By Admin', this.emitUpdateLocumUsers)
-      this.$socket.on('Admin Notification Locum Account Delete Requested', this.emitUpdateLocumUsers)
-      this.$socket.on('Admin Notification Locum Account Delete Request Cancelled', this.emitUpdateLocumUsers)
-      this.$socket.on('Admin Notification Locum Deleted', this.emitUpdateLocumUsers)
-    },
+      if (
+        this.user.status === 'Compliance Suspension' &&
+        (this.user.compliance_status !== 'Compliant' || this.user.compliance_status !== 'Expiring')
+      ) {
+        const locumStatusChoices = [
+          {
+            label: 'Inactive',
+            value: 'Inactive'
+          },
+          {
+            label: 'Bogus',
+            value: 'Bogus'
+          },
+          {
+            label: 'Account Suspension',
+            value: 'Account Suspension'
+          }
+        ]
 
-    destroyed () {
-      this.$socket.removeListener('Admin Notification Locum Deactivated', this.emitUpdateLocumUsers)
-      this.$socket.removeListener('Admin Notification Locum Deactivated By Admin', this.emitUpdateLocumUsers)
-      this.$socket.removeListener('Admin Notification Locum Reactivated', this.emitUpdateLocumUsers)
-      this.$socket.removeListener('Admin Notification Locum Reactivated By Admin', this.emitUpdateLocumUsers)
-      this.$socket.removeListener('Admin Notification Locum Account Delete Requested', this.emitUpdateLocumUsers)
-      this.$socket.removeListener('Admin Notification Locum Account Delete Request Cancelled', this.emitUpdateLocumUsers)
-      this.$socket.removeListener('Admin Notification Locum Deleted', this.emitUpdateLocumUsers)
-    },
+        return locumStatusChoices
+      }
 
-    methods: {
-      emitUpdateLocumUsers ({ notification }) {
-        if (
-          notification
-          && notification.payload_type === 'locum_user'
-          && this.user
-          && notification.payload.id === this.user.id
-        ) {
-          this.$emit('updateLocumUsers')
+      if (this.user.status === 'Bogus') {
+        const locumStatusChoices = [
+          {
+            label: 'Active',
+            value: 'Active'
+          },
+          {
+            label: 'Inactive',
+            value: 'Inactive'
+          }
+        ]
+
+        return locumStatusChoices
+      }
+
+      const locumStatusChoices = [
+        {
+          label: 'Active',
+          value: 'Active'
+        },
+        {
+          label: 'Bogus',
+          value: 'Bogus'
         }
-      },
+      ]
+      return locumStatusChoices
+    }
+  },
 
-      getQuery () {
-        const query = {
-          ...this.$route.query
-        }
-        const offset = parseInt(query.page) * 10 - 10
-        return offset
-      },
-      
-      downloadItem (imgUrl, imgFilename) {
-        if(this.authAdminPermissions.includes('Download Locum Compliance Documents')) {
-          const axios = require("axios")
-          axios({
-            url: imgUrl,
-            method: "GET",
-            responseType: "blob" // important
-          }).then(response => {
-            const url = window.URL.createObjectURL(new Blob([response.data]))
-            const link = document.createElement("a")
-            link.href = url
-            link.setAttribute("download", imgFilename)
-            document.body.appendChild(link)
-            link.click()
-          })
-        } else {
-          console.log('You are not permitted to perform such action')
-        }
-      },
+  watch: {
+    locumStatusChoices() {
+      this.selectedStatus = ''
+    }
+  },
 
-      deleteLocumAccount () {
-        this.showDeleteModal = true
-        this.deletingLocum = true
-        this.$axios.put(`/api/v1/admin/locum-users/${this.$route.params.id}/delete`).then(() => {
-          this.$store.commit("SET_NOTIFICATION", {
+  created() {
+    console.log('locum', this.user)
+    this.locumDetails = this.user.locum_detail
+    this.userComplianceDocuments = this.user.locum_detail.compliance_documents
+    this.hubzzLocumNotes = this.user.hubzz_locum_notes
+  },
+
+  mounted() {
+    LOCUM_NOTIFICATION_EVENTS.forEach(eventName => {
+      this.$socket.on(eventName, this.emitUpdateLocumUsers)
+    })
+  },
+
+  destroyed() {
+    LOCUM_NOTIFICATION_EVENTS.forEach(eventName => {
+      this.$socket.removeListener(eventName, this.emitUpdateLocumUsers)
+    })
+  },
+
+  methods: {
+    emitUpdateLocumUsers({ notification }) {
+      if (notification && notification.payload_type === 'locum_user' && this.user && notification.payload.id === this.user.id) {
+        this.$emit('updateLocumUsers')
+      }
+    },
+
+    downloadItem(imgUrl, imgFilename) {
+      if (this.authAdminPermissions.includes('Download Locum Compliance Documents')) {
+        const axios = require('axios')
+        axios({
+          url: imgUrl,
+          method: 'GET',
+          responseType: 'blob' // important
+        }).then(response => {
+          const url = window.URL.createObjectURL(new Blob([response.data]))
+          const link = document.createElement('a')
+          link.href = url
+          link.setAttribute('download', imgFilename)
+          document.body.appendChild(link)
+          link.click()
+        })
+      } else {
+        console.log('You are not permitted to perform such action')
+      }
+    },
+
+    deleteLocumAccount() {
+      this.showDeleteModal = true
+      this.deletingLocum = true
+      this.$axios
+        .put(`/api/v1/admin/locum-users/${this.$route.params.id}/delete`)
+        .then(() => {
+          this.$store.commit('SET_NOTIFICATION', {
             enabled: true,
-            status: "success",
-            text: "Locum Successfully Deleted"
+            status: 'success',
+            text: 'Locum Successfully Deleted'
           })
 
           this.$emit('updateLocumUsers')
-        }).catch((err) => {
+        })
+        .catch(err => {
           console.log('err', err.response || err)
 
-          this.$store.commit("SET_NOTIFICATION", {
+          this.$store.commit('SET_NOTIFICATION', {
             enabled: true,
-            status: "danger",
+            status: 'danger',
             text: err.response.data.message
           })
-        }).finally(() => {
+        })
+        .finally(() => {
           this.showDeleteModal = false
           this.deletingLocum = false
         })
-      },
+    },
 
-      rejectDeleteLocumAccountRequest () {
-        this.showRejectDeleteAccountRequestModal = true
-        this.rejectingDeleteLocumAccountRequest = true
-        this.$axios.put(`/api/v1/admin/locum-users/${this.$route.params.id}/reject-delete-request`).then(() => {
-          this.$store.commit("SET_NOTIFICATION", {
+    rejectDeleteLocumAccountRequest() {
+      this.showRejectDeleteAccountRequestModal = true
+      this.rejectingDeleteLocumAccountRequest = true
+      this.$axios
+        .put(`/api/v1/admin/locum-users/${this.$route.params.id}/reject-delete-request`)
+        .then(() => {
+          this.$store.commit('SET_NOTIFICATION', {
             enabled: true,
-            status: "success",
-            text: "Locum Delete Request Rejected Successfully"
+            status: 'success',
+            text: 'Locum Delete Request Rejected Successfully'
           })
 
           this.$emit('updateLocumUsers')
-        }).catch((err) => {
+        })
+        .catch(err => {
           console.log('err', err.response || err)
 
-          this.$store.commit("SET_NOTIFICATION", {
+          this.$store.commit('SET_NOTIFICATION', {
             enabled: true,
-            status: "danger",
+            status: 'danger',
             text: err.response.data.message
           })
-        }).finally(() => {
+        })
+        .finally(() => {
           this.showRejectDeleteAccountRequestModal = false
           this.rejectingDeleteLocumAccountRequest = false
         })
-      },
+    },
 
-      deactivateLocumAccount () {
-        this.showDeactivateModal = true
-        this.deactivatingLocum = true
-        this.$axios.put(`/api/v1/admin/locum-users/${this.$route.params.id}/deactivate`).then(() => {
-          this.$store.commit("SET_NOTIFICATION", {
+    deactivateLocumAccount() {
+      this.showDeactivateModal = true
+      this.deactivatingLocum = true
+      this.$axios
+        .put(`/api/v1/admin/locum-users/${this.$route.params.id}/deactivate`)
+        .then(() => {
+          this.$store.commit('SET_NOTIFICATION', {
             enabled: true,
-            status: "success",
-            text: "Locum Successfully Deactivated"
+            status: 'success',
+            text: 'Locum Successfully Deactivated'
           })
 
           this.$emit('updateLocumUsers')
-        }).catch(err => {
-          this.$store.commit("SET_NOTIFICATION", {
+        })
+        .catch(err => {
+          this.$store.commit('SET_NOTIFICATION', {
             enabled: true,
-            status: "danger",
+            status: 'danger',
             text: err.response.data.message
           })
-        }).finally(() => {
+        })
+        .finally(() => {
           this.showDeactivateModal = false
           this.deactivatingLocum = false
         })
-      },
+    },
 
-      reactivateLocumAccount () {
-        this.showReactivateModal = true
-        this.reactivatingLocum = true
-        this.$axios.put(`/api/v1/admin/locum-users/${this.$route.params.id}/reactivate`).then(() => {
-          this.$store.commit("SET_NOTIFICATION", {
+    reactivateLocumAccount() {
+      this.showReactivateModal = true
+      this.reactivatingLocum = true
+      this.$axios
+        .put(`/api/v1/admin/locum-users/${this.$route.params.id}/reactivate`)
+        .then(() => {
+          this.$store.commit('SET_NOTIFICATION', {
             enabled: true,
-            status: "success",
-            text: "Locum Successfully Reactivated"
+            status: 'success',
+            text: 'Locum Successfully Reactivated'
           })
 
           this.$emit('updateLocumUsers')
-        }).catch(err => {
-          this.$store.commit("SET_NOTIFICATION", {
+        })
+        .catch(err => {
+          this.$store.commit('SET_NOTIFICATION', {
             enabled: true,
-            status: "danger",
+            status: 'danger',
             text: err.response.data.message
           })
-        }).finally(() => {
+        })
+        .finally(() => {
           this.showReactivateModal = false
           this.reactivatingLocum = false
         })
-      },
+    },
 
-      async changeLocumUserStatus (locumID, status) {
-        try {
-          this.$emit('setViewLocumUserLoading', true)
+    async changeLocumUserStatus(locumID, status) {
+      try {
+        this.$emit('setViewLocumUserLoading', true)
 
-          console.log("locum details", status)
+        console.log('locum details', status)
 
-          await this.$axios.$put(`/api/v1/admin/locum-users/${locumID}/status`, {
-            status,
-          }).then(res => {
+        await this.$axios
+          .$put(`/api/v1/admin/locum-users/${locumID}/status`, {
+            status
+          })
+          .then(res => {
             console.log('res', res)
-            if (res.data.user.compliance_status !== 'Compliant'
-            && res.data.user.compliance_status !== 'Expiring'  
-            && status === 'Active') {
-              this.$store.commit("SET_NOTIFICATION", {
+            if (res.data.user.compliance_status !== 'Compliant' && res.data.user.compliance_status !== 'Expiring' && status === 'Active') {
+              this.$store.commit('SET_NOTIFICATION', {
                 enabled: true,
-                status: "alert",
-                text: "Unsuccessfully Changed Locum status. Locum is Not Compliant.",
+                status: 'alert',
+                text: 'Unsuccessfully Changed Locum status. Locum is Not Compliant.'
               })
             } else {
-              this.$store.commit("SET_NOTIFICATION", {
+              this.$store.commit('SET_NOTIFICATION', {
                 enabled: true,
-                status: "success",
-                text: res.data.message || "Saved",
+                status: 'success',
+                text: res.data.message || 'Saved'
               })
             }
-            console.log("res", res.data.user)
+            console.log('res', res.data.user)
 
             this.$emit('setViewLocumUser', res.data.user)
 
             this.$emit('setViewLocumUserLoading', false)
           })
+      } catch (err) {
+        console.log('index practices index put status err', err)
+        this.$store.commit('SET_NOTIFICATION', {
+          enabled: true,
+          status: 'danger',
+          text: err.response.data.message
+        })
 
-          
-        } catch (err) {
-          console.log("index practices index put status err", err)
-          this.$store.commit("SET_NOTIFICATION", {
-            enabled: true,
-            status: "danger",
-            text: err.response.data.message
-          })
+        this.$emit('setViewLocumUserLoading', false)
+      }
+    },
 
-          this.$emit('setViewLocumUserLoading', false)
-        }
-      },
+    statusStyle(status) {
+      switch (status) {
+        case 'Active':
+          return 'bg-green-500 text-white'
+        case 'Inactive':
+          return 'bg-gray-500 '
+        case 'Deactivated':
+        case 'Deleted':
+          return 'bg-red-800 text-red-400'
+        case 'Account Suspension':
+          return 'bg-red-600 '
+        case 'Compliance Suspension':
+          return 'bg-red-600 text-white'
+        case 'Dormant':
+          return 'bg-orange-500 text-white'
+        default:
+          return
+      }
+    },
 
-      statusStyle (status) {
-				switch (status) {
-					case 'Active':
-						return 'bg-green-500 text-white'
-					case 'Inactive':
-						return 'bg-gray-500 '
-					case 'Deactivated':
-					case 'Deleted':
-						return 'bg-red-800 text-red-400'
-					case 'Account Suspension':
-						return 'bg-red-600 '
-					case 'Compliance Suspension':
-						return 'bg-red-600 text-white'
-					case 'Dormant':
-						return 'bg-orange-500 text-white'
-					default:
-						return
-        }
-      },
-
-      async toPutHubzzLocumNotes () {
-        try { 
-          await this.$axios.$put(`/api/v1/admin/locum-users/${this.$route.params.id}/hubzz-locum-notes`,{
-            hubzz_locum_notes: this.hubzzLocumNotes,
+    async toPutHubzzLocumNotes() {
+      try {
+        await this.$axios
+          .$put(`/api/v1/admin/locum-users/${this.$route.params.id}/hubzz-locum-notes`, {
+            hubzz_locum_notes: this.hubzzLocumNotes
           })
           .then(res => {
             this.hubzzLocumNotes = res.data.user.hubzz_locum_notes
 
             this.$emit('setViewLocumUser', res.data.user)
 
-            this.$store.commit("SET_NOTIFICATION", {
+            this.$store.commit('SET_NOTIFICATION', {
               enabled: true,
-              status: "success",
-              text: res.data.message || "Saved",
+              status: 'success',
+              text: res.data.message || 'Saved'
             })
           })
-        } catch (err) {
-          console.log("err", err)
-          this.$store.commit("SET_NOTIFICATION", {
-            enabled: true,
-            status: "danger",
-            text: err.response.data.message
-          })
-        }
-        
+      } catch (err) {
+        console.log('err', err)
+        this.$store.commit('SET_NOTIFICATION', {
+          enabled: true,
+          status: 'danger',
+          text: err.response.data.message
+        })
       }
     }
   }
+}
 </script>

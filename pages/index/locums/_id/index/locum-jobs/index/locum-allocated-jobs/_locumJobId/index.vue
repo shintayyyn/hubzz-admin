@@ -7,27 +7,27 @@
 import LocumDetailJobModal from '@/components/Locums/Jobs/LocumDetailJobModal'
 export default {
   components: {
-      LocumDetailJobModal
+    LocumDetailJobModal
   },
-  data (){
-    return{
-      job:'',
+  data() {
+    return {
+      job: '',
       locumUserId: ''
     }
   },
-  async asyncData ({ app, store, route, error }){
-    try{
+  async asyncData({ app, store, route, error }) {
+    try {
       let response = await app.$axios.$get(`/api/v1/admin/jobs/${route.params.locumJobId}`)
       const job = response.data.job
       const locumUserId = route.params.id
-      return{
+      return {
         job,
         locumUserId
       }
-    }catch(err){
-      error({statusCode: 404})
-      store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
-      console.log('get job error!',err)
+    } catch (err) {
+      error({ statusCode: 404 })
+      store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+      console.log('get job error!', err)
     }
   }
 }
@@ -41,9 +41,9 @@ export default {
   width: 100%;
   height: 100%;
   overflow: auto;
-  border-left: solid 2px #FFC72C;
+  border-left: solid 2px #ffc72c;
   transition: all 0.3s ease-in-out;
-  background-color:#505561;
+  background-color: #505561;
   z-index: 512;
 }
 @media screen and (min-width: 1200px) {

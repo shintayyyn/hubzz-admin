@@ -1,13 +1,6 @@
 <template>
   <section class="flex-1 flex flex-col overflow-y-auto">
-    <template
-      v-if="
-        (authAdminPermissions.includes('View Locums') ||
-          authAdminPermissions.includes('View Locum Jobs') ||
-          authAdminPermissions.includes('View Locum Compliance Detail')) &&
-          $route.name === 'index-locums'
-      "
-    >
+    <template v-if="canAccessLocumsPage">
       <div class="flex flex-col md:flex-row justify-between md:items-center">
         <div class="flex flex-col w-full justify-start mb-2">
           <div class="flex justify-between">
@@ -51,20 +44,6 @@
                   @click="filterReset"
                 />
               </div>
-
-              <!-- <div class="mx-1 my-2">
-                <AppButton
-                  label="Message"
-                  :customTheme="
-                    `border rounded-lg ${
-                      chosenLocums.length > 0 ? 'bg-orange-400 hover:bg-orange-500 text-gray-700' : 'bg-gray-400 hover:bg-gray-500 text-black'
-                    }`
-                  "
-                  labelClass="flex-row-reverse mr-2"
-                  :disabled="chosenLocums.length === 0"
-                  @click="sendMessageModal = !sendMessageModal"
-                />
-              </div> -->
             </div>
           </div>
           <div class="flex flex-row flex-wrap justify-start items-center w-full rounded-lg -mt-3" :class="filterModal ? 'flex' : 'hidden'">
@@ -157,6 +136,30 @@ import AppTableNew from '@/components/Base/AppTableNew'
 import AppInputSmall from '@/components/Base/AppInputSmall'
 import AppButton from '@/components/Base/AppButton'
 import SendMessageModal from '@/components/Messages/SendMessageModal'
+
+const LOCUM_PAGE_PERMISSIONS = ['View Locums', 'View Locum Jobs', 'View Locum Compliance Detail']
+const STATUS_CLASS_MAP = {
+  Active: 'text-green-700',
+  Inactive: 'text-gray-700',
+  Deactivated: 'text-black',
+  'Account Suspension': 'text-red-600',
+  'Compliance Suspension': 'text-red-600',
+  Dormant: 'text-gray-500',
+  Bogus: 'text-gray-600'
+}
+const COMPLIANCE_STATUS_CLASS_MAP = {
+  Empty: 'text-gray-400',
+  Incomplete: 'text-orange-600',
+  Pending: 'text-yellow-800',
+  Expiring: ' text-red-400',
+  Expired: 'text-red-500',
+  Rejected: 'text-orange-700',
+  Compliant: 'text-green-700'
+}
+const REGISTRATION_TYPE_MAP = {
+  Practice: 'Referred by Practice',
+  Locum: 'Referred by Locum'
+}
 
 export default {
   components: {
@@ -252,17 +255,31 @@ export default {
     authAdminPermissions() {
       return this.$store.getters['permissions']
     },
+
+    canAccessLocumsPage() {
+      return LOCUM_PAGE_PERMISSIONS.some(permission => this.authAdminPermissions.includes(permission)) && this.$route.name === 'index-locums'
+    },
+
+    activeFilters() {
+      const filters = {}
+
+      if (this.search) {
+        filters.search = this.search
+      }
+
+      if (this.filterStatus) {
+        filters.status = this.filterStatus
+      }
+
+      if (this.filterCompliances) {
+        filters.compliance_status = this.filterCompliances
+      }
+
+      return filters
+    },
+
     columns() {
       return [
-        // {
-        //   name: 'Check',
-        //   dataIndex: 'checker',
-        //   class: 'text-center',
-        //   slotName: 'checker',
-        //   eventName: 'checkClicked',
-        //   width: 80,
-        //   order: 1
-        // },
         {
           name: 'Message',
           dataIndex: 'messageButton',
@@ -391,16 +408,6 @@ export default {
   },
 
   watch: {
-    // filterStatus () {
-    // 	this.currentPage = 1
-    //   this.getAllLocumUsers()
-    // },
-
-    // filterCompliances () {
-    // 	this.currentPage = 1
-    //   this.getAllLocumUsers()
-    // },
-
     search() {
       this.searchSubmit()
     },
@@ -466,34 +473,20 @@ export default {
     },
 
     getAllLocumUsers() {
-      const filters = {}
-
-      if (this.search) {
-        filters.search = this.search
-      }
-
-      if (this.filterStatus) {
-        filters.status = this.filterStatus
-      }
-
-      if (this.filterCompliances) {
-        filters.compliance_status = this.filterCompliances
-      }
-
       this.loading = true
 
       Promise.all([
         this.$axios
           .get('/api/v1/admin/locum-users/count', {
             params: {
-              ...filters
+              ...this.activeFilters
             }
           })
           .then(response => response.data.data.count),
         this.$axios
           .get('/api/v1/admin/locum-users', {
             params: {
-              ...filters,
+              ...this.activeFilters,
               order_by: this.orderBy,
               limit: this.limit,
               offset: this.offset
@@ -545,58 +538,15 @@ export default {
     },
 
     statusStyle(status) {
-      switch (status) {
-        case 'Active':
-          return 'text-green-700'
-        case 'Inactive':
-          return 'text-gray-700'
-        case 'Deactivated':
-          return 'text-black'
-        case 'Account Suspension':
-          return 'text-red-600'
-        case 'Compliance Suspension':
-          return 'text-red-600'
-        case 'Dormant':
-          return 'text-gray-500'
-        case 'Bogus':
-          return 'text-gray-600'
-        default:
-          return
-      }
+      return STATUS_CLASS_MAP[status]
     },
 
     complianceStatusStyle(status) {
-      switch (status) {
-        case 'Empty':
-          return 'text-gray-400'
-        case 'Incomplete':
-          return 'text-orange-600'
-        case 'Pending':
-          return 'text-yellow-800'
-        case 'Expiring':
-          return ' text-red-400'
-        case 'Expired':
-          return 'text-red-500'
-        case 'Rejected':
-          return 'text-orange-700'
-        case 'Compliant':
-          return 'text-green-700'
-        default:
-          return
-      }
+      return COMPLIANCE_STATUS_CLASS_MAP[status]
     },
 
     registrationType(type) {
-      let registrationType = ''
-      if (type === 'Practice') {
-        registrationType = 'Referred by Practice'
-      } else if (type === 'Locum') {
-        registrationType = 'Referred by Locum'
-      } else {
-        registrationType = 'Organic'
-      }
-
-      return registrationType
+      return REGISTRATION_TYPE_MAP[type] || 'Organic'
     }
   }
 }

@@ -1,11 +1,5 @@
 <template>
   <div class="m-4">
-    <!-- HEADER -->
-    <!-- <div class="flex justify-between text-sm ">
-      <div @click="goBack()" class="cursor-pointer m-6">
-        <svgicon name="arrow-left-solid" height="32" width="32" class=" hover:text-sunglow fill-current" />
-      </div>
-    </div> -->
     <div class="flex flex-wrap font-semibold my-4">
       <div class="text-2xl  mr-4">
         {{ job_part.job && job_part.job.title ? job_part.job.title : '(none)' }}
@@ -14,8 +8,8 @@
         <div class="ml-2 text-black p-2 bg-yellow-500 rounded">
           {{ job_part.status }}
         </div>
-        <div v-if="job_part && job_part.terminated" class="ml-2 text-black p-2 bg-gray-300 rounded">
-          {{ job_part && job_part.terminated ? 'Terminated' : null }}
+        <div v-if="job_part.terminated" class="ml-2 text-black p-2 bg-gray-300 rounded">
+          Terminated
         </div>
         <div class="ml-2 text-black p-2  rounded" :class="job_part.job && job_part.job.type == 'Platform' ? 'bg-red-500' : 'bg-blue-500'">
           {{ job_part.job && job_part.job.type ? job_part.job.type : null }}
@@ -27,7 +21,7 @@
       <AppLoading :loading="loading" />
       <div
         class="flex flex-col order-2 md:order-1 flex-wrap h-full text-sm no-underline  w-full"
-        :class="jobParts && jobParts.length > 0 ? 'md:w-1/2' : 'max-w-xl'"
+        :class="jobParts.length > 0 ? 'md:w-1/2' : 'max-w-xl'"
       >
         <div v-if="job_part.status === 'Cancelled'" class="flex flex-col   rounded-lg leading-tight my-2">
           <div class="m-4">
@@ -109,20 +103,6 @@
                 <p class="">
                   {{ job_part.locum_invoice_item.locum_invoice.locum_user_id }}
                 </p>
-                <!-- <p class="mt-4 font-semibold">
-                  Invoice Amount
-                </p>
-                <p
-                  class=""
-                >
-                  {{ "£ " + job_part.locum_invoice_item.locum_invoice.total_amount }}
-                </p> -->
-                <!-- <p class="mt-4 font-semibold">
-                  Final Hours
-                </p>
-                <p class="">
-                  {{ job_part.locum_invoice_item.final_hours + "Hours" }}
-                </p> -->
                 <div v-if="job_part.invoice_status === 'Disputed' && job_part.locum_invoice_item">
                   <p class="mt-4 font-semibold">
                     Disputed by Locum At
@@ -190,13 +170,6 @@
                   :schedules="job_part.schedules"
                 />
               </div>
-
-              <!-- <p class="mt-4 font-semibold">
-                Unpaid Breaks (in minutes)
-              </p>
-              <p class="ml-2 mb-2">
-                {{ job_part.job.platform_job.unpaid_breaks_in_minutes }}
-              </p> -->
             </div>
             <!-- INFOS RIGHT -->
             <div class="xl:w-1/3 w-full px-1">
@@ -362,7 +335,6 @@
                     Job Part Status
                   </div>
                 </div>
-                <!-- :class="`${jobParts.length > 3 && job.platform_job.appointed_to_locum  ? 'h-48' : 'h-full'}`" -->
                 <div
                   v-for="(item, index) in jobParts"
                   :key="`item-${index}`"
@@ -402,32 +374,11 @@
               :perPage="params.limit"
               @pagechanged="pagechanged"
             />
-            <!-- <AppPagination
-              :total="specificJobPart.job.job_parts.length"
-              :totalPages="totalPages"
-              :currentPage="currentPage"
-              :perPage="params.limit"
-              @pagechanged="pagechanged"
-            /> -->
-            <!-- not working also -->
-            <!-- <nuxt-link
-							v-for="(item, index) in specificJobPart.job.job_parts"
-							:to="`/practices/${$route.params.id}/practice-sessions/practice-${item.status.toLowerCase()}-sessions/${item.id}`"
-							:key="`item-${index}`"
-							class="w-full flex flex-col md:flex-row rounded-lg  hover:-light my-1 md:my-2 shadow-lg cursor-pointer border-l-8 p-4"
-							:class="item.id === specificJobPart.id ? 'border-yellow-500':'border-waterloo-light md:border-0 md:pl-6'"
-						>
-							<div class="flex flex-col  leading-tight">
-								<strong class="block md:hidden text-sm uppercase">Job Part Number</strong>
-								<span>{{item.job_part_number}}</span>
-								<span>{{item.status}}</span>
-							</div>
-            </nuxt-link>-->
           </div>
         </div>
 
         <!-- GOOGLE MAPS -->
-        <div v-if="job_part.job ? job_part.job.platform_job : null" class="w-full p-5 mt-4 rounded-lg shadow">
+        <div v-if="job_part.job && job_part.job.platform_job" class="w-full p-5 mt-4 rounded-lg shadow">
           <div class="pb-2">
             <div class="mt-4 font-semibold">
               Practice
@@ -505,12 +456,6 @@ export default {
         offset: 0,
         order_by: ['created_at:desc']
       },
-      columns: [
-        { name: 'Job Part Number', dataIndex: 'job_part_number' },
-        { name: 'Status', dataIndex: 'status', class: 'text-center' },
-        { name: 'Date Start', dataIndex: 'date_start', class: 'text-center localDate' },
-        { name: 'Date End', dataIndex: 'date_end', class: 'text-center localDate' }
-      ],
       loading: false
     }
   },
@@ -527,12 +472,6 @@ export default {
         this.specificJobPart.job.platform_job.practice
       ) {
         return this.specificJobPart.job.platform_job.practice.surgery.address.coordinates
-      }
-      return { x: 0, y: 0 }
-    },
-    latLangPrivate() {
-      if (this.specificJobPart && this.specificJobPart.job && this.specificJobPart.job.private_job) {
-        return this.specificJobPart.job.private_job.private_practice.surgery.address.coordinates
       }
       return { x: 0, y: 0 }
     }
@@ -560,21 +499,7 @@ export default {
     }
   },
 
-  mounted() {
-    console.log('Component Mounted. jobId Prop:', this.jobId)
-    console.log('specificJobPart Prop:', this.specificJobPart)
-  },
-
   methods: {
-    goBack() {
-      const path = this.$route.path
-      const query = { ...this.$route.query }
-
-      const listPath = path.substring(0, path.lastIndexOf('/'))
-
-      this.$router.push({ path: listPath, query })
-    },
-
     async show(id) {
       this.loading = true
       this.$axios.$get(`/api/v1/admin/job-parts/${id}`).then(res => {
@@ -624,12 +549,6 @@ export default {
       this.currentPage = page
       const id = this.jobId || (this.specificJobPart ? this.specificJobPart.job_id || this.specificJobPart.job.id : null)
       this.getJobParts(id)
-    },
-
-    sorted(order_by) {
-      this.currentPage = 1
-      this.params.order_by = order_by
-      this.getJobParts(this.params)
     }
   }
 }

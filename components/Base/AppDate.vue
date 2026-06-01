@@ -3,12 +3,7 @@
     <div v-if="label || required" class="relative flex flex-row flex-no-wrap justify-between pr-2">
       <label :for="name" class="text-xs sm:text-sm py-1 font-bold">
         {{ label }}
-        <!-- <span v-if="required" class="text-red-500">*</span> -->
       </label>
-      <!-- <div
-				class="absolute right-0 bg-red-500 p-1 text-xs sm:text-sm text-white rounded"
-				v-if="error"
-			>{{error.message}}</div>-->
     </div>
     <div class="flex flex-row justify-start mt-1">
       <div class="flex flex-col w-full">
@@ -26,7 +21,7 @@
         />
         <transition name="drop-down">
           <div v-if="error" class="bg-red-300 text-red-700 py-1 px-2 text-xs">
-            {{ error.message.charAt(0).toUpperCase() + error.message.slice(1).replace(/_/g, ' ') }}
+            {{ formattedErrorMessage }}
           </div>
         </transition>
       </div>
@@ -48,223 +43,32 @@
               </select>
             </div>
             <div class="m-1 w-1/2 flex flex-no-wrap justify-end">
-              <span
-                class="mr-1"
-                :class="selectedYear == yearLists[0] && selectedMonth == 1 ? 'cursor-not-allowed' : 'cursor-pointer'"
-                @click="adjustMonth('previous')"
-              >
-                <svgicon name="arrow-left" height="12" width="12" :color="selectedYear == yearLists[0] && selectedMonth == 1 ? 'gray' : ''" />
+              <span class="mr-1" :class="canGoPreviousMonth ? 'cursor-pointer' : 'cursor-not-allowed'" @click="adjustMonth('previous')">
+                <svgicon name="arrow-left" height="12" width="12" :color="canGoPreviousMonth ? '' : 'gray'" />
               </span>
-              <span
-                class="ml-1"
-                :class="
-                  (isBefore && selectedYear == $moment().format('YYYY') && parseInt(selectedMonth) == parseInt($moment().format('M'))) ||
-                    (selectedYear == yearLists[yearLists.length - 1] && selectedMonth == 12)
-                    ? 'cursor-not-allowed'
-                    : 'cursor-pointer'
-                "
-                @click="adjustMonth('next')"
-              >
-                <svgicon
-                  name="arrow-right"
-                  height="12"
-                  width="12"
-                  :color="
-                    (isBefore && selectedYear == $moment().format('YYYY') && parseInt(selectedMonth) == parseInt($moment().format('M'))) ||
-                      (selectedYear == yearLists[yearLists.length - 1] && selectedMonth == 12)
-                      ? 'gray'
-                      : ''
-                  "
-                />
+              <span class="ml-1" :class="canGoNextMonth ? 'cursor-pointer' : 'cursor-not-allowed'" @click="adjustMonth('next')">
+                <svgicon name="arrow-right" height="12" width="12" :color="canGoNextMonth ? '' : 'gray'" />
               </span>
             </div>
           </div>
 
           <div class="flex flex-no-wrap justify-between text-xs sm:text-sm mx-1 mt-4">
-            <div class="w-full text-center font-bold">
-              Mo
-            </div>
-            <div class="w-full text-center font-bold">
-              Tu
-            </div>
-            <div class="w-full text-center font-bold">
-              We
-            </div>
-            <div class="w-full text-center font-bold">
-              Th
-            </div>
-            <div class="w-full text-center font-bold">
-              Fr
-            </div>
-            <div class="w-full text-center font-bold">
-              Sa
-            </div>
-            <div class="w-full text-center font-bold">
-              Su
+            <div v-for="weekday in weekdayColumns" :key="weekday.label" class="w-full text-center font-bold">
+              {{ weekday.label }}
             </div>
           </div>
 
           <div class="flex flex-no-wrap justify-between m-1">
-            <div class="flex flex-col w-full">
-              <div v-if="daysInMonth.findIndex(({ day }) => day === 0) < 6">
+            <div v-for="column in calendarColumns" :key="column.label" class="flex flex-col w-full">
+              <div v-if="column.hasLeadingBlank">
                 <div class="date-cell">
                   &nbsp;
                 </div>
               </div>
-              <div v-for="(item, index) in daysInMonth" :key="index">
+              <div v-for="(item, index) in column.days" :key="index">
                 <div
-                  v-if="item.day === 1"
                   class="rounded-full relative p-1 flex justify-center items-center date-cell"
-                  :class="{
-                    'border-yellow-500 border-2': isSame(item.fullDate),
-                    'text-gray-500': isDisabled(item.fullDate),
-                    'cursor-pointer hover:bg-gray-400': !isDisabled(item.fullDate),
-                    'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date, item)
-                  }"
-                  @click="select(item.fullDate)"
-                >
-                  <div class="text-xs md:text-sm z-10">
-                    {{ item.date }}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="flex flex-col w-full">
-              <div v-if="daysInMonth.findIndex(({ day }) => day === 0) < 5">
-                <div class="date-cell">
-                  &nbsp;
-                </div>
-              </div>
-              <div v-for="(item, index) in daysInMonth" :key="index">
-                <div
-                  v-if="item.day === 2"
-                  class="rounded-full relative p-1 flex justify-center items-center date-cell"
-                  :class="{
-                    'border-yellow-500 border-2': isSame(item.fullDate),
-                    'text-gray-500': isDisabled(item.fullDate),
-                    'cursor-pointer hover:bg-gray-400': !isDisabled(item.fullDate),
-                    'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date, item)
-                  }"
-                  @click="select(item.fullDate)"
-                >
-                  <div class="text-xs md:text-sm z-10">
-                    {{ item.date }}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="flex flex-col w-full">
-              <div v-if="daysInMonth.findIndex(({ day }) => day === 0) < 4">
-                <div class="date-cell">
-                  &nbsp;
-                </div>
-              </div>
-              <div v-for="(item, index) in daysInMonth" :key="index">
-                <div
-                  v-if="item.day === 3"
-                  class="rounded-full relative p-1 flex justify-center items-center date-cell"
-                  :class="{
-                    'border-yellow-500 border-2': isSame(item.fullDate),
-                    'text-gray-500': isDisabled(item.fullDate),
-                    'cursor-pointer hover:bg-gray-400': !isDisabled(item.fullDate),
-                    'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
-                  }"
-                  @click="select(item.fullDate)"
-                >
-                  <div class="text-xs md:text-sm z-10">
-                    {{ item.date }}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="flex flex-col w-full">
-              <div v-if="daysInMonth.findIndex(({ day }) => day === 0) < 3">
-                <div class="date-cell">
-                  &nbsp;
-                </div>
-              </div>
-              <div v-for="(item, index) in daysInMonth" :key="index">
-                <div
-                  v-if="item.day === 4"
-                  class="rounded-full relative p-1 flex justify-center items-center date-cell"
-                  :class="{
-                    'border-yellow-500 border-2': isSame(item.fullDate),
-                    'text-gray-500': isDisabled(item.fullDate),
-                    'cursor-pointer hover:bg-gray-400': !isDisabled(item.fullDate),
-                    'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
-                  }"
-                  @click="select(item.fullDate)"
-                >
-                  <div class="text-xs md:text-sm z-10">
-                    {{ item.date }}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="flex flex-col w-full">
-              <div v-if="daysInMonth.findIndex(({ day }) => day === 0) < 2">
-                <div class="date-cell">
-                  &nbsp;
-                </div>
-              </div>
-              <div v-for="(item, index) in daysInMonth" :key="index">
-                <div
-                  v-if="item.day === 5"
-                  class="rounded-full relative p-1 flex justify-center items-center date-cell"
-                  :class="{
-                    'border-yellow-500 border-2': isSame(item.fullDate),
-                    'text-gray-500': isDisabled(item.fullDate),
-                    'cursor-pointer hover:bg-gray-400': !isDisabled(item.fullDate),
-                    'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
-                  }"
-                  @click="select(item.fullDate)"
-                >
-                  <div class="text-xs md:text-sm z-10">
-                    {{ item.date }}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="flex flex-col w-full">
-              <div v-if="daysInMonth.findIndex(({ day }) => day === 0) < 1">
-                <div class="date-cell">
-                  &nbsp;
-                </div>
-              </div>
-              <div v-for="(item, index) in daysInMonth" :key="index">
-                <div
-                  v-if="item.day === 6"
-                  class="rounded-full relative p-1 flex justify-center items-center date-cell"
-                  :class="{
-                    'border-yellow-500 border-2': isSame(item.fullDate),
-                    'text-gray-500': isDisabled(item.fullDate),
-                    'cursor-pointer hover:bg-gray-400': !isDisabled(item.fullDate),
-                    'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
-                  }"
-                  @click="select(item.fullDate)"
-                >
-                  <div class="text-xs md:text-sm z-10">
-                    {{ item.date }}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="flex flex-col w-full">
-              <div v-if="daysInMonth.findIndex(({ day }) => day === 0) < 0">
-                <div class="date-cell">
-                  &nbsp;
-                </div>
-              </div>
-              <div v-for="(item, index) in daysInMonth" :key="index">
-                <div
-                  v-if="item.day === 0"
-                  class="rounded-full relative p-1 flex justify-center items-center date-cell"
-                  :class="{
-                    'border-yellow-500 border-2': isSame(item.fullDate),
-                    'text-gray-500': isDisabled(item.fullDate),
-                    'cursor-pointer hover:bg-gray-400': !isDisabled(item.fullDate),
-                    'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
-                  }"
+                  :class="getDateClasses(item)"
                   @click="select(item.fullDate)"
                 >
                   <div class="text-xs md:text-sm z-10">
@@ -279,9 +83,11 @@
     </transition>
   </div>
 </template>
+
 <script>
 import { mixin as clickaway } from 'vue-clickaway'
-let months = [
+
+const months = [
   { label: 'Jan', value: '1' },
   { label: 'Feb', value: '2' },
   { label: 'Mar', value: '3' },
@@ -295,6 +101,17 @@ let months = [
   { label: 'Nov', value: '11' },
   { label: 'Dec', value: '12' }
 ]
+
+const weekdayColumns = [
+  { label: 'Mo', day: 1, leadingBlankThreshold: 6 },
+  { label: 'Tu', day: 2, leadingBlankThreshold: 5 },
+  { label: 'We', day: 3, leadingBlankThreshold: 4 },
+  { label: 'Th', day: 4, leadingBlankThreshold: 3 },
+  { label: 'Fr', day: 5, leadingBlankThreshold: 2 },
+  { label: 'Sa', day: 6, leadingBlankThreshold: 1 },
+  { label: 'Su', day: 0, leadingBlankThreshold: 0 }
+]
+
 export default {
   mixins: [clickaway],
   props: {
@@ -305,8 +122,6 @@ export default {
     error: Object,
     inStyle: String,
     inClass: String,
-    // format: String,
-    // disabled all dates past the current date
     isAfter: Boolean,
     isBefore: Boolean,
     format: {
@@ -324,7 +139,7 @@ export default {
     return {
       modal: false,
       months,
-      monthLists: [],
+      weekdayColumns,
       selectedMonth: this.$moment.utc().format('M'),
       selectedYear: this.$moment.utc().format('YYYY'),
       daysInMonth: []
@@ -358,15 +173,75 @@ export default {
       return years
     },
 
+    firstSundayIndex() {
+      return this.daysInMonth.findIndex(({ day }) => day === 0)
+    },
+
+    formattedErrorMessage() {
+      if (!this.error || !this.error.message) {
+        return ''
+      }
+
+      return this.error.message.charAt(0).toUpperCase() + this.error.message.slice(1).replace(/_/g, ' ')
+    },
+
+    minYearInList() {
+      return Math.min(...this.yearLists.map(Number))
+    },
+
+    maxYearInList() {
+      return Math.max(...this.yearLists.map(Number))
+    },
+
+    todayYear() {
+      return parseInt(this.$moment().format('YYYY'))
+    },
+
+    todayMonth() {
+      return parseInt(this.$moment().format('M'))
+    },
+
+    selectedYearNumber() {
+      return parseInt(this.selectedYear)
+    },
+
+    selectedMonthNumber() {
+      return parseInt(this.selectedMonth)
+    },
+
+    canGoPreviousMonth() {
+      if (this.selectedYearNumber <= this.minYearInList && this.selectedMonthNumber === 1) {
+        return false
+      }
+
+      if (this.selectedYearNumber === this.todayYear && this.selectedMonthNumber === this.todayMonth && this.isAfter) {
+        return false
+      }
+
+      return true
+    },
+
+    canGoNextMonth() {
+      if (this.isBefore && this.selectedYearNumber === this.todayYear && this.selectedMonthNumber === this.todayMonth) {
+        return false
+      }
+
+      if (this.selectedYearNumber >= this.maxYearInList && this.selectedMonthNumber === 12) {
+        return false
+      }
+
+      return true
+    },
+
+    calendarColumns() {
+      return this.weekdayColumns.map(column => ({
+        ...column,
+        hasLeadingBlank: this.firstSundayIndex < column.leadingBlankThreshold,
+        days: this.daysInMonth.filter(item => item.day === column.day)
+      }))
+    },
+
     filteredMonths() {
-      // if selected year === current year, get only the current month up to last month,
-      // if not, get all the months
-      // if (this.selectedYear === this.$moment().format("YYYY")) {
-      // 	return this.months.filter(
-      // 		month => parseInt(month.value) >= parseInt(this.$moment().format("M"))
-      // 	);
-      // }
-      // return this.months;
       if (this.selectedYear === this.$moment().format('YYYY')) {
         if (this.isAfter) {
           return this.months.filter(month => parseInt(month.value) >= parseInt(this.$moment().format('M')))
@@ -393,50 +268,25 @@ export default {
   created() {
     // get current month and year
     if (this.value) {
-      // this.value = this.$moment(this.value).format('YYYY-MM-DD')
       this.selectedMonth = this.$moment(this.value, this.format).format('M')
       this.selectedYear = this.$moment(this.value, this.format).format('YYYY')
     }
-    // get month list
-    this.getMonthLists()
-    // get year list
     this.getDaysInMonth(this.selectedMonth, this.selectedYear)
   },
   methods: {
-    getMonthLists() {
-      for (let i = this.selectedMonth; i <= this.months.length; i++) {
-        this.monthLists.push(`${i}`)
-      }
-    },
-    getYearLists() {
-      if (!this.isBefore) {
-        for (let i = 0; i <= 10; i++) {
-          this.yearLists.push(
-            this.$moment(this.selectedYear, 'YYYY')
-              .add(i, 'years')
-              .format('YYYY')
-          )
-        }
-      }
-
-      //new logic for year picker.
-      if (!this.isAfter) {
-        const selectedYear = parseInt(this.selectedYear)
-        const minYear = 2022
-
-        for (let year = selectedYear; year >= minYear; year--) {
-          if (!this.yearLists.includes(year.toString())) {
-            this.yearLists.push(year.toString())
-          }
-        }
-      }
-      this.yearLists.sort(function(a, b) {
-        return a - b
-      })
-    },
     isSelectedDate(date) {
       let selectedDate = `${this.selectedYear}-${this.selectedMonth}-${date}`
       return this.$moment(selectedDate, 'YYYY-MM-D').isSame(this.value)
+    },
+    getDateClasses(item) {
+      const disabled = this.isDisabled(item.fullDate)
+
+      return {
+        'border-yellow-500 border-2': this.isSame(item.fullDate),
+        'text-gray-500': disabled,
+        'cursor-pointer hover:bg-gray-400': !disabled,
+        'bg-yellow-500 border-yellow-500 border-2': this.isSelectedDate(item.date)
+      }
     },
     isSame(date) {
       let newDate = this.$moment().format('MM-DD-YYYY')
@@ -460,16 +310,6 @@ export default {
           .subtract(1, 'd')
           .isBefore(this.isAfterDate)
       }
-      // return false;
-      // let newDate = this.$moment.utc().format("MM-DD-YYYY");
-      // if (this.isAfter) {
-      //   return this.$moment(date, "MM-DD-YYYY").isAfter(
-      //     this.$moment(newDate, "MM-DD-YYYY")
-      //   );
-      // }
-      // return this.$moment(date, "MM-DD-YYYY").isBefore(
-      //   this.$moment(newDate, "MM-DD-YYYY")
-      // );
     },
     toggledOff() {
       // get to the selected date
@@ -482,38 +322,25 @@ export default {
       this.modal = false
     },
     adjustMonth(type) {
-      const currentYear = parseInt(this.selectedYear)
-      const currentMonth = parseInt(this.selectedMonth)
-      const todayYear = parseInt(this.$moment().format('YYYY'))
-      const todayMonth = parseInt(this.$moment().format('M'))
-      const minYear = Math.min(...this.yearLists.map(Number))
-      const maxYear = Math.max(...this.yearLists.map(Number))
-
       if (type === 'previous') {
-        // Stop at Jan of the minimum year
-        if (currentYear <= minYear && currentMonth === 1) return
-        // Stop at current month if isAfter
-        if (currentYear === todayYear && currentMonth === todayMonth && this.isAfter) return
+        if (!this.canGoPreviousMonth) return
 
-        if (currentMonth > 1) {
-          this.selectedMonth = currentMonth - 1
+        if (this.selectedMonthNumber > 1) {
+          this.selectedMonth = this.selectedMonthNumber - 1
         } else {
           this.selectedMonth = 12
-          this.selectedYear = currentYear - 1
+          this.selectedYear = this.selectedYearNumber - 1
         }
       }
 
       if (type === 'next') {
-        // Stop at current month/year if isBefore
-        if (this.isBefore && currentYear === todayYear && currentMonth === todayMonth) return
-        // Stop at Dec of the maximum year
-        if (currentYear >= maxYear && currentMonth === 12) return
+        if (!this.canGoNextMonth) return
 
-        if (currentMonth === 12) {
-          this.selectedYear = currentYear + 1
+        if (this.selectedMonthNumber === 12) {
+          this.selectedYear = this.selectedYearNumber + 1
           this.selectedMonth = 1
         } else {
-          this.selectedMonth = currentMonth + 1
+          this.selectedMonth = this.selectedMonthNumber + 1
         }
       }
     },
@@ -529,13 +356,6 @@ export default {
         date = date.add(1, 'days')
       }
       this.daysInMonth = days
-      // days.forEach(day => {
-      //   this.daysInMonth.push({
-      //     day: day.getDay(),
-      //     date: day.getDate(),
-      //     fullDate: this.$moment(day).format("MM-DD-YYYY")
-      //   });
-      // });
     },
     validateInput(e) {
       if ((e.key >= 0 && e.key <= 9) || e.key === '/') {
@@ -553,6 +373,7 @@ export default {
   }
 }
 </script>
+
 <style scoped>
 .calendar {
   min-width: 230px;
