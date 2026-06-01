@@ -3,7 +3,7 @@
     <AppLoading :loading="loadingBillablePractices" />
     <div class="flex items-center px-2">
       <div class="relative w-full">
-        <div v-if="authAdminPermissions.includes('Create Hubzz Invoices')" class="flex justify-start items-center flex-wrap py-2">
+        <div v-if="canCreateHubzzInvoices" class="flex justify-start items-center flex-wrap py-2">
           <AppButton
             class="mr-2 mt-1 font-bold"
             :label="$route.name.includes('bulk-billings') ? '+ Bill Individually' : ' + Bill by Bulk'"
@@ -49,28 +49,6 @@
               :isAfter="true"
               :error="formError.find(item => item.field === 'due_date')"
             />
-            <!-- <label for="billing_period_date_start">Date Start:</label>
-            <input 
-              id="billing_period_date_start" 
-              v-model="billing_period_date_start" 
-              type="date" 
-              name="billing_period_date_start"
-              placeholder="DD/MM/YYYY"
-            >
-            <label for="billing_period_date_end">Date End:</label>
-            <input 
-              id="billing_period_date_end" 
-              v-model="billing_period_date_end" 
-              type="date" 
-              name="billing_period_date_end"
-            >
-            <label for="due_date">Due Date:</label>
-            <input 
-              id="due_date" 
-              v-model="due_date" 
-              type="date" 
-              name="due_date"
-            > -->
           </div>
         </div>
         <div class="flex flex-col">
@@ -154,42 +132,6 @@
       <div class="hidden md:flex justify-around font-semibold w-full px-4">
         <div class="flex flex-row w-full text-sm justify-around">
           <!-- ORIGINAL -->
-          <!-- <div
-            class="text-center"
-            style="flex: 1 0 0; min-width: 100px; max-width: 250px;" 
-          >
-            Practice
-          </div>
-          <div
-            class="text-center"
-            style="flex: 1 0 0; min-width: 90px; max-width: 100px;"  
-          >
-            Check
-          </div>
-          <div
-            class="text-center"
-            style="flex: 1 0 0; min-width: 90px; max-width: 200px;"  
-          >
-            Job Part Number
-          </div>
-          <div
-            class="text-center"
-            style="flex: 1 0 0; min-width: 90px; max-width: 200px;"  
-          >
-            Approved at / Completed At
-          </div>
-          <div
-            class="text-center"
-            style="flex: 1 0 0; min-width: 90px; max-width: 175px;"  
-          >
-            Total
-          </div>
-          <div
-            class="text-center"
-            style="flex: 1 0 0; min-width: 90px; max-width: 220px;"  
-          >
-            Status
-          </div> -->
           <!-- ORIGINAL ENDS HERE -->
 
           <!-- FOR QA TESTING ONLY -->
@@ -218,112 +160,6 @@
         </div>
       </div>
 
-      <!-- OLD -->
-      <!-- <div class="w-full h-160 overflow-y-auto rounded-lg">
-        <div class="px-2 overflow-x-hidden">
-          <AppTable
-            :total="itemCount"
-            :items="allBillablePractices"
-            :currentPage="currentPage"
-            :perPage="practiceParams.limit"
-            :columns="practiceColumns"
-            :orderBy="practiceParams.order_by"
-            :disabledHeadings="true"
-            :disabledPagination="true"
-            :itemsOnTop="true"
-            :customItemsWidth="'cursor-default'"
-            @pagechanged="pagechanged"
-            @checkClicked="toggleCheckPracticeCheckAll"
-            @sorted="sorted"
-          >
-            <template v-slot:checker="slotProps">
-              <div class="flex flex-col items-center bg-gray-300 rounded-lg justify-between m-1">
-                <div class="text-left">
-                  {{ slotProps.item.name }}
-                </div>
-                <div
-                  class="m-1 rounded-full text-center px-4 py-1 w-32"
-                  :class="typeStyle(slotProps.item.type)"
-                >
-                  {{ slotProps.item.type }}
-                </div>
-                <div
-                  v-if="slotProps.item.type === 'Spoke' && slotProps.item.parent_practice"
-                  class="text-blue-200 m-1"
-                >
-                  {{ slotProps.item.parent_practice.name }} (HUB)
-                </div>
-                <div class="m-1">
-                  <input
-                    :id="slotProps.item"
-                    v-model="chosenPractices"
-                    type="checkbox"
-                    :value="slotProps.item"
-                  >
-                  <label :for="slotProps.item">Select All</label>
-                </div>
-                <div>
-                  Picked {{ chosenPracticeJobParts.filter(item => item.practice_id === slotProps.item.id).length }} of {{ slotProps.item.practice_invoiceable_job_parts.length }}
-                </div>
-              </div>
-            </template>
-
-            <template v-slot:invoiceable_job_parts="slotProps">
-              <div
-                class="md:justify-center md:w-full px-1 xl:px-2 align-middle md:text-center overflow-x-hidden"
-              >
-                <AppTable
-                  :total="slotProps.item.practice_invoiceable_job_parts.length"
-                  :items="slotProps.item.practice_invoiceable_job_parts"
-                  :columns="jobPartsColumns"
-                  :disabledPagination="true"
-                  :disabledHeadings="true"
-                  :customWidth="'w-full overflow-x-hidden'"
-                  :customItemsWidth="'w-full md:w-8/10 cursor-default'"
-                  @checkClicked="toggleCheckJobParts"
-                  @sorted="sorted"
-                >
-                  <template v-slot:checker="slotProps">
-                    <input
-                      :id="slotProps.item"
-                      v-model="chosenPracticeJobParts"
-                      type="checkbox"
-                      :value="slotProps.item"
-                    >
-                    <label :for="slotProps.item" />
-                  </template>
-                  <template v-slot:approved_completed_at="slotProps">
-                    <div>{{ slotProps.item.approved_at_in_gb_formatted ? slotProps.item.approved_at_in_gb_formatted : slotProps.item.completed_at_in_gb_formatted }}</div>
-                  </template>
-                  <template v-slot:status_slot="slotProps">
-                    <div
-                      :class="statusStyle(slotProps.item.invoice_status === 'To Be Invoiced'
-                        ? slotProps.item.status === 'Cancelled'
-                          ? slotProps.item.status 
-                          : slotProps.item.invoice_status  
-                        : slotProps.item.invoice_status === 'Disputed'
-                          ? slotProps.item.invoice_status 
-                          : slotProps.item.status )"
-                    >
-                      {{ slotProps.item.invoice_status === 'To Be Invoiced'
-                        ? slotProps.item.status === 'Cancelled'
-                          ? slotProps.item.status
-                          : slotProps.item.invoice_status
-                        : slotProps.item.invoice_status === 'Disputed'
-                          ? slotProps.item.invoice_status
-                          : slotProps.item.status }}
-                    </div>
-                  </template>
-                  <template v-slot:job_part_items_disputed_at_slot="slotProps">
-                    <div>{{ slotProps.item.job_part_items_disputed_at ? slotProps.item.job_part_items_disputed_at : 'N/A' }}</div>
-                  </template>
-                </AppTable>
-              </div>
-            </template>
-          </AppTable>
-        </div>
-      </div> -->
-
       <!-- New -->
       <div class="overflow-auto" style="max-height: 43vh">
         <div v-for="item in allBillablePractices" :key="item.id">
@@ -345,11 +181,6 @@
                 <div class="relative text-center">
                   <input :id="item.id" v-model="chosenPractices" type="checkbox" :value="item" @click="toggleCheckPracticeCheckAll(item)" />
                   <label :for="item.id">Select All</label>
-                  <!-- <AppButton 
-                    :label="'Select All'" 
-                    :icon="'add-rectangle'" 
-                    @click="toggleCheckPracticeCheckAll(item)" 
-                  /> -->
                 </div>
 
                 <div class="text-center text-sm">
@@ -467,30 +298,24 @@
 </template>
 <script>
 import debounce from 'lodash.debounce'
-// import AppTable from "@/components/Base/AppTable"
 import AppTableNew from '@/components/Base/AppTableNew'
 import AppDate from '@/components/Base/AppDate'
 import AppButton from '@/components/Base/AppButton'
 import AppLoading from '@/components/Base/AppLoading'
 import AppPagination from '@/components/Base/AppPagination'
-// import AppInput from "@/components/Base/AppInput"
 import AppInputSmall from '@/components/Base/AppInputSmall'
 export default {
   components: {
-    // AppTable,
     AppTableNew,
     AppDate,
     AppButton,
     AppLoading,
     AppPagination,
-    // AppInput,
     AppInputSmall
   },
 
   data() {
     return {
-      searchMessage: '',
-      showSessionsModal: false,
       formError: [],
 
       // for app table
@@ -506,9 +331,6 @@ export default {
       invoiceableDateEnd: '',
 
       alphabeticalOrder: false,
-
-      orderAlphabeticalAsc: false,
-      orderAlphabeticalDesc: false,
       showIndependentSpokesOnly: false,
       showDependentSpokesOnly: false,
       showStandAloneOnly: false,
@@ -523,7 +345,6 @@ export default {
       chosenPracticeJobParts: [],
 
       // tax rate
-      practiceTaxRate: 0,
       practiceTaxRateFormatted: 0,
 
       practiceParams: {
@@ -542,105 +363,7 @@ export default {
         practice_invoiceable: true
       },
 
-      loading: false,
-      practiceColumns: [
-        // ===========ORIGINAL COLUMNS===========
-        // {
-        // 	name: 'Practice',
-        // 	dataIndex: 'checker',
-        // 	class: 'flex-1 mt-4 items-center',
-        // 	flex: '1 0 0',
-        // 	slotName: 'checker',
-        // 	eventName: 'checkClicked',
-        // 	minWidth: '100px',
-        // 	maxWidth: '250px',
-        // },
-        // {
-        // 	name: 'Job Parts',
-        // 	dataIndex: 'invoiceable_job_parts',
-        // 	class: 'flex-initial',
-        // 	slotName: 'invoiceable_job_parts',
-        // 	flex: '1 0 0',
-        // 	minWidth: '100px',
-        // 	maxWidth: '1000px'
-        // },
-        // ===========ORIGINAL COLUMNS ENDS HERE===========
-
-        // ===========FOR QA TESTING ONLY===========
-        {
-          name: 'Practice',
-          dataIndex: 'checker',
-          class: 'flex-1 mt-4 items-center',
-          flex: '1 0 0',
-          slotName: 'checker',
-          eventName: 'checkClicked',
-          minWidth: '100px',
-          maxWidth: '200px',
-          sortable: false
-        },
-        {
-          name: 'Job Parts',
-          dataIndex: 'invoiceable_job_parts',
-          class: 'flex-initial',
-          slotName: 'invoiceable_job_parts',
-          flex: '1 0 0',
-          minWidth: '100px',
-          maxWidth: '1000px',
-          sortable: false
-        }
-        // ===========FOR QA TESTING ONLY ENDS HERE===========
-      ],
       jobPartsColumns: [
-        // ===========ORIGINAL COLUMNS===========
-        // {
-        // 	name: "Check",
-        // 	dataIndex: "checker",
-        // 	class: "flex items-center justify-center",
-        // 	slotName: "checker",
-        // 	flex: '1 0 0',
-        // 	minWidth: '90px',
-        // 	maxWidth: '100px',
-        // 	eventName: "checkClicked"
-        // },
-        // {
-        // 	name: "Job Part Number",
-        // 	dataIndex: "job_part_number",
-        // 	flex: '1 0 0',
-        // 	minWidth: '90px',
-        // 	maxWidth: '200px',
-        // 	class: "flex items-center justify-center",
-        // 	sortable: false
-        // },
-        // {
-        // 	name: "Approved At / Completed At",
-        // 	slot: true,
-        // 	dataIndex: "approved_at",
-        // 	flex: '1 0 0',
-        // 	minWidth: '90px',
-        // 	maxWidth: '200px',
-        // 	class: "flex items-center justify-center localDate",
-        // 	slotName: "approved_completed_at"
-        // },
-        // {
-        // 	name: "Total",
-        // 	dataIndex: "total",
-        // 	flex: '1 0 0',
-        // 	minWidth: '90px',
-        // 	maxWidth: '200px',
-        // 	class: "flex items-center justify-center currency",
-        // 	sortable: false
-        // },
-        // {
-        // 	name: "Status",
-        // 	slot: true,
-        // 	dataIndex: "status",
-        // 	flex: '1 0 0',
-        // 	minWidth: '90px',
-        // 	maxWidth: '200px',
-        // 	slotName: "status_slot",
-        // 	class: "flex items-center justify-center",
-        // 	sortable: true
-        // },
         // ===========ORIGINAL COLUMNS ENDS HERE===========
 
         // ===========FOR QA TESTING ONLY===========
@@ -696,6 +419,9 @@ export default {
     authAdminPermissions() {
       return this.$store.getters['permissions']
     },
+    canCreateHubzzInvoices() {
+      return this.authAdminPermissions.includes('Create Hubzz Invoices')
+    },
 
     loadingBillablePractices() {
       return this.$store.state.billings.loading_billable_practices
@@ -709,16 +435,8 @@ export default {
       return this.$store.state.billings.billable_practices_count
     },
 
-    pageCount() {
-      return Math.ceil(this.itemCount / this.practiceParams.limit)
-    },
-
     totalPages() {
       return Math.ceil(this.itemCount / this.practiceParams.limit)
-    },
-
-    total() {
-      return this.allBillablePractices.length
     }
   },
 
@@ -744,13 +462,6 @@ export default {
         this.formError.splice(due_date_index, errors.length)
       }
     },
-    invoiceableDateStart: function(value) {
-      if (value > this.invoiceableDateEnd) {
-        this.invoiceableDateEnd = ''
-      }
-      this.practiceParams.practice_invoiceable_date_start = value
-    },
-
     invoiceableDateEnd: function(value) {
       this.practiceParams.practice_invoiceable_date_end = value
       this.getBillablePractices()
@@ -770,28 +481,6 @@ export default {
       } else {
         this.practiceParams.order_by = ['created_at:desc']
       }
-      this.getBillablePractices()
-    },
-
-    orderAlphabeticalAsc: function(value) {
-      if (value === true) {
-        this.practiceParams.order_by = ['practice_name:asc']
-        this.orderAlphabeticalDesc = false
-      } else {
-        this.practiceParams.order_by = ['created_at:desc']
-      }
-
-      this.getBillablePractices()
-    },
-
-    orderAlphabeticalDesc: function(value) {
-      if (value === true) {
-        this.practiceParams.order_by = ['practice_name:desc']
-        this.orderAlphabeticalAsc = false
-      } else {
-        this.practiceParams.order_by = ['created_at:desc']
-      }
-
       this.getBillablePractices()
     },
 
@@ -908,7 +597,6 @@ export default {
 
   created() {
     this.$axios.$get(`/api/v1/admin/tax-rates`).then(res => {
-      this.practiceTaxRate = res.data.tax_rates.practice_tax_rate
       this.practiceTaxRateFormatted = res.data.tax_rates.practice_tax_rate_formatted
     })
     this.$store.commit('practices/CLEAR_PRACTICES_COUNT')
@@ -1054,31 +742,6 @@ export default {
       // )
     },
 
-    goToPage(page) {
-      if (page < 1) {
-        return
-      }
-
-      if (page > this.pageCount) {
-        return
-      }
-
-      const query = {
-        ...this.$router.query,
-        page
-      }
-
-      if (page === 1) {
-        delete query.page
-      }
-
-      if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-        this.loading = true
-      }
-
-      this.$router.push({ query })
-    },
-
     searchSubmit: debounce(function(page, order_by) {
       this.chosenPractices = []
       let search = this.search
@@ -1117,25 +780,10 @@ export default {
         delete query.search
       }
 
-      if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-        this.loading = true
-      }
-
       this.getBillablePractices()
 
       this.$router.push({ query })
     }, 500),
-
-    toggleCheckChosenPractices(item) {
-      const index = this.chosenPractices.findIndex(practice => {
-        return practice.id === item.id
-      })
-      if (index > -1) {
-        this.chosenPractices.splice(index, 1)
-      } else {
-        this.chosenPractices.push(item)
-      }
-    },
 
     toggleCheckJobParts(item) {
       const index = this.chosenPracticeJobParts.findIndex(jobPart => {
@@ -1188,13 +836,6 @@ export default {
       this.$store.commit('billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES', false)
     },
 
-    sortData: function(toSortBy) {
-      if ((toSortBy = this.sortBy)) {
-        this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc'
-      }
-      this.sortBy = toSortBy
-    },
-
     typeStyle(status) {
       switch (status) {
         case 'Hub':
@@ -1203,17 +844,6 @@ export default {
           return 'text-blue-500'
         case 'Stand Alone':
           return 'text-indigo-600'
-        default:
-          return
-      }
-    },
-
-    hubTypeStyle(hubType) {
-      switch (hubType) {
-        case 'Type 1':
-          return 'bg-red-500 text-white px-4 py-1'
-        case 'Type 2':
-          return 'bg-purple-500 text-white px-4 py-1'
         default:
           return
       }
@@ -1247,12 +877,6 @@ export default {
       this.$store.commit('billings/CLEAR_BILLABLE_PRACTICES_COUNT')
       this.$store.commit('billings/CLEAR_BILLABLE_PRACTICES')
       this.getBillablePractices()
-    },
-
-    clearInvoiceableJobParts() {
-      this.chosenPracticeJobParts = []
-      this.chosenPracticesFinalization = []
-      this.showSessionsModal = false
     },
 
     sorted(order_by) {

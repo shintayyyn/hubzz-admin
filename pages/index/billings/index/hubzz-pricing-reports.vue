@@ -22,22 +22,21 @@
 
 <script>
 export default {
-  data (){
-    return{
+  data() {
+    return {
       pricingReports: [
-          {
-            title: 'REP-030',
-            subtitle: 'Hours Approved',
-            url: '/billings/hubzz-pricing-reports/locum-invoice-job-parts',
-          },
-          {
-            title: 'REP-031',
-            subtitle: 'Invoices',
-            url: '/billings/hubzz-pricing-reports/practice-invoice-items',
-          },
-        ],
+        {
+          title: 'REP-030',
+          subtitle: 'Hours Approved',
+          url: '/billings/hubzz-pricing-reports/locum-invoice-job-parts'
+        },
+        {
+          title: 'REP-031',
+          subtitle: 'Invoices',
+          url: '/billings/hubzz-pricing-reports/practice-invoice-items'
+        }
+      ]
     }
   }
-
 }
 </script>

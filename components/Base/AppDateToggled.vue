@@ -55,7 +55,7 @@
                 class="ml-1"
                 :class="
                   (isBefore && selectedYear == $moment().format('YYYY') && parseInt(selectedMonth) == parseInt($moment().format('M'))) ||
-                  (selectedYear == yearLists[yearLists.length - 1] && selectedMonth == 12)
+                    (selectedYear == yearLists[yearLists.length - 1] && selectedMonth == 12)
                     ? 'cursor-not-allowed'
                     : 'cursor-pointer'
                 "
@@ -67,7 +67,7 @@
                   width="12"
                   :color="
                     (isBefore && selectedYear == $moment().format('YYYY') && parseInt(selectedMonth) == parseInt($moment().format('M'))) ||
-                    (selectedYear == yearLists[yearLists.length - 1] && selectedMonth == 12)
+                      (selectedYear == yearLists[yearLists.length - 1] && selectedMonth == 12)
                       ? 'gray'
                       : ''
                   "
@@ -276,7 +276,6 @@
   </div>
 </template>
 <script>
-import { mixin as clickaway } from 'vue-clickaway'
 let months = [
   { label: 'Jan', value: '1' },
   { label: 'Feb', value: '2' },
@@ -292,14 +291,31 @@ let months = [
   { label: 'Dec', value: '12' }
 ]
 export default {
-  mixins: [clickaway],
   props: {
-    value: String,
-    name: String,
-    label: String,
-    error: Object,
-    inStyle: String,
-    inClass: String,
+    value: {
+      type: String,
+      default: ''
+    },
+    name: {
+      type: String,
+      default: ''
+    },
+    label: {
+      type: String,
+      default: ''
+    },
+    error: {
+      type: Object,
+      default: null
+    },
+    inStyle: {
+      type: String,
+      default: ''
+    },
+    inClass: {
+      type: String,
+      default: ''
+    },
     // disabled all dates past the current date
     isAfter: Boolean,
     isBefore: Boolean,
@@ -311,10 +327,7 @@ export default {
   },
   data() {
     return {
-      modal: false,
       months,
-      monthLists: [],
-      yearLists: [],
       selectedMonth: this.$moment.utc().format('M'),
       selectedYear: this.$moment.utc().format('YYYY'),
       daysInMonth: []
@@ -348,14 +361,6 @@ export default {
       return years
     },
     filteredMonths() {
-      // if selected year === current year, get only the current month up to last month,
-      // if not, get all the months
-      // if (this.selectedYear === this.$moment().format("YYYY")) {
-      // 	return this.months.filter(
-      // 		month => parseInt(month.value) >= parseInt(this.$moment().format("M"))
-      // 	);
-      // }
-      // return this.months;
       if (this.selectedYear === this.$moment().format('YYYY')) {
         if (this.isAfter) {
           return this.months.filter(month => parseInt(month.value) >= parseInt(this.$moment().format('M')))
@@ -386,44 +391,9 @@ export default {
       this.selectedMonth = this.$moment(this.value, this.format).format('M')
       this.selectedYear = this.$moment(this.value, this.format).format('YYYY')
     }
-    // get month list
-    this.getMonthLists()
-    // get year list
-    this.getYearLists()
     this.getDaysInMonth(this.selectedMonth, this.selectedYear)
   },
   methods: {
-    getMonthLists() {
-      for (let i = this.selectedMonth; i <= this.months.length; i++) {
-        this.monthLists.push(`${i}`)
-      }
-    },
-    getYearLists() {
-      if (!this.isBefore) {
-        for (let i = 0; i <= 10; i++) {
-          this.yearLists.push(
-            this.$moment(this.selectedYear, 'YYYY')
-              .add(i, 'years')
-              .format('YYYY')
-          )
-        }
-      }
-
-      //new logic for year picker.
-      if (!this.isAfter) {
-        const selectedYear = parseInt(this.selectedYear)
-        const minYear = 2022
-
-        for (let year = selectedYear; year >= minYear; year--) {
-          if (!this.yearLists.includes(year.toString())) {
-            this.yearLists.push(year.toString())
-          }
-        }
-      }
-      this.yearLists.sort(function(a, b) {
-        return a - b
-      })
-    },
     isSelectedDate(date) {
       let selectedDate = `${this.selectedYear}-${this.selectedMonth}-${date}`
       return this.$moment(selectedDate, 'YYYY-MM-D').isSame(this.value)
@@ -450,27 +420,8 @@ export default {
           .subtract(1, 'd')
           .isBefore(this.$moment(newDate, 'MM-DD-YYYY'))
       }
-      // return false;
-      // let newDate = this.$moment.utc().format("MM-DD-YYYY");
-      // if (this.isAfter) {
-      //   return this.$moment(date, "MM-DD-YYYY").isAfter(
-      //     this.$moment(newDate, "MM-DD-YYYY")
-      //   );
-      // }
-      // return this.$moment(date, "MM-DD-YYYY").isBefore(
-      //   this.$moment(newDate, "MM-DD-YYYY")
-      // );
     },
-    // toggledOff() {
-    // 	// get to the selected date
-    // 	if (this.value) {
-    // 		let month = this.$moment(this.value, "YYYY-MM-DD").format("M");
-    // 		let year = this.$moment(this.value, "YYYY-MM-DD").format("YYYY");
-    // 		this.selectedMonth = month;
-    // 		this.selectedYear = year;
-    // 	}
-    // 	this.modal = false;
-    // },
+
     adjustMonth(type) {
       const currentYear = parseInt(this.selectedYear)
       const currentMonth = parseInt(this.selectedMonth)
@@ -519,13 +470,6 @@ export default {
         date = date.add(1, 'days')
       }
       this.daysInMonth = days
-      // days.forEach(day => {
-      //   this.daysInMonth.push({
-      //     day: day.getDay(),
-      //     date: day.getDate(),
-      //     fullDate: this.$moment(day).format("MM-DD-YYYY")
-      //   });
-      // });
     },
     validateInput(e) {
       if ((e.key >= 0 && e.key <= 9) || e.key === '/') {
@@ -536,7 +480,6 @@ export default {
     },
     select(date) {
       if (!this.isDisabled(date)) {
-        // this.modal = false;
         this.$emit('input', this.$moment(date, 'MM-DD-YYYY').format(this.format))
       }
     }

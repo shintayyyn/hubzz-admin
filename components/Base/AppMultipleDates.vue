@@ -76,47 +76,23 @@
           </div>
 
           <div class="flex flex-no-wrap justify-between text-xs sm:text-sm mx-1 mt-4">
-            <div class="w-full text-center font-bold">
-              Mo
-            </div>
-            <div class="w-full text-center font-bold">
-              Tu
-            </div>
-            <div class="w-full text-center font-bold">
-              We
-            </div>
-            <div class="w-full text-center font-bold">
-              Th
-            </div>
-            <div class="w-full text-center font-bold">
-              Fr
-            </div>
-            <div class="w-full text-center font-bold">
-              Sa
-            </div>
-            <div class="w-full text-center font-bold">
-              Su
+            <div v-for="column in weekdayColumns" :key="`weekday-${column.day}`" class="w-full text-center font-bold">
+              {{ column.label }}
             </div>
           </div>
 
           <div class="flex flex-no-wrap justify-between m-1">
-            <div class="relative flex flex-col w-full">
-              <div v-if="daysInMonth.findIndex(({ day }) => day === 0) < 6">
+            <div v-for="column in weekdayColumns" :key="`column-${column.day}`" class="relative flex flex-col w-full">
+              <div v-if="firstSundayIndex < column.emptyIndexThreshold">
                 <div class="date-cell">
                   &nbsp;
                 </div>
               </div>
               <div v-for="(item, index) in daysInMonth" :key="index">
                 <div
-                  v-if="item.day === 1"
+                  v-if="item.day === column.day"
                   class="rounded-full relative p-1 flex justify-center items-center date-cell"
-                  :class="{
-                    'border-yellow-500 border-2': isSame(item.fullDate),
-                    'text-gray-500': isDisabled(item.fullDate),
-                    'cursor-pointer hover:bg-gray-300': !isDisabled(item.fullDate) && !disableSelection,
-                    'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date, item),
-                    'bg-yellow-500': dates.length && dates.includes($moment(item.fullDate, 'MM-DD-YYYY').format(format))
-                  }"
+                  :class="getDayCellClasses(item, column)"
                   @mouseover="showHover(item.fullDate)"
                   @click="select(item.fullDate)"
                 >
@@ -126,285 +102,9 @@
                 </div>
                 <transition name="fade">
                   <div
-                    v-if="hoverDate === item.fullDate && item.day === 1"
+                    v-if="hoverDate === item.fullDate && item.day === column.day"
                     class="hover-details absolute bg-transparent border border-gray-400 text-xs z-50 flex flex-col items-center"
-                    @mouseleave=";(showDetail = false), (hoverDate = '')"
-                  >
-                    <div class="w-full">
-                      <div class="px-1">
-                        Date: {{ scheduleDetails.date }}
-                      </div>
-                      <div v-for="(shift, shiftIndex) in scheduleDetails.shifts" :key="shiftIndex" class="px-1 border-t bg-gray-100">
-                        <p>Shift: {{ getName('shift', shift.shift_id) }}</p>
-                        <p>Start time: {{ shift.time_start }}</p>
-                        <p>End time: {{ shift.time_end }}</p>
-                        <p>Rate: {{ shift.rate }}</p>
-                        <p>Rate Type: {{ getName('rate_type', shift.rate_type) }}</p>
-                      </div>
-                    </div>
-                  </div>
-                </transition>
-              </div>
-            </div>
-            <div class="relative flex flex-col w-full">
-              <div v-if="daysInMonth.findIndex(({ day }) => day === 0) < 5">
-                <div class="date-cell">
-                  &nbsp;
-                </div>
-              </div>
-              <div v-for="(item, index) in daysInMonth" :key="index">
-                <div
-                  v-if="item.day === 2"
-                  class="rounded-full relative p-1 flex justify-center items-center date-cell"
-                  :class="{
-                    'border-yellow-500 border-2': isSame(item.fullDate),
-                    'text-gray-500': isDisabled(item.fullDate),
-                    'cursor-pointer hover:bg-gray-300': !isDisabled(item.fullDate) && !disableSelection,
-                    'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date, item),
-                    'bg-yellow-500': dates.length && dates.includes($moment(item.fullDate, 'MM-DD-YYYY').format(format))
-                  }"
-                  @mouseover="showHover(item.fullDate)"
-                  @click="select(item.fullDate)"
-                >
-                  <div class="text-xs md:text-sm z-10">
-                    {{ item.date }}
-                  </div>
-                </div>
-                <transition name="fade">
-                  <div
-                    v-if="hoverDate === item.fullDate && item.day === 2"
-                    class="hover-details absolute bg-transparent border border-gray-400 text-xs z-50 flex flex-col items-center"
-                    @mouseleave=";(showDetail = false), (hoverDate = '')"
-                  >
-                    <div class="w-full">
-                      <div class="px-1">
-                        Date: {{ scheduleDetails.date }}
-                      </div>
-                      <div v-for="(shift, shiftIndex) in scheduleDetails.shifts" :key="shiftIndex" class="px-1 border-t bg-gray-100">
-                        <p>Shift: {{ getName('shift', shift.shift_id) }}</p>
-                        <p>Start time: {{ shift.time_start }}</p>
-                        <p>End time: {{ shift.time_end }}</p>
-                        <p>Rate: {{ shift.rate }}</p>
-                        <p>Rate Type: {{ getName('rate_type', shift.rate_type) }}</p>
-                      </div>
-                    </div>
-                  </div>
-                </transition>
-              </div>
-            </div>
-            <div class="relative flex flex-col w-full">
-              <div v-if="daysInMonth.findIndex(({ day }) => day === 0) < 4">
-                <div class="date-cell">
-                  &nbsp;
-                </div>
-              </div>
-              <div v-for="(item, index) in daysInMonth" :key="index">
-                <div
-                  v-if="item.day === 3"
-                  class="rounded-full relative p-1 flex justify-center items-center date-cell"
-                  :class="{
-                    'border-yellow-500 border-2': isSame(item.fullDate),
-                    'text-gray-500': isDisabled(item.fullDate),
-                    'cursor-pointer hover:bg-yellow-500': !isDisabled(item.fullDate) && !disableSelection,
-                    'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date),
-                    'bg-yellow-500': dates.length && dates.includes($moment(item.fullDate, 'MM-DD-YYYY').format(format))
-                  }"
-                  @mouseover="showHover(item.fullDate)"
-                  @click="select(item.fullDate)"
-                >
-                  <div class="text-xs md:text-sm z-10">
-                    {{ item.date }}
-                  </div>
-                </div>
-                <transition name="fade">
-                  <div
-                    v-if="hoverDate === item.fullDate && item.day === 3"
-                    class="hover-details absolute bg-transparent border border-gray-400 text-xs z-50 flex flex-col items-center"
-                    @mouseleave=";(showDetail = false), (hoverDate = '')"
-                  >
-                    <div class="w-full">
-                      <div class="px-1">
-                        Date: {{ scheduleDetails.date }}
-                      </div>
-                      <div v-for="(shift, shiftIndex) in scheduleDetails.shifts" :key="shiftIndex" class="px-1 border-t bg-gray-100">
-                        <p>Shift: {{ getName('shift', shift.shift_id) }}</p>
-                        <p>Start time: {{ shift.time_start }}</p>
-                        <p>End time: {{ shift.time_end }}</p>
-                        <p>Rate: {{ shift.rate }}</p>
-                        <p>Rate Type: {{ getName('rate_type', shift.rate_type) }}</p>
-                      </div>
-                    </div>
-                  </div>
-                </transition>
-              </div>
-            </div>
-            <div class="relative flex flex-col w-full">
-              <div v-if="daysInMonth.findIndex(({ day }) => day === 0) < 3">
-                <div class="date-cell">
-                  &nbsp;
-                </div>
-              </div>
-              <div v-for="(item, index) in daysInMonth" :key="index">
-                <div
-                  v-if="item.day === 4"
-                  class="rounded-full relative p-1 flex justify-center items-center date-cell"
-                  :class="{
-                    'border-yellow-500 border-2': isSame(item.fullDate),
-                    'text-gray-500': isDisabled(item.fullDate),
-                    'cursor-pointer hover:bg-yellow-500': !isDisabled(item.fullDate) && !disableSelection,
-                    'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date),
-                    'bg-yellow-500': dates.length && dates.includes($moment(item.fullDate, 'MM-DD-YYYY').format(format))
-                  }"
-                  @mouseover="showHover(item.fullDate)"
-                  @click="select(item.fullDate)"
-                >
-                  <div class="text-xs md:text-sm z-10">
-                    {{ item.date }}
-                  </div>
-                </div>
-                <transition name="fade">
-                  <div
-                    v-if="hoverDate === item.fullDate && item.day === 4"
-                    class="hover-details absolute bg-transparent border border-gray-400 text-xs z-50 flex flex-col items-center"
-                    @mouseleave=";(showDetail = false), (hoverDate = '')"
-                  >
-                    <div class="w-full">
-                      <div class="px-1">
-                        Date: {{ scheduleDetails.date }}
-                      </div>
-                      <div v-for="(shift, shiftIndex) in scheduleDetails.shifts" :key="shiftIndex" class="px-1 border-t bg-gray-100">
-                        <p>Shift: {{ getName('shift', shift.shift_id) }}</p>
-                        <p>Start time: {{ shift.time_start }}</p>
-                        <p>End time: {{ shift.time_end }}</p>
-                        <p>Rate: {{ shift.rate }}</p>
-                        <p>Rate Type: {{ getName('rate_type', shift.rate_type) }}</p>
-                      </div>
-                    </div>
-                  </div>
-                </transition>
-              </div>
-            </div>
-            <div class="relative flex flex-col w-full">
-              <div v-if="daysInMonth.findIndex(({ day }) => day === 0) < 2">
-                <div class="date-cell">
-                  &nbsp;
-                </div>
-              </div>
-              <div v-for="(item, index) in daysInMonth" :key="index">
-                <div
-                  v-if="item.day === 5"
-                  class="rounded-full relative p-1 flex justify-center items-center date-cell"
-                  :class="{
-                    'border-yellow-500 border-2': isSame(item.fullDate),
-                    'text-gray-500': isDisabled(item.fullDate),
-                    'cursor-pointer hover:yellow-500': !isDisabled(item.fullDate) && !disableSelection,
-                    'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date),
-                    'bg-yellow-500': dates.length && dates.includes($moment(item.fullDate, 'MM-DD-YYYY').format(format))
-                  }"
-                  @mouseover="showHover(item.fullDate)"
-                  @click="select(item.fullDate)"
-                >
-                  <div class="text-xs md:text-sm z-10">
-                    {{ item.date }}
-                  </div>
-                </div>
-                <transition name="fade">
-                  <div
-                    v-if="hoverDate === item.fullDate && item.day === 5"
-                    class="hover-details absolute bg-transparent border border-gray-400 text-xs z-50 flex flex-col items-center"
-                    @mouseleave=";(showDetail = false), (hoverDate = '')"
-                  >
-                    <div class="w-full">
-                      <div class="px-1">
-                        Date: {{ scheduleDetails.date }}
-                      </div>
-                      <div v-for="(shift, shiftIndex) in scheduleDetails.shifts" :key="shiftIndex" class="px-1 border-t bg-gray-100">
-                        <p>Shift: {{ getName('shift', shift.shift_id) }}</p>
-                        <p>Start time: {{ shift.time_start }}</p>
-                        <p>End time: {{ shift.time_end }}</p>
-                        <p>Rate: {{ shift.rate }}</p>
-                        <p>Rate Type: {{ getName('rate_type', shift.rate_type) }}</p>
-                      </div>
-                    </div>
-                  </div>
-                </transition>
-              </div>
-            </div>
-            <div class="relative flex flex-col w-full">
-              <div v-if="daysInMonth.findIndex(({ day }) => day === 0) < 1">
-                <div class="date-cell">
-                  &nbsp;
-                </div>
-              </div>
-              <div v-for="(item, index) in daysInMonth" :key="index">
-                <div
-                  v-if="item.day === 6"
-                  class="rounded-full relative p-1 flex justify-center items-center date-cell"
-                  :class="{
-                    'border-yellow-500 border-2': isSame(item.fullDate),
-                    'text-gray-500': isDisabled(item.fullDate),
-                    'cursor-pointer hover:bg-yellow-500': !isDisabled(item.fullDate) && !disableSelection,
-                    'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date),
-                    'bg-yellow-500': dates.length && dates.includes($moment(item.fullDate, 'MM-DD-YYYY').format(format))
-                  }"
-                  @mouseover="showHover(item.fullDate)"
-                  @click="select(item.fullDate)"
-                >
-                  <div class="text-xs md:text-sm z-10">
-                    {{ item.date }}
-                  </div>
-                </div>
-                <transition name="fade">
-                  <div
-                    v-if="hoverDate === item.fullDate && item.day === 6"
-                    class="hover-details absolute bg-transparent border border-gray-400 text-xs z-50 flex flex-col items-center"
-                    @mouseleave=";(showDetail = false), (hoverDate = '')"
-                  >
-                    <div class="w-full">
-                      <div class="px-1">
-                        Date: {{ scheduleDetails.date }}
-                      </div>
-                      <div v-for="(shift, shiftIndex) in scheduleDetails.shifts" :key="shiftIndex" class="px-1 border-t bg-gray-100">
-                        <p>Shift: {{ getName('shift', shift.shift_id) }}</p>
-                        <p>Start time: {{ shift.time_start }}</p>
-                        <p>End time: {{ shift.time_end }}</p>
-                        <p>Rate: {{ shift.rate }}</p>
-                        <p>Rate Type: {{ getName('rate_type', shift.rate_type) }}</p>
-                      </div>
-                    </div>
-                  </div>
-                </transition>
-              </div>
-            </div>
-            <div class="relative flex flex-col w-full">
-              <div v-if="daysInMonth.findIndex(({ day }) => day === 0) < 0">
-                <div class="date-cell">
-                  &nbsp;
-                </div>
-              </div>
-              <div v-for="(item, index) in daysInMonth" :key="index">
-                <div
-                  v-if="item.day === 0"
-                  class="rounded-full relative p-1 flex justify-center items-center date-cell"
-                  :class="{
-                    'border-yellow-500 border-2': isSame(item.fullDate),
-                    'text-gray-500': isDisabled(item.fullDate),
-                    'cursor-pointer hover:bg-yellow-500': !isDisabled(item.fullDate) && !disableSelection,
-                    'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date),
-                    'bg-yellow-500': dates.length && dates.includes($moment(item.fullDate, 'MM-DD-YYYY').format(format))
-                  }"
-                  @mouseover="showHover(item.fullDate)"
-                  @click="select(item.fullDate)"
-                >
-                  <div class="text-xs md:text-sm z-10">
-                    {{ item.date }}
-                  </div>
-                </div>
-                <transition name="fade">
-                  <div
-                    v-if="hoverDate === item.fullDate && item.day === 0"
-                    class="hover-details absolute bg-transparent border border-gray-400 text-xs z-50 flex flex-col items-center"
-                    @mouseleave=";(showDetail = false), (hoverDate = '')"
+                    @mouseleave="hoverDate = ''"
                   >
                     <div class="w-full">
                       <div class="px-1">
@@ -551,14 +251,12 @@ export default {
     return {
       modal: false,
       months,
-      monthLists: [],
       yearLists: [],
       selectedMonth: this.$moment.utc().format('M'),
       selectedYear: this.$moment.utc().format('YYYY'),
       daysInMonth: [],
       lastDate: '',
       dates: [],
-      showDetail: false,
       hoverDate: '',
       scheduleDetails: {
         date: '',
@@ -567,6 +265,20 @@ export default {
     }
   },
   computed: {
+    weekdayColumns() {
+      return [
+        { day: 1, label: 'Mo', emptyIndexThreshold: 6, hoverClass: 'hover:bg-gray-300', isSelectedWithItem: true },
+        { day: 2, label: 'Tu', emptyIndexThreshold: 5, hoverClass: 'hover:bg-gray-300', isSelectedWithItem: true },
+        { day: 3, label: 'We', emptyIndexThreshold: 4, hoverClass: 'hover:bg-yellow-500', isSelectedWithItem: false },
+        { day: 4, label: 'Th', emptyIndexThreshold: 3, hoverClass: 'hover:bg-yellow-500', isSelectedWithItem: false },
+        { day: 5, label: 'Fr', emptyIndexThreshold: 2, hoverClass: 'hover:yellow-500', isSelectedWithItem: false },
+        { day: 6, label: 'Sa', emptyIndexThreshold: 1, hoverClass: 'hover:bg-yellow-500', isSelectedWithItem: false },
+        { day: 0, label: 'Su', emptyIndexThreshold: 0, hoverClass: 'hover:bg-yellow-500', isSelectedWithItem: false }
+      ]
+    },
+    firstSundayIndex() {
+      return this.daysInMonth.findIndex(({ day }) => day === 0)
+    },
     filteredMonths() {
       // if selected year === current year, get only the current month up to last month,
       // if not, get all the months
@@ -620,7 +332,6 @@ export default {
     isOpen(value) {
       if (value === false) {
         this.hoverDate = ''
-        this.showDetail = false
       }
     }
   },
@@ -637,12 +348,20 @@ export default {
       this.selectedYear = this.$moment(this.lastDate, this.format).format('YYYY')
     }
 
-    this.getMonthLists()
     this.getYearLists()
     this.getDaysInMonth(this.selectedMonth, this.selectedYear)
   },
 
   methods: {
+    getDayCellClasses(item, column) {
+      return {
+        'border-yellow-500 border-2': this.isSame(item.fullDate),
+        'text-gray-500': this.isDisabled(item.fullDate),
+        [`cursor-pointer ${column.hoverClass}`]: !this.isDisabled(item.fullDate) && !this.disableSelection,
+        'bg-yellow-500 border-yellow-500 border-2': column.isSelectedWithItem ? this.isSelectedDate(item.date, item) : this.isSelectedDate(item.date),
+        'bg-yellow-500': this.dates.length && this.dates.includes(this.$moment(item.fullDate, 'MM-DD-YYYY').format(this.format))
+      }
+    },
     getName(type, id) {
       if (type === 'shift') {
         switch (id) {
@@ -691,11 +410,6 @@ export default {
           })
           this.hoverDate = fullDate
         }
-      }
-    },
-    getMonthLists() {
-      for (let i = this.selectedMonth; i <= this.months.length; i++) {
-        this.monthLists.push(`${i}`)
       }
     },
     getYearLists() {

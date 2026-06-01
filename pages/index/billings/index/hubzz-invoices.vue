@@ -1,13 +1,8 @@
 <template>
-  <section v-if="authAdminPermissions.includes('View Hubzz Invoices')">
+  <section v-if="canViewHubzzInvoices">
     <template v-if="$route.name === 'index-billings-index-hubzz-invoices'">
       <div class="flex flex-col md:flex-row justify-start md:items-center w-full pt-2 pb-4">
         <div class="mr-2 pt-1">
-          <!-- <input
-            v-model="search"
-            class="rounded-lg border-2 border-transparent text-sm text-white w-1/2 md:w-full p-2 focus:border-sunglow focus:outline-none bg-waterloo"
-            placeholder="Filter by Practice Name or Invoice Number"
-          > -->
           <AppInputSmall
             v-model="search"
             :type="'text'"
@@ -19,23 +14,23 @@
           />
         </div>
         <div class="flex m-2 sm:mt-4 text-sm text-gray-700">
-          <input id="showUnpaidInvoiceOnly" v-model="showUnpaidInvoiceOnly" type="checkbox" value="true">
+          <input id="showUnpaidInvoiceOnly" v-model="showUnpaidInvoiceOnly" type="checkbox" value="true" />
           <label for="showUnpaidInvoiceOnly">Show Unpaid Invoices Only</label>
         </div>
         <div class="flex m-2 sm:mt-4 text-sm text-gray-700">
-          <input id="showExportableInvoicesOnly" v-model="showExportableInvoicesOnly" type="checkbox" value="true">
+          <input id="showExportableInvoicesOnly" v-model="showExportableInvoicesOnly" type="checkbox" value="true" />
           <label for="showExportableInvoicesOnly">Show Exportable Invoices Only</label>
         </div>
         <div class="flex m-2 sm:mt-4 text-sm text-gray-700">
-          <input id="showPaidInvoiceOnly" v-model="showPaidInvoiceOnly" type="checkbox" value="true">
+          <input id="showPaidInvoiceOnly" v-model="showPaidInvoiceOnly" type="checkbox" value="true" />
           <label for="showPaidInvoiceOnly">Show Paid Invoices Only</label>
         </div>
         <div class="flex m-2 sm:mt-4 text-sm text-gray-700">
-          <input id="showCsvExportOnly" v-model="showCsvExportOnly" type="checkbox" value="true">
+          <input id="showCsvExportOnly" v-model="showCsvExportOnly" type="checkbox" value="true" />
           <label for="showCsvExportOnly">Show CSV Exported Only</label>
         </div>
       </div>
-      
+
       <div class="">
         <AppTableNew
           v-if="hubzzInvoices.length > 0"
@@ -53,19 +48,17 @@
           @sorted="sorted"
         >
           <template v-slot:checker="slotProps">
-            <input 
-              v-if="slotProps.item.sage_ref"
-              :id="slotProps.item" 
-              v-model="chosenInvoices" 
-              type="checkbox" 
-              :value="slotProps.item" 
-            >
+            <input v-if="slotProps.item.sage_ref" :id="slotProps.item" v-model="chosenInvoices" type="checkbox" :value="slotProps.item" />
             <label :for="slotProps.item" />
           </template>
 
           <template v-slot:issuedAt="slotProps">
             <div>
-              {{ $moment(slotProps.item.issued_at_in_gb).isSame($moment.utc(), 'day') ? slotProps.item.issued_at_in_gb_formatted_relative : $moment(slotProps.item.issued_at_in_gb).format('DD/MM/YYYY') }}
+              {{
+                $moment(slotProps.item.issued_at_in_gb).isSame($moment.utc(), 'day')
+                  ? slotProps.item.issued_at_in_gb_formatted_relative
+                  : $moment(slotProps.item.issued_at_in_gb).format('DD/MM/YYYY')
+              }}
             </div>
           </template>
 
@@ -80,10 +73,7 @@
           </template>
 
           <template v-slot:exported_at="slotProps">
-            <div
-              v-if="slotProps.item.sage_ref"
-              :class="slotProps.item.exported_at ? 'text-white-400' : 'text-white-400'"
-            >
+            <div v-if="slotProps.item.sage_ref" :class="slotProps.item.exported_at ? 'text-white-400' : 'text-white-400'">
               <span class="font-bold">{{ slotProps.item.exported_at ? 'Yes' : 'No' }}</span>
             </div>
             <div v-else>
@@ -93,22 +83,13 @@
 
           <template v-slot:payment_status="slotProps">
             <div class="flex flex-col">
-              <div
-                v-if="slotProps.item.unpaid_at" 
-                class="px-2"
-              >
-                {{ slotProps.item.unpaid_at ? `Marked Invalid at  ${slotProps.item.unpaid_at_in_gb_formatted }`: null }}
+              <div v-if="slotProps.item.unpaid_at" class="px-2">
+                {{ slotProps.item.unpaid_at ? `Marked Invalid at  ${slotProps.item.unpaid_at_in_gb_formatted}` : null }}
               </div>
-              <div 
-                v-else-if="slotProps.item.paid_at"
-                class="flex items-center justify-center"
-              >
+              <div v-else-if="slotProps.item.paid_at" class="flex items-center justify-center">
                 {{ slotProps.item.paid_at ? `Paid at ${slotProps.item.paid_at_in_gb_formatted}` : null }}
               </div>
-              <div 
-                v-else
-                class="text-gray-700"
-              >
+              <div v-else class="text-gray-700">
                 Unpaid
               </div>
             </div>
@@ -118,35 +99,13 @@
             <div class="flex justify-center">
               <div class="flex items-center justify-center">
                 <AppButton
-                  :label="!slotProps.item.paid_at ? 'Settle Payment':'Payment is Settled'"
+                  :label="!slotProps.item.paid_at ? 'Settle Payment' : 'Payment is Settled'"
                   class="text-white mr-2"
                   customTheme="bg-green-500 hover:bg-green-600 py-1"
                   :disabled="slotProps.item.sage_ref && !slotProps.item.paid_at ? false : true"
                   @click="toShowPaidModal(slotProps.item.id)"
                 />
-                <!-- <span
-                  v-if="!slotProps.item.sage_ref"
-                  class="tool-left text-sm mr-2"
-                  data-tip="Sage Reference is not yet added on Practice Profile."
-                  tabindex="1"
-                >
-                  <svgicon name="info" width="21" height="21" color="white transparent black" class="ml-2" />
-                </span> -->
               </div>
-              <!-- <div
-                v-else
-                class="px-2"
-              >
-                {{ slotProps.item.paid_at ? $moment(slotProps.item.paid_at).format('DD/MM/YYYY') : "Not yet paid" }}
-              </div> -->
-
-              <!-- <div>
-                <AppButton
-                  :label="'View'"
-                  class="mr-2"
-                  @click="viewInvoice(slotProps.item.id)"
-                />
-              </div> -->
             </div>
           </template>
         </AppTableNew>
@@ -163,41 +122,31 @@
           </div>
         </template>
       </div>
-      
-      <div 
-        v-if="authAdminPermissions.includes('Export Sage Csv')"
-        class="flex flex-row justify-end"
-      >
-        <AppButton
-          class="mx-2"
-          :label="'Clear Selection'"
-          :icon="'add-rectangle'"
-          @click="reset()"
-        />
-        <AppButton
-          class="mr-2"
-          :label="'Create SAGE.csv'"
-          :icon="'circle-check'"
-          :disabled="chosenInvoices.length == 0"
-          @click="confirmSage()"
-        />
+
+      <div v-if="canExportSageCsv" class="flex flex-row justify-end">
+        <AppButton class="mx-2" :label="'Clear Selection'" :icon="'add-rectangle'" @click="reset()" />
+        <AppButton class="mr-2" :label="'Create SAGE.csv'" :icon="'circle-check'" :disabled="chosenInvoices.length == 0" @click="confirmSage()" />
       </div>
 
       <!--SETTLE PAYMENT MODAL -->
       <transition name="fade" mode="out-in">
-        <div v-if="showPaidModal == true" class="mark-paid-modal h-full flex flex-col rounded-lg shadow-lg overflow-hidden">
+        <div v-if="showPaidModal === true" class="mark-paid-modal h-full flex flex-col rounded-lg shadow-lg overflow-hidden">
           <!-- TO PAID CONFIRM CANCEL -->
           <transition name="drop" mode="out-in">
             <AppConfirm
               v-if="confirm"
               :in-style="'top:35%'"
-              :message="paidAt ? 'Are you sure you want to mark this bill as paid? This action cannot be reversed.' : 'Are you sure you want to mark this bill as invalid?'"
+              :message="
+                paidAt
+                  ? 'Are you sure you want to mark this bill as paid? This action cannot be reversed.'
+                  : 'Are you sure you want to mark this bill as invalid?'
+              "
               @cancel="confirm = false"
               @confirm="settlePayment()"
             />
           </transition>
           <!-- SHIELD FOR CONFIRM CANCEL -->
-          <div v-if="confirm == true" class="shield" @click="confirm = false" />
+          <div v-if="confirm === true" class="shield" @click="confirm = false" />
 
           <div class="flex items-center text-sm m-4">
             <div class="hover:text-sunglow p-1 ml-auto" @click="closeModals()">
@@ -208,28 +157,22 @@
 
           <!-- PAID OR UNPAID MODAL RED AND BLUE BUTTONS -->
           <div
-            v-if="paymentModal === false && modalPaidUnpaid === true" 
+            v-if="paymentModal === false && modalPaidUnpaid === true"
             class="flex flex-col text-center text-lg font-semibold h-full mt-6 text-white"
           >
             <div class="p-4 mt-2 border-b">
-              <div 
-                class="rounded-lg m-2 my-6 p-8 bg-green-500 hover:bg-green-600 cursor-pointer"
-                @click="toShowPaymentModal()"
-              >
+              <div class="rounded-lg m-2 my-6 p-8 bg-green-500 hover:bg-green-600 cursor-pointer" @click="toShowPaymentModal()">
                 Mark Invoice as Paid
               </div>
             </div>
             <div class="p-4">
-              <div 
-                class="rounded-lg m-2 my-6 p-8 bg-red-500 hover:bg-red-600 cursor-pointer"
-                @click="toShowUnpaidModal()"
-              >
+              <div class="rounded-lg m-2 my-6 p-8 bg-red-500 hover:bg-red-600 cursor-pointer" @click="toShowUnpaidModal()">
                 Mark Payment as Invalid
               </div>
             </div>
           </div>
           <!-- PAID OR UNPAID MODAL RED AND BLUE BUTTONS ENDS HERE -->
-          
+
           <!-- MARKING AS PAID MODAL WITH DATEPICKER -->
           <div class="flex flex-col w-full px-8 justify-between">
             <div v-if="paymentModal === true && modalPaidUnpaid === false">
@@ -237,19 +180,8 @@
                 <AppDateToggled v-model="paidAt" class="z-50" :name="'paidAt'" :label="'Paid At'" is-before />
               </div>
               <div class="flex flex-row mb-4">
-                <AppButton
-                  :label="'Confirm'"
-                  :background="'green'"
-                  class="mr-2"
-                  :disabled="paidAt ? false : true"
-                  @click="confirm = true"
-                />
-                <AppButton
-                  :label="'Cancel'"
-                  :background="'red'"
-                  class="mr-2"
-                  @click="cancelPaymentModal()"
-                />
+                <AppButton :label="'Confirm'" :background="'green'" class="mr-2" :disabled="paidAt ? false : true" @click="confirm = true" />
+                <AppButton :label="'Cancel'" :background="'red'" class="mr-2" @click="cancelPaymentModal()" />
               </div>
             </div>
           </div>
@@ -269,18 +201,8 @@
                 />
               </div>
               <div class="flex flex-row mb-4">
-                <AppButton
-                  :label="'Confirm'"
-                  :background="'green'"
-                  class="mr-2"
-                  @click="confirm = true"
-                />
-                <AppButton
-                  :label="'Cancel'"
-                  :background="'red'"
-                  class="mr-2"
-                  @click="cancelPaymentModal()"
-                />
+                <AppButton :label="'Confirm'" :background="'green'" class="mr-2" @click="confirm = true" />
+                <AppButton :label="'Cancel'" :background="'red'" class="mr-2" @click="cancelPaymentModal()" />
               </div>
             </div>
           </div>
@@ -291,7 +213,7 @@
 
       <!-- SAGE CSV EXPORT MODAL -->
       <transition name="fade" mode="out-in">
-        <div v-if="exportedModal == true" class="mark-paid-modal overflow-hidden">
+        <div v-if="exportedModal === true" class="mark-paid-modal overflow-hidden">
           <transition name="drop" mode="out-in">
             <AppConfirm
               v-if="confirm"
@@ -302,7 +224,7 @@
             />
           </transition>
           <!-- TO EXPORT CONFIRM CANCEL -->
-          <div v-if="confirm == true" class="shield" @click="confirm = false" />
+          <div v-if="confirm === true" class="shield" @click="confirm = false" />
           <div class="flex items-center text-sm m-4">
             <div class="hover:text-sunglow p-1 ml-auto" @click="exportedModal = false">
               <svgicon name="times-solid" height="24" width="24" class="fill-current cursor-pointer" />
@@ -317,7 +239,7 @@
               <div v-for="(item, index) in exportedChosenInvoices" :key="`item-${index}`">
                 <div class="flex flex-row m-2">
                   <div class="mx-2">
-                    {{ 'ID: '+ item.id }}
+                    {{ 'ID: ' + item.id }}
                   </div>
                   <div class="mx-2">
                     {{ 'Invoice Number: ' + item.invoice_number }}
@@ -332,16 +254,10 @@
               </div>
             </div>
             <div class="flex flex-row mb-4">
-              <div
-                class="p-2 px-4 my-2 mr-2 rounded-lg bg-green-500 hover:bg-green-600 cursor-pointer"
-                @click="confirm = true"
-              >
+              <div class="p-2 px-4 my-2 mr-2 rounded-lg bg-green-500 hover:bg-green-600 cursor-pointer" @click="confirm = true">
                 Confirm
               </div>
-              <div
-                class="p-2 px-4 my-2 mr-2 rounded-lg bg-red-500 hover:bg-red-600 cursor-pointer"
-                @click="exportedModal = false"
-              >
+              <div class="p-2 px-4 my-2 mr-2 rounded-lg bg-red-500 hover:bg-red-600 cursor-pointer" @click="exportedModal = false">
                 Cancel
               </div>
             </div>
@@ -351,168 +267,162 @@
       </transition>
       <!-- SAGE CSV EXPORT MODAL ENDS HERE -->
 
-      <div 
-        v-if="$route.path.includes('hubzzInvoiceId') 
-          || showPaidModal === true 
-          || exportedModal === true" 
-        class="billing-shield" 
+      <div
+        v-if="$route.path.includes('hubzzInvoiceId') || showPaidModal === true || exportedModal === true"
+        class="billing-shield"
         @click="closeModals()"
       />
     </template>
-    
+
     <nuxt-child />
   </section>
 </template>
 
 <script>
-import AppButton from "@/components/Base/AppButton"
-import AppInput from "@/components/Base/AppInput"
+import AppButton from '@/components/Base/AppButton'
+import AppInput from '@/components/Base/AppInput'
 import AppTableNew from '@/components/Base/AppTableNew'
 import AppInputSmall from '@/components/Base/AppInputSmall'
-import AppDateToggled from "@/components/Base/AppDateToggled"
-import debounce from "lodash.debounce"
-import AppConfirm from "@/components/Base/AppConfirm"
+import AppDateToggled from '@/components/Base/AppDateToggled'
+import debounce from 'lodash.debounce'
+import AppConfirm from '@/components/Base/AppConfirm'
 export default {
-	components: {
+  components: {
     AppInput,
     AppButton,
     AppTableNew,
     AppInputSmall,
-		AppDateToggled,
-		AppConfirm
-	},
-	data () {
-		return {
-			loading: false,
+    AppDateToggled,
+    AppConfirm
+  },
+  data() {
+    return {
       currentPage: 1,
       downloading: false,
-      search: "",
+      search: '',
       showUnpaidInvoiceOnly: false,
       showPaidInvoiceOnly: false,
       showCsvExportOnly: false,
       showExportableInvoicesOnly: false,
-			params: {
-        search: "",
-        practice_id: "",
-        invoice_number: "",
+      params: {
+        search: '',
+        practice_id: '',
+        invoice_number: '',
         // exportable: true,
-				limit: 15,
-				offset: 0,
-				order_by: ["issued_at:desc"]
+        limit: 15,
+        offset: 0,
+        order_by: ['issued_at:desc']
       },
       chosenInvoices: [],
       exportedChosenInvoices: [],
 
       // FOR MARKING INVOICE AS PAID
-			showPaidModal: false,
+      showPaidModal: false,
       modalPaidUnpaid: false,
       paymentModal: false,
       unpaidModal: false,
       paidAt: null,
       unpaidReason: '',
-			invoiceId: "",
-			confirm: false,
-      
+      invoiceId: '',
+      confirm: false,
+
       // EXPORTING MODALS
       exportedModal: false,
 
-			// practiceInvoices: [],
-			// practiceInvoicesCount: 0,
-			practice: "",
-			sort: "",
-			columns: [
-        //  {
-        //   name: "Check",
-        //   dataIndex: "checker",
-        //   class: "text-center",
-        //   slotName: "checker",
-        //   eventName: "checkClicked",
-        //   order: 1
-        // },
-				{
-					name: "Invoice Number",
-          dataIndex: "invoice_number",
-          class: "text-center",
+      columns: [
+        {
+          name: 'Invoice Number',
+          dataIndex: 'invoice_number',
+          class: 'text-center',
           sortable: true,
-          width: 120
-				},
-				{
-					name: "Practice",
-          dataIndex: "practice_name",
-					class: "text-center min-w-xs",
-          sortable: true,
-				},
-				{
-					name: "Period",
-					dataIndex: "period_in_gb_formatted",
-          slotName: "period",
-          minWidth: "36",
-					class: "text-center truncate pr-24 ",
-          width: 150
-				},
-				{
-          name: "Issued At",
-          dataIndex: "issued_at",
-          slotName:"issuedAt",
-          class: "text-center",
-					sortable: true,
-          width: 120
-				},
-				{
-					name: "£ Amount",
-					dataIndex: "taxed_total_formatted",
-					class: "text-center",
-					sortable: "false",
           width: 120
         },
         {
-          name: "Due Date",
-          dataIndex:"due_date_in_gb_formatted",
-          class:"text-center",
+          name: 'Practice',
+          dataIndex: 'practice_name',
+          class: 'text-center min-w-xs',
+          sortable: true
+        },
+        {
+          name: 'Period',
+          dataIndex: 'period_in_gb_formatted',
+          slotName: 'period',
+          minWidth: '36',
+          class: 'text-center truncate pr-24 ',
+          width: 150
+        },
+        {
+          name: 'Issued At',
+          dataIndex: 'issued_at',
+          slotName: 'issuedAt',
+          class: 'text-center',
+          sortable: true,
           width: 120
         },
-				{
-          name: "Paid?",
-          dataIndex: "",
+        {
+          name: '£ Amount',
+          dataIndex: 'taxed_total_formatted',
+          class: 'text-center',
+          sortable: 'false',
+          width: 120
+        },
+        {
+          name: 'Due Date',
+          dataIndex: 'due_date_in_gb_formatted',
+          class: 'text-center',
+          width: 120
+        },
+        {
+          name: 'Paid?',
+          dataIndex: '',
           slot: true,
-          slotName: "payment_status",
-          class: "text-center",
+          slotName: 'payment_status',
+          class: 'text-center',
           width: 200
         },
         {
-          name: "CSV Exported?",
-          dataIndex:"exported_at",
-          slotName:"exported_at",
-          class:"text-center",
+          name: 'CSV Exported?',
+          dataIndex: 'exported_at',
+          slotName: 'exported_at',
+          class: 'text-center',
           width: 100
-        },
-      ],
-		}
-	},
-	computed: {
-    authAdminPermissions () {
-			return this.$store.getters["permissions"]
+        }
+      ]
+    }
+  },
+  computed: {
+    authAdminPermissions() {
+      return this.$store.getters['permissions']
     },
-		loadingHubzzInvoices () {
-			return this.$store.state.billings.loading_invoices
-		},
-		hubzzInvoicesCount () {
-			return this.$store.state.billings.hubzz_invoices_count
-		},
-		hubzzInvoices () {
-			return this.$store.state.billings.hubzz_invoices
-		}
-	},
-	watch: {
-		confirm (value) {
-			if (value === false) {
-				this.getHubzzInvoices()
-			}
+    canViewHubzzInvoices() {
+      return this.authAdminPermissions.includes('View Hubzz Invoices')
     },
-    search () {
+    canExportSageCsv() {
+      return this.authAdminPermissions.includes('Export Sage Csv')
+    },
+    canUpdateHubzzInvoices() {
+      return this.authAdminPermissions.includes('Update Hubzz Invoices & Other Processes')
+    },
+    loadingHubzzInvoices() {
+      return this.$store.state.billings.loading_invoices
+    },
+    hubzzInvoicesCount() {
+      return this.$store.state.billings.hubzz_invoices_count
+    },
+    hubzzInvoices() {
+      return this.$store.state.billings.hubzz_invoices
+    }
+  },
+  watch: {
+    confirm(value) {
+      if (value === false) {
+        this.getHubzzInvoices()
+      }
+    },
+    search() {
       this.searchSubmit()
     },
-    showUnpaidInvoiceOnly (newValue) {
+    showUnpaidInvoiceOnly(newValue) {
       this.currentPage = 1
       this.params.offset = 0
       if (this.showPaidInvoiceOnly === true && newValue === true) {
@@ -521,25 +431,24 @@ export default {
 
       this.getHubzzInvoices()
     },
-    showPaidInvoiceOnly (newValue) {
+    showPaidInvoiceOnly(newValue) {
       this.currentPage = 1
       this.params.offset = 0
       if (this.showUnpaidInvoiceOnly === true && newValue === true) {
         this.showUnpaidInvoiceOnly = false
       }
-      
+
       this.getHubzzInvoices()
     },
-    showCsvExportOnly (newValue) {
+    showCsvExportOnly(newValue) {
       this.currentPage = 1
       this.params.offset = 0
       if (this.showExportableInvoicesOnly === true && newValue === true) {
         this.showExportableInvoicesOnly = false
       }
       this.getHubzzInvoices()
-      
     },
-    showExportableInvoicesOnly (newValue) {
+    showExportableInvoicesOnly(newValue) {
       this.currentPage = 1
       this.params.offset = 0
       if (this.showCsvExportOnly === true && newValue === true) {
@@ -548,246 +457,195 @@ export default {
       this.getHubzzInvoices()
     }
   },
-	async asyncData ({ app, route, store }) {
-		try {
-			await store.commit("billings/TOGGLE_LOADING", true)
-			let { 
-        page = 1, 
-        order_by = ["issued_at:desc"] 
-      } = route.query
+  async asyncData({ app, route, store }) {
+    try {
+      await store.commit('billings/TOGGLE_LOADING', true)
+      let { page = 1, order_by = ['issued_at:desc'] } = route.query
 
-			const limit = 15
+      const limit = 15
       const offset = page * limit - limit
-      // const exportable = true
-			let params = {
-				limit,
-				offset,
-        order_by,
-        // exportable,
-			}
+      let params = {
+        limit,
+        offset,
+        order_by
+      }
 
-			let response = await app.$axios.$get(
-				`/api/v1/admin/practice-invoices/count`,
-				{ params }
-			)
-			await store.commit(
-				"billings/SET_HUBZZ_INVOICES_COUNT",
-				response.data.count
-			)
+      let response = await app.$axios.$get(`/api/v1/admin/practice-invoices/count`, { params })
+      await store.commit('billings/SET_HUBZZ_INVOICES_COUNT', response.data.count)
 
-			response = await app.$axios.$get(`/api/v1/admin/practice-invoices`, {
-				params
-			})
-			await store.commit(
-				"billings/SET_HUBZZ_INVOICES",
-				response.data.practice_invoices
-			)
+      response = await app.$axios.$get(`/api/v1/admin/practice-invoices`, {
+        params
+      })
+      await store.commit('billings/SET_HUBZZ_INVOICES', response.data.practice_invoices)
 
-			// response = await app.$axios.$get(
-			// 	`/api/v1/admin/practices/${practice_id}`
-			// )
-			// const practice = response.data.practice
+      await store.commit('billings/TOGGLE_LOADING', false)
 
-			await store.commit("billings/TOGGLE_LOADING", false)
-
-			return {
-				// practice,
-				params,
-				loading: false,
-				perPage: limit,
-				currentPage: page,
-				order_by
-			}
-		} catch (err) {
-			store.commit("SET_NOTIFICATION", {
-				enabled: true,
-				status: "danger",
-				text: "Something went wrong!"
-			})
-			console.log("Get hubzz invoices error!", err)
-		}
-	},
-  created () {
-    if (this.authAdminPermissions.includes('Export Sage Csv')) {
+      return {
+        params,
+        perPage: limit,
+        currentPage: page,
+        order_by
+      }
+    } catch (err) {
+      store.commit('SET_NOTIFICATION', {
+        enabled: true,
+        status: 'danger',
+        text: 'Something went wrong!'
+      })
+    }
+  },
+  created() {
+    if (this.canExportSageCsv) {
       this.columns.unshift({
-        name: "Check",
-        dataIndex: "checker",
-        class: "text-center",
-        slotName: "checker",
-        eventName: "checkClicked",
+        name: 'Check',
+        dataIndex: 'checker',
+        class: 'text-center',
+        slotName: 'checker',
+        eventName: 'checkClicked',
         width: 80,
         order: 1
       })
     }
-    if (this.authAdminPermissions.includes('Update Hubzz Invoices & Other Processes')) {
+    if (this.canUpdateHubzzInvoices) {
       this.columns.push({
-        name: "Actions",
+        name: 'Actions',
         slot: true,
-        slotName: "actions",
-        dataIndex: "",
-        class: "text-center",
-        width: 180,
+        slotName: 'actions',
+        dataIndex: '',
+        class: 'text-center',
+        width: 180
       })
     }
-    
   },
-	methods: {
-    searchSubmit: debounce(function (page, order_by) {
-      this.chosenInvoices = []
-			let search = this.search
-      this.params.search = this.search
-			let query = {
-				...this.$router.query,
-				search
-			}
-			if (page === 1) {
-				delete query.page
-			}
-			if (page && page > 1) {
-				query = {
-					...this.$router.query,
-					page,
-					search
-				}
-			}
-			if (order_by) {
-				query = {
-					...this.$router.query,
-					search,
-					order_by
-				}
-			}
-			if (page && order_by) {
-				query = {
-					...this.$router.query,
-					page,
-					search,
-					order_by
-				}
-			}
-
-			if (this.search === "") {
-				delete query.search
-			}
-
-			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-				this.loading = true
-			}
-
-			this.getHubzzInvoices()
-
-			// this.$router.push({ query })
-    }, 500),
-
-    getHubzzInvoices () {
-      console.log('show unpaid',this.showUnpaidInvoiceOnly)
-      this.$store
-      .dispatch("billings/fetchHubzzInvoices", {
-        exportable: this.showExportableInvoicesOnly === true ? true : null,
+  methods: {
+    getHubzzInvoiceRequestPayload(countOnly = false) {
+      return {
+        exportable: this.showExportableInvoicesOnly === true ? true : countOnly ? null : '',
         practice_id: this.params.practice_id ? this.params.practice_id : '',
         search: this.params.search ? this.params.search : '',
-        paid: this.showPaidInvoiceOnly === true ? true : this.showUnpaidInvoiceOnly === true ? "false" : null,
-        exported: this.showCsvExportOnly === true ? true : this.showExportableInvoicesOnly === true ? "false" : null,
+        paid: this.showPaidInvoiceOnly === true ? true : this.showUnpaidInvoiceOnly === true ? 'false' : null,
+        exported: this.showCsvExportOnly === true ? true : this.showExportableInvoicesOnly === true ? 'false' : null,
         invoice_number: this.params.invoice_number ? this.params.invoice_number : '',
-				limit: this.params.limit ? this.params.limit : '',
-				order_by: this.params.order_by ? this.params.order_by : '' ,
+        limit: this.params.limit ? this.params.limit : '',
+        order_by: this.params.order_by ? this.params.order_by : '',
         offset: this.params.offset ? this.params.offset : '',
-        countOnly: true
-      })
-      .then(() => {
-        this.$store.dispatch("billings/fetchHubzzInvoices", {
-          exportable: this.showExportableInvoicesOnly ? this.showExportableInvoicesOnly : '',
-          practice_id: this.params.practice_id ? this.params.practice_id : '',
-          search: this.params.search ? this.params.search : '',
-          paid:this.showPaidInvoiceOnly === true ? true : this.showUnpaidInvoiceOnly === true ? "false" : null,
-          exported: this.showCsvExportOnly === true ? true : this.showExportableInvoicesOnly === true ? "false" : null,
-          invoice_number: this.params.invoice_number ? this.params.invoice_number : '',
-          limit: this.params.limit ? this.params.limit : '',
-          order_by: this.params.order_by ? this.params.order_by : '' ,
-          offset: this.params.offset ? this.params.offset : '',
-        })
-      })
-    },
-    // BULK SAGE METHODS
-    showSageChecker () {
-      this.sageChecker = !this.sageChecker
-      const index = this.columns.findIndex(column => {
-        return column.name === "Check"
-      })
-
-      if (index > -1) {
-        this.columns.splice(index, 1)
-      } else {
-        this.columns.unshift(
-          {
-            name: "Check",
-            dataIndex: "checker",
-            class: "text-center",
-            slotName: "checker",
-            eventName: "checkClicked",
-            order: 1
-          },
-        )
+        ...(countOnly ? { countOnly: true } : {})
       }
     },
-    async confirmSage () {
+
+    searchSubmit: debounce(function(page, order_by) {
+      this.chosenInvoices = []
+      let search = this.search
+      this.params.search = this.search
+      let query = {
+        ...this.$router.query,
+        search
+      }
+      if (page === 1) {
+        delete query.page
+      }
+      if (page && page > 1) {
+        query = {
+          ...this.$router.query,
+          page,
+          search
+        }
+      }
+      if (order_by) {
+        query = {
+          ...this.$router.query,
+          search,
+          order_by
+        }
+      }
+      if (page && order_by) {
+        query = {
+          ...this.$router.query,
+          page,
+          search,
+          order_by
+        }
+      }
+
+      if (this.search === '') {
+        delete query.search
+      }
+
+      this.getHubzzInvoices()
+
+      // this.$router.push({ query })
+    }, 500),
+
+    getHubzzInvoices() {
+      this.$store.dispatch('billings/fetchHubzzInvoices', this.getHubzzInvoiceRequestPayload(true)).then(() => {
+        this.$store.dispatch('billings/fetchHubzzInvoices', this.getHubzzInvoiceRequestPayload())
+      })
+    },
+    async confirmSage() {
       const exported = this.chosenInvoices.filter(invoice => invoice.exported_at !== null)
       this.exportedChosenInvoices = exported
-      if(exported.length > 0){
+      if (exported.length > 0) {
         this.exportedModal = true
       } else {
         await this.markExported()
       }
     },
-    async markExported () {
+    async markExported() {
       const invoiceIds = this.chosenInvoices.map(invoice => invoice.id)
 
       await this.$axios.put(`/api/v1/admin/practice-invoices/export-invoices`, {
-        id: invoiceIds,
+        id: invoiceIds
       })
       await this.downloadCsv(invoiceIds)
     },
-    downloadCsv (invoiceIds) {
+    downloadCsv(invoiceIds) {
       this.downloading = true
 
-      this.$axios.post('/api/v1/admin/hq-invoice/generate-key', {
-        filename: `bulkSage.csv`,
-      }, {
-        params: {
-          practice_invoice_id: invoiceIds,
-        },
-      }).then((responses) => {
-        const token = responses.data.data.token
-        window.open(`${process.env.API_URL}/api/v1/admin/hq-invoice/bulk-sage?token=${token}`)
-        this.confirm = false
-        this.exportedModal = false
-        this.chosenInvoices = []
-      }).catch((err) => {
-        console.log('err', err)
-        this.$nuxt.error(err.response ? err.response.data : err)
-      }).finally(() => {
-        this.downloading = false
-        this.exportedModal = false
-        this.getHubzzInvoices()
-      })
+      this.$axios
+        .post(
+          '/api/v1/admin/hq-invoice/generate-key',
+          {
+            filename: `bulkSage.csv`
+          },
+          {
+            params: {
+              practice_invoice_id: invoiceIds
+            }
+          }
+        )
+        .then(responses => {
+          const token = responses.data.data.token
+          window.open(`${process.env.API_URL}/api/v1/admin/hq-invoice/bulk-sage?token=${token}`)
+          this.confirm = false
+          this.exportedModal = false
+          this.chosenInvoices = []
+        })
+        .catch(err => {
+          this.$nuxt.error(err.response ? err.response.data : err)
+        })
+        .finally(() => {
+          this.downloading = false
+          this.exportedModal = false
+          this.getHubzzInvoices()
+        })
     },
-    viewInvoice (invoiceId) {
+    viewInvoice(invoiceId) {
       this.$router.push(`/billings/hubzz-invoices/${invoiceId}`)
     },
-    toggleCheck (item) {
-			const index = this.chosenInvoices.findIndex(invoice => {
-				return invoice.id === item.id
-			})
+    toggleCheck(item) {
+      const index = this.chosenInvoices.findIndex(invoice => {
+        return invoice.id === item.id
+      })
 
-			if (index > -1) {
-				this.chosenInvoices.splice(index, 1)
-			} else {
-				this.chosenInvoices.push(item)
+      if (index > -1) {
+        this.chosenInvoices.splice(index, 1)
+      } else {
+        this.chosenInvoices.push(item)
       }
     },
 
     // SETTLE PAYMENT METHODS
-    reset () {
+    reset() {
       this.currentPage = 1
       this.chosenInvoices = []
       this.exportedChosenInvoices = []
@@ -797,117 +655,101 @@ export default {
       this.showExportableInvoicesOnly = false
     },
 
-    cancelPaymentModal () {
+    cancelPaymentModal() {
       this.paymentModal = false
-      this.unpaidModal = false 
+      this.unpaidModal = false
       this.modalPaidUnpaid = true
       this.paidAt = null
       this.unpaidReason = null
     },
-    closeModals () {
+    closeModals() {
       this.showPaidModal = false
       this.modalPaidUnpaid = false
       this.paymentModal = false
-      this.unpaidModal = false 
+      this.unpaidModal = false
 
       this.confirm = false
       this.exportedModal = false
       this.paidAt = null
       this.unpaidReason = null
     },
-		toShowPaidModal (itemId) {
-			this.showPaidModal = true
+    toShowPaidModal(itemId) {
+      this.showPaidModal = true
       this.modalPaidUnpaid = true
       this.invoiceId = itemId
       this.paidAt = null
       this.unpaidReason = null
     },
-    toShowPaymentModal () {
+    toShowPaymentModal() {
       this.modalPaidUnpaid = false
       this.paymentModal = true
       this.paidAt = null
       this.unpaidReason = null
     },
-    toShowUnpaidModal () {
+    toShowUnpaidModal() {
       this.modalPaidUnpaid = false
       this.unpaidModal = true
       this.paidAt = null
       this.unpaidReason = null
     },
-    settlePayment (){
-      if(this.paidAt) {
+    settlePayment() {
+      if (this.paidAt) {
         this.toMarkAsPaid()
       } else {
         this.toMarkAsUnpaid()
       }
     },
-    async toMarkAsUnpaid () {
+    async toMarkAsUnpaid() {
       await this.$axios
-        .$put(`/api/v1/admin/practice-invoices/${this.invoiceId}/unpaid`,{
-          unpaid_reason: this.unpaidReason,
+        .$put(`/api/v1/admin/practice-invoices/${this.invoiceId}/unpaid`, {
+          unpaid_reason: this.unpaidReason
         })
         .then(() => {
           this.closeModals()
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "success",
-						text: "Successfully Marked Invoice as Unpaid"
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'success',
+            text: 'Successfully Marked Invoice as Unpaid'
           })
           this.getHubzzInvoices()
         })
         .catch(err => {
-          this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "danger",
-						text: err.response.data.message
-					})
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'danger',
+            text: err.response.data.message
+          })
         })
     },
-		async toMarkAsPaid () {
-			await this.$axios
-				.$put(`/api/v1/admin/practice-invoices/${this.invoiceId}/paid`, {
-					paid_at: this.paidAt
-				})
-				.then(() => {
-					this.closeModals()
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "success",
-						text: "Successfully Marked Invoice as Paid"
-					})
-				})
-				.catch(err => {
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "danger",
-						text: err.response.data.message
-					})
-				})
+    async toMarkAsPaid() {
+      await this.$axios
+        .$put(`/api/v1/admin/practice-invoices/${this.invoiceId}/paid`, {
+          paid_at: this.paidAt
+        })
+        .then(() => {
+          this.closeModals()
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'success',
+            text: 'Successfully Marked Invoice as Paid'
+          })
+        })
+        .catch(err => {
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'danger',
+            text: err.response.data.message
+          })
+        })
     },
-    
-		practiceTypeStyle (type) {
-			switch (type) {
-				case "Stand Alone":
-					return "bg-indigo-500 text-white lg:px-4 sm:px-2"
-				case "Hub":
-					return "bg-red-500 text-white lg:px-8 sm:px-2"
-				case "Spoke":
-					return "bg-blue-500 text-white lg:px-8 sm:px-2"
-				default:
-					return
-			}
-		},
-		pagechanged (page) {
-			// const query = {
-			// 	...this.$route.query,
-			// 	page: page || 1
-			// }
-			this.params.offset = this.params.limit * (page - 1)
-			this.currentPage = page
-			this.getHubzzInvoices()
-		},
 
-		sorted (orderByParam) {
+    pagechanged(page) {
+      this.params.offset = this.params.limit * (page - 1)
+      this.currentPage = page
+      this.getHubzzInvoices()
+    },
+
+    sorted(orderByParam) {
       if (!this.params.order_by.some(item => item.includes(`${orderByParam}`))) {
         this.params.order_by = []
         this.params.order_by.push(`${orderByParam}:desc`)
@@ -923,38 +765,30 @@ export default {
         }
       }
 
-			this.currentPage = 1
-			this.getHubzzInvoices()
-    },
-    
-    sortIcon (orderByParam) {
-      return this.params.order_by.some(orderBy => orderBy === orderByParam || orderBy === `${orderByParam}:asc`)
-        ? 'sort-ascend'
-        : this.params.order_by.some(orderBy => orderBy === `${orderByParam}:desc`)
-          ? 'sort-descend'
-          : 'sort'
-      },
-	}
+      this.currentPage = 1
+      this.getHubzzInvoices()
+    }
+  }
 }
 </script>
 
 <style>
 .mark-paid-modal {
-	position: fixed;
-	left: 50%;
-	top: 50%;
-	transform: translate(-50%, -50%);
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   width: 500px;
-	max-width: 95%;
-	max-height: 70%;
-	overflow: auto;
-	transition: all 0.3s ease-in-out;
-	background-color: #e9e9e9;
-	z-index: 512;
+  max-width: 95%;
+  max-height: 70%;
+  overflow: auto;
+  transition: all 0.3s ease-in-out;
+  background-color: #e9e9e9;
+  z-index: 512;
 }
 @media screen and (min-width: 768px) {
-	.mark-paid-modal {
-		max-height: 60%;
-	}
+  .mark-paid-modal {
+    max-height: 60%;
+  }
 }
 </style>
