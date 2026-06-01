@@ -2,13 +2,8 @@
   <div class="">
     <AppLoading :loading="loadingPracticeUsers" :message="'Loading Practice Users'" />
 
-    <div v-if="authAdminPermissions.includes('Create New Practice User')" class="mb-5">
-      <AppButton
-        :label="'Add User'"
-        :icon="'add-user'"
-        :disabled="practice.status === 'Deactivated'"
-        @click="modal = true"
-      />
+    <div v-if="canCreatePracticeUser" class="mb-5">
+      <AppButton :label="'Add User'" :icon="'add-user'" :disabled="practice.status === 'Deactivated'" @click="modal = true" />
     </div>
 
     <transition name="fade">
@@ -25,26 +20,6 @@
         @pagechanged="pagechanged"
         @sorted="sorted"
       >
-        <!-- <template v-slot:status_slot="slotProps">
-          <div
-            class="px-4 py-1 rounded-full text-center w-32 mx-auto"
-            :class="
-              slotProps.item.status === 'Active'
-                ? 'bg-green-500 text-white lg:px-8 sm:px-2'
-                : 'bg-yellow-500 text-black lg:px-6 sm:px-2'
-            "
-          >
-            {{ slotProps.item.status }}
-          </div>
-        </template> -->
-        <!-- <template v-slot:actions="slotProps">
-          <AppButton
-           
-            :label="'View'"
-            :disabled="slotProps.item.status === 'Deactivated'"
-            @click="$router.push({ path: `/practices/${practice.id}/practice-users/${slotProps.item.id}`})"
-          />
-        </template> -->
       </AppTableNew>
 
       <template v-else>
@@ -57,7 +32,7 @@
     <div
       v-if="$route.name.includes('index-practices-id-index-practice-users-pracUserId') || modal"
       class="edit-practice-user-shield"
-      @click="modal ? modal=false : $router.go(-1)"
+      @click="modal ? (modal = false) : $router.go(-1)"
     />
 
     <transition name="slide" mode="out-in">
@@ -70,198 +45,196 @@
         @close="modal = false"
         @userCreated="createdPracticeUserHandler"
       />
-      <!-- </div> -->
     </transition>
   </div>
 </template>
 
 <script>
-  import CreateUser from "@/components/UserManagement/CreateUser"
-  import AppLoading from "@/components/Base/AppLoading"
-  import AppTableNew from "@/components/Base/AppTableNew"
-  import AppButton from "@/components/Base/AppButton"
+import CreateUser from '@/components/UserManagement/CreateUser'
+import AppLoading from '@/components/Base/AppLoading'
+import AppTableNew from '@/components/Base/AppTableNew'
+import AppButton from '@/components/Base/AppButton'
 
-  export default {
-    components: {
-      CreateUser,
-      AppLoading,
-      AppTableNew,
-      AppButton,
+export default {
+  components: {
+    CreateUser,
+    AppLoading,
+    AppTableNew,
+    AppButton
+  },
+
+  props: {
+    practice: {
+      type: Object,
+      required: true
+    }
+  },
+
+  data() {
+    return {
+      loadingPracticeUsers: false,
+      count: 0,
+      practiceUsers: [],
+
+      modal: false,
+      currentPage: 1,
+      perPage: 5,
+
+      orderBy: ['created_at:desc'],
+
+      columns: [
+        {
+          name: 'Full Name',
+          dataIndex: 'personal_detail.name',
+          class: 'text-center'
+        },
+        {
+          name: 'Username',
+          dataIndex: 'username',
+          class: 'text-center'
+        },
+        {
+          name: 'Email Address',
+          dataIndex: 'email',
+          class: 'text-center'
+        },
+        {
+          name: 'Role',
+          dataIndex: 'practice_detail.practice_role',
+          class: 'text-center'
+        },
+        {
+          name: 'Sign-Up Verified',
+          dataIndex: 'email_verified_at_in_gb_formatted',
+          class: 'text-center'
+        },
+        {
+          name: 'Status',
+          dataIndex: 'status',
+          class: 'text-center',
+          sortable: true
+        }
+      ]
+    }
+  },
+
+  computed: {
+    practiceId() {
+      return this.practice ? this.practice.id : null
     },
 
-    props: {
-      practice: {
-        type: Object,
-        required: true,
-      },
+    offset() {
+      return this.perPage * (this.currentPage - 1)
     },
 
-    data () {
-      return {
-        loadingPracticeUsers: false,
-        count: 0,
-        practiceUsers: [],
-
-        modal: false,
-        currentPage: 1,
-        perPage: 5,
-
-        orderBy: ["created_at:desc"],
-
-        query: null,
-
-        columns: [
-          {
-            name: "Full Name",
-            dataIndex: "personal_detail.name",
-            class: "text-center"
-          },
-          {
-            name: "Username",
-            dataIndex: "username",
-            class: "text-center"
-          },
-          {
-            name: "Email Address",
-            dataIndex: "email",
-            class: "text-center"
-          },
-          {
-            name: "Role",
-            dataIndex: "practice_detail.practice_role",
-            class: "text-center"
-          },
-          {
-            name: "Sign-Up Verified",
-            dataIndex: "email_verified_at_in_gb_formatted",
-            class: "text-center"
-          },
-          {
-            name: "Status",
-            dataIndex: "status",
-            class: "text-center",
-            sortable: true
-          },
-        ],
-      }
+    authAdminPermissions() {
+      return this.$store.getters['permissions']
     },
 
-    computed: {
-      practiceId () {
-        return this.practice ? this.practice.id : null
-      },
+    canCreatePracticeUser() {
+      return this.authAdminPermissions.includes('Create New Practice User')
+    }
+  },
 
-      totalPages () {
-        return Math.ceil(this.count / this.perPage)
-      },
+  mounted() {
+    this.$socket.on('createdPracticeUser', this.createdPracticeUserHandler)
 
-      offset () {
-        return this.perPage * (this.currentPage - 1)
-      },
+    this.getPracticeUsers()
+  },
 
-      authAdminPermissions () {
-        return this.$store.getters["permissions"]
-      },
-    },
+  destroyed() {
+    this.$socket.removeListener('createdPracticeUser', this.createdPracticeUserHandler)
+  },
 
-    mounted () {
-      this.$socket.on('createdPracticeUser', this.createdPracticeUserHandler)
-
-      this.getPracticeUsers()
-    },
-
-    destroyed () {
-      this.$socket.removeListener('createdPracticeUser', this.createdPracticeUserHandler)
-    },
-
-    methods: {
-      getPracticeUsers () {
-        this.loadingPracticeUsers = true
-        Promise.all([
-          this.$axios.get('/api/v1/admin/practice-users/count', {
+  methods: {
+    getPracticeUsers() {
+      this.loadingPracticeUsers = true
+      Promise.all([
+        this.$axios
+          .get('/api/v1/admin/practice-users/count', {
             params: {
-              practice_id: this.practiceId,
-            },
-          }).then(response => response.data.data.count),
+              practice_id: this.practiceId
+            }
+          })
+          .then(response => response.data.data.count),
 
-          this.$axios.get('/api/v1/admin/practice-users', {
+        this.$axios
+          .get('/api/v1/admin/practice-users', {
             params: {
               practice_id: this.practiceId,
               order_by: this.orderBy,
               limit: this.perPage,
-              offset: this.offset,
+              offset: this.offset
             }
-          }).then(response => response.data.data.users),
-        ]).then((responses) => {
-          const [
-            count,
-            practiceUsers,
-          ] = responses
+          })
+          .then(response => response.data.data.users)
+      ])
+        .then(responses => {
+          const [count, practiceUsers] = responses
 
           this.count = count
           this.practiceUsers = practiceUsers
-        }).catch((err) => {
-          console.log('err', err.response || err)
-          this.$store.commit("SET_NOTIFICATION", {
+        })
+        .catch(err => {
+          this.$store.commit('SET_NOTIFICATION', {
             enabled: true,
-            status: "danger",
+            status: 'danger',
             text: err.response.data.message
           })
-        }).finally(() => {
+        })
+        .finally(() => {
           this.loadingPracticeUsers = false
         })
-      },
-
-      createdPracticeUserHandler () {
-        this.getPracticeUsers()
-        
-        this.$emit('practiceUpdated')
-      },
-
-      pagechanged (page) {
-        this.currentPage = page || 1
-        this.getPracticeUsers()
-      },
-
-      sorted (orderBy) {
-        this.orderBy = orderBy
-        this.getPracticeUsers()
-      },
-
     },
 
+    createdPracticeUserHandler() {
+      this.getPracticeUsers()
+
+      this.$emit('practiceUpdated')
+    },
+
+    pagechanged(page) {
+      this.currentPage = page || 1
+      this.getPracticeUsers()
+    },
+
+    sorted(orderBy) {
+      this.orderBy = orderBy
+      this.getPracticeUsers()
+    }
   }
+}
 </script>
 
 <style>
-  .edit-practice-user-shield {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #333;
-    opacity: 0.5;
-    z-index: 511;
-  }
+.edit-practice-user-shield {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #333;
+  opacity: 0.5;
+  z-index: 511;
+}
 
+.edit-practice-user-modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin-right: 0%;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  border-left: solid 2px #ffc72c;
+  transition: all 0.3s ease-in-out;
+  background-color: #505561;
+  z-index: 512;
+}
+
+@media screen and (min-width: 1200px) {
   .edit-practice-user-modal {
-    position: fixed;
-    top: 0;
-    right: 0;
-    margin-right: 0%;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    border-left: solid 2px #ffc72c;
-    transition: all 0.3s ease-in-out;
-    background-color: #505561;
-    z-index: 512;
+    width: 70%;
   }
-
-  @media screen and (min-width: 1200px) {
-    .edit-practice-user-modal {
-      width: 70%;
-    }
-  }
+}
 </style>

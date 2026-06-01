@@ -2,10 +2,7 @@
   <div class="mt-5 px-2">
     <!-- tabs here -->
     <transition name="fade" mode="out-in">
-      <PracticeUsers
-        :practice="practice"
-        @practiceUpdated="() => $emit('practiceUpdated')"
-      />
+      <PracticeUsers :practice="practice" @practiceUpdated="() => $emit('practiceUpdated')" />
     </transition>
     <nuxt-child />
   </div>
@@ -15,36 +12,34 @@
 import PracticeUsers from '@/components/Practices/PracticeUsers'
 
 export default {
-  transition:{
-    name:'fade',
-    mode:'out-in'
+  transition: {
+    name: 'fade',
+    mode: 'out-in'
   },
 
-  components:{
-    PracticeUsers,
+  components: {
+    PracticeUsers
   },
 
-  data (){
-    return{
-    }
+  data() {
+    return {}
   },
 
-  computed:{
-    practice (){
+  computed: {
+    practice() {
       return this.$store.state.practices.practice
     }
   },
 
-  async asyncData ({app,store,route}){
-    try{
+  async asyncData({ app, store, route }) {
+    try {
       let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}`)
       const practice = response.data.practice
-      await store.commit('practices/SET_SPECIFIC_PRACTICE',practice)
-      return{
-      }
-    }catch(err){
-      store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
-      console.log('get practice error!!!!',err)
+      await store.commit('practices/SET_SPECIFIC_PRACTICE', practice)
+      return {}
+    } catch (err) {
+      store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+      console.log('get practice error!!!!', err)
     }
   }
 }

@@ -1,30 +1,26 @@
 <template>
   <div>
-    <JobsLists
-      :practiceSurgery="practiceSurgery"
-      :status="['Allocated']"
-      :jobDenom="'Job Parts'"
-    />
+    <JobsLists :practiceSurgery="practiceSurgery" :status="['Allocated']" :jobDenom="'Job Parts'" />
   </div>
 </template>
 
 <script>
 import JobsLists from '@/components/JobsLists'
 export default {
-  components:{
-    JobsLists,
+  components: {
+    JobsLists
   },
 
   props: {
     practice: {
       type: Object,
-      default: () => null,
+      default: () => null
     },
 
     practiceSurgery: {
       type: Object,
-      default: () => null,
-    },
-  },
+      default: () => null
+    }
+  }
 }
 </script>

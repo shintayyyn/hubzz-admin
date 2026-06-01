@@ -6,7 +6,7 @@
           v-if="practice"
           :practice="practice"
           :professionComplianceCategories="professionComplianceCategories"
-          @practiceUpdated="(practice) => $emit('practiceUpdated', practice)"
+          @practiceUpdated="practice => $emit('practiceUpdated', practice)"
         />
       </transition>
     </div>
@@ -14,39 +14,37 @@
 </template>
 
 <script>
-  import PracticeProfile from "@/components/Practices/PracticeProfile"
+import PracticeProfile from '@/components/Practices/PracticeProfile'
 
-  export default {
+export default {
+  components: {
+    PracticeProfile
+  },
 
-    components: {
-      PracticeProfile
+  props: {
+    practice: {
+      type: Object,
+      default: () => null
     },
 
-    props: {
-      practice: {
-        type: Object,
-        default: () => null,
-      },
+    professionComplianceCategories: {
+      type: Array,
+      default: () => null
+    }
+  },
 
-      professionComplianceCategories: {
-        type: Array,
-        default: () => null,
-      },
-    },
+  methods: {
+    goBack() {
+      const query = {
+        ...this.$route.query
+      }
 
-    methods: {
-      goBack () {
-        const query = {
-          ...this.$route.query
-        }
+      if (query.session_tab) {
+        delete query.session_tab
+      }
 
-        if (query.session_tab) {
-          delete query.session_tab
-        }
-
-        this.$router.push({ path: "/practices", query })
-      },
-    },
-
+      this.$router.push({ path: '/practices', query })
+    }
   }
+}
 </script>

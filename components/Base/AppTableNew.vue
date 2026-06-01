@@ -6,7 +6,7 @@
       <div class="relative flex flex-col overflow-x-auto w-full" :style="tableStyle">
         <!-- HEADER -->
         <div
-          v-if="disabledHeadings === false"
+          v-if="!disabledHeadings"
           :style="`min-width: ${customWidth}px`"
           class="row flex justify-start font-bold leading-none text-xs py-2 border-l border-r border-t"
         >
@@ -57,12 +57,9 @@
                       <div class="relative" @click="toggleDropdown(rowIndex)">
                         <div class="flex items-center w-full">
                           <div class="flex flex-col relative w-full">
-                            <div
-                              class="cursor-pointer rounded flex items-center justify-between px-2 text-xs border border-gray-500 bg-white"
-                              :class="isDropdownOpen(rowIndex) ? 'bg-white' : ''"
-                            >
-                              <span>{{ column.initialDropdown ? column.initialDropdown : 'Select Action' }}</span>
-                              <span v-if="!isDropdownOpen(rowIndex)"><svgicon name="caret-down" width="8" /></span>
+                            <div class="cursor-pointer rounded flex items-center justify-between px-2 text-xs border border-gray-500 bg-white">
+                              <span>{{ column.initialDropdown || 'Select Action' }}</span>
+                              <span v-if="!isDropdownOpen(rowIndex)"><svgicon name="caret-down" width="8"/></span>
                             </div>
                             <div v-if="isDropdownOpen(rowIndex)" class="absolute bottom-0 " :class="getDropdownClasses(rowIndex)">
                               <slot name="actions" :item="item" @click="$emit('click', item)" />
@@ -107,7 +104,7 @@
       </div>
     </div>
 
-    <div v-if="!loading && total > perPage && disabledPagination === false" class="w-full">
+    <div v-if="!loading && total > perPage && !disabledPagination" class="w-full">
       <AppPagination
         :total="total"
         :totalPages="totalPages"
@@ -130,7 +127,10 @@ const DEFAULT_COLUMN_WIDTH = '100px'
 const COMPACT_COLUMN_WIDTH = '50px'
 const CHECKER_SLOT = 'checker'
 const MESSAGE_BUTTON_SLOT = 'messageButton'
+const HEADING_COMPACT_SLOTS = [CHECKER_SLOT]
+const CELL_COMPACT_SLOTS = [CHECKER_SLOT, MESSAGE_BUTTON_SLOT]
 const DROPDOWN_CLASS = 'dropdown'
+const DROPDOWN_UP_CLASS = 'dropdown-up'
 const INVOICE_NUMBER_COLUMN = 'Invoice Number'
 const NON_CLICKABLE_STATUS = 'To Be Invoiced'
 const NON_CLICKABLE_TYPE = 'Private'
@@ -233,17 +233,20 @@ export default {
       ]
     },
     getHeadingStyle(column) {
-      return `min-width: ${this.getColumnMinWidth(column, [CHECKER_SLOT])}; ${this.getColumnMaxWidth(column)}`
+      return `min-width: ${this.getColumnMinWidth(column, HEADING_COMPACT_SLOTS)}; ${this.getColumnMaxWidth(column)}`
     },
     getRowStyle() {
-      return `${this.customWidth ? `min-width: ${this.customWidth}px` : ``}`
+      return this.customWidth ? `min-width: ${this.customWidth}px` : ''
     },
     getRowClasses(item, rowIndex) {
       return [
         this.isClickable(item) ? 'cursor-pointer ' : 'opacity-60 cursor-not-allowed',
         rowIndex % 2 === 0 ? 'stripe-gray' : 'bg-white',
-        rowIndex === this.items.length - 1 ? 'border-b' : ''
+        this.isLastRow(rowIndex) ? 'border-b' : ''
       ]
+    },
+    isLastRow(rowIndex) {
+      return rowIndex === this.items.length - 1
     },
     getRowComponent(item) {
       return this.isClickable(item) ? 'nuxt-link' : 'div'
@@ -258,7 +261,7 @@ export default {
       }
     },
     getRouterLink(item) {
-      if (this.routerLink && {}.toString.call(this.routerLink) === '[object Function]') {
+      if (typeof this.routerLink === 'function') {
         return this.routerLink(item)
       }
 
@@ -268,8 +271,8 @@ export default {
       }
     },
     getCellStyle(column, index, rowIndex) {
-      return `min-width: ${this.getColumnMinWidth(column, [CHECKER_SLOT, MESSAGE_BUTTON_SLOT])}; ${this.getColumnMaxWidth(column)}; ${
-        column.dataIndex !== 'actions' ? this.countLines(index, column.width, rowIndex) : ''
+      return `min-width: ${this.getColumnMinWidth(column, CELL_COMPACT_SLOTS)}; ${this.getColumnMaxWidth(column)}; ${
+        column.dataIndex !== 'actions' ? this.countLines(index, rowIndex) : ''
       }`
     },
     getColumnMinWidth(column, compactSlots) {
@@ -282,7 +285,7 @@ export default {
       return column.slotName === CHECKER_SLOT || column.slotName === MESSAGE_BUTTON_SLOT
     },
     isDropdownColumn(column) {
-      return column.class.includes(DROPDOWN_CLASS)
+      return column.class && column.class.includes(DROPDOWN_CLASS)
     },
     isDropdownOpen(rowIndex) {
       return this.dropdownIndex !== null && this.dropdownIndex === rowIndex
@@ -291,7 +294,7 @@ export default {
       this.dropdownIndex = this.isDropdownOpen(rowIndex) ? null : rowIndex
     },
     getDropdownClasses(rowIndex) {
-      return this.items.length > 1 && this.total > this.perPage - 5 && rowIndex === this.items.length - 1 ? 'dropdown-up' : DROPDOWN_CLASS
+      return this.items.length > 1 && this.total > this.perPage - 5 && this.isLastRow(rowIndex) ? DROPDOWN_UP_CLASS : DROPDOWN_CLASS
     },
     isClickable(item) {
       if (!this.routerLink) return false
@@ -313,13 +316,13 @@ export default {
     },
 
     sort(dataIndex) {
-      if (!this.params.some(item => item.includes(`${dataIndex}`))) {
+      if (!this.params.some(item => item.includes(dataIndex))) {
         this.params = []
         this.params.push(`${dataIndex}:desc`)
       } else {
-        let index = this.params.findIndex(item => item === `${dataIndex}:desc`)
-        if (index >= 0) {
-          this.params.splice(index, 1, `${dataIndex}:asc`)
+        const descIndex = this.params.findIndex(item => item === `${dataIndex}:desc`)
+        if (descIndex >= 0) {
+          this.params.splice(descIndex, 1, `${dataIndex}:asc`)
         } else {
           this.params.splice(
             this.params.findIndex(item => item === `${dataIndex}:asc`),
@@ -339,22 +342,26 @@ export default {
       this.$emit('limitchanged', limit)
     },
     sortIcon(dataIndex) {
-      if (Array.isArray(this.params) && this.params.length > 0) {
-        return this.params.some(orderBy => orderBy === dataIndex || orderBy === `${dataIndex}:asc`)
-          ? 'sort-ascend'
-          : this.params.some(orderBy => orderBy === `${dataIndex}:desc`)
-          ? 'sort-descend'
-          : 'sort'
-      } else {
+      if (!Array.isArray(this.params) || !this.params.length) {
         return ''
       }
+
+      if (this.params.some(orderBy => orderBy === dataIndex || orderBy === `${dataIndex}:asc`)) {
+        return 'sort-ascend'
+      }
+
+      if (this.params.some(orderBy => orderBy === `${dataIndex}:desc`)) {
+        return 'sort-descend'
+      }
+
+      return 'sort'
     },
     dataCell(item, column) {
       if (column.column instanceof Function) {
         return column.column(item)
       }
 
-      var dataIndexArr = column.dataIndex.split('.')
+      const dataIndexArr = column.dataIndex.split('.')
       let str = null
       if (Array.isArray(item[dataIndexArr[0]])) {
         str = []
@@ -402,30 +409,37 @@ export default {
           str = item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]][dataIndexArr[3]][dataIndexArr[4]][dataIndexArr[5]]
         }
       }
-      if (str === false) {
-        str = 'No'
-      }
-      if (str === true) {
-        str = 'Yes'
-      }
-      if (str === null) {
-        str = '(none)'
-      }
-      return str
+      return this.normalizeCellValue(str)
     },
-    countLines(index, width, rowIndex) {
+    normalizeCellValue(value) {
+      if (value === false) {
+        return 'No'
+      }
+      if (value === true) {
+        return 'Yes'
+      }
+      if (value === null) {
+        return '(none)'
+      }
+      return value
+    },
+    countLines(index, rowIndex) {
       if (this.noTextResize) return
-      let el = null
-      if (this.$refs[`col${index}`]) {
-        el = this.$refs[`col${index}`].find((item, ind) => ind === rowIndex)
-        if (el) {
-          let colHeight = el.offsetHeight
-          let lineHeight = parseInt(el.style.lineHeight)
-          let lines = colHeight / lineHeight
-          if (lines && lines > 1) {
-            return `font-size: ${12 - lines}px; line-height: ${12 - lines + 4}px;`
-          }
-        }
+      const colRefs = this.$refs[`col${index}`]
+      if (!colRefs) {
+        return
+      }
+
+      const el = colRefs.find((item, ind) => ind === rowIndex)
+      if (!el) {
+        return
+      }
+
+      const colHeight = el.offsetHeight
+      const lineHeight = parseInt(el.style.lineHeight)
+      const lines = colHeight / lineHeight
+      if (lines && lines > 1) {
+        return `font-size: ${12 - lines}px; line-height: ${12 - lines + 4}px;`
       }
     }
   }
@@ -450,7 +464,6 @@ export default {
 .dropdown-up {
   z-index: 1;
   width: 100%;
-  /* margin-top: -4px; */
 }
 .dropdown {
   top: 0;

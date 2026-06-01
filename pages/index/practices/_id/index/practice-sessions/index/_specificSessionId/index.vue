@@ -33,12 +33,8 @@ export default {
 	},
 	async asyncData ({ app, store, route, error }) {
 		try {
-			const isJobParts =
-				route.query &&
-				route.query.status &&
-				(route.query.status.toLowerCase() === "ongoing" ||
-					route.query.status.toLowerCase() === "completed" ||
-					route.query.status.toLowerCase() === "approved")
+			const normalizedStatus = route.query && route.query.status ? route.query.status.toLowerCase() : null
+			const isJobParts = ["ongoing", "completed", "approved"].includes(normalizedStatus)
 			let response = await app.$axios.$get(
 				`/api/v1/admin/${isJobParts === true ? "job-parts" : "jobs"}/${
 					route.params.specificSessionId
@@ -56,11 +52,10 @@ export default {
 				job,
 				isJobParts
 			}
-		} catch (err) {
-			error({ statusCode: 404 })
-			console.log("get job error!", err)
-		}
-	},
+			} catch (err) {
+				error({ statusCode: 404 })
+			}
+		},
 	methods: {
 		goBack () {
 			const query = {

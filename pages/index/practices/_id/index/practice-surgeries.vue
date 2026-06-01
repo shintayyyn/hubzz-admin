@@ -1,17 +1,10 @@
 <template>
   <section class="mt-5">
-    <template v-if="$route.name === 'index-practices-id-index-practice-surgeries'" class="flex flex-col rounded-lg">
+    <template v-if="isPracticeSurgeriesRoute" class="flex flex-col rounded-lg">
       <div class="flex overflow-hidden">
         <div class="flex overflow-x-auto mb-2">
-          <div
-            v-if="practice && practice.status === 'Active' && authAdminPermissions.includes('Create New Spoke To Hub')"
-            class="flex-3 mx-1 whitespace-no-wrap"
-          >
-            <AppButton
-              :label="'Add Spoke for this Hub'"
-              :icon="'add-rectangle'"
-              :nuxtLink="{ path: `/practices/${this.$route.params.id}/practice-surgeries/add-spoke`, query: $route.query }"
-            />
+          <div v-if="canCreateNewSpokeToHub" class="flex-3 mx-1 whitespace-no-wrap">
+            <AppButton :label="'Add Spoke for this Hub'" :icon="'add-rectangle'" :nuxtLink="{ path: addSpokePath, query: $route.query }" />
           </div>
 
           <div v-if="deleteSurgery == true" class="flex-3 mx-1 whitespace-no-wrap">
@@ -35,7 +28,7 @@
           :columns="columns"
           :loading="loadingSurgeries"
           :loading-message="'Loading Surgeries'"
-          :router-link="`/practices/${$route.params.id}/practice-surgeries`"
+          :router-link="practiceSurgeriesPath"
           @pagechanged="pagechanged"
         >
           <template v-slot:type_slot="slotProps">
@@ -179,6 +172,21 @@ export default {
     authAdminPermissions() {
       return this.$store.getters['permissions']
     },
+    routePracticeId() {
+      return this.$route.params.id
+    },
+    isPracticeSurgeriesRoute() {
+      return this.$route.name === 'index-practices-id-index-practice-surgeries'
+    },
+    canCreateNewSpokeToHub() {
+      return this.practice && this.practice.status === 'Active' && this.authAdminPermissions.includes('Create New Spoke To Hub')
+    },
+    practiceSurgeriesPath() {
+      return `/practices/${this.routePracticeId}/practice-surgeries`
+    },
+    addSpokePath() {
+      return `${this.practiceSurgeriesPath}/add-spoke`
+    },
     total() {
       return this.$store.state.practices.practiceSpokesCount
     },
@@ -229,7 +237,7 @@ export default {
       this.$store.commit('practices/SET_SPECIFIC_PRACTICE', this.practice)
 
       const count = await this.$axios
-        .get(`/api/v1/admin/practices/${this.$route.params.id}/practice-surgeries/count`)
+        .get(`/api/v1/admin/practices/${this.routePracticeId}/practice-surgeries/count`)
         .then(response => response.data.data.count)
 
       this.$store.commit('practices/SET_PRACTICE_SPOKES_COUNT', count)
@@ -242,28 +250,19 @@ export default {
 
       this.getPracticeSurgeries()
     } catch (err) {
-      console.log('err', err.response || err)
-
-      this.$store.commit('SET_NOTIFICATION', {
-        enabled: true,
-        status: 'danger',
-        text: err.response.data.message
-      })
+      this.notifyError(err)
     }
   },
 
   methods: {
-    practiceSurgeryDeletedHandler(practiceSurgeryId) {
-      console.log('practiceSurgeryDeletedHandler', practiceSurgeryId)
+    practiceSurgeryDeletedHandler(_practiceSurgeryId) {
       this.getPracticeSurgeries()
     },
 
     async viewTerminationModal(practiceSurgery) {
-      console.log('viewTerminationModal', practiceSurgery)
-
       this.specificChildSurgery = practiceSurgery
 
-      this.$router.push(`/practices/${this.$route.params.id}/practice-surgeries/${practiceSurgery.id}/terminate-spoke`)
+      this.$router.push(`/practices/${this.routePracticeId}/practice-surgeries/${practiceSurgery.id}/terminate-spoke`)
     },
 
     getPracticeSurgeries() {
@@ -274,19 +273,14 @@ export default {
       const params = { limit, offset }
 
       this.$axios
-        .get(`/api/v1/admin/practices/${this.$route.params.id}/practice-surgeries`, {
+        .get(`/api/v1/admin/practices/${this.routePracticeId}/practice-surgeries`, {
           params
         })
         .then(response => {
           this.$store.commit('practices/SET_PRACTICE_SPOKES', response.data.data.practice_surgeries)
         })
         .catch(err => {
-          console.log('get children error!!!!', err)
-          this.$store.commit('SET_NOTIFICATION', {
-            enabled: true,
-            status: 'danger',
-            text: err.response.data.message
-          })
+          this.notifyError(err)
         })
         .finally(() => {
           this.loadingSurgeries = false
@@ -337,6 +331,14 @@ export default {
       }
 
       return result
+    },
+
+    notifyError(err) {
+      this.$store.commit('SET_NOTIFICATION', {
+        enabled: true,
+        status: 'danger',
+        text: err.response.data.message
+      })
     }
   }
 }

@@ -45,15 +45,10 @@
             </div>
             <!-- SPOKE PERMISSIONS - PERMISSIONS OF THE SPOKE BEING VIEWED. -->
             <div class="w-1/2  my-2">
-              <div class="flex flex-row items-center">
-                <div class="text-lg  font-semibold">
-                  Spoke Permissions
-                </div>
-                <!-- <div
-                  @click="edit()"
-                  class="text-sm font-semibold px-3 py-1 mx-2 rounded-lg cursor-pointer"
-                  :class="`${editPermissions == false ? 'text-black bg-yellow-500 hover:bg-yellow-400' : ' bg-red-600 hover:bg-red-700'}`"
-                >{{editPermissions == false ? 'Edit' : 'Cancel Editing'}}</div>-->
+            <div class="flex flex-row items-center">
+              <div class="text-lg  font-semibold">
+                Spoke Permissions
+              </div>
               </div>
 
               <div class="mt-2 mb-4 mx-2">
@@ -70,7 +65,6 @@
                     <p class="font-semibold">
                       Does Hub allow creation of Jobs/Sessions?
                     </p>
-                    <!-- <p class="text-sm mx-6">{{practice.allow_surgery_create_sessions === true ? 'Yes':'No'}}</p> -->
                   </div>
                   <div
                     v-if="practice.allow_surgery_create_sessions === true"
@@ -211,11 +205,6 @@
             </div>
           </div>
         </form>
-
-        <!-- <div
-          class="w-full sm:w-1/4 p-2 mt-4  rounded-lg bg-red-700 hover:bg-red-800 text-center cursor-pointer"
-          @click="confirm=true"
-        >Terminate this spoke from Hub</div> -->
         <AppButton
           v-if="authAdminPermissions.includes('Terminate Spoke')"
           class=" mt-4"
@@ -307,12 +296,7 @@ export default {
   },
   data () {
     return {
-      // practice:'',
-      // practiceHub:'',
-      // practiceHub:'',
       confirm: false,
-      confirmAccept: false,
-      confirmReject: false,
       currentPage: 1,
       params: {
         limit: 10,
@@ -442,18 +426,10 @@ export default {
         status: "danger",
         text: "Something went wrong!"
       })
-      console.log("get parent practice error!!", err)
     }
   },
 
   methods: {
-    async getPractice () {
-      await this.$axios.$get(`/api/v1/admin/practices/${this.$route.params.id}`).then(res => {
-        const practice = res.data.practice
-        this.$store.commit("practices/SET_SPECIFIC_PRACTICE", practice)
-      })
-    },
-    
     getHubInvitations () {
       this.$store
         .dispatch("practices/fetchHubInvitations", {
@@ -478,12 +454,6 @@ export default {
       this.$router.push({ query })
       this.getHubInvitations()
     },
-
-    // async limitchanged(limit) {
-    // 	this.currentPage = 1
-    // 	this.itemsPerPage = limit
-    // 	await this.getHubInvitations(this.paramSort)
-    // },
     async toTerminateFromHub () {
       await this.$axios
         .$delete(

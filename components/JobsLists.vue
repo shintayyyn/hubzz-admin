@@ -5,7 +5,7 @@
         <p class="mx-2">
           Filter
         </p>
-        <span class="mx-2"><svgicon name="caret-down" width="10" :style="filterModal ? 'transform: rotate(180deg)' : ''" /></span>
+        <span class="mx-2"><svgicon name="caret-down" width="10" :style="filterModal ? 'transform: rotate(180deg)' : ''"/></span>
       </button>
       <transition name="fade">
         <div v-if="filterModal" class="flex items-center">
@@ -99,10 +99,8 @@ export default {
       job_title: null,
       filterModal: false,
       isFiltered: false,
-      totalPages: 0,
       currentPage: 1,
       limit: 15,
-      modal: false,
       orderBy: ['created_at_in_gb_formatted:desc'],
       defaultColumns: [
         {
@@ -155,8 +153,40 @@ export default {
   },
 
   computed: {
+    currentStatus() {
+      return this.status[0]
+    },
+    isPracticeSurgeryRoute() {
+      return this.$route.name.includes('practice-surgeries')
+    },
+    routeStatusSegment() {
+      return this.currentStatus.replace(/^(.)|\s+(.)/g, c => c.toLowerCase())
+    },
+    currentFilters() {
+      const filters = {}
+      if (this.locumUser) {
+        filters.viewing_locum_user_id = this.$route.params.id
+        filters.locum_status = this.status
+        filters.type = 'Platform'
+      }
+      if (this.practice || this.practiceSurgery) {
+        filters.practice_id = this.isPracticeSurgeryRoute ? null : this.$route.params.id
+        filters.practice_surgery_id = this.isPracticeSurgeryRoute ? this.$route.params.practiceSurgeryId : null
+        filters.status = this.status
+      }
+      filters.title_includes = this.job_title
+      if (this.jobDenom === 'Jobs') {
+        filters.job_number_includes = this.job_number
+      } else {
+        filters.job_part_number_includes = this.job_number
+      }
+      return filters
+    },
+    resourceConfig() {
+      return this.jobDenom === 'Jobs' ? { endpoint: 'jobs', listKey: 'jobs' } : { endpoint: 'job-parts', listKey: 'job_parts' }
+    },
     total() {
-      const status = this.status[0]
+      const status = this.currentStatus
       let count = 0
       switch (status) {
         case 'Allocated':
@@ -226,7 +256,7 @@ export default {
     },
 
     items() {
-      const status = this.status[0]
+      const status = this.currentStatus
       let records = []
       switch (status) {
         case 'Allocated':
@@ -299,7 +329,7 @@ export default {
     },
 
     columns() {
-      const status = this.status[0]
+      const status = this.currentStatus
       switch (status) {
         case 'Allocated':
         case 'Ongoing':
@@ -451,15 +481,11 @@ export default {
     routerLink() {
       let route = null
       if (this.locumUser) {
-        route = `/locums/${this.$route.params.id}/locum-jobs/locum-${this.status[0].replace(/^(.)|\s+(.)/g, c => c.toLowerCase())}-jobs`
+        route = `/locums/${this.$route.params.id}/locum-jobs/locum-${this.routeStatusSegment}-jobs`
       } else if (this.practice) {
-        route = `/practices/${this.$route.params.id}/practice-sessions/practice-${this.status[0].replace(/^(.)|\s+(.)/g, c =>
-          c.toLowerCase()
-        )}-sessions`
+        route = `/practices/${this.$route.params.id}/practice-sessions/practice-${this.routeStatusSegment}-sessions`
       } else if (this.practiceSurgery) {
-        route = `/practices/${this.$route.params.id}/practice-surgeries/${
-          this.$route.params.practiceSurgeryId
-        }/surgery-sessions/surgery-${this.status[0].replace(/^(.)|\s+(.)/g, c => c.toLowerCase())}-sessions`
+        route = `/practices/${this.$route.params.id}/practice-surgeries/${this.$route.params.practiceSurgeryId}/surgery-sessions/surgery-${this.routeStatusSegment}-sessions`
       }
 
       if (!route) {
@@ -515,74 +541,32 @@ export default {
 
     getJobs() {
       this.loading = true
-      const filters = {}
-      const promises = []
-      if (this.locumUser) {
-        filters.viewing_locum_user_id = this.$route.params.id
-        filters.locum_status = this.status
-        filters.type = 'Platform'
-      }
-      if (this.practice || this.practiceSurgery) {
-        filters.practice_id = this.$route.name.includes('practice-surgeries') ? null : this.$route.params.id
-        filters.practice_surgery_id = this.$route.name.includes('practice-surgeries') ? this.$route.params.practiceSurgeryId : null
-        filters.status = this.status
-      }
-      filters.title_includes = this.job_title
-      if (this.jobDenom === 'Jobs') {
-        filters.job_number_includes = this.job_number
-      } else {
-        filters.job_part_number_includes = this.job_number
-      }
+      const { endpoint, listKey } = this.resourceConfig
+      const filters = this.currentFilters
+      const promises = [
+        this.$axios
+          .$get(`/api/v1/admin/${endpoint}/count`, {
+            params: {
+              ...filters
+            }
+          })
+          .then(response => response.data.count),
+        this.$axios
+          .$get(`/api/v1/admin/${endpoint}`, {
+            params: {
+              ...filters,
+              limit: this.limit,
+              offset: this.offset,
+              order_by: this.orderBy
+            }
+          })
+          .then(response => response.data[listKey])
+      ]
 
-      console.log('filters', filters)
-      console.log('practiceSurgery', this.practiceSurgery)
-      if (this.jobDenom === 'Jobs') {
-        promises.push(
-          this.$axios
-            .$get(`/api/v1/admin/jobs/count`, {
-              params: {
-                ...filters
-              }
-            })
-            .then(response => response.data.count),
-          this.$axios
-            .$get(`/api/v1/admin/jobs`, {
-              params: {
-                ...filters,
-                limit: this.limit,
-                offset: this.offset,
-                order_by: this.orderBy
-              }
-            })
-            .then(response => response.data.jobs)
-        )
-      } else if (this.jobDenom === 'Job Parts') {
-        promises.push(
-          this.$axios
-            .$get(`/api/v1/admin/job-parts/count`, {
-              params: {
-                ...filters
-              }
-            })
-            .then(response => response.data.count),
-          this.$axios
-            .$get(`/api/v1/admin/job-parts`, {
-              params: {
-                ...filters,
-                limit: this.limit,
-                offset: this.offset,
-                order_by: this.orderBy
-              }
-            })
-            .then(response => response.data.job_parts)
-        )
-      }
-
-      Promise.all([...promises]).then(responses => {
+      Promise.all(promises).then(responses => {
         const [count, jobs] = responses
 
-        const status = this.status[0]
-        switch (status) {
+        switch (this.currentStatus) {
           case 'Allocated':
             this.$store.commit('jobs/SET_LOCUM_ALLOCATED_JOBS_COUNT', count)
             this.$store.commit('jobs/SET_LOCUM_ALLOCATED_JOBS', jobs)
@@ -657,7 +641,6 @@ export default {
               this.$store.commit('jobs/SET_LOCUM_APPROVED_JOBS_COUNT', count)
               this.$store.commit('jobs/SET_LOCUM_APPROVED_JOBS', jobs)
             } else if (this.practice || this.practiceSurgery) {
-              console.log('bat ayaw')
               this.$store.commit('jobs/SET_PRACTICE_APPROVED_SESSIONS_COUNT', count)
               this.$store.commit('jobs/SET_PRACTICE_APPROVED_SESSIONS', jobs)
             }
@@ -680,7 +663,7 @@ export default {
     },
 
     routeItemId(item) {
-      if (this.status[0] === 'Applied') {
+      if (this.currentStatus === 'Applied') {
         return item.job_id || (item.job && item.job.id) || item.id
       }
 

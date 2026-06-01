@@ -1,5 +1,5 @@
 <template>
-  <div>    
+  <div>
     <div class="flex flex-row justify-start overflow-x-auto border-b border-gray-500 mb-4">
       <div
         class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
@@ -17,10 +17,6 @@
         Practice with Custom Surgery
       </div>
     </div>
-    <!-- <CreateUser 
-      :registeeType="'customSurgery'"
-      @updatePractices="updatePractices"
-    /> -->
     <div
       v-if="customSurgery"
       class="shield"
@@ -28,10 +24,10 @@
     />
     <transition name="slide" mode="out-in" class="bg-orange-500">
       <AddPracticeSurgery v-if="!customSurgery" />
-      
-      
+
+
       <CreateUser
-        v-if="customSurgery" 
+        v-if="customSurgery"
         :registeeType="'customSurgery'"
         @close="customSurgery = false"
         @updatePractices="updatePractices"
@@ -45,11 +41,6 @@
   import CreateUser from "@/components/UserManagement/CreateUser"
 
   export default {
-    // transition: {
-    //   name: 'fade',
-    //   mode: 'out-in',
-    // },
-
     components: {
       AddPracticeSurgery,
       CreateUser
@@ -61,7 +52,7 @@
         scroll: 0,
       }
     },
-    
+
     methods: {
 
       updatePractices (){

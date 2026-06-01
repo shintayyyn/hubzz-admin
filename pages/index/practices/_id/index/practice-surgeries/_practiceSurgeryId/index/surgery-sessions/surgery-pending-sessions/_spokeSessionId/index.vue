@@ -6,29 +6,29 @@
 <script>
 import PracticeSessionModal from '@/components/Practices/PracticeSessionModal'
 export default {
-  components:{
+  components: {
     PracticeSessionModal
-  },  
-  data (){
-    return{
-      job:'',
-      practiceId:''
+  },
+  data() {
+    return {
+      job: '',
+      practiceId: ''
     }
   },
-  async asyncData ({ app, store, route, error }){
-    try{
+  async asyncData({ app, store, route, error }) {
+    try {
       let response = await app.$axios.$get(`/api/v1/admin/jobs/${route.params.spokeSessionId}`)
       const job = response.data.job
       console.log('job', job)
       const practiceId = route.params.id
-      return{
+      return {
         job,
         practiceId
       }
-    }catch(err){
+    } catch (err) {
       error({ statusCode: 404 })
-      store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
-      console.log('get job error!',err)
+      store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+      console.log('get job error!', err)
     }
   }
 }
@@ -42,9 +42,9 @@ export default {
   width: 100%;
   height: 100%;
   overflow: auto;
-  border-left: solid 2px #FFC72C;
+  border-left: solid 2px #ffc72c;
   transition: all 0.3s ease-in-out;
-  background-color:#505561;
+  background-color: #505561;
   z-index: 512;
 }
 @media screen and (min-width: 1200px) {

@@ -8,15 +8,11 @@
           :name="'search'"
           :button="true"
           :buttonLabel="'Search'"
-          :placeholder="
-            !practice || (practice && practice.type == 'Hub')
-              ? 'Search for Surgery by Name, etc...'
-              : 'Search for Hub by Name, etc...'
-          "
+          :placeholder="searchPlaceholder"
           @click="searchSubmit()"
         />
       </div>
-      
+
       <div class="w-full overflow-y-auto px-2">
         <div>
           <!--TABLE-->
@@ -33,29 +29,18 @@
                 class="flex no-underline rounded-lg shadow-md my-2 transition-hover  hover:bg-gray-300 cursor-pointer"
                 @click="show(surgery.id)"
               >
-                <!-- :class="
-                  [registeredPractice.includes(surgery.id)
-                    ? ' opacity-75'
-                    : ' hover:bg-gray-300 cursor-pointer', 
-                    toggleRegisteredPractice && registeredPractice.includes(surgery.id) && 'hidden']
-                "-->
                 <div class="flex w-full">
                   <div class="w-full text-xs p-4">
                     <div class="w-full flex justify-between items-center">
                       <span class="font-bold">{{ surgery.name }}</span>
-                      <!-- <span
-                        v-if="registeredPractice.includes(surgery.id)"
-                        class="py-1 px-2 rounded-lg text-xs md:text-sm bg-green-600 shadow"
-                      >Registered</span>-->
                     </div>
                     <span class="block w-full py-1">{{ surgery.address.line_1 }}</span>
                     <span class="block w-full py-1">{{ surgery.address.line_2 }}</span>
                     <span class="block w-full py-1">{{ surgery.address.line_3 }}</span>
                     <div class="flex items-center my-1">
-                      <span
-                        class="block p-2 rounded"
-                        :class="registeredPractice.includes(surgery.id) ? 'bg-gray-500 opacity-75' : 'bg-gray-500 '"
-                      >CCG</span>
+                      <span class="block p-2 rounded" :class="registeredPractice.includes(surgery.id) ? 'bg-gray-500 opacity-75' : 'bg-gray-500 '"
+                        >CCG</span
+                      >
                       <span class="w-full px-2">
                         {{ surgery.clinical_commissioning_group.name }}
                       </span>
@@ -63,8 +48,9 @@
                     <div class="flex items-center my-1">
                       <span
                         class="block p-2 rounded whitespace-no-wrap"
-                        :class="registeredPractice.includes(surgery.id)? 'bg-gray-500 opacity-75': 'bg-gray-500'"
-                      >Practice Code</span>
+                        :class="registeredPractice.includes(surgery.id) ? 'bg-gray-500 opacity-75' : 'bg-gray-500'"
+                        >Practice Code</span
+                      >
                       <span class="w-full px-2">{{ surgery.code }}</span>
                     </div>
                   </div>
@@ -73,7 +59,7 @@
             </transition-group>
           </template>
 
-          <template v-if="practice && practice.type == 'Hub'">
+          <template v-if="isHubPractice">
             <!--IF PRACTICE IS A HUB-->
             <p v-if="!practiceSpokes.length" class="text-gray-500 py-2 -mx-2">
               No Spoke Found
@@ -90,12 +76,8 @@
                   <div class="w-full text-xs p-4">
                     <div class="flex justify-between">
                       <span class="font-bold">{{ spoke.surgery.name }}</span>
-                      <span
-                        v-if="spoke.invited"
-                        class="py-1 px-2 rounded-lg text-xs md:text-sm bg-green-600 shadow"
-                      >Invited</span>
+                      <span v-if="spoke.invited" class="py-1 px-2 rounded-lg text-xs md:text-sm bg-green-600 shadow">Invited</span>
                     </div>
-                    <!-- <span class="font-bold">{{ spoke.surgery.name }}</span> -->
                     <span class="block w-full py-1">{{ spoke.address_line_1 }}</span>
                     <span class="block w-full py-1">{{ spoke.address_line_2 }}</span>
                     <span class="block w-full py-1">{{ spoke.address_line_3 }}</span>
@@ -130,78 +112,54 @@
     />
     <!-- PAGINATION ENDS HERE -->
 
-    <div
-      v-if="createPracticeModal || setSpokePermissionModal"
-      class="practice-user-shield"
-      @click="shieldClickaway()"
-    />
+    <div v-if="createPracticeModal || setSpokePermissionModal" class="practice-user-shield" @click="shieldClickaway()" />
     <transition name="slide" mode="out-in">
-      <!-- <div
-				class="shadow-lg"
-				:class="practice ? 'practice-user-modal-small' : 'practice-user-modal'"
-				v-if="createPracticeModal"
-      >-->
       <CreateUser
         v-if="createPracticeModal"
         :practice="practice"
         :surgery="surgery"
         :registeeType="'newPractice'"
         @close="createPracticeModal = false"
-        @userCreated="(createPracticeModal = false), $emit('close')"
+        @userCreated=";(createPracticeModal = false), $emit('close')"
       />
-      <!-- </div> -->
       <!-- ===================SET PERMISSIONS OF PRACTICE SPOKE=================== -->
       <div v-if="setSpokePermissionModal" class="practice-user-modal shadow-lg">
-        <SetSpokePermissions
-          :practice="practice"
-          :practiceSpokeId="practiceSpokeId"
-          @close="setSpokePermissionModal = false"
-        />
+        <SetSpokePermissions :practice="practice" :practiceSpokeId="practiceSpokeId" @close="setSpokePermissionModal = false" />
       </div>
     </transition>
   </div>
 </template>
 
 <script>
-import debounce from "lodash.debounce"
-import AppPagination from "@/components/Base/AppPagination"
-import CreateUser from "@/components/UserManagement/CreateUser"
-import SetSpokePermissions from "@/components/Practices/SetSpokePermissions"
+import debounce from 'lodash.debounce'
+import AppPagination from '@/components/Base/AppPagination'
+import CreateUser from '@/components/UserManagement/CreateUser'
+import SetSpokePermissions from '@/components/Practices/SetSpokePermissions'
 import AppInputSmall from '@/components/Base/AppInputSmall'
 export default {
   components: {
     AppPagination,
     CreateUser,
     SetSpokePermissions,
-    AppInputSmall,
+    AppInputSmall
   },
   props: {
     practice: {
       type: Object,
       default: () => null
-    },
-    practiceHub: {
-      type: Object,
-      default: () => null
-    },
-    spokesCount: {
-      type: Number,
-      default: 0
     }
   },
 
-  data () {
+  data() {
     return {
       surgeries: [],
       surgery: null,
-      search: "",
+      search: '',
 
       practiceSpokes: [],
-      hub: null,
-      practiceCount: null,
       createPracticeModal: false,
       setSpokePermissionModal: false,
-      practiceSpokeId: "",
+      practiceSpokeId: '',
       practiceSurgeries: [],
 
       total: 0,
@@ -209,25 +167,35 @@ export default {
       currentPage: 1,
       perPage: 10,
       loading: false,
-      registeredPractice: [],
+      registeredPractice: []
+    }
+  },
 
-      toggleRegisteredPractice: false
+  computed: {
+    isHubPractice() {
+      return this.practice && this.practice.type === 'Hub'
+    },
+    currentAddPracticePage() {
+      return parseInt(this.$route.query.add_practice_page) || 1
+    },
+    searchPlaceholder() {
+      return !this.practice || this.isHubPractice ? 'Search for Surgery by Name, etc...' : 'Search for Hub by Name, etc...'
     }
   },
 
   watch: {
-    $route () {
-      this.currentPage = parseInt(this.$route.query.add_practice_page) || 1
+    $route() {
+      this.currentPage = this.currentAddPracticePage
 
       this.getData()
     },
 
-    search () {
+    search() {
       this.searchSubmit()
     }
   },
 
-  beforeDestroy () {
+  beforeDestroy() {
     let query = {
       ...this.$route.query
     }
@@ -239,126 +207,64 @@ export default {
     })
   },
 
-  created () {
+  created() {
     this.getData()
   },
 
   methods: {
-    goBack () {
-      if (this.practice) {
-        this.$router.push(
-          `/practices/${this.$route.params.id}/practice-surgeries`
-        )
-      } else {
-        this.$router.push(`/practices`)
-      }
+    getOffset() {
+      return this.perPage * (this.currentAddPracticePage - 1)
     },
 
-    getPractices () {
-      this.$store.dispatch("practices/fetchPractices", {
-        limit: 10,
-        order_by: "created_at:desc"
-      })
+    setPagination(total) {
+      this.total = total
+      this.perPage = 10
+      this.totalPages = Math.ceil(this.total / this.perPage)
     },
 
-    getPracticeHub (practiceId) {
-      this.$store.dispatch("practices/fetchHub", {
-        practice_id: practiceId
-      })
-    },
-
-    getPracticeParent (parentId) {
-      this.$store.dispatch("practices/fetchPracticeParent", {
-        practice_parent_id: parentId
-      })
-    },
-
-    getPracticeSpokesCount (practiceId) {
-      this.$store.dispatch("practices/fetchSpokes", {
-        countOnly: true,
-        practice_id: practiceId
-      })
-    },
-
-    getPracticeSpokes (practiceId) {
-      this.$store.dispatch("practices/fetchSpokes", {
-        practice_id: practiceId
-      })
-    },
-
-    updatePracticeSpokesPageCount () {
-      let payload = {
-        spokesCount: this.spokesCount,
-        perPage: 5
-      }
-
-      this.$store.commit(
-        "practices/UPDATE_PRACTICE_SPOKES_PAGE_COUNT",
-        payload
-      )
-    },
-
-    async getData () {
+    async getData() {
       this.loading = true
 
       const limit = this.perPage
 
-      let offset =
-        this.perPage * (parseInt(this.$route.query.add_practice_page) - 1)
-
       const params = {
         limit,
-        offset
+        offset: this.getOffset()
       }
 
       if (this.search) {
         params.search = this.search
       }
 
-      if (this.practice && this.practice.type === "Hub") {
+      if (this.isHubPractice) {
         this.practiceSurgeries = await this.$axios
           .get(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries`)
           .then(response => response.data.data.practice_surgeries)
 
-        params.status = ["Active", "Dormant"]
+        params.status = ['Active', 'Dormant']
 
-        params.type = ["Stand Alone", "Spoke"]
+        params.type = ['Stand Alone', 'Spoke']
 
         params.has_parent = false
 
-        this.total = await this.$axios
-          .get(`/api/v1/admin/practices/count`, { params })
-          .then(response => response.data.data.count)
-
-        this.perPage = 10
-
-        this.totalPages = Math.ceil(this.total / this.perPage)
+        const total = await this.$axios.get(`/api/v1/admin/practices/count`, { params }).then(response => response.data.data.count)
+        this.setPagination(total)
 
         this.getOrphanSpokes(params)
       } else if (!this.practice) {
-        this.total = await this.$axios
-          .get(`/api/v1/admin/surgeries/count`, { params })
-          .then(response => response.data.data.count)
-
-        this.perPage = 10
-
-        this.totalPages = Math.ceil(this.total / this.perPage)
+        const total = await this.$axios.get(`/api/v1/admin/surgeries/count`, { params }).then(response => response.data.data.count)
+        this.setPagination(total)
 
         this.getAllSurgeries()
       }
     },
 
-    async getAllSurgeries () {
+    async getAllSurgeries() {
       const limit = this.perPage
-
-      let offset = 0
-
-      offset =
-        this.perPage * (parseInt(this.$route.query.add_practice_page) - 1)
 
       const params = {
         limit,
-        offset,
+        offset: this.getOffset()
       }
 
       if (this.search) {
@@ -374,48 +280,35 @@ export default {
       this.loading = false
     },
 
-    async getOrphanSpokes (params) {
+    async getOrphanSpokes(params) {
       if (this.search) {
         params.search = this.search
       }
 
       this.practiceSpokes = []
 
-      let response = await this.$axios.$get(
-        `/api/v1/admin/practices/${this.$route.params.id}/spoke-invitations`
-      )
+      const response = await this.$axios.$get(`/api/v1/admin/practices/${this.$route.params.id}/spoke-invitations`)
+      const invitedSpokes = response.data.spokes || []
 
-      await this.$axios
-        .$get(`/api/v1/admin/practices/`, { params })
-        .then(res => {
-          let invited = ""
-          res.data.practices.forEach(spoke => {
-            invited = response.data.spokes.find(
-              invitation => invitation.id === spoke.id
-            )
-            if (invited) {
-              this.practiceSpokes.push({
-                ...spoke,
-                invited: true
-              })
-            } else {
-              this.practiceSpokes.push({
-                ...spoke,
-                invited: false
-              })
-            }
+      await this.$axios.$get(`/api/v1/admin/practices/`, { params }).then(res => {
+        res.data.practices.forEach(spoke => {
+          const invited = invitedSpokes.find(invitation => invitation.id === spoke.id)
+          this.practiceSpokes.push({
+            ...spoke,
+            invited: !!invited
           })
         })
+      })
 
       this.loading = false
     },
 
-    async newChildSpoke (practiceId, invited) {
+    async newChildSpoke(practiceId, invited) {
       if (invited) {
-        this.$store.commit("SET_NOTIFICATION", {
+        this.$store.commit('SET_NOTIFICATION', {
           enabled: true,
-          status: "danger",
-          text: "This Spoke already sent an invitation."
+          status: 'danger',
+          text: 'This Spoke already sent an invitation.'
         })
       } else {
         this.practiceSpokeId = practiceId
@@ -423,7 +316,7 @@ export default {
       }
     },
 
-    async show (id) {
+    async show(id) {
       const response = await this.$axios.get(`/api/v1/admin/surgeries/${id}`)
 
       this.surgery = response.data.data.surgery
@@ -431,26 +324,18 @@ export default {
       this.createPracticeModal = true
     },
 
-    shieldClickaway () {
+    shieldClickaway() {
       this.createPracticeModal = false
       this.setSpokePermissionModal = false
     },
 
-    searchSubmit: debounce(async function () {
-      const query = {
-        ...this.$route.query
-      }
-
-      if (this.search) {
-        query.search = this.search
-      }
-
+    searchSubmit: debounce(function() {
       this.pagechanged(0)
 
       this.getData()
     }, 500),
 
-    pagechanged (page) {
+    pagechanged(page) {
       const query = {
         ...this.$route.query
       }
@@ -484,5 +369,4 @@ export default {
   opacity: 0.5;
   z-index: 511;
 }
-
 </style>

@@ -22,40 +22,39 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       practiceComplianceReports: [
         {
           title: 'REP-018',
           subtitle: 'Practice Lead Time for Activation',
-          url: '/practices/practice-compliance-reports/activated-practices',
-        },
-      ],
+          url: '/practices/practice-compliance-reports/activated-practices'
+        }
+      ]
     }
   },
-  computed : {
-    authAdminPermissions () {
-			return this.$store.getters["permissions"]
-    },
+  computed: {
+    authAdminPermissions() {
+      return this.$store.getters['permissions']
+    }
   },
-  async asyncData ({ store, error }) {
+  async asyncData({ store, error }) {
     try {
-      const authAdminPermissions = store.getters["permissions"]
+      const authAdminPermissions = store.getters['permissions']
 
       if (authAdminPermissions.includes('View Reports') === false) {
         error({
           statusCode: 403,
-          message: 'You are not authorized to view this page.',
+          message: 'You are not authorized to view this page.'
         })
         return
       }
-
-    } catch(err) {
+    } catch (err) {
       error({ statusCode: 404 })
-      store.commit("SET_NOTIFICATION", {
+      store.commit('SET_NOTIFICATION', {
         enabled: true,
-        status: "danger",
-        text: "Something went wrong!"
+        status: 'danger',
+        text: 'Something went wrong!'
       })
     }
   }

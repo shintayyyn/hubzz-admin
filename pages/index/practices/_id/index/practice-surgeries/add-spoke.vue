@@ -10,27 +10,27 @@
 import AddPracticeSurgery from '@/components/Practices/AddPracticeSurgery'
 
 export default {
-  components:{
-    AddPracticeSurgery,
+  components: {
+    AddPracticeSurgery
   },
 
-  data (){
+  data() {
     return {
       practice: ''
     }
   },
-  
-  async asyncData ({ app, route, store, error }) {
-    try{
+
+  async asyncData({ app, route, store, error }) {
+    try {
       let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}`)
       const practice = response.data.practice
 
-      const authAdminPermissions = store.getters["permissions"]
+      const authAdminPermissions = store.getters['permissions']
 
       if (authAdminPermissions.includes('View Surgery Management') === false || authAdminPermissions.includes('Create New Spoke To Hub') === false) {
         error({
           statusCode: 403,
-          message: 'You are not authorized to view this page.',
+          message: 'You are not authorized to view this page.'
         })
         return
       }
@@ -38,32 +38,32 @@ export default {
       return {
         practice
       }
-    } catch(err) {
-      store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
-      console.log('get practice error!!!!',err)
+    } catch (err) {
+      store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+      console.log('get practice error!!!!', err)
     }
   }
 }
 </script>
 
 <style>
-  .add-spoke-modal {
-    position: fixed;
-    top: 0;
-    right: 0;
-    margin-right: 0%;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    border-left: solid 2px #ffc72c;
-    transition: all 0.3s ease-in-out;
-    background-color: #505561;
-    z-index: 512;
-  }
+.add-spoke-modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin-right: 0%;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  border-left: solid 2px #ffc72c;
+  transition: all 0.3s ease-in-out;
+  background-color: #505561;
+  z-index: 512;
+}
 
-  @media screen and (min-width: 1200px) {
-    .add-spoke-modal {
-      width: 70%;
-    }
+@media screen and (min-width: 1200px) {
+  .add-spoke-modal {
+    width: 70%;
   }
+}
 </style>

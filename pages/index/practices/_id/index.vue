@@ -14,7 +14,7 @@
         class="flex flex-row justify-start overflow-x-auto border-b border-yellow-500 pt-1"
       >
         <nuxt-link
-          v-if="practicePermissions.includes('View Practices')"
+          v-if="canViewPractices"
           :to="`/practices/${$route.params.id}`"
           class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
           :class="$route.name === 'index-practices-id-index' ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
@@ -23,14 +23,7 @@
         </nuxt-link>
 
         <nuxt-link
-          v-if="
-            practice &&
-              practice.type === 'Hub' &&
-              practice.status !== 'Inactive' &&
-              practice.status !== 'Bogus' &&
-              practice.status !== 'Deleted' &&
-              practicePermissions.includes('View Surgery Management')
-          "
+          v-if="canViewSurgeryManagementTab"
           :to="`/practices/${$route.params.id}/practice-surgeries`"
           class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
           :class="$route.path.includes(`/practices/${$route.params.id}/practice-surgeries`) ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
@@ -39,12 +32,7 @@
         </nuxt-link>
 
         <nuxt-link
-          v-if="
-            practice &&
-              practice.type === 'Spoke' &&
-              practice.status !== 'Inactive' && practice.status !== 'Bogus' && practice.status !== 'Deleted' &&
-              practicePermissions.includes('View Surgery Management')
-          "
+          v-if="canViewHubTab"
           :to="`/practices/${$route.params.id}/practice-hub`"
           class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
           :class="$route.path == `/practices/${$route.params.id}/practice-hub` ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
@@ -53,13 +41,7 @@
         </nuxt-link>
 
         <nuxt-link
-          v-if="
-            practice &&
-              practice.status !== 'Inactive' &&
-              practice.status !== 'Bogus' &&
-              practice.status !== 'Deleted' &&
-              practicePermissions.includes('View Surgery Management')
-          "
+          v-if="canViewInvitationsTab"
           :to="`/practices/${$route.params.id}/practice-invitations`"
           class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
           :class="$route.name.includes('index-practices-id-index-practice-invitations-index') ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
@@ -68,7 +50,7 @@
         </nuxt-link>
 
         <nuxt-link
-          v-if="practice && practice.status !== 'Inactive' && practice.status !== 'Bogus' && practicePermissions.includes('View Practice Sessions')"
+          v-if="canViewSessionsTab"
           :to="`/practices/${$route.params.id}/practice-sessions`"
           class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
           :class="$route.path.includes(`/practices/${$route.params.id}/practice-sessions`) ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
@@ -77,7 +59,7 @@
         </nuxt-link>
 
         <nuxt-link
-          v-if="practice && practice.status !== 'Deleted' && practicePermissions.includes('View Practice Users')"
+          v-if="canViewUsersTab"
           :to="`/practices/${$route.params.id}/practice-users`"
           class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
           :class="$route.path.includes(`/practices/${$route.params.id}/practice-users`) ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
@@ -86,7 +68,7 @@
         </nuxt-link>
 
         <nuxt-link
-          v-if="practice && practice.status !== 'Bogus' && practice.status !== 'Deleted' && practicePermissions.includes('View Practice Documents')"
+          v-if="canViewDocumentsTab"
           :to="`/practices/${$route.params.id}/practice-documents`"
           class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
           :class="$route.path == `/practices/${$route.params.id}/practice-documents` ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
@@ -95,7 +77,7 @@
         </nuxt-link>
 
         <nuxt-link
-          v-if="practice && practice.status !== 'Bogus' && practice.status !== 'Deleted' && practicePermissions.includes('View Practice Rates')"
+          v-if="canViewRatesTab"
           :to="`/practices/${$route.params.id}/practice-rates`"
           class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
           :class="$route.path == `/practices/${$route.params.id}/practice-rates` ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
@@ -127,26 +109,69 @@ export default {
     return {
       loading: false,
       practice: null,
-      practicePermissions: null
+      practicePermissions: []
     }
   },
 
   computed: {
-    getRoute() {
-      return tab => {
-        if (!tab) {
-          tab = ''
-        }
-        const query = {
-          ...this.$route.query
-        }
-        delete query.order_by
-        delete query.status
-        return {
-          path: tab ? `/practices/${this.$route.params.id}/${tab}` : `/practices/${this.$route.params.id}`,
-          query
-        }
-      }
+    canViewPractices() {
+      return this.practicePermissions.includes('View Practices')
+    },
+
+    canViewSurgeryManagement() {
+      return this.practicePermissions.includes('View Surgery Management')
+    },
+
+    isHubPractice() {
+      return this.practice && this.practice.type === 'Hub'
+    },
+
+    isSpokePractice() {
+      return this.practice && this.practice.type === 'Spoke'
+    },
+
+    isNotInactiveBogusDeleted() {
+      return this.practice && this.practice.status !== 'Inactive' && this.practice.status !== 'Bogus' && this.practice.status !== 'Deleted'
+    },
+
+    isNotInactiveBogus() {
+      return this.practice && this.practice.status !== 'Inactive' && this.practice.status !== 'Bogus'
+    },
+
+    isNotDeleted() {
+      return this.practice && this.practice.status !== 'Deleted'
+    },
+
+    isNotBogusDeleted() {
+      return this.practice && this.practice.status !== 'Bogus' && this.practice.status !== 'Deleted'
+    },
+
+    canViewSurgeryManagementTab() {
+      return this.isHubPractice && this.isNotInactiveBogusDeleted && this.canViewSurgeryManagement
+    },
+
+    canViewHubTab() {
+      return this.isSpokePractice && this.isNotInactiveBogusDeleted && this.canViewSurgeryManagement
+    },
+
+    canViewInvitationsTab() {
+      return this.isNotInactiveBogusDeleted && this.canViewSurgeryManagement
+    },
+
+    canViewSessionsTab() {
+      return this.isNotInactiveBogus && this.practicePermissions.includes('View Practice Sessions')
+    },
+
+    canViewUsersTab() {
+      return this.isNotDeleted && this.practicePermissions.includes('View Practice Users')
+    },
+
+    canViewDocumentsTab() {
+      return this.isNotBogusDeleted && this.practicePermissions.includes('View Practice Documents')
+    },
+
+    canViewRatesTab() {
+      return this.isNotBogusDeleted && this.practicePermissions.includes('View Practice Rates')
     }
   },
 
@@ -174,14 +199,12 @@ export default {
         status: 'danger',
         text: 'Something went wrong!'
       })
-      console.log('Get hubzz invoices error!', err)
     }
   },
 
   created() {
     let toRedirect = ''
-    if (this.practicePermissions.find(item => item === 'View Practices') === undefined) {
-      console.log('redirecting')
+    if (!this.practicePermissions.includes('View Practices')) {
       switch (this.practicePermissions[0]) {
         case 'View Practice Sessions':
           toRedirect = 'practice-sessions'
@@ -211,8 +234,6 @@ export default {
 
   methods: {
     practiceUpdatedHandler(practice) {
-      console.log('practiceUpdatedHandler', practice)
-
       if (practice) {
         this.practice = practice
       } else {

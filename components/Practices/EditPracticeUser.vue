@@ -7,16 +7,16 @@
           <div class="flex">
             <button
               class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
-              :class="tab1 === true ? 'border-b-4 border-gray-500' : 'text-gray-600'"
+              :class="tab1 ? 'border-b-4 border-gray-500' : 'text-gray-600'"
               @click=";(tab1 = true), (tab2 = false)"
             >
               <strong>General</strong>
             </button>
 
             <button
-              v-if="practiceUser && practiceUser.status !== 'Deleted' && authAdminPermissions.includes('Edit Practice User')"
+              v-if="canEditPracticeUser && !isDeletedPracticeUser"
               class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
-              :class="tab2 === true ? 'border-b-4 border-gray-500' : 'text-gray-600'"
+              :class="tab2 ? 'border-b-4 border-gray-500' : 'text-gray-600'"
               @click=";(tab2 = true), (tab1 = false)"
             >
               <strong>Change Password</strong>
@@ -30,16 +30,13 @@
     <div class="flex sm:p-2 max-w-lg">
       <!-- TAB 1 -->
       <div v-if="tab1" class="flex flex-col relative p-4 border rounded-lg text-sm w-full">
-        <div
-          v-if="practiceUser && practiceUser.status !== 'Deleted' && authAdminPermissions.includes('Edit Practice User') && tab1"
-          class="absolute right-0 px-4"
-        >
+        <div v-if="canEditPracticeUser && !isDeletedPracticeUser && tab1" class="absolute right-0 px-4">
           <button class="rounded-lg py-1 px-4 text-sm bg-sunglow hover:bg-sunglow-dark text-black" @click="editProfile = !editProfile">
             {{ editProfile ? 'Cancel Editing' : 'Edit Profile' }}
           </button>
         </div>
 
-        <div v-if="practiceUser && practiceUser.status === 'Deleted'">
+        <div v-if="isDeletedPracticeUser">
           <span>User deleted at {{ practiceUser.account_deleted_at_in_gb_formatted }}</span>
         </div>
 
@@ -49,7 +46,7 @@
             :type="'text'"
             :name="'username'"
             :label="'Username'"
-            :error="formError.find(item => item.field === 'username')"
+            :error="errorFor('username')"
             required
             @blur="CheckEmptyField(toPutPracticeUser.username, 'username')"
           />
@@ -59,7 +56,7 @@
             :type="'email'"
             :name="'email'"
             :label="'E-Mail Address'"
-            :error="formError.find(item => item.field === 'email')"
+            :error="errorFor('email')"
             required
             @blur="CheckEmptyField(toPutPracticeUser.email, 'email')"
           />
@@ -71,7 +68,7 @@
             :type="'text'"
             :name="'first_name'"
             :label="'First Name'"
-            :error="formError.find(item => item.field === 'first_name')"
+            :error="errorFor('first_name')"
             required
             @blur="CheckEmptyField(toPutPracticeUser.first_name, 'first_name')"
           />
@@ -81,24 +78,18 @@
             :type="'text'"
             :name="'last_name'"
             :label="'Last Name'"
-            :error="formError.find(item => item.field === 'last_name')"
+            :error="errorFor('last_name')"
             required
             @blur="CheckEmptyField(toPutPracticeUser.last_name, 'last_name')"
           />
-
-          <AppInput v-if="false" v-model="toPutPracticeUser.suffix" :type="'text'" :name="'suffix'" :label="'Suffix'" :placeholder="'Ph.D'" />
 
           <AppInput
             v-model="toPutPracticeUser.practice_role"
             :type="'select'"
             :name="'practice_role'"
             :label="'Role'"
-            :items="[
-              { label: 'Partner', value: 'Partner' },
-              { label: 'Practice Manager', value: 'Practice Manager' },
-              { label: 'Practice Staff', value: 'Practice Staff' }
-            ]"
-            :error="formError.find(item => item.field === 'practice_role')"
+            :items="practiceRoleOptions"
+            :error="errorFor('practice_role')"
             required
             @blur="CheckEmptyField(toPutPracticeUser.practice_role, 'practice_role')"
           />
@@ -108,7 +99,7 @@
             :type="'select'"
             :label="'Practice User Role'"
             :items="practice_user_roles"
-            :error="formError.find(item => item.field === 'practice_user_role_id')"
+            :error="errorFor('practice_user_role_id')"
             :disabled="isPracticeUserAdmin"
             required
             @blur="CheckEmptyField(toPutPracticeUser.practice_user_role_id, 'practice_user_role_id')"
@@ -133,7 +124,7 @@
             v-model="toPutPracticeUser.status"
             :type="'select'"
             :label="'Status'"
-            :error="formError.find(item => item.field === 'status')"
+            :error="errorFor('status')"
             :items="[
               { label: 'Active', value: 'Active' },
               { label: 'Disabled', value: 'Disabled' }
@@ -151,10 +142,7 @@
           </button>
         </div>
 
-        <div
-          v-if="!authAdminPermissions.includes('Edit Practice User') || (authAdminPermissions.includes('Edit Practice User') && !editProfile)"
-          class="w-full overflow-hidden text-sm p-2"
-        >
+        <div v-if="!canEditPracticeUser || (canEditPracticeUser && !editProfile)" class="w-full overflow-hidden text-sm p-2">
           <div class="flex py-2 font-bold">
             Username
           </div>
@@ -189,16 +177,6 @@
           <div class="flex px-2 ">
             {{ practiceUser.last_name ? practiceUser.last_name : 'N/A' }}
           </div>
-
-          <template v-if="false">
-            <div class="flex py-2 font-bold">
-              Suffix
-            </div>
-
-            <div class="flex px-2 ">
-              {{ practiceUser.suffix ? practiceUser.suffix : 'N/A' }}
-            </div>
-          </template>
 
           <div class="flex py-2 font-bold">
             Role
@@ -262,10 +240,7 @@
 
           <br />
 
-          <div
-            v-if="practiceUser && practiceUser.status !== 'Deleted' && !isPracticeUserAdmin && authAdminPermissions.includes('Delete Practice User')"
-            class="flex my-2"
-          >
+          <div v-if="canDeletePracticeUser" class="flex my-2">
             <AppButton
               :label="'Delete this Practice User'"
               :custom-theme="'bg-red-500 hover:bg-red-600 text-white py-1'"
@@ -284,7 +259,7 @@
             :type="'password'"
             :name="'password'"
             :label="'New Password'"
-            :error="formError.find(item => item.field === 'password')"
+            :error="errorFor('password')"
             required
             @blur="CheckEmptyField(toChangePassword.password, 'password')"
           />
@@ -293,14 +268,10 @@
             :type="'password'"
             :name="'password_confirmation'"
             :label="'Confirm New Password'"
-            :error="formError.find(item => item.field === 'password_confirmation')"
+            :error="errorFor('password_confirmation')"
             required
             @blur="CheckEmptyField(toChangePassword.password_confirmation, 'password_confirmation')"
           />
-          <!-- <button
-            class="inline-flex font-semibold no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left"
-            @click.prevent="checkPasswordInfo(practiceUser.id,toChangePassword)"
-          >Save Changes</button>-->
           <AppButton :label="'Save Changes'" @click="checkPasswordInfo(practiceUser.id, toChangePassword)" />
         </div>
       </div>
@@ -343,9 +314,6 @@ export default {
     return {
       practice: null,
       formError: [],
-      errors: [],
-      errorPass: [],
-      userTabs: 0,
       editProfile: false,
       tab1: true,
       tab2: false,
@@ -377,6 +345,27 @@ export default {
   computed: {
     authAdminPermissions() {
       return this.$store.getters['permissions']
+    },
+    canEditPracticeUser() {
+      return this.authAdminPermissions.includes('Edit Practice User')
+    },
+    isDeletedPracticeUser() {
+      return this.practiceUser && this.practiceUser.status === 'Deleted'
+    },
+    canDeletePracticeUser() {
+      return (
+        this.practiceUser &&
+        this.practiceUser.status !== 'Deleted' &&
+        !this.isPracticeUserAdmin &&
+        this.authAdminPermissions.includes('Delete Practice User')
+      )
+    },
+    practiceRoleOptions() {
+      return [
+        { label: 'Partner', value: 'Partner' },
+        { label: 'Practice Manager', value: 'Practice Manager' },
+        { label: 'Practice Staff', value: 'Practice Staff' }
+      ]
     },
     isPracticeUserAdmin() {
       return (
@@ -468,8 +457,6 @@ export default {
   created() {
     this.practice = this.practiceUser.practice_detail.practice
 
-    console.log('specificUserPractice', this.practice)
-
     this.toPutPracticeUser = {
       username: this.practiceUser.username,
       email: this.practiceUser.email,
@@ -510,20 +497,14 @@ export default {
           text: err.response.data.message
         })
       })
-
-    console.log('practice_user_roles', this.practice_user_roles)
   },
 
   methods: {
-    errorMessage(field, message) {
-      if (this.formError.find(error => error.field === field.toString())) {
-        let error = this.formError.find(error => error.field === field.toString())
-        return message ? message : error.message
-      }
-      return
+    errorFor(field) {
+      return this.formError.find(item => item.field === field)
     },
 
-    checkForm: function(practiceUserId, userInfo) {
+    checkForm(practiceUserId, userInfo) {
       this.formError = []
       this.Validate(this.toPutPracticeUser, ['title', 'suffix'])
       if (!this.formError.length) {
@@ -531,7 +512,7 @@ export default {
       }
     },
 
-    checkPasswordInfo: function(uID, changePass) {
+    checkPasswordInfo(uID, changePass) {
       this.Validate(this.toChangePassword)
       if (!this.formError.length) {
         this.toChangeUserPassword(uID, changePass)
@@ -554,8 +535,6 @@ export default {
 
         this.editProfile = false
       } catch (err) {
-        console.log('err', err.response || err)
-
         let message = null
 
         if (err.response) {
@@ -582,8 +561,6 @@ export default {
 
     async toChangeUserPassword(userID, toChangePassword) {
       try {
-        console.log(toChangePassword.password)
-        console.log(toChangePassword.password_confirmation)
         await this.$axios.put(`/api/v1/admin/users/${userID}/change-password`, {
           password: toChangePassword.password,
           password_confirmation: toChangePassword.password_confirmation
@@ -599,13 +576,10 @@ export default {
           status: 'danger',
           text: err.response.data.message
         })
-        console.log('index put locum detail compliance documents error', err)
       }
     },
 
     errorHandler(err) {
-      console.log('err', err.response || err)
-
       let message = null
 
       if (err.response) {

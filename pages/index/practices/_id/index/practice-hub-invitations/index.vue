@@ -17,18 +17,14 @@
           <div
             class="text-white ml-2 px-4 py-2 rounded-lg bg-yellow-600 hover:bg-yellow-700"
             @click="$router.push(`/practices/${$route.params.id}/practice-invitations/${slotProps.item.id}`)"
-          >Accept</div>
-          <div
-            class="text-white ml-2 px-4 py-2 rounded-lg bg-red-600 hover:bg-yellow-700"
-            @click="toggleRejectModal(slotProps.item.id)"
-          >Reject</div>
+          >
+            Accept
+          </div>
+          <div class="text-white ml-2 px-4 py-2 rounded-lg bg-red-600 hover:bg-yellow-700" @click="toggleRejectModal(slotProps.item.id)">Reject</div>
         </div>
       </template>
     </AppTable>
-    <div
-      class="text-center text-white text-lg font-bold"
-      v-if="spokes.length === 0"
-    >No invitations from spokes.</div>
+    <div class="text-center text-white text-lg font-bold" v-if="spokes.length === 0">No invitations from spokes.</div>
     <AppConfirm
       v-if="toggle_reject_modal"
       :message="'Reject this spoke invitation to this Practice?'"
@@ -36,28 +32,25 @@
       @confirm="rejectInvitation()"
     />
     <transition name="fade" mode="out-in">
-      <div
-        v-if="['index-practices-id-index-practice-invitations-index-practiceId'].includes($route.name) || toggle_reject_modal"
-        class="shield"
-        @click="$router.push(`/practices/${$route.params.id}/practice-invitations`), toggle_reject_modal = false"
-      />
+      <div v-if="showShield" class="shield" @click="closeOverlays" />
     </transition>
     <nuxt-child @acceptInvitation="getSpokeInvitationsPromiseAll" />
   </div>
 </template>
 <script>
-import AppTable from "@/components/Base/AppTable";
-import AppConfirm from "@/components/Base/AppConfirm";
+import AppTable from '@/components/Base/AppTable'
+import AppConfirm from '@/components/Base/AppConfirm'
 export default {
-  middleware: "changedPracticeType",
+  middleware: 'changedPracticeType',
   transition: {
-    name: "fade",
-    mode: "out-in"
+    name: 'fade',
+    mode: 'out-in'
   },
   components: {
     AppTable,
     AppConfirm
   },
+
   data() {
     return {
       toggle_reject_modal: false,
@@ -68,108 +61,104 @@ export default {
       perPage: 5,
       columns: [
         {
-          name: "Practice Name",
-          dataIndex: "name"
+          name: 'Practice Name',
+          dataIndex: 'name'
         },
         {
-          name: "Practice Code",
-          dataIndex: "code",
-          class: "text-center"
+          name: 'Practice Code',
+          dataIndex: 'code',
+          class: 'text-center'
         },
         {
-          name: "Actions",
+          name: 'Actions',
           slot: true,
-          slotName: "actions",
-          dataIndex: "",
-          class: "text-center"
+          slotName: 'actions',
+          dataIndex: '',
+          class: 'text-center'
         }
       ]
-    };
+    }
   },
-  async asyncData ({ app, store, route, error }) {
+  computed: {
+    showShield() {
+      return ['index-practices-id-index-practice-invitations-index-practiceId'].includes(this.$route.name) || this.toggle_reject_modal
+    }
+  },
+  async asyncData({ app, store, route, error }) {
     try {
-      const authAdminPermissions = store.getters["permissions"]
+      const authAdminPermissions = store.getters['permissions']
       if (authAdminPermissions.includes('View Surgery Management') === false) {
         error({
           statusCode: 403,
-          message: 'You are not authorized to view this page.',
+          message: 'You are not authorized to view this page.'
         })
         return
       }
-      let response = await app.$axios.$get(
-        `/api/v1/admin/practices/${route.params.id}/spoke-invitations/count`
-      );
-      const total = response.data.count;
+      let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}/spoke-invitations/count`)
+      const total = response.data.count
 
-      response = await app.$axios.$get(
-        `/api/v1/admin/practices/${route.params.id}/spoke-invitations`
-      );
-      const spokes = response.data.spokes;
+      response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}/spoke-invitations`)
+      const spokes = response.data.spokes
       return {
         total,
         spokes
-      };
-    } catch (err) {
-      store.commit("SET_NOTIFICATION", {
+      }
+    } catch {
+      store.commit('SET_NOTIFICATION', {
         enabled: true,
-        status: "danger",
-        text: "Something went wrong!"
-      });
-      console.log("err", err.response || err);
+        status: 'danger',
+        text: 'Something went wrong!'
+      })
     }
   },
   methods: {
+    closeOverlays() {
+      this.$router.push(`/practices/${this.$route.params.id}/practice-invitations`)
+      this.toggle_reject_modal = false
+    },
     toggleRejectModal(spokeId) {
-      this.toggle_reject_modal = true;
-      this.selectedSpokeId = spokeId;
+      this.toggle_reject_modal = true
+      this.selectedSpokeId = spokeId
     },
     rejectInvitation() {
       this.$axios
-        .$delete(
-          `/api/v1/admin/practices/${this.$route.params.id}/spoke-invitations/reject/${this.selectedSpokeId}`
-        )
-        .then(res => {
-          this.$store.commit("SET_NOTIFICATION", {
+        .$delete(`/api/v1/admin/practices/${this.$route.params.id}/spoke-invitations/reject/${this.selectedSpokeId}`)
+        .then(() => {
+          this.$store.commit('SET_NOTIFICATION', {
             enabled: true,
-            status: "sucess",
-            text: "Spoke Invitation Rejected Successfully!"
-          });
+            status: 'sucess',
+            text: 'Spoke Invitation Rejected Successfully!'
+          })
 
-          let index = this.spokes.findIndex(
-            spoke => spoke.id === this.selectedSpokeId
-          );
+          let index = this.spokes.findIndex(spoke => spoke.id === this.selectedSpokeId)
           if (index >= 0) {
-            this.spokes.splice(index, 1);
+            this.spokes.splice(index, 1)
           }
         })
         .finally(() => {
-          this.toggle_reject_modal = false;
-          this.selectedSpokeId = null;
-        });
+          this.toggle_reject_modal = false
+          this.selectedSpokeId = null
+        })
     },
     async getSpokeInvitationsPromiseAll() {
-      let response = await this.$axios.$get(
-        `/api/v1/admin/practices/${route.params.id}/spoke-invitations/count`
-      );
-      this.total = response.data.count;
-      response = await this.$axios.$get(
-        `/api/v1/admin/practices/${route.params.id}/spoke-invitations`
-      );
-      this.spokes = response.data.spokes;
+      let response = await this.$axios.$get(`/api/v1/admin/practices/${this.$route.params.id}/spoke-invitations/count`)
+      this.total = response.data.count
+      response = await this.$axios.$get(`/api/v1/admin/practices/${this.$route.params.id}/spoke-invitations`)
+      this.spokes = response.data.spokes
     },
     pagechanged(e) {
       const query = {
         ...this.$route.query,
         page: e || 1
-      };
-      this.$router.push({ query });
-      this.getSpokeInvitation();
+      }
+      this.$router.push({ query })
+      this.getSpokeInvitationsPromiseAll()
     },
     async limitchanged(limit) {
-      this.currentPage = 1;
-      this.perPage = limit;
-      await this.getSpokeInvitation();
+      this.currentPage = 1
+      this.perPage = limit
+      await this.getSpokeInvitationsPromiseAll()
     }
   }
-};
+}
 </script>

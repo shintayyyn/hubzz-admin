@@ -1,10 +1,6 @@
 <template>
   <div>
-    <JobsLists
-      :practice="practice"
-      :status="['Withdrawn']"
-      :jobDenom="'Job Parts'"
-    />
+    <JobsLists :practice="practice" :status="['Withdrawn']" :jobDenom="'Job Parts'" />
   </div>
 </template>
 
@@ -12,15 +8,15 @@
 import JobsLists from '@/components/JobsLists'
 
 export default {
-  components:{
+  components: {
     JobsLists
   },
 
   props: {
     practice: {
       type: Object,
-      default: () => null,
-    },
-  },
+      default: () => null
+    }
+  }
 }
 </script>
