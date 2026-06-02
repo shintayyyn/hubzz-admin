@@ -6,7 +6,8 @@
       :to="getRoute(tab.path)"
       class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
       :class="isActiveTab(tab.path) ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
-      >{{ tab.label }}
+    >
+      {{ tab.label }}
     </nuxt-link>
   </div>
 </template>

@@ -13,7 +13,9 @@
           <div class="text-lg font-bold">
             {{ registeeType === 'customSurgery' ? 'Create Custom Practice' : 'Create User' }}
           </div>
-          <div v-if="surgery" class="text-xs font-hairline">Surgery: {{ surgery.name }}</div>
+          <div v-if="surgery" class="text-xs font-hairline">
+            Surgery: {{ surgery.name }}
+          </div>
         </div>
 
         <div class="flex my-4 p-4 border rounded-lg text-sm max-w-lg">
@@ -397,6 +399,43 @@ export default {
     }
   },
 
+  computed: {
+    isPracticeCreationRegistee() {
+      return this.registeeType === 'customSurgery' || this.registeeType === 'newPractice'
+    },
+
+    isPracticeUserOrCreationRegistee() {
+      return this.registeeType === 'newPractice' || this.registeeType === 'practiceUser' || this.registeeType === 'customSurgery'
+    },
+
+    isAdminRegistee() {
+      return this.registeeType === 'admin'
+    },
+
+    practiceTypeOptions() {
+      return [
+        { label: 'Hub', value: 'Hub' },
+        { label: 'Stand Alone', value: 'Stand Alone' },
+        { label: 'Spoke', value: 'Spoke' }
+      ]
+    },
+
+    hubTypeOptions() {
+      return [
+        { label: 'Type 1', value: 'Type 1' },
+        { label: 'Type 2', value: 'Type 2' }
+      ]
+    },
+
+    practiceRoleOptions() {
+      return [
+        { label: 'Partner', value: 'Partner' },
+        { label: 'Practice Manager', value: 'Practice Manager' },
+        { label: 'Practice Staff', value: 'Practice Staff' }
+      ]
+    }
+  },
+
   watch: {
     //new watcher
     'toPostUser.account_number'(value) {
@@ -514,43 +553,6 @@ export default {
     }
   },
 
-  computed: {
-    isPracticeCreationRegistee() {
-      return this.registeeType === 'customSurgery' || this.registeeType === 'newPractice'
-    },
-
-    isPracticeUserOrCreationRegistee() {
-      return this.registeeType === 'newPractice' || this.registeeType === 'practiceUser' || this.registeeType === 'customSurgery'
-    },
-
-    isAdminRegistee() {
-      return this.registeeType === 'admin'
-    },
-
-    practiceTypeOptions() {
-      return [
-        { label: 'Hub', value: 'Hub' },
-        { label: 'Stand Alone', value: 'Stand Alone' },
-        { label: 'Spoke', value: 'Spoke' }
-      ]
-    },
-
-    hubTypeOptions() {
-      return [
-        { label: 'Type 1', value: 'Type 1' },
-        { label: 'Type 2', value: 'Type 2' }
-      ]
-    },
-
-    practiceRoleOptions() {
-      return [
-        { label: 'Partner', value: 'Partner' },
-        { label: 'Practice Manager', value: 'Practice Manager' },
-        { label: 'Practice Staff', value: 'Practice Staff' }
-      ]
-    }
-  },
-
   async created() {
     if (this.surgery) {
       this.toPostUser.surgery_id = this.surgery.id
@@ -573,7 +575,7 @@ export default {
       await this.$axios
         .$post(`/api/v1/postcode-to-coordinates`, { postcode: this.surgery.postcode })
         .then(res => {
-          ;(this.toPostUser.coordinate_x = res.data.postcode_coordinate.coordinate_x),
+          (this.toPostUser.coordinate_x = res.data.postcode_coordinate.coordinate_x),
             (this.toPostUser.coordinate_y = res.data.postcode_coordinate.coordinate_y)
         })
         .catch(err => {

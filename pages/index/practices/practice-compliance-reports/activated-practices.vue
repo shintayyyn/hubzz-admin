@@ -86,8 +86,12 @@
             <div class="whitespace-no-wrap">
               {{ itemCountInfo }}
             </div>
-            <div class="whitespace-no-wrap">Page: {{ activePage }} / {{ pages }}</div>
-            <div class="whitespace-no-wrap">Order By: {{ orderByProcessed }}</div>
+            <div class="whitespace-no-wrap">
+              Page: {{ activePage }} / {{ pages }}
+            </div>
+            <div class="whitespace-no-wrap">
+              Order By: {{ orderByProcessed }}
+            </div>
           </div>
         </div>
         <ReportPagination :count="count" :pages="pages" :page="activePage" @page="setPage" />

@@ -59,7 +59,7 @@
                           <div class="flex flex-col relative w-full">
                             <div class="cursor-pointer rounded flex items-center justify-between px-2 text-xs border border-gray-500 bg-white">
                               <span>{{ column.initialDropdown || 'Select Action' }}</span>
-                              <span v-if="!isDropdownOpen(rowIndex)"><svgicon name="caret-down" width="8"/></span>
+                              <span v-if="!isDropdownOpen(rowIndex)"><svgicon name="caret-down" width="8" /></span>
                             </div>
                             <div v-if="isDropdownOpen(rowIndex)" class="absolute bottom-0 " :class="getDropdownClasses(rowIndex)">
                               <slot name="actions" :item="item" @click="$emit('click', item)" />

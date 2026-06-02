@@ -26,7 +26,7 @@
       />
     </transition>
     <!-- CONFIRM OR CANCEL MODAL ENDS HERE -->
-    <div class="shield cursor-pointer overflow-hidden" v-if="hasOpenConfirmationModal" @click="closeConfirmationModal"></div>
+    <div v-if="hasOpenConfirmationModal" class="shield cursor-pointer overflow-hidden" @click="closeConfirmationModal"></div>
     <div class="w-full flex flex-wrap justify-between mb-2">
       <svgicon name="times-solid" class="hover:text-sunglow fill-current w-6 md:w-8 h-6 md:h-8 cursor-pointer" @click="$router.go(-1)" />
       <div class="py-2 font-bold text-lg leading-tight">
@@ -65,7 +65,9 @@
       </div>
       <div class="my-2">
         <span class="font-bold">Note from Practice Hub:</span>
-        <div class="md:m-2 p-2 bg-gray-300 rounded-lg overflow-y-auto">{{ childSurgery.note }}</div>
+        <div class="md:m-2 p-2 bg-gray-300 rounded-lg overflow-y-auto">
+          {{ childSurgery.note }}
+        </div>
       </div>
     </div>
 

@@ -58,26 +58,6 @@ export default {
     }
   },
 
-  methods: {
-    getRoute(tab = '') {
-      const query = {
-        ...this.$route.query
-      }
-
-      delete query.order_by
-      delete query.status
-
-      return {
-        path: `/practices/${this.$route.params.id}/practice-sessions/${tab}`,
-        query
-      }
-    },
-
-    isActiveTab(tab) {
-      return this.$route.path.includes(tab.slug) || this.$route.path.includes(tab.surgerySlug)
-    }
-  },
-
   async asyncData({ store, error }) {
     const authAdminPermissions = store.getters['permissions']
 
@@ -98,6 +78,26 @@ export default {
         path: `/practices/${this.practice.id}/practice-sessions/practice-live-sessions`,
         query: this.$route.query
       })
+    }
+  },
+
+  methods: {
+    getRoute(tab = '') {
+      const query = {
+        ...this.$route.query
+      }
+
+      delete query.order_by
+      delete query.status
+
+      return {
+        path: `/practices/${this.$route.params.id}/practice-sessions/${tab}`,
+        query
+      }
+    },
+
+    isActiveTab(tab) {
+      return this.$route.path.includes(tab.slug) || this.$route.path.includes(tab.surgerySlug)
     }
   }
 }

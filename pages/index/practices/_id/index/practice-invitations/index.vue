@@ -27,31 +27,45 @@
           </div>
         </template>
       </AppTable>
-      <div class="text-center  text-lg font-bold" v-if="spokes.length === 0">No invitations from spokes.</div>
+      <div v-if="spokes.length === 0" class="text-center  text-lg font-bold">
+        No invitations from spokes.
+      </div>
     </template>
 
     <template v-if="practice && practice.type === 'Spoke'">
       <div v-if="practice.hub_practice" class="flex flex-col mx-4 border rounded-lg p-4 max-w-sm ">
-        <div class="font-bold text-xl mb-4">Practice Hub</div>
+        <div class="font-bold text-xl mb-4">
+          Practice Hub
+        </div>
         <div>Practice Name</div>
-        <div class="font-bold text-lg mb-2">{{ practice.hub_practice.name ? practice.hub_practice.name : 'N/A' }}</div>
+        <div class="font-bold text-lg mb-2">
+          {{ practice.hub_practice.name ? practice.hub_practice.name : 'N/A' }}
+        </div>
         <div>Practice Code</div>
-        <div class="font-bold text-lg mb-2">{{ practice.hub_practice.code ? practice.hub_practice.code : 'N/A' }}</div>
+        <div class="font-bold text-lg mb-2">
+          {{ practice.hub_practice.code ? practice.hub_practice.code : 'N/A' }}
+        </div>
         <div>CCG</div>
         <div class="font-bold text-lg mb-2">
           {{ practice.hub_practice.clinical_commissioning_group_name ? practice.hub_practice.clinical_commissioning_group_name : 'N/A' }}
         </div>
         <div>Contact Number</div>
-        <div class="font-bold text-lg mb-2">{{ practice.hub_practice.phone_number ? practice.hub_practice.phone_number : 'N/A' }}</div>
+        <div class="font-bold text-lg mb-2">
+          {{ practice.hub_practice.phone_number ? practice.hub_practice.phone_number : 'N/A' }}
+        </div>
         <div>Address</div>
         <div v-for="(addressLine, index) in hubPracticeAddressLines" :key="index" class="font-bold text-lg">
           {{ addressLine }}
         </div>
         <div class="mb-2"></div>
         <div>Report To</div>
-        <div class="font-bold text-lg mb-2">{{ practice.hub_practice.report_to ? practice.hub_practice.report_to : 'N/A' }}</div>
+        <div class="font-bold text-lg mb-2">
+          {{ practice.hub_practice.report_to ? practice.hub_practice.report_to : 'N/A' }}
+        </div>
         <div>Email Address</div>
-        <div class="font-bold text-lg mb-2">{{ practice.hub_practice.email ? practice.hub_practice.email : 'N/A' }}</div>
+        <div class="font-bold text-lg mb-2">
+          {{ practice.hub_practice.email ? practice.hub_practice.email : 'N/A' }}
+        </div>
         <div class="flex items-center">
           <div
             class="mx-1 px-4 py-1 text-white rounded-lg bg-red-600 hover:bg-red-700 cursor-pointer text-center md:w-48"
@@ -68,7 +82,9 @@
           </div>
         </div>
       </div>
-      <div class="text-center  text-lg font-bold" v-if="!practice.hub_practice">This practice did not invite any Hub.</div>
+      <div v-if="!practice.hub_practice" class="text-center  text-lg font-bold">
+        This practice did not invite any Hub.
+      </div>
     </template>
 
     <AppConfirm
@@ -86,7 +102,7 @@
     <transition name="fade" mode="out-in">
       <div v-if="showShield" class="shield" @click="closeOverlays" />
     </transition>
-    <nuxt-child @acceptInvitation="getInit" :practiceType="practice.type" />
+    <nuxt-child :practiceType="practice.type" @acceptInvitation="getInit" />
   </div>
 </template>
 <script>

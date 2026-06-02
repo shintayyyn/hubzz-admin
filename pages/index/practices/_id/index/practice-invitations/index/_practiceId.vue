@@ -20,7 +20,7 @@
             required
           />
         </div>
-        <div class="p-2 mx-2 bg-gray-500 rounded-lg" v-if="shouldShowRateLimits">
+        <div v-if="shouldShowRateLimits" class="p-2 mx-2 bg-gray-500 rounded-lg">
           <div class="w-full p-1">
             <AppInput
               v-model="form.max_hourly_rate_limit"
@@ -234,7 +234,7 @@ export default {
 
         this.$axios
           .$post(urlPath, formPayload)
-          .then(res => {
+          .then(() => {
             this.$store.commit('SET_NOTIFICATION', {
               enabled: true,
               status: 'sucess',

@@ -46,8 +46,8 @@
       <div>
         <label class="text-white">Limit: </label>
         <select v-model="limit">
-          <option v-for="limit in limits" :key="`limit_${limit}`" :value="limit">
-            {{ limit }}
+          <option v-for="pageLimit in limits" :key="`limit_${pageLimit}`" :value="pageLimit">
+            {{ pageLimit }}
           </option>
         </select>
       </div>

@@ -255,7 +255,7 @@ export default {
   },
 
   methods: {
-    practiceSurgeryDeletedHandler(_practiceSurgeryId) {
+    practiceSurgeryDeletedHandler() {
       this.getPracticeSurgeries()
     },
 

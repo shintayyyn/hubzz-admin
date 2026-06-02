@@ -24,8 +24,7 @@
                 v-if="practice.type === 'Hub' && practice.hub_type === 'Type 2'"
                 class="inline-flex px-4 py-1 mr-2 mb-1 rounded-lg text-sm md:px-2"
                 :class="practiceTypeStyle(practice.hub_type)"
-                >'Health Board'</span
-              >
+              >'Health Board'</span>
             </p>
 
             <p class="flex font-bold">
@@ -87,7 +86,9 @@
               "
             >
               <div v-for="professionComplianceCategory in professionComplianceCategories" :key="professionComplianceCategory.id" class="mb-4">
-                <p class="flex font-bold">Compliance Requirements for {{ professionComplianceCategory.name }}:</p>
+                <p class="flex font-bold">
+                  Compliance Requirements for {{ professionComplianceCategory.name }}:
+                </p>
 
                 <div
                   v-for="referenceComplianceDocument in professionComplianceCategory.reference_compliance_documents.filter(
@@ -97,7 +98,7 @@
                           return (
                             practiceProfessionComplianceCategoryComplianceDocument.compliance_document_id === referenceComplianceDocument.id &&
                             practiceProfessionComplianceCategoryComplianceDocument.profession_compliance_category_id ===
-                              professionComplianceCategory.id
+                            professionComplianceCategory.id
                           )
                         }
                       )
@@ -121,7 +122,7 @@
                             return (
                               practiceProfessionComplianceCategoryComplianceDocument.compliance_document_id === mandatoryComplianceDocument.id &&
                               practiceProfessionComplianceCategoryComplianceDocument.profession_compliance_category_id ===
-                                professionComplianceCategory.id
+                              professionComplianceCategory.id
                             )
                           }
                         )
@@ -138,7 +139,7 @@
                             return (
                               practiceProfessionComplianceCategoryComplianceDocument.compliance_document_id === childComplianceDocument.id &&
                               practiceProfessionComplianceCategoryComplianceDocument.profession_compliance_category_id ===
-                                professionComplianceCategory.id
+                              professionComplianceCategory.id
                             )
                           }
                         )
@@ -166,7 +167,7 @@
                             return (
                               practiceProfessionComplianceCategoryComplianceDocument.compliance_document_id === optionalComplianceDocument.id &&
                               practiceProfessionComplianceCategoryComplianceDocument.profession_compliance_category_id ===
-                                professionComplianceCategory.id
+                              professionComplianceCategory.id
                             )
                           }
                         )
@@ -183,7 +184,7 @@
                             return (
                               practiceProfessionComplianceCategoryComplianceDocument.compliance_document_id === childComplianceDocument.id &&
                               practiceProfessionComplianceCategoryComplianceDocument.profession_compliance_category_id ===
-                                professionComplianceCategory.id
+                              professionComplianceCategory.id
                             )
                           }
                         )
@@ -473,8 +474,8 @@
                       {{
                         practice && practice.actived_until
                           ? $moment(practice.actived_until, 'YYYY-MM-DD[T]')
-                              .utc()
-                              .format('DD/MM/YYYY')
+                            .utc()
+                            .format('DD/MM/YYYY')
                           : 'N/A'
                       }}
                     </p>
@@ -537,8 +538,7 @@
                   v-if="practice.type === 'Hub' && practice.hub_type === 'Type 2'"
                   class="inline-flex px-4 py-1 mr-2 mb-1 rounded-lg text-sm md:px-2"
                   :class="practiceTypeStyle(practice.hub_type)"
-                  >{{ practice.hub_type === 'Type 2' ? 'Health Board' : null }}</span
-                >
+                >{{ practice.hub_type === 'Type 2' ? 'Health Board' : null }}</span>
               </div>
 
               <!-- EDIT PRACTICE TYPE -->

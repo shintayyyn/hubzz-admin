@@ -1,83 +1,54 @@
-
 <template>
   <div>
     <div class="page-overlap flex-1 flex flex-col self-end">
-      <div class="text-lg md:text-2xl ">
+      <div class="text-lg md:text-2xl">
         Practice Cancellations
       </div>
-  
-      <div class="text-sm md:text-lg ">
+
+      <div class="text-sm md:text-lg">
         Rep-024
       </div>
 
-      <div
-        class="flex-col justify-start items-center w-full border p-3 rounded-lg flex my-2"
-      >
+      <div class="flex-col justify-start items-center w-full border p-3 rounded-lg flex my-2">
         <div class="flex flex-row w-full items-center">
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-            <AppInput
-              v-model="practiceNameIncludes"
-              placeholder="Search by Practice Name"
-              type="text"
-              label="Practice Name"
-            />
+            <AppInput v-model="practiceNameIncludes" placeholder="Search by Practice Name" type="text" label="Practice Name" />
           </div>
 
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-            <AppInput
-              v-model="areaPostCode"
-              placeholder="Search Area Postcode"
-              type="text"
-              label="Area Postcode"
-            />
+            <AppInput v-model="areaPostCode" placeholder="Search Area Postcode" type="text" label="Area Postcode" />
           </div>
         </div>
-        
+
         <div class="flex flex-row w-full items-center">
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-            <AppDate
-              v-model="dateStart"
-              label="Date Start"
-              format="YYYY-MM-DD"
-            />
+            <AppDate v-model="dateStart" label="Date Start" format="YYYY-MM-DD" />
           </div>
 
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-            <AppDate
-              v-model="dateEnd"
-              label="Date End"
-              format="YYYY-MM-DD"
-            />
+            <AppDate v-model="dateEnd" label="Date End" format="YYYY-MM-DD" />
           </div>
         </div>
 
         <div class="md:px-1 flex flex-wrap w-full justify-end">
-          <AppButton
-            label="Reset"
-            :in-style="'padding:5px 14px;margin-bottom:5px'"
-            @click="filterReset"
-          />
+          <AppButton label="Reset" :in-style="'padding:5px 14px;margin-bottom:5px'" @click="filterReset" />
 
-          <AppButton
-            class="mx-2"
-            label="Submit"
-            :in-style="'padding:5px 14px;margin-bottom:5px'"
-            @click="filterSearch"
-          />
+          <AppButton class="mx-2" label="Submit" :in-style="'padding:5px 14px;margin-bottom:5px'" @click="filterSearch" />
         </div>
       </div>
 
       <div v-if="false">
         <div>
-          <label class="">Limit: </label>
+          <label>Limit: </label>
           <select v-model="limit">
             <option v-for="limitOption in limits" :key="`limit_${limitOption}`" :value="limitOption">
               {{ limitOption }}
             </option>
           </select>
         </div>
+
         <div>
-          <label class="">Page: </label>
+          <label>Page: </label>
           <select v-model="activePage">
             <option v-for="page in pages" :key="`page_${page}`" :value="page">
               {{ page }}
@@ -89,47 +60,43 @@
       <ReportTable
         :limit="limit"
         :items="cancelledJobs"
-        :getItemKey="(item) => item.job_id"
+        :getItemKey="item => item.job_id"
         :columnDetails="columnDetails"
         :orderBy="orderBy"
         :loading="loading"
-        @setOrderBy="(value) => orderBy = value"
+        @setOrderBy="setOrderBy"
       />
 
       <div class="w-full flex flex-wrap justfify-between items-center">
         <div class="flex-1 flex flex-wrap justify-between pt-2 md:py-2 text-sm">
-          <div class=" w-full md:w-auto text-center md:text-left">
+          <div class="w-full md:w-auto text-center md:text-left">
             <div class="whitespace-no-wrap">
               {{ itemCountInfo }}
             </div>
+
             <div class="whitespace-no-wrap">
               Page: {{ activePage }} / {{ pages }}
             </div>
+
             <div class="whitespace-no-wrap">
               Order By: {{ orderByProcessed }}
             </div>
           </div>
         </div>
-        <ReportPagination
-          :count="count" 
-          :pages="pages" 
-          :page="activePage"
-          @page="setPage" 
-        />
+
+        <ReportPagination :count="count" :pages="pages" :page="activePage" @page="setPage" />
       </div>
 
-      <div
-        v-if="authAdminPermissions.includes('Generate Reports')"
-        class="flex-wrap justify-start items-center w-full p-3 flex my-2"
-      >
+      <div v-if="authAdminPermissions.includes('Generate Reports')" class="flex-wrap justify-start items-center w-full p-3 flex my-2">
         <div class="md:px-1 flex flex-wrap w-full justify-end">
           <button
-            :disabled="downloading || cancelledJobs.length === 0"
+            :disabled="downloading || !hasResults"
             class="px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
-            :class="cancelledJobs.length === 0 ? 'bg-gray-500' : 'bg-sunglow hover:bg-sunglow-dark'"
+            :class="!hasResults ? 'bg-gray-500' : 'bg-sunglow hover:bg-sunglow-dark'"
             @click="downloadCsv"
           >
             <svgicon name="cloud-download" width="21" height="21" color="fill" class="fill-current mr-2" />
+
             <span>Download CSV</span>
           </button>
         </div>
@@ -137,326 +104,309 @@
     </div>
   </div>
 </template>
-
 <script>
-  import ReportTable from '@/components/Reports/ReportTable'
-  import ReportPagination from '@/components/Reports/ReportPagination'
-  import AppInput from '@/components/Base/AppInput'
-  import AppButton from '@/components/Base/AppButton'
-  import AppDate from '@/components/Base/AppDate'
-  export default {
-    components: {
-      ReportTable,
-      ReportPagination,
-      AppInput,
-      AppButton,
-      AppDate,
+import ReportTable from '@/components/Reports/ReportTable'
+import ReportPagination from '@/components/Reports/ReportPagination'
+import AppInput from '@/components/Base/AppInput'
+import AppButton from '@/components/Base/AppButton'
+import AppDate from '@/components/Base/AppDate'
+
+export default {
+  components: {
+    ReportTable,
+    ReportPagination,
+    AppInput,
+    AppButton,
+    AppDate
+  },
+
+  data() {
+    return {
+      loading: false,
+      count: 0,
+      downloading: false,
+      cancelledJobs: [],
+      orderByProcessed: '',
+      orderBy: [],
+      orderBys: [
+        {
+          title: 'Practice Name (Ascending)',
+          column: 'practice_name',
+          direction: 'asc'
+        },
+        {
+          title: 'Practice Name (Descending)',
+          column: 'practice_name',
+          direction: 'desc'
+        }
+      ],
+      limit: 10,
+      limits: [1, 2, 3, 4, 5, 10, 15, 20, 25],
+      activePage: 1,
+
+      practiceNameIncludes: '',
+      dateStart: '',
+      dateEnd: '',
+      areaPostCode: '',
+      downloadToken: null
+    }
+  },
+
+  computed: {
+    authAdminPermissions() {
+      return this.$store.getters.permissions
+    },
+    hasResults() {
+      return this.cancelledJobs.length > 0
     },
 
-    data () {
-      return {
-        loading: false,
-        count: 0,
-        downloading: false,
-        cancelledJobs: [],
-        orderByProcessed: '',
-        orderBy: [],
-        orderBys: [
-          {
-            title: 'Practice Name (Ascending)',
-            column: 'practice_name',
-            direction: 'asc',
-          },
-          {
-            title: 'Practice Name (Descending)',
-            column: 'practice_name',
-            direction: 'desc',
-          },
-        ],
-        limit: 10,
-        limits: [
-          1,
-          2,
-          3,
-          4,
-          5,
-          10,
-          15,
-          20,
-          25,
-        ],
-        activePage: 1,
+    itemCountInfo() {
+      const firstItem = Math.min(this.offset + 1, this.count)
+      const lastItem = Math.min(this.offset + (this.loading ? this.limit : this.cancelledJobs.length), this.count)
 
-        practiceNameIncludes: '',
-        dateStart: '',
-        dateEnd: '',
-        areaPostCode: '',
-        downloadToken: null,
+      return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
+    },
+
+    offset() {
+      return (this.activePage - 1) * this.limit
+    },
+
+    pages() {
+      return Math.max(Math.ceil(this.count / this.limit), 1)
+    },
+
+    filterParams() {
+      return {
+        practice_name_includes: this.practiceNameIncludes || '',
+        date_start: this.dateStart || '',
+        date_end: this.dateEnd || '',
+        area_includes: this.areaPostCode || ''
       }
     },
 
-    computed: {
-      authAdminPermissions () {
-        return this.$store.getters["permissions"]
-      },
+    columnDetails() {
+      return [
+        {
+          title: '#',
+          key: 'index',
+          sort_key: null,
+          column: (_, index) => this.offset + index + 1,
+          justify: 'end',
+          flexGrow: 0,
+          flexShrink: 0
+        },
+        {
+          title: 'Practice',
+          key: 'practice_name',
+          sort_key: 'practice_name',
+          column: item => item.practice_name,
+          justify: 'start',
+          flexGrow: 1,
+          flexShrink: 0
+        },
+        {
+          title: 'Job Number',
+          key: 'job_number',
+          sort_key: 'job_number',
+          column: item => item.job_number,
+          justify: 'start',
+          flexGrow: 1,
+          flexShrink: 0
+        },
+        {
+          title: 'Profession',
+          key: 'profession',
+          sort_key: 'profession',
+          column: item => item.profession,
+          justify: 'start',
+          flexGrow: 1,
+          flexShrink: 0
+        },
+        {
+          title: 'Date',
+          key: 'date',
+          sort_key: 'date',
+          column: item => (item.date ? this.$moment(item.date, 'YYYY-MM-DD').format('DD/MM/YYYY') : null),
+          justify: 'center',
+          flexGrow: 1,
+          flexShrink: 0
+        },
+        {
+          title: 'Area',
+          key: 'area',
+          sort_key: 'area',
+          column: item => item.area,
+          justify: 'start',
+          flexGrow: 1,
+          flexShrink: 0
+        },
+        {
+          title: 'Reason',
+          key: 'reason',
+          sort_key: 'reason',
+          column: item => item.reason,
+          justify: 'start',
+          flexGrow: 1,
+          flexShrink: 0
+        }
+      ]
+    }
+  },
 
-      itemCountInfo () {
-        const firstItem = Math.min((this.limit * this.activePage) - this.limit + 1, this.count)
-        const lastItem = Math.min((this.limit * this.activePage) - this.limit + (this.loading ? this.limit : this.cancelledJobs.length), this.count)
-        
-        return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
-      },
-      offset () {
-        return this.activePage * this.limit - this.limit
-      },
+  watch: {
+    orderBy(value) {
+      let replaced = ''
 
-      columnDetails () {
-        return [
-          {
-            title: '#',
-            key: 'index',
-            sort_key: null,
-            column: (_, index) => this.offset + index + 1,
-            justify: 'end',
-            flexGrow: 0,
-            flexShrink: 0,
-          },
-          {
-            title: 'Practice',
-            key: 'practice_name',
-            sort_key: 'practice_name',
-            column: (item) => item.practice_name,
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Job Number',
-            key: 'job_number',
-            sort_key: 'job_number',
-            column: (item) => item.job_number,
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Profession',
-            key: 'profession',
-            sort_key: 'profession',
-            column: (item) => item.profession,
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Date',
-            key: 'date',
-            sort_key: 'date',
-            column: (item) => item.date ? this.$moment(item.date, 'YYYY-MM-DD').format('DD/MM/YYYY') : null,
-            justify: 'center',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Area',
-            key: 'area',
-            sort_key: 'area',
-            column: (item) => item.area,
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Reason',
-            key: 'reason',
-            sort_key: 'reason',
-            column: (item) => item.reason,
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-        ]
-      },
+      if (value.length > 0) {
+        replaced = value[0]
+          .replace(/_/g, ' ')
+          .replace(/:/g, ' - ')
+          .replace(/(^\w{1})|(\s{1}\w{1})/g, word => word.toUpperCase())
+          .replace('Desc', 'Descending')
+          .replace('Asc', 'Ascending')
+      }
 
-      pages () {
-        return Math.max(Math.ceil(this.count / this.limit), 1)
-      },
+      this.orderByProcessed = replaced
+      this.getCancelledJobs()
     },
 
-    watch: {
-      orderBy (value) {
-        let replaced = ''
-        if(value.length > 0) {
-          replaced = value[0].replace(/_/g, ' ')
-          replaced = replaced.replace(/:/g, ' - ')
-          replaced = replaced.replace(/(^\w{1})|(\s{1}\w{1})/g, word => word.toUpperCase())
-          replaced = replaced.replace('Desc', 'Descending')
-          replaced = replaced.replace('Asc', 'Ascending')
-        } 
-        this.orderByProcessed = replaced
-        this.getCancelledJobs()
-      },
-
-      limit () {
-        this.page = 1
-        this.getCancelledJobs()
-      },
-
-      activePage () {
-        this.getCancelledJobs()
-      },
+    limit() {
+      this.activePage = 1
+      this.getCancelledJobs()
     },
 
-    mounted () {      
-      const {
-        practice_name_includes: practiceNameIncludes,
-        date_start: dateStart,
-        date_end: dateEnd,
-        area_includes: areaPostCode,
-        order_by: orderBy = [],
-        page,
-      } = this.$route.query
+    activePage() {
+      this.getCancelledJobs()
+    }
+  },
 
-      this.practiceNameIncludes = practiceNameIncludes ? practiceNameIncludes : ''
-      this.areaPostCode = areaPostCode ? areaPostCode : ''
-      this.dateStart = dateStart ? dateStart : ''
-      this.dateEnd = dateEnd ? dateEnd : ''
+  mounted() {
+    const { practice_name_includes, date_start, date_end, area_includes, order_by = [], page } = this.$route.query
 
-      this.orderBy = orderBy
-      this.activePage = page ? Number.parseInt(page) : 1
+    this.practiceNameIncludes = practice_name_includes || ''
+    this.areaPostCode = area_includes || ''
+    this.dateStart = date_start || ''
+    this.dateEnd = date_end || ''
+
+    this.orderBy = order_by
+    this.activePage = page ? Number.parseInt(page) : 1
+
+    this.getCancelledJobs()
+  },
+
+  methods: {
+    filterReset() {
+      this.practiceNameIncludes = ''
+      this.areaPostCode = ''
+      this.dateStart = ''
+      this.dateEnd = ''
+
+      this.filterSearch()
+    },
+
+    filterSearch() {
+      this.activePage = 1
+
+      const query = {
+        ...this.$route.query,
+        practice_name_includes: this.practiceNameIncludes || '',
+        area_includes: this.areaPostCode || '',
+        date_start: this.dateStart || '',
+        date_end: this.dateEnd || '',
+        order_by: this.orderBy || undefined,
+        page: undefined
+      }
+
+      if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+        this.$router.replace({ query })
+      }
 
       this.getCancelledJobs()
     },
 
-    methods: {
-      filterReset () {
-        this.practiceNameIncludes =''
-        this.areaPostCode = ''
-        this.dateStart = ''
-        this.dateEnd = ''
+    setPage(page) {
+      this.activePage = page
 
-        this.filterSearch()
-      },
-
-      filterSearch () {
-        this.activePage = 1
-
-        const query = {
+      this.$router.replace({
+        query: {
           ...this.$route.query,
-          practiceNameIncludes: this.practiceNameIncludes ? this.practiceNameIncludes : '',
-          areaPostCode: this.areaPostCode ? this.areaPostCode : '',
-          dateStart: this.dateStart ? this.dateStart : '',
-          dateEnd: this.dateEnd ? this.dateEnd : '',
-          order_by: this.orderBy ? this.orderBy : undefined,
-          page: undefined,
+          page: this.activePage === 1 ? undefined : this.activePage
         }
+      })
 
-        if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-          this.$router.replace({ query })
+      this.getCancelledJobs()
+    },
+
+    setOrderBy(orderBy) {
+      this.orderBy = orderBy
+      this.activePage = 1
+
+      this.$router.replace({
+        query: {
+          ...this.$route.query,
+          order_by: this.orderBy,
+          page: undefined
         }
-        
-        this.getCancelledJobs()
-      },
+      })
 
-      setPage (page) {
-        this.activePage = page
+      this.getCancelledJobs()
+    },
 
-        if (this.activePage === 1) {
-          this.$router.replace({
-            query: {
-              ...this.$route.query,
-              page: undefined,
-            }
+    getCancelledJobs() {
+      this.loading = true
+      this.cancelledJobs = []
+
+      Promise.all([
+        this.$axios
+          .get('/api/v1/admin/reports/cancelled-jobs/count', {
+            params: this.filterParams
           })
-        } else {
-          this.$router.replace({
-            query: {
-              ...this.$route.query,
-              page: this.activePage,
-            }
-          })
-        }
+          .then(({ data }) => data.data.count),
 
-        this.getCancelledJobs()
-      },
-
-      setOrderBy (orderBy) {
-        this.orderBy = orderBy
-        this.activePage = 1
-
-        this.$router.replace({
-          query: {
-            ...this.$route.query,
-            order_by: this.orderBy,
-            page: undefined,
-          }
-        })
-
-        this.getCancelledJobs()
-      },
-
-      getCancelledJobs () {
-        this.loading = true
-        this.cancelledJobs = []
-        
-        const params = {
-          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : '',
-          date_start: this.dateStart ? this.dateStart : '',
-          date_end: this.dateEnd ? this.dateEnd : '',
-          area_includes: this.areaPostCode ? this.areaPostCode : '',
-        }
-        Promise.all([
-          this.$axios.get('/api/v1/admin/reports/cancelled-jobs/count', {
-            params
-          }).then((responses) => {
-            return responses.data.data.count
-          }),
-
-          this.$axios.get('/api/v1/admin/reports/cancelled-jobs', {
+        this.$axios
+          .get('/api/v1/admin/reports/cancelled-jobs', {
             params: {
-              ...params,
+              ...this.filterParams,
               order_by: this.orderBy,
               limit: this.limit,
-              offset: this.offset,
+              offset: this.offset
+            }
+          })
+          .then(({ data }) => data.data.cancelled_jobs),
+
+        this.$axios
+          .post(
+            '/api/v1/admin/reports/cancelled-jobs/generate-key',
+            {
+              filename: 'cancelledJobs.csv'
             },
-          }).then((responses) => {
-            return responses.data.data.cancelled_jobs
-          }),
-
-          this.$axios.post('/api/v1/admin/reports/cancelled-jobs/generate-key', {
-            filename: `cancelledJobs.csv`,
-          }, {
-            params: {
-              ...params,
-              order_by: this.orderBy,
-            },
-          }).then((responses) => {
-            const token = responses.data.data.token
-
-            return token
-          }),
-        ]).then((results) => {
-          const [
-            count,
-            cancelledJobs,
-            downloadToken,
-          ] = results
-
+            {
+              params: {
+                ...this.filterParams,
+                order_by: this.orderBy
+              }
+            }
+          )
+          .then(({ data }) => data.data.token)
+      ])
+        .then(([count, cancelledJobs, downloadToken]) => {
           this.count = count
           this.cancelledJobs = cancelledJobs
           this.downloadToken = downloadToken
-        }).catch((err) => {
+        })
+        .catch(err => {
           console.log('err.response ? err.response.data : err', err.response ? err.response.data : err)
+
           this.$nuxt.error(err.response ? err.response.data : err)
-        }).finally(() => {
+        })
+        .finally(() => {
           this.loading = false
         })
-      },
-
-      downloadCsv () {
-        window.open(`${process.env.API_URL}/api/v1/admin/reports/cancelled-jobs/csv?token=${this.downloadToken}`)
-      },
     },
 
+    downloadCsv() {
+      window.open(`${process.env.API_URL}/api/v1/admin/reports/cancelled-jobs/csv?token=${this.downloadToken}`)
+    }
   }
+}
 </script>
