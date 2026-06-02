@@ -15,7 +15,7 @@
         :icon="'add-user'"
         :iconSize="'16'"
         class="my-1 mt-3 mr-2"
-        @click=";((modal = true), (deleteAdminUser = false))"
+        @click=";(modal = true), (deleteAdminUser = false)"
       />
       <template v-if="authAdminPermissions.includes('Delete Admin Account') && total > 0">
         <AppButton
@@ -75,7 +75,7 @@ export default {
     CreateUser,
     AppConfirm,
     AppButton,
-    AppTableNew,
+    AppTableNew
   },
   data() {
     return {
@@ -85,8 +85,6 @@ export default {
       params: {},
       search: '',
 
-      //itemCount:'',
-      // adminUsers:{},
       adminCreate: true,
       adminAccountId: '',
       modal: false,
@@ -99,29 +97,23 @@ export default {
         {
           name: 'E-mail',
           dataIndex: 'email',
-          class: 'text-center',
-          // flex: '1 0 0',
-          // width: 300,
+          class: 'text-center'
         },
         {
           name: 'Name',
           dataIndex: 'personal_detail.name',
-          class: 'text-center',
-          // flex: '1 0 0',
-          // width: 200,
+          class: 'text-center'
         },
-        //new
+
         {
           name: 'Role/s',
-          // dataIndex: "admin_detail.role.name",
-          column: (item) => {
-            return item.admin_detail?.roles?.map((role) => role.name).join(', ') ?? '—'
+
+          column: item => {
+            return item.admin_detail?.roles?.map(role => role.name).join(', ') ?? '—'
           },
-          class: 'text-center',
-          // flex: '1 0 0',
-          // width: 300,
-        },
-      ],
+          class: 'text-center'
+        }
+      ]
     }
   },
   computed: {
@@ -145,7 +137,7 @@ export default {
     },
     total() {
       return this.adminUsers.length
-    },
+    }
   },
   watch: {
     deleteAdminUser(value) {
@@ -156,14 +148,14 @@ export default {
             slot: true,
             slotName: 'delete',
             dataIndex: '',
-            class: 'text-center',
+            class: 'text-center'
           },
-          ...this.defaultColumns,
+          ...this.defaultColumns
         ]
       } else {
         this.columns = [...this.defaultColumns]
       }
-    },
+    }
   },
   async asyncData({ app, store, route }) {
     try {
@@ -180,7 +172,7 @@ export default {
       }
       const getAdminUsersCount = await app.$axios.$get(`/api/v1/admin/admin-users/count`, { params })
       const getAdminUsers = await app.$axios.$get(`/api/v1/admin/admin-users`, {
-        params,
+        params
       })
 
       let response = await getAdminUsersCount
@@ -189,22 +181,19 @@ export default {
       response = await getAdminUsers
       const adminUsers = response.data.users
 
-      //store users and count here
       await store.commit('adminusers/SET_ADMIN_COUNT', itemCount)
       await store.commit('adminusers/SET_ADMIN_USERS', adminUsers)
       await store.commit('adminusers/TOGGLE_LOADING', false)
       return {
         itemsPerPage: limit,
         currentPage: page,
-        search,
-        //itemCount, //store
-        //adminUsers //store
+        search
       }
     } catch (err) {
       store.commit('SET_NOTIFICATION', {
         enabled: true,
         status: 'danger',
-        text: 'Something went wrong!',
+        text: 'Something went wrong!'
       })
       console.log('get users error', err)
     }
@@ -216,7 +205,7 @@ export default {
   methods: {
     getQuery() {
       const query = {
-        ...this.$route.query,
+        ...this.$route.query
       }
       const offset = parseInt(query.page) * 10 - 10
       return offset
@@ -225,7 +214,7 @@ export default {
       this.$store.dispatch('adminusers/fetchAdminUsers', {
         limit: 10,
         search: params.search,
-        offset: this.getQuery(),
+        offset: this.getQuery()
       })
     },
     toDeleteAdminUser(userId) {
@@ -236,7 +225,7 @@ export default {
       if (this.adminAccountId) {
         await this.$axios
           .$delete(`/api/v1/admin/admin-users/${this.adminAccountId}`)
-          .then(async res => {
+          .then(async () => {
             await this.$store.dispatch('adminusers/fetchAdminUsers', {
               limit: 10,
               offset: this.getQuery(),
@@ -246,14 +235,14 @@ export default {
             this.$store.commit('SET_NOTIFICATION', {
               enabled: true,
               status: 'success',
-              text: 'Admin Account Successfully Deleted',
+              text: 'Admin Account Successfully Deleted'
             })
           })
-          .catch((err) => {
+          .catch(err => {
             this.$store.commit('SET_NOTIFICATION', {
               enabled: true,
               status: 'danger',
-              text: err.response.data.message,
+              text: err.response.data.message
             })
           })
       }
@@ -262,12 +251,12 @@ export default {
     pagechanged(e) {
       const query = {
         ...this.$route.query,
-        page: e || 1,
+        page: e || 1
       }
       this.$router.push({ query })
       this.getAdmins(this.params)
-    },
-  },
+    }
+  }
 }
 </script>
 <style>
@@ -281,23 +270,4 @@ export default {
   opacity: 0.5;
   z-index: 511;
 }
-/* .new-user-modal {
-	position: fixed;
-	top: 0;
-	right: 0;
-	margin-right: 0%;
-	width: 100%;
-	height: 100%;
-	overflow: auto;
-	border-left: solid 2px #ffc72c;
-	transition: all 0.3s ease-in-out;
-	background-color: #505561;
-	z-index: 512;
-}
-
-@media screen and (min-width: 1200px) {
-	.new-user-modal {
-		width: 70%;
-	}
-} */
 </style>

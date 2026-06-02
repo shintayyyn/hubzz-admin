@@ -124,7 +124,7 @@
                   {{ surveyResponseAnswer.answer ? surveyResponseAnswer.answer : '&nbsp;' }}
                 </p>
               </div>
-              
+
               <div v-if="surveyResponseAnswer.question_type === 'Rating'" class="mb-4">
                 <h1 class="text-lg">
                   {{ surveyResponseAnswer.question }}
@@ -139,42 +139,34 @@
                   />
                 </div>
               </div>
-              
+
               <div v-if="surveyResponseAnswer.question_type === 'Check Boxes'" class="mb-4">
                 <h1 class="text-lg">
                   {{ surveyResponseAnswer.question }}
                 </h1>
                 <div class="flex flex-col ml-2">
-                  <div
-                    v-for="choice in surveyResponseAnswer.survey_question.choices"
-                    :key="choice.id"
-                    class="flex py-2"
-                  >
+                  <div v-for="choice in surveyResponseAnswer.survey_question.choices" :key="choice.id" class="flex py-2">
                     <input
                       :name="choice.id"
                       type="checkbox"
-                      :checked="surveyResponseAnswer.selected_choices.some((selectedChoice) => selectedChoice.selected_choice === choice.choice)"
-                    >
+                      :checked="surveyResponseAnswer.selected_choices.some(selectedChoice => selectedChoice.selected_choice === choice.choice)"
+                    />
                     <label>{{ choice.choice }}</label>
                   </div>
                 </div>
               </div>
-              
+
               <div v-if="surveyResponseAnswer.question_type === 'Radio Buttons'" class="mb-4">
                 <h1 class="text-lg">
                   {{ surveyResponseAnswer.question }}
                 </h1>
                 <div class="flex flex-col ml-2">
-                  <div
-                    v-for="choice in surveyResponseAnswer.survey_question.choices"
-                    :key="choice.id"
-                    class="flex py-2"
-                  >
+                  <div v-for="choice in surveyResponseAnswer.survey_question.choices" :key="choice.id" class="flex py-2">
                     <input
                       :name="choice.id"
                       type="radio"
-                      :checked="surveyResponseAnswer.selected_choices.some((selectedChoice) => selectedChoice.selected_choice === choice.choice)"
-                    >
+                      :checked="surveyResponseAnswer.selected_choices.some(selectedChoice => selectedChoice.selected_choice === choice.choice)"
+                    />
                     <label>{{ choice.choice }}</label>
                   </div>
                 </div>
@@ -192,37 +184,37 @@ import AppLoading from '@/components/Base/AppLoading'
 
 export default {
   components: {
-    AppLoading,
+    AppLoading
   },
 
-  data () {
+  data() {
     return {
       surveyResponse: null,
-      gettingSurveryResponse: false,
+      gettingSurveryResponse: false
     }
   },
 
   watch: {
-    questionType () {
+    questionType() {
       this.formErrors = this.formErrors.filter(({ field }) => field !== 'question_type')
 
       if (!this.questionType) {
         this.formErrors.push({
           field: 'question_type',
           message: 'Type is required.',
-          validation: 'required',
+          validation: 'required'
         })
       }
     },
 
-    question () {
+    question() {
       this.formErrors = this.formErrors.filter(({ field }) => field !== 'question')
 
       if (!this.question) {
         this.formErrors.push({
           field: 'question',
           message: 'Response is required.',
-          validation: 'required',
+          validation: 'required'
         })
 
         return
@@ -232,18 +224,18 @@ export default {
         this.formErrors.push({
           field: 'question',
           message: 'Response maximum length is 255 characters.',
-          validation: 'max',
+          validation: 'max'
         })
       }
-    },
+    }
   },
 
-  mounted () {
+  mounted() {
     this.getSurveyResponse()
   },
 
   methods: {
-    async getSurveyResponse () {
+    async getSurveyResponse() {
       try {
         this.gettingSurveryResponse = true
 
@@ -273,13 +265,13 @@ export default {
           this.$store.commit('SET_NOTIFICATION', {
             enabled: true,
             status: 'danger',
-            text: message,
+            text: message
           })
         }
 
         this.gettingSurveryResponse = false
       }
-    },
-  },
+    }
+  }
 }
 </script>
