@@ -1,6 +1,6 @@
 <template>
   <section class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-y-auto">
-    <template v-if="$route.name === 'index-change-email-requests'">
+    <template v-if="isListView">
       <AppTableNew
         :total="count"
         :items="changeEmailRequests"
@@ -8,53 +8,51 @@
         :perPage="limit"
         :columns="columns"
         :loading="loading"
-        :routerLink="changeEmailRequest => ({ name: 'index-change-email-requests-id-index-index', params: { id: changeEmailRequest.id } })"
+        :routerLink="rowLink"
         :orderBy="orderBy"
         :customWidth="'800'"
-        @pagechanged="_page => (page = _page)"
-        @limitchanged="_limit => (limit = _limit)"
-        @sorted="_orderBy => (orderBy = _orderBy)"
+        @pagechanged="page = $event"
+        @limitchanged="limit = $event"
+        @sorted="orderBy = $event"
       >
-        <template v-slot:status_slot="slotProps">
-          <div class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1" :class="changeEmailRequestStatusColorClass[slotProps.item.status]">
-            <span>{{ slotProps.item.status }}</span>
+        <template #status_slot="{ item }">
+          <div class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1" :class="statusClass[item.status]">
+            {{ item.status }}
           </div>
         </template>
       </AppTableNew>
 
-      <div v-if="!loading && count === 0" class="mt-2 w-full text-center text-white">
+      <div v-if="!loading && !count" class="mt-2 w-full text-center text-white">
         <span>No change email requests.</span>
       </div>
     </template>
 
     <nuxt-child
       :changeEmailRequests="changeEmailRequests"
-      :changeEmailRequestStatusColorClass="changeEmailRequestStatusColorClass"
-      @changeEmailRequests="_changeEmailRequests => (changeEmailRequests = _changeEmailRequests)"
+      :changeEmailRequestStatusColorClass="statusClass"
+      @changeEmailRequests="changeEmailRequests = $event"
     />
   </section>
 </template>
 
 <script>
 import debounce from 'lodash.debounce'
-
-import AppLoading from '@/components/Base/AppLoading'
 import AppTableNew from '@/components/Base/AppTableNew'
 
+const STATUS_CLASS = Object.freeze({
+  Accepted: 'bg-green-500 text-white',
+  Pending: 'bg-gray-500 text-gray-700',
+  Rejected: 'bg-red-600 border-red-600 text-white'
+})
+
 export default {
-  components: {
-    AppLoading,
-    AppTableNew
-  },
+  components: { AppTableNew },
 
   data() {
     return {
       loading: false,
       limit: 15,
       page: 1,
-      search: '',
-      filterStatus: null,
-      sort: null,
       orderBy: ['requested_at_formatted:desc'],
       count: 0,
       changeEmailRequests: []
@@ -62,216 +60,105 @@ export default {
   },
 
   computed: {
-    authAdminPermissions() {
-      return this.$store.getters['permissions']
-    },
-    pages() {
-      return Math.max(Math.ceil(this.count / this.limit), 1)
+    isListView() {
+      return this.$route.name === 'index-change-email-requests'
     },
 
     offset() {
-      return Math.max(this.page * this.limit - this.limit, 0)
+      return Math.max((this.page - 1) * this.limit, 0)
     },
 
     columns() {
       return [
-        {
-          name: 'ID',
-          dataIndex: 'id',
-          class: 'text-center',
-          sortable: true,
-          flex: '1 0 0',
-          width: 100
-        },
-        {
-          name: 'New E-Mail Address',
-          dataIndex: 'new_email',
-          class: 'text-center',
-          sortable: true,
-          flex: '1 0 0',
-          width: 300
-        },
-        {
-          name: 'User Count',
-          dataIndex: 'user_count',
-          class: 'text-center',
-          sortable: true,
-          flex: '1 0 0',
-          width: 100
-        },
-        {
-          name: 'Requested At',
-          dataIndex: 'requested_at_formatted',
-          class: 'text-center',
-          sortable: true,
-          flex: '1 0 0',
-          width: 300
-        },
-        {
-          name: 'Status',
-          dataIndex: 'status',
-          class: 'text-center',
-          sortable: true,
-          flex: '1 0 0',
-          width: 300
-          // slot: true,
-          // slotName: 'status_slot',
-        },
-        {
-          name: 'Accepted At',
-          dataIndex: 'accepted_at_in_gb_formatted',
-          class: 'text-center',
-          sortable: true,
-          flex: '1 0 0',
-          width: 300
-        },
-        {
-          name: 'Rejected At',
-          dataIndex: 'rejected_at_in_gb_formatted',
-          class: 'text-center',
-          sortable: true,
-          flex: '1 0 0',
-          width: 300
-        }
+        { name: 'ID', dataIndex: 'id', sortable: true, width: 100 },
+        { name: 'New E-Mail Address', dataIndex: 'new_email', sortable: true, width: 300 },
+        { name: 'User Count', dataIndex: 'user_count', sortable: true, width: 100 },
+        { name: 'Requested At', dataIndex: 'requested_at_formatted', sortable: true, width: 300 },
+        { name: 'Status', dataIndex: 'status', sortable: true, width: 300 },
+        { name: 'Accepted At', dataIndex: 'accepted_at_in_gb_formatted', sortable: true, width: 300 },
+        { name: 'Rejected At', dataIndex: 'rejected_at_in_gb_formatted', sortable: true, width: 300 }
       ]
     },
 
-    orderByValues() {
-      return this.columns.reduce((orderByValues, column) => {
-        const { name, dataIndex, sortable } = column
-
-        if (sortable) {
-          orderByValues.push({
-            displayLabel: `${name} (asc)`,
-            value: `${dataIndex}:asc`
-          })
-
-          orderByValues.push({
-            displayLabel: `${name} (desc)`,
-            value: `${dataIndex}:desc`
-          })
-        }
-
-        return orderByValues
-      }, [])
+    statusClass() {
+      return STATUS_CLASS
     },
 
-    selectedOrderByValue: {
-      get() {
-        return this.orderBy.length > 0 ? this.orderBy[0] : null
-      },
-      set(orderBy) {
-        this.orderBy = [orderBy]
-      }
-    },
-
-    changeEmailRequestStatusColorClass() {
-      return {
-        Accepted: 'bg-green-500 text-white',
-        Pending: 'bg-gray-500 text-gray-700',
-        Rejected: 'bg-red-600 border-red-600 text-white'
-      }
+    rowLink() {
+      return item => ({
+        name: 'index-change-email-requests-id-index-index',
+        params: { id: item.id }
+      })
     }
   },
 
   watch: {
-    page() {
-      this.searchSubmit()
-    },
-
-    limit() {
-      this.searchSubmit()
-    },
-
-    orderBy() {
-      this.searchSubmit()
-    }
+    page: 'fetchData',
+    limit: 'fetchData',
+    orderBy: 'fetchData'
   },
 
   async asyncData({ store, error }) {
-    try {
-      const authAdminPermissions = store.getters['permissions']
+    const permissions = store.getters['permissions']
 
-      if (authAdminPermissions.includes('View Change Email Requests') === false) {
-        error({
-          statusCode: 403,
-          message: 'You are not authorized to view this page.'
-        })
-        return
-      }
-    } catch (err) {
-      error({ statusCode: 404 })
-      store.commit('SET_NOTIFICATION', {
-        enabled: true,
-        status: 'danger',
-        text: 'Something went wrong!'
+    if (!permissions?.includes('View Change Email Requests')) {
+      return error({
+        statusCode: 403,
+        message: 'You are not authorized to view this page.'
       })
-      console.log('get parent practice error!!', err)
     }
   },
 
   mounted() {
-    this.loading = true
-    this.getChangeEmailRequests()
-      .catch(err => {
-        console.log('err', err)
-      })
-      .finally(() => {
-        this.loading = false
-      })
-
-    this.$store.dispatch('pendingChangeEmailRequestIds')
-    this.$socket.on('Admin Notification Change Email Request Pending', this.getChangeEmailRequests)
-    this.$socket.on('Admin Notification Change Email Request Rejected', this.changeEmailRequestUpdated)
-    this.$socket.on('Admin Notification Change Email Request Accepted', this.changeEmailRequestUpdated)
+    this.init()
   },
 
-  destroyed() {
-    this.$socket.removeListener('Admin Notification Change Email Request Pending', this.getChangeEmailRequests)
-    this.$socket.removeListener('Admin Notification Change Email Request Rejected', this.changeEmailRequestUpdated)
-    this.$socket.removeListener('Admin Notification Change Email Request Accepted', this.changeEmailRequestUpdated)
+  beforeDestroy() {
+    this.teardownSockets()
   },
 
   methods: {
-    changeEmailRequestUpdated(changeEmailRequest) {
-      const index = this.changeEmailRequests.findIndex(({ id }) => id === changeEmailRequest.id)
+    init() {
+      this.fetchData()
 
-      if (index > -1) {
-        this.changeEmailRequests.splice(index, 1, changeEmailRequest)
-      }
+      this.$store.dispatch('pendingChangeEmailRequestIds')
+
+      this.$socket.on('Admin Notification Change Email Request Pending', this.fetchData)
+      this.$socket.on('Admin Notification Change Email Request Rejected', this.updateRow)
+      this.$socket.on('Admin Notification Change Email Request Accepted', this.updateRow)
     },
 
-    searchSubmit: debounce(function() {
-      this.activePage = 1
+    teardownSockets() {
+      this.$socket.removeListener('Admin Notification Change Email Request Pending', this.fetchData)
+      this.$socket.removeListener('Admin Notification Change Email Request Rejected', this.updateRow)
+      this.$socket.removeListener('Admin Notification Change Email Request Accepted', this.updateRow)
+    },
+
+    updateRow(payload) {
+      const index = this.changeEmailRequests.findIndex(i => i.id === payload.id)
+      if (index !== -1) this.$set(this.changeEmailRequests, index, payload)
+    },
+
+    fetchData: debounce(function() {
       this.loading = true
-      this.getChangeEmailRequests()
-        .catch(err => {
-          console.log('err', err)
-        })
-        .finally(() => {
-          this.loading = false
-        })
-    }, 500),
 
-    getChangeEmailRequests() {
-      return Promise.all([
-        this.$axios.get('/api/v1/admin/change-email-requests/count').then(response => response.data.data.count),
-        this.$axios
-          .get('/api/v1/admin/change-email-requests', {
-            params: {
-              order_by: this.orderBy,
-              limit: this.limit,
-              offset: this.offset
-            }
-          })
-          .then(response => response.data.data.change_email_requests)
-      ]).then(responses => {
-        const [count, changeEmailRequests] = responses
-
-        this.count = count
-        this.changeEmailRequests = changeEmailRequests
-      })
-    }
+      Promise.all([
+        this.$axios.get('/api/v1/admin/change-email-requests/count'),
+        this.$axios.get('/api/v1/admin/change-email-requests', {
+          params: {
+            order_by: this.orderBy,
+            limit: this.limit,
+            offset: this.offset
+          }
+        })
+      ])
+        .then(([countRes, listRes]) => {
+          this.count = countRes.data.data.count
+          this.changeEmailRequests = listRes.data.data.change_email_requests
+        })
+        .catch(err => console.error(err))
+        .finally(() => (this.loading = false))
+    }, 500)
   }
 }
 </script>

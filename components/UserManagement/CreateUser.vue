@@ -1,7 +1,6 @@
 <template>
   <div ref="modalContainer" :class="getStyle(registeeType)">
     <div class="flex flex-col px-4">
-      <!-- class="absolute top-0 bottom-0 right-0 left-0 flex flex-col p-4 md:p-8" -->
       <div class="flex justify-between text-sm my-4 mx-2">
         <div class="cursor-pointer" @click="$emit('close')">
           <svgicon name="arrow-left-solid" height="32" width="32" class="hover:text-sunglow fill-current" />
@@ -628,12 +627,7 @@ export default {
       res.data.postcode_coordinates.forEach(item => {
         this.postCodes.push({ value: item.postcode, label: item.postcode })
       })
-      // let default_post_code = res.data.roles.find((item, index) => index === 0)
     })
-    // console.log('practice details', this.toPostUser)
-    // if (this.practice) {
-    //   console.log("Practice to be created is a spoke");
-    // }
   },
 
   methods: {

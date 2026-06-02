@@ -24,27 +24,15 @@
               class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
               placeholder="Search Locum by Name or E-Mail"
               @keyup.enter="searchSubmit"
-            >
-            <button
-              v-if="search"
-              class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
-              @click="(search = ''), searchSubmit()"
-            >
-              <svgicon
-                name="times-solid"
-                height="12"
-                width="12"
-                class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
-              />
+            />
+            <button v-if="search" class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1" @click=";(search = ''), searchSubmit()">
+              <svgicon name="times-solid" height="12" width="12" class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6" />
             </button>
           </div>
         </div>
 
         <div class="flex flex-col w-full justify-end">
-          <div
-            v-if="false"
-            class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:py-2 py-0"
-          >
+          <div v-if="false" class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:py-2 py-0">
             <label class="text-sm text-white md:pr-2">Filter by Status</label>
             <select
               v-model="filterStatus"
@@ -84,23 +72,22 @@
           :routerLink="routerLink"
           :orderBy="orderBy"
           :customWidth="'800'"
-          @pagechanged="(_page) => page = _page"
-          @limitchanged="(_limit) => limit = _limit"
-          @sorted="(_orderBy) => orderBy = _orderBy"
+          @pagechanged="_page => (page = _page)"
+          @limitchanged="_limit => (limit = _limit)"
+          @sorted="_orderBy => (orderBy = _orderBy)"
         />
       </div>
       <div v-if="!loading && count === 0" class="mt-2 w-full text-center text-white">
         <span>No compliance document reject reasons.</span>
       </div>
     </template>
-    
 
     <nuxt-child
       :complianceDocuments="complianceDocuments"
       :complianceDocumentSelectionList="complianceDocumentSelectionList"
       :loadingComplianceDocuments="loadingComplianceDocuments"
       :complianceDocumentRejectReasons="complianceDocumentRejectReasons"
-      @complianceDocumentRejectReasons="(_complianceDocumentRejectReasons) => complianceDocumentRejectReasons = _complianceDocumentRejectReasons"
+      @complianceDocumentRejectReasons="_complianceDocumentRejectReasons => (complianceDocumentRejectReasons = _complianceDocumentRejectReasons)"
       @complianceDocumentRejectReasonCreated="getComplianceDocumentRejectReasons()"
       @complianceDocumentRejectReasonUpdated="complianceDocumentRejectReasonUpdated"
       @complianceDocumentRejectReasonDeleted="complianceDocumentRejectReasonDeleted"
@@ -109,19 +96,16 @@
 </template>
 
 <script>
-import debounce from "lodash.debounce"
+import debounce from 'lodash.debounce'
 
-import AppLoading from '@/components/Base/AppLoading'
-import AppTableNew from "@/components/Base/AppTableNew"
+import AppTableNew from '@/components/Base/AppTableNew'
 
 export default {
-
   components: {
-    AppLoading,
-    AppTableNew,
+    AppTableNew
   },
 
-  data () {
+  data() {
     return {
       loading: false,
       limit: 20,
@@ -129,85 +113,79 @@ export default {
       search: '',
       filterStatus: null,
       sort: null,
-      orderBy: [
-        'id:asc',
-      ],
+      orderBy: ['id:asc'],
       count: 0,
       complianceDocumentRejectReasons: [],
 
       loadingComplianceDocuments: false,
-      complianceDocuments: [],
+      complianceDocuments: []
     }
   },
 
   computed: {
-    authAdminPermissions () {
-			return this.$store.getters["permissions"]
+    authAdminPermissions() {
+      return this.$store.getters['permissions']
     },
 
-    pages () {
+    pages() {
       return Math.max(Math.ceil(this.count / this.limit), 1)
     },
 
-    offset () {
+    offset() {
       return Math.max(this.page * this.limit - this.limit, 0)
     },
 
-    columns () {
+    columns() {
       return [
         {
-          name: "ID",
-          dataIndex: "id",
-          class: "text-center",
+          name: 'ID',
+          dataIndex: 'id',
+          class: 'text-center',
           sortable: true,
           flex: '1 0 0',
-          width: 100,
+          width: 100
         },
         {
-          name: "Compliance Document",
-          dataIndex: "compliance_document_name",
+          name: 'Compliance Document',
+          dataIndex: 'compliance_document_name',
           sortable: true,
           flex: '1 0 0',
-          width: 300,
+          width: 300
         },
         {
-          name: "Reject Reason",
-          dataIndex: "reject_reason",
+          name: 'Reject Reason',
+          dataIndex: 'reject_reason',
           sortable: true,
           flex: '1 0 0',
           width: 600
-        },
+        }
       ]
     },
 
-    routerLink () {
-      return (complianceDocumentRejectReason) => {
+    routerLink() {
+      return complianceDocumentRejectReason => {
         return {
           name: 'index-compliance-document-reject-reasons-id',
           params: {
-            id: complianceDocumentRejectReason.id,
-          },
+            id: complianceDocumentRejectReason.id
+          }
         }
       }
     },
 
-    orderByValues () {
+    orderByValues() {
       return this.columns.reduce((orderByValues, column) => {
-        const {
-          name,
-          dataIndex,
-          sortable,
-        } = column
+        const { name, dataIndex, sortable } = column
 
         if (sortable) {
           orderByValues.push({
             displayLabel: `${name} (asc)`,
-            value: `${dataIndex}:asc`,
+            value: `${dataIndex}:asc`
           })
 
           orderByValues.push({
             displayLabel: `${name} (desc)`,
-            value: `${dataIndex}:desc`,
+            value: `${dataIndex}:desc`
           })
         }
 
@@ -216,82 +194,88 @@ export default {
     },
 
     selectedOrderByValue: {
-      get () {
+      get() {
         return this.orderBy.length > 0 ? this.orderBy[0] : null
       },
-      set (orderBy) {
+      set(orderBy) {
         this.orderBy = [orderBy]
-      },
+      }
     },
 
-    complianceDocumentSelectionList () {
+    complianceDocumentSelectionList() {
       return this.complianceDocuments.map(complianceDocument => ({
         label: complianceDocument.name,
-        value: complianceDocument.id,
+        value: complianceDocument.id
       }))
-    },
+    }
   },
 
   watch: {
-    page () {
+    page() {
       this.searchSubmit()
     },
 
-    limit () {
+    limit() {
       this.searchSubmit()
     },
 
-    orderBy () {
+    orderBy() {
       this.searchSubmit()
-    },
+    }
   },
 
-  async asyncData ({ store, error }) {
-    const authAdminPermissions = store.getters["permissions"]
+  async asyncData({ store, error }) {
+    const authAdminPermissions = store.getters['permissions']
 
     if (authAdminPermissions.includes('View Compliance Document Reject Reasons') === false) {
       error({
         statusCode: 403,
-        message: 'You are not authorized to view this page.',
+        message: 'You are not authorized to view this page.'
       })
       return
     }
   },
 
-  mounted () {
+  mounted() {
     this.loading = true
-    this.getComplianceDocumentRejectReasons().catch((err) => {
-      console.log('err', err)
-    }).finally(() => {
-      this.loading = false
-    })
+    this.getComplianceDocumentRejectReasons()
+      .catch(err => {
+        console.log('err', err)
+      })
+      .finally(() => {
+        this.loading = false
+      })
 
     this.loadingComplianceDocuments = true
-    this.$axios.get('/api/v1/admin/compliance-documents', {
-      params: {
-        has_parent: false,
-        has_verifiable_profession_compliance_category: true,
-        limit: 999,
-      },
-    }).then((response) => {
-      this.complianceDocuments = response.data.data.compliance_documents
-    }).catch(this.errorHandler).finally(() => {
-      this.loadingComplianceDocuments = false
-    })
-    
+    this.$axios
+      .get('/api/v1/admin/compliance-documents', {
+        params: {
+          has_parent: false,
+          has_verifiable_profession_compliance_category: true,
+          limit: 999
+        }
+      })
+      .then(response => {
+        this.complianceDocuments = response.data.data.compliance_documents
+      })
+      .catch(this.errorHandler)
+      .finally(() => {
+        this.loadingComplianceDocuments = false
+      })
+
     this.$socket.on('Admin Notification Compliance Document Reject Reason Created', this.getComplianceDocumentRejectReasons)
     this.$socket.on('Admin Notification Compliance Document Reject Reason Updated', this.complianceDocumentRejectReasonUpdated)
     this.$socket.on('Admin Notification Compliance Document Reject Reason Deleted', this.complianceDocumentRejectReasonDeleted)
   },
 
-  destroyed () {
+  destroyed() {
     this.$socket.removeListener('Admin Notification Compliance Document Reject Reason Created', this.getComplianceDocumentRejectReasons)
     this.$socket.removeListener('Admin Notification Compliance Document Reject Reason Updated', this.complianceDocumentRejectReasonUpdated)
     this.$socket.removeListener('Admin Notification Compliance Document Reject Reason Deleted', this.complianceDocumentRejectReasonDeleted)
   },
 
   methods: {
-    errorHandler (err) {
+    errorHandler(err) {
       console.log('err', err.response || err)
 
       let message = null
@@ -312,12 +296,12 @@ export default {
         this.$store.commit('SET_NOTIFICATION', {
           enabled: true,
           status: 'danger',
-          text: message,
+          text: message
         })
       }
     },
 
-    complianceDocumentRejectReasonUpdated (complianceDocumentRejectReason) {
+    complianceDocumentRejectReasonUpdated(complianceDocumentRejectReason) {
       const index = this.complianceDocumentRejectReasons.findIndex(({ id }) => id === complianceDocumentRejectReason.id)
 
       if (index > -1) {
@@ -325,7 +309,7 @@ export default {
       }
     },
 
-    complianceDocumentRejectReasonDeleted (complianceDocumentRejectReasonId) {
+    complianceDocumentRejectReasonDeleted(complianceDocumentRejectReasonId) {
       const index = this.complianceDocumentRejectReasons.findIndex(({ id }) => id === complianceDocumentRejectReasonId)
 
       if (index > -1) {
@@ -335,37 +319,37 @@ export default {
       this.getComplianceDocumentRejectReasons()
     },
 
-    searchSubmit: debounce(function () {
+    searchSubmit: debounce(function() {
       this.activePage = 1
       this.loading = true
-      this.getComplianceDocumentRejectReasons().catch((err) => {
-        console.log('err', err)
-      }).finally(() => {
-        this.loading = false
-      })
+      this.getComplianceDocumentRejectReasons()
+        .catch(err => {
+          console.log('err', err)
+        })
+        .finally(() => {
+          this.loading = false
+        })
     }, 500),
 
-    getComplianceDocumentRejectReasons () {
+    getComplianceDocumentRejectReasons() {
       return Promise.all([
-        this.$axios.get('/api/v1/admin/compliance-document-reject-reasons/count')
-          .then(response => response.data.data.count),
-        this.$axios.get('/api/v1/admin/compliance-document-reject-reasons', {
-          params: {
-            order_by: this.orderBy,
-            limit: this.limit,
-            offset: this.offset,
-          }
-        }).then(response => response.data.data.compliance_document_reject_reasons),
-      ]).then((responses) => {
-        const [
-          count,
-          complianceDocumentRejectReasons,
-        ] = responses
+        this.$axios.get('/api/v1/admin/compliance-document-reject-reasons/count').then(response => response.data.data.count),
+        this.$axios
+          .get('/api/v1/admin/compliance-document-reject-reasons', {
+            params: {
+              order_by: this.orderBy,
+              limit: this.limit,
+              offset: this.offset
+            }
+          })
+          .then(response => response.data.data.compliance_document_reject_reasons)
+      ]).then(responses => {
+        const [count, complianceDocumentRejectReasons] = responses
 
         this.count = count
         this.complianceDocumentRejectReasons = complianceDocumentRejectReasons
       })
-    },
-  },
+    }
+  }
 }
 </script>

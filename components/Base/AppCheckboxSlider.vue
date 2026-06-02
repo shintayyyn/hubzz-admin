@@ -1,34 +1,34 @@
 <template>
   <div class="relative inline-block" :style="{ width: `${width}px`, height: `${height}px` }" @click="$emit('input', !value)">
-    <input v-model="value" class="hidden" type="checkbox">
+    <input v-model="value" class="hidden" type="checkbox" />
     <span class="slider" :class="{ round: rounded }" />
   </div>
 </template>
 
 <script>
-  export default {
-    props: {
-      value: {
-        type: Boolean,
-        default: false,
-      },
+export default {
+  props: {
+    value: {
+      type: Boolean,
+      default: false
+    },
 
-      rounded: {
-        type: Boolean,
-        default: true,
-      },
+    rounded: {
+      type: Boolean,
+      default: true
+    },
 
-      width: {
-        type: Number,
-        default: 60,
-      },
+    width: {
+      type: Number,
+      default: 60
+    },
 
-      height: {
-        type: Number,
-        default: 34,
-      },
+    height: {
+      type: Number,
+      default: 34
     }
   }
+}
 </script>
 
 <style>
@@ -40,28 +40,28 @@
   right: 0;
   bottom: 0;
   background-color: #ccc;
-  -webkit-transition: .2s;
-  transition: .2s;
+  -webkit-transition: 0.2s;
+  transition: 0.2s;
 }
 
 .slider:before {
   position: absolute;
-  content: "";
+  content: '';
   height: 26px;
   width: 26px;
   left: 4px;
   bottom: 4px;
   background-color: white;
-  -webkit-transition: .2s;
-  transition: .2s;
+  -webkit-transition: 0.2s;
+  transition: 0.2s;
 }
 
 input:checked + .slider {
-  background-color: #FFC72C;
+  background-color: #ffc72c;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #FFC72C;
+  box-shadow: 0 0 1px #ffc72c;
 }
 
 input:checked + .slider:before {

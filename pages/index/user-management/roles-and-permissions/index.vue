@@ -1,15 +1,15 @@
 <template>
-	<div>
-		<transition name="fade" mode="out-in">
-			<AdminRoles />
-		</transition>
-	</div>
+  <div>
+    <transition name="fade" mode="out-in">
+      <AdminRoles />
+    </transition>
+  </div>
 </template>
 <script>
-import AdminRoles from "@/components/UserManagement/AdminRoles";
+import AdminRoles from '@/components/UserManagement/AdminRoles'
 export default {
-	components: {
-		AdminRoles
-	},
+  components: {
+    AdminRoles
+  }
 }
 </script>
