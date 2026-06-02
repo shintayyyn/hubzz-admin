@@ -33,6 +33,7 @@ export default {
     })
   },
   methods: {
+
     goBack() {
       const query = {
         ...this.$route.query
