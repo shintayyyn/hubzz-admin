@@ -22,7 +22,6 @@
           @click="goPrevious"
         >
           <svgicon name="caret-down" width="12" height="12" class="fill-current" style="transform: rotate(90deg)" />
-          <!-- <svgicon name="arrow-left" width="13" height="13" /> -->
         </button>
       </div>
 
@@ -32,9 +31,7 @@
             type="button"
             class="text-gray-700 hover:text-gray-800 font-bold text-xs md:text-sm py-2 px-1 mx-1 focus:outline-none"
             :disabled="loading || activePage === pageItem"
-            :class="{
-              'active border-b-2 border-gray-600 cursor-not-allowed': activePage === pageItem
-            }"
+            :class="{ 'active border-b-2 border-gray-600 cursor-not-allowed': activePage === pageItem }"
             @click="activePage = pageItem"
           >
             {{ pageItem }}
@@ -51,7 +48,6 @@
           @click="goNext"
         >
           <svgicon name="caret-down" width="12" height="12" class="fill-current" style="transform: rotate(-90deg)" />
-          <!-- <svgicon name="arrow-right" width="13" height="13" /> -->
         </button>
       </div>
 
@@ -73,26 +69,11 @@
 <script>
 export default {
   props: {
-    loading: {
-      type: Boolean,
-      default: false
-    },
-    count: {
-      type: Number,
-      default: 0
-    },
-    pages: {
-      type: Number,
-      default: 1
-    },
-    page: {
-      type: Number,
-      default: 1
-    },
-    maxPage: {
-      type: Number,
-      default: 5
-    }
+    loading: { type: Boolean, default: false },
+    count: { type: Number, default: 0 },
+    pages: { type: Number, default: 1 },
+    page: { type: Number, default: 1 },
+    maxPage: { type: Number, default: 5 }
   },
 
   computed: {
@@ -100,8 +81,8 @@ export default {
       get() {
         return this.page
       },
-      set(page) {
-        this.$emit('page', page)
+      set(val) {
+        this.$emit('page', val)
       }
     },
 
@@ -114,38 +95,29 @@ export default {
     },
 
     visiblePages() {
-      const pageItems = []
+      const result = []
+      const { pages, activePage, maxPage } = this
 
-      for (let page = 1; page <= this.pages; page++) {
-        if (this.showPage(page)) {
-          pageItems.push(page)
+      const left = Math.floor((maxPage - 1) / 2)
+      const right = Math.ceil((maxPage - 1) / 2)
+
+      for (let p = 1; p <= pages; p++) {
+        const inStartRange = activePage < left + 2 && p < maxPage + 1
+        const inEndRange = activePage > pages - right - 1 && p > pages - maxPage
+        const inMiddleRange = p >= activePage - left && p <= activePage + right
+
+        if (inStartRange || inEndRange || inMiddleRange) {
+          result.push(p)
         }
       }
 
-      return pageItems
-    },
-
-    showPage() {
-      return page => {
-        const left = Math.floor((this.maxPage - 1) / 2)
-        const right = Math.ceil((this.maxPage - 1) / 2)
-
-        if (this.activePage < left + 2) {
-          return page < this.maxPage + 1
-        }
-
-        if (this.activePage > this.pages - right - 1) {
-          return page > this.pages - this.maxPage
-        }
-
-        return page >= this.activePage - left && page <= this.activePage + right
-      }
+      return result
     }
   },
 
   methods: {
-    navButtonClass(isDisabled) {
-      return isDisabled ? 'text-gray-500 cursor-not-allowed' : 'hover:text-gray-800 text-gray-700'
+    navButtonClass(disabled) {
+      return disabled ? 'text-gray-500 cursor-not-allowed' : 'hover:text-gray-800 text-gray-700'
     },
 
     goFirst() {
@@ -153,11 +125,11 @@ export default {
     },
 
     goPrevious() {
-      this.activePage = this.activePage > 1 ? this.activePage - 1 : 1
+      this.activePage = Math.max(1, this.activePage - 1)
     },
 
     goNext() {
-      this.activePage = this.activePage < this.pages ? this.activePage + 1 : this.pages
+      this.activePage = Math.min(this.pages, this.activePage + 1)
     },
 
     goLast() {
@@ -166,37 +138,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.__pagination_button {
-  background: linear-gradient(to top, #f2d024, #efde86);
-  color: #000;
-}
-
-.active {
-  border-bottom: 2px solid #999999;
-}
-
-.__pagination_button.active:disabled {
-  color: #f2d024;
-  box-shadow: inset 0px 0px 0px 2px #dbb013;
-  cursor: default;
-}
-
-.__pagination_button:active {
-  transform: translate(2px, 2px);
-}
-
-.__pagination_button:active :not(.__pagination_button:disabled) {
-  transform: translate(2px, 2px);
-  box-shadow: 0 0 0 transparent;
-}
-
-.__pagination_button:disabled,
-.__pagination_button:disabled svg {
-  background: #696c71;
-  color: #999999;
-  fill: #999999;
-  box-shadow: 0 0 0 transparent;
-}
-</style>
