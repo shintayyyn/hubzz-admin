@@ -28,10 +28,7 @@
       required
       @blur="CheckEmptyField(form.last_name, 'last_name')"
     />
-    <AppInput
-      v-if="false"
-      v-model="form.suffix" :type="'text'" :name="'suffix'" :label="'Suffix'"
-    />
+    <AppInput v-if="false" v-model="form.suffix" :type="'text'" :name="'suffix'" :label="'Suffix'" />
 
     <AppInput
       v-model="form.roles_id"
@@ -63,9 +60,9 @@
 </template>
 
 <script>
-import AppInput from "@/components/Base/AppInput"
-import AppButton from "@/components/Base/AppButton"
-import AppFilterSearch from "@/components/Base/AppFilterSearch"
+import AppInput from '@/components/Base/AppInput'
+import AppButton from '@/components/Base/AppButton'
+import AppFilterSearch from '@/components/Base/AppFilterSearch'
 export default {
   components: {
     AppInput,
@@ -76,19 +73,19 @@ export default {
   props: {
     adminRoles: {
       type: Array,
-      default: () => [],
+      default: () => []
     }
   },
 
-  data () {
+  data() {
     return {
       user: null,
       form: {
-        email: "",
-        title: "",
-        first_name: "",
-        last_name: "",
-        suffix: "",
+        email: '',
+        title: '',
+        first_name: '',
+        last_name: '',
+        suffix: '',
         roles_id: []
       },
       filteredAdminRoles: [],
@@ -96,11 +93,9 @@ export default {
     }
   },
 
-  async mounted () {
+  async mounted() {
     try {
-      let response = await this.$axios.$get(
-        `/api/v1/admin/admin-users/${this.$route.params.id}`
-      )
+      let response = await this.$axios.$get(`/api/v1/admin/admin-users/${this.$route.params.id}`)
 
       this.user = response.data.user
 
@@ -110,29 +105,9 @@ export default {
       this.form.last_name = this.user.personal_detail.last_name
       this.form.suffix = this.user.personal_detail.suffix
 
-      // this.user.admin_detail.roles.forEach(item => {
-      //   this.form.roles_id.push({
-      //     value: item.id,
-      //     label: item.name
-      //   })
-      // })
-
       this.user.admin_detail.roles.forEach(item => {
         this.form.roles_id.push(item.id.toString())
       })
-
-      // this.adminRoles.forEach(item => {
-      //   const found = this.user.admin_detail.roles.find(
-      //     userRole => userRole.id === item.value
-      //   )
-      //   console.log("items")
-      //   if (!found) {
-      //     this.filteredAdminRoles.push({
-      //       value: item.value,
-      //       label: item.label
-      //     })
-      //   }
-      // })
 
       this.adminRoles.forEach(item => {
         this.filteredAdminRoles.push({
@@ -141,57 +116,49 @@ export default {
         })
       })
 
-      console.log("user roles", this.user.admin_detail.roles)
-      console.log("filtered", this.filteredAdminRoles)
+      console.log('user roles', this.user.admin_detail.roles)
+      console.log('filtered', this.filteredAdminRoles)
     } catch (err) {
-      this.$store.commit("SET_NOTIFICATION", {
+      this.$store.commit('SET_NOTIFICATION', {
         enabled: true,
-        status: "danger",
-        text: "Something went wrong!"
+        status: 'danger',
+        text: 'Something went wrong!'
       })
     }
   },
   methods: {
-    uncheckRole (data) {
+    uncheckRole(data) {
       console.log('data', data)
 
       this.form.roles_id = this.form.roles_id.filter(id => id !== data)
     },
 
-    getAdminUsers () {
-      this.$store.dispatch("adminusers/fetchAdminUsers", {
-        limit: 10,
+    getAdminUsers() {
+      this.$store.dispatch('adminusers/fetchAdminUsers', {
+        limit: 10
       })
     },
-    
-    updateForm (user_id) {
+
+    updateForm(user_id) {
       this.formError = []
       console.log('form', this.form)
-      this.Validate(this.form, ["title", "suffix"])
+      this.Validate(this.form, ['title', 'suffix'])
       if (!this.formError.length) {
-        // this.form.roles_id = this.form.roles_id.map(item => item.value)
         this.$axios
           .$put(`/api/v1/admin/admin-users/${user_id}`, this.form)
           .then(res => {
-            // this.form.roles_id = []
-            // res.data.user.admin_detail.roles.forEach(item => {
-            //   this.form.roles_id.push({
-            //     value: item.id,
-            //     label: item.name
-            //   })
-            // })
             this.form.roles_id = res.data.user.admin_detail.roles.map(role => role.id.toString())
-            this.$store.commit("SET_NOTIFICATION", {
+            this.$store.commit('SET_NOTIFICATION', {
               enabled: true,
-              status: "success",
-              text: "Admin Account Updated Successfully!"
+              status: 'success',
+              text: 'Admin Account Updated Successfully!'
             })
           })
           .catch(err => {
-            console.log("edit admin user error!", err)
-            this.$store.commit("SET_NOTIFICATION", {
+            console.log('edit admin user error!', err)
+            this.$store.commit('SET_NOTIFICATION', {
               enabled: true,
-              status: "danger",
+              status: 'danger',
               text: err.response.data.message
             })
           })
