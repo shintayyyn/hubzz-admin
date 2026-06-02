@@ -3,9 +3,9 @@
 </template>
 
 <script>
-  export default {
-    middleware({ redirect }) {
-      return redirect('/referral-lottery')
-    }
+export default {
+  middleware({ redirect }) {
+    return redirect('/referral-lottery')
   }
+}
 </script>

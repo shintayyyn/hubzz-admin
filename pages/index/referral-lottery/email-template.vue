@@ -2,34 +2,23 @@
   <div class="px-4 md:px-6 mt-5">
     <AppLoading v-if="loading" />
 
-    <transition name="slide" mode="out-in" v-show="!loading">
-      <div class="bg-gray-200 rounded-lg border p-4">
-        <div>
-          <!-- <div class="text-base md:text-4xl font-bold md:font-normal px-2 mb-4 text-white">Terms and Conditions</div> -->
-          <client-only
-            placeholder="Loading...">
-            <quill-editor
-              class="bg-white text-black"
-              :class="!templateText ? 'border-b-2 border-red-600' : ''"
-              ref="myTextEditor"
-              v-model="templateText"
-              :options="editorOption"
-              @blur="onEditorBlur($event)"
-              @focus="onEditorFocus($event)"
-              @ready="onEditorReady($event)"
-            ></quill-editor>
-          </client-only>
+    <transition name="slide" mode="out-in">
+      <div v-show="!loading" class="bg-gray-200 rounded-lg border p-4">
+        <client-only placeholder="Loading...">
+          <quill-editor
+            v-model="templateText"
+            class="bg-white text-black"
+            :class="{ 'border-b-2 border-red-600': !templateText }"
+            :options="editorOption"
+          />
+        </client-only>
 
-          <p
-            class="text-red-600 text-sm py-1"
-            v-if="!templateText"
-          >Template cannot be empty.</p>
-        </div>
+        <p v-if="!templateText" class="text-red-600 text-sm py-1">
+          Template cannot be empty.
+        </p>
 
-        <div
-          class="flex justify-end pt-2"
-        >
-          <AppButton :label="'Save'" @click="save()" :disabled="!templateText" />
+        <div class="flex justify-end pt-2">
+          <AppButton label="Save" :disabled="!templateText" @click="save" />
         </div>
       </div>
     </transition>
@@ -37,133 +26,98 @@
 </template>
 
 <script>
-import AppButton from "@/components/Base/AppButton";
-import AppLoading from "@/components/Base/AppLoading";
+import AppButton from '@/components/Base/AppButton'
+import AppLoading from '@/components/Base/AppLoading'
+
+const API_ENDPOINT = '/api/v1/admin/email-template-referral-verified'
 
 export default {
-	components: {
-		AppButton,
-    AppLoading,
-	},
-
-	data() {
-		return {
-      loading: true,
-      templateText: '',
-			editorOption: {
-				placeholder: 'Please type the Template',
-				modules: {
-					toolbar: [
-						['bold', 'italic', 'underline', 'strike'],
-						['blockquote', 'code-block'],
-						[{ header: 1 }, { header: 2 }],
-						[{ list: 'ordered' }, { list: 'bullet' }],
-						[{ script: 'sub' }, { script: 'super' }],
-						[{ indent: '-1' }, { indent: '+1' }],
-						[{ direction: 'rtl' }],
-						[{ size: ['small', false, 'large', 'huge'] }],
-						[{ header: [1, 2, 3, 4, 5, 6, false] }],
-						[{ font: [] }],
-						[{ color: [] }, { background: [] }],
-						[{ align: [] }],
-						['clean'],
-						['link']
-					]
-				}
-			}
-		};
-	},
-
-	computed: {
-		editor() {
-			return this.$refs.myTextEditor.quill;
-		}
-	},
-
-  mounted () {
-    this.loading = true
-
-    this.$axios.get('/api/v1/admin/email-template-referral-verified').then((response) => {
-      console.log('response', response.data)
-      this.templateText = response.data.data.template_text
-    }).catch((err) => {
-      console.log('err', err.response || err)
-
-      let message = null
-
-      if (err.response) {
-        message = err.response.data.message
-      } else if (err.request) {
-        message = 'Something went wrong!'
-      } else {
-        message = err.message
-      }
-
-      if (message) {
-        this.$store.commit('SET_NOTIFICATION', {
-          enabled: true,
-          status: 'danger',
-          text: message,
-        })
-      }
-    }).finally(() => {
-      this.loading = false
-    })
+  components: {
+    AppButton,
+    AppLoading
   },
 
-	methods: {
-		onEditorBlur(editor) {
-			console.log('editor blur!', editor);
-		},
-		onEditorFocus(editor) {
-			console.log('editor focus!', editor);
-		},
-		onEditorReady(editor) {
-			console.log('editor ready!', editor);
-		},
-		async save() {
-			if (this.templateText) {
-				try {
-					await this.$axios.put('/api/v1/admin/email-template-referral-verified', {
-            template_text: this.templateText,
-          });
+  data() {
+    return {
+      loading: true,
+      templateText: '',
+      editorOption: {
+        placeholder: 'Please type the Template',
+        modules: {
+          toolbar: [
+            ['bold', 'italic', 'underline', 'strike'],
+            ['blockquote', 'code-block'],
+            [{ header: 1 }, { header: 2 }],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            [{ script: 'sub' }, { script: 'super' }],
+            [{ indent: '-1' }, { indent: '+1' }],
+            [{ direction: 'rtl' }],
+            [{ size: ['small', false, 'large', 'huge'] }],
+            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+            [{ font: [] }],
+            [{ color: [] }, { background: [] }],
+            [{ align: [] }],
+            ['clean'],
+            ['link']
+          ]
+        }
+      }
+    }
+  },
 
-					this.$store.commit('SET_NOTIFICATION', {
-						enabled: true,
-						status: 'success',
-						text: 'Email Template Updated'
-					});
-				} catch (err) {
-          console.log('err', err.response || err)
+  mounted() {
+    this.fetchTemplate()
+  },
 
-          let message = null
+  methods: {
+    async fetchTemplate() {
+      try {
+        const res = await this.$axios.get(API_ENDPOINT)
+        this.templateText = res?.data?.data?.template_text || ''
+      } catch (err) {
+        this.handleError(err)
+      } finally {
+        this.loading = false
+      }
+    },
 
-          if (err.response) {
-            message = err.response.data.message
-          } else if (err.request) {
-            message = 'Something went wrong!'
-          } else {
-            message = err.message
-          }
+    async save() {
+      if (!this.templateText) return this.$emit('formError')
 
-          if (message) {
-            this.$store.commit('SET_NOTIFICATION', {
-              enabled: true,
-              status: 'danger',
-              text: message,
-            })
-          }
-				}
-			} else {
-				this.$emit('formError')
-			}
-		}
-	}
-};
+      try {
+        await this.$axios.put(API_ENDPOINT, {
+          template_text: this.templateText
+        })
+
+        this.notify('success', 'Email Template Updated')
+      } catch (err) {
+        this.handleError(err)
+      }
+    },
+
+    handleError(err) {
+      const message = err?.response?.data?.message || (err?.request && 'Something went wrong!') || err?.message || 'Unexpected error'
+
+      this.$store.commit('SET_NOTIFICATION', {
+        enabled: true,
+        status: 'danger',
+        text: message
+      })
+    },
+
+    notify(status, text) {
+      this.$store.commit('SET_NOTIFICATION', {
+        enabled: true,
+        status,
+        text
+      })
+    }
+  }
+}
 </script>
 
 <style scoped>
-  .ql-toolbar.ql-snow {
-    display: flex;
-  }
+.ql-toolbar.ql-snow {
+  display: flex;
+}
 </style>
