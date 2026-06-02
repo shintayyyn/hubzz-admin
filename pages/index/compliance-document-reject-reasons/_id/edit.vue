@@ -12,7 +12,7 @@
 
         <div class="mx-2 md:mx-4 flex  my-4 p-4 border rounded-lg text-sm max-w-lg">
           <div class="w-full text-sm p-2">
-            <AppInput 
+            <AppInput
               v-model="complianceDocumentId"
               type="select"
               label="Compliance Document"
@@ -22,7 +22,7 @@
               required
             />
 
-            <AppInput 
+            <AppInput
               v-model="rejectReason"
               type="textarea"
               :rows="3"
@@ -32,7 +32,11 @@
               required
             />
 
-            <AppButton class="mt-4" :label="updatingComplianceDocumentRejectReason ? 'Updating...' : 'Update'" @click="updateComplianceDocumentRejectReason" />
+            <AppButton
+              class="mt-4"
+              :label="updatingComplianceDocumentRejectReason ? 'Updating...' : 'Update'"
+              @click="updateComplianceDocumentRejectReason"
+            />
           </div>
         </div>
       </div>
@@ -41,207 +45,218 @@
 </template>
 
 <script>
-  import AppLoading from '@/components/Base/AppLoading'
-  import AppInput from '@/components/Base/AppInput'
-  import AppButton from '@/components/Base/AppButton'
+import AppLoading from '@/components/Base/AppLoading'
+import AppInput from '@/components/Base/AppInput'
+import AppButton from '@/components/Base/AppButton'
 
-  export default {
-    components: {
-      AppLoading,
-      AppInput,
-      AppButton,
+export default {
+  components: {
+    AppLoading,
+    AppInput,
+    AppButton
+  },
+
+  props: {
+    complianceDocumentRejectReasons: {
+      type: Array,
+      required: true
     },
 
-    props: {
-      complianceDocumentRejectReasons: {
-        type: Array,
-        required: true,
-      },
-
-      complianceDocuments: {
-        type: Array,
-        required: true,
-      },
-
-      complianceDocumentSelectionList: {
-        type: Array,
-        required: true,
-      },
-
-      loadingComplianceDocuments: {
-        type: Boolean,
-        default: false,
-      },
+    complianceDocuments: {
+      type: Array,
+      required: true
     },
 
-    data () {
-      return {
-        loading: false,
-        complianceDocumentRejectReason: null,
-
-        complianceDocumentId: null,
-        rejectReason: '',
-        formErrors: [],
-        updatingComplianceDocumentRejectReason: false,
-      }
+    complianceDocumentSelectionList: {
+      type: Array,
+      required: true
     },
 
-    computed: {
-      complianceDocumentRejectReasonId () {
-        return this.complianceDocumentRejectReason ? this.complianceDocumentRejectReason.id : null
-      },
+    loadingComplianceDocuments: {
+      type: Boolean,
+      default: false
+    }
+  },
 
-      complianceDocument () {
-        return this.complianceDocumentId
-          ? this.complianceDocuments.find(({ id }) => id.toString() === this.complianceDocumentId.toString()) || null
-          : null
-      },
+  data() {
+    return {
+      loading: false,
+      complianceDocumentRejectReason: null,
+
+      complianceDocumentId: null,
+      rejectReason: '',
+      formErrors: [],
+      updatingComplianceDocumentRejectReason: false
+    }
+  },
+
+  computed: {
+    complianceDocumentRejectReasonId() {
+      return this.complianceDocumentRejectReason ? this.complianceDocumentRejectReason.id : null
     },
 
-    watch: {
-      complianceDocumentId () {
-        this.formErrors = this.formErrors.filter(({ field }) => field !== 'compliance_document_id')
+    complianceDocument() {
+      return this.complianceDocumentId
+        ? this.complianceDocuments.find(({ id }) => id.toString() === this.complianceDocumentId.toString()) || null
+        : null
+    }
+  },
 
-        if (!this.complianceDocumentId) {
-          this.formErrors.push({
-            field: 'compliance_document_id',
-            message: 'Compliance document is required.',
-            validation: 'required',
-          })
-        }
-      },
+  watch: {
+    complianceDocumentId() {
+      this.formErrors = this.formErrors.filter(({ field }) => field !== 'compliance_document_id')
 
-      rejectReason () {
-        this.formErrors = this.formErrors.filter(({ field }) => field !== 'reject_reason')
-
-        if (!this.rejectReason) {
-          this.formErrors.push({
-            field: 'reject_reason',
-            message: 'Reject reason is required.',
-            validation: 'required',
-          })
-
-          return
-        }
-
-        if (this.rejectReason.length > 255) {
-          this.formErrors.push({
-            field: 'reject_reason',
-            message: 'Reject reason maximum length is 255 characters.',
-            validation: 'max',
-          })
-        }
-      },
-    },
-    async asyncData ({ store, error }) {
-      const authAdminPermissions = store.getters["permissions"]
-
-      if (authAdminPermissions.includes('Edit Compliance Document Reject Reasons') === false) {
-        error({
-          statusCode: 403,
-          message: 'You are not authorized to view this page.',
+      if (!this.complianceDocumentId) {
+        this.formErrors.push({
+          field: 'compliance_document_id',
+          message: 'Compliance document is required.',
+          validation: 'required'
         })
-        return
       }
     },
 
-    mounted () {
-      const complianceDocumentRejectReason = this.complianceDocumentRejectReasons
-        && this.complianceDocumentRejectReasons.find(({ id }) => id.toString() === this.$route.params.id.toString())
+    rejectReason() {
+      this.formErrors = this.formErrors.filter(({ field }) => field !== 'reject_reason')
 
-      if (complianceDocumentRejectReason) {
-        this.complianceDocumentRejectReason = complianceDocumentRejectReason
-        this.complianceDocumentId = this.complianceDocumentRejectReason.compliance_document_id
-        this.rejectReason = this.complianceDocumentRejectReason.reject_reason
+      if (!this.rejectReason) {
+        this.formErrors.push({
+          field: 'reject_reason',
+          message: 'Reject reason is required.',
+          validation: 'required'
+        })
+
         return
       }
 
-      this.loading = true
-      this.$axios.get(`/api/v1/admin/compliance-document-reject-reasons/${this.$route.params.id}?published=any`).then((response) => {
+      if (this.rejectReason.length > 255) {
+        this.formErrors.push({
+          field: 'reject_reason',
+          message: 'Reject reason maximum length is 255 characters.',
+          validation: 'max'
+        })
+      }
+    }
+  },
+  async asyncData({ store, error }) {
+    const authAdminPermissions = store.getters['permissions']
+
+    if (authAdminPermissions.includes('Edit Compliance Document Reject Reasons') === false) {
+      error({
+        statusCode: 403,
+        message: 'You are not authorized to view this page.'
+      })
+      return
+    }
+  },
+
+  mounted() {
+    const complianceDocumentRejectReason =
+      this.complianceDocumentRejectReasons &&
+      this.complianceDocumentRejectReasons.find(({ id }) => id.toString() === this.$route.params.id.toString())
+
+    if (complianceDocumentRejectReason) {
+      this.complianceDocumentRejectReason = complianceDocumentRejectReason
+      this.complianceDocumentId = this.complianceDocumentRejectReason.compliance_document_id
+      this.rejectReason = this.complianceDocumentRejectReason.reject_reason
+      return
+    }
+
+    this.loading = true
+    this.$axios
+      .get(`/api/v1/admin/compliance-document-reject-reasons/${this.$route.params.id}?published=any`)
+      .then(response => {
         this.complianceDocumentRejectReason = response.data.data.compliance_document_reject_reason
         this.complianceDocumentId = this.complianceDocumentRejectReason.compliance_document_id
         this.rejectReason = this.complianceDocumentRejectReason.reject_reason
-      }).catch((err) => {
+      })
+      .catch(err => {
         console.log('err', err.response || err)
 
         this.$nuxt.error(err)
-      }).finally(() => {
-        this.loading = false
-        // setTimeout(() => {
-        //   this.loading = false
-        // }, 1000)
       })
-    },
+      .finally(() => {
+        this.loading = false
+      })
+  },
 
-    methods: {
-      async updateComplianceDocumentRejectReason () {
-        try {
-          const data = {
-            compliance_document_id: this.complianceDocumentId,
-            reject_reason: this.rejectReason,
-          }
+  methods: {
+    async updateComplianceDocumentRejectReason() {
+      try {
+        const data = {
+          compliance_document_id: this.complianceDocumentId,
+          reject_reason: this.rejectReason
+        }
 
-          this.formErrors = await this.$validator(data, {
+        this.formErrors = await this.$validator(
+          data,
+          {
             compliance_document_id: 'required',
-            reject_reason: 'required|string|max:255',
-          }, {
+            reject_reason: 'required|string|max:255'
+          },
+          {
             'compliance_document_id.required': 'Compliance document is required.',
             'reject_reason.required': 'Reject reason is required.',
             'reject_reason.string': 'Invalid reject reason.',
-            'reject_reason.max': 'Reject reason maximum length is 255 characters.',
-          }).then(() => []).catch((errors) => errors)
-
-          if (this.formErrors.length) {
-            return
+            'reject_reason.max': 'Reject reason maximum length is 255 characters.'
           }
+        )
+          .then(() => [])
+          .catch(errors => errors)
 
-          this.updatingComplianceDocumentRejectReason = true
+        if (this.formErrors.length) {
+          return
+        }
 
-          const response = await this.$axios.put(`/api/v1/admin/compliance-document-reject-reasons/${this.complianceDocumentRejectReasonId}?published=any`, data)
+        this.updatingComplianceDocumentRejectReason = true
 
-          const complianceDocumentRejectReason = response.data.data.compliance_document_reject_reason
+        const response = await this.$axios.put(
+          `/api/v1/admin/compliance-document-reject-reasons/${this.complianceDocumentRejectReasonId}?published=any`,
+          data
+        )
 
-          const message = response.data.message
+        const complianceDocumentRejectReason = response.data.data.compliance_document_reject_reason
 
-          this.$emit('complianceDocumentRejectReasonUpdated', complianceDocumentRejectReason)
+        const message = response.data.message
 
+        this.$emit('complianceDocumentRejectReasonUpdated', complianceDocumentRejectReason)
+
+        this.$store.commit('SET_NOTIFICATION', {
+          enabled: true,
+          status: 'success',
+          text: message || 'Compliance Document Reject Reason Updated!'
+        })
+
+        this.updatingComplianceDocumentRejectReason = false
+
+        this.$router.push({ name: 'index-compliance-document-reject-reasons' })
+      } catch (err) {
+        console.log('err', err.response || err)
+
+        let message = null
+
+        if (err.response) {
+          if (err.response.status === 400 && err.response.data.error_messages) {
+            this.formErrors = err.response.data.error_messages
+          } else {
+            message = err.response.data.message
+          }
+        } else if (err.request) {
+          message = 'Something went wrong!'
+        } else {
+          message = err.message
+        }
+
+        if (message) {
           this.$store.commit('SET_NOTIFICATION', {
             enabled: true,
-            status: 'success',
-            text: message || 'Compliance Document Reject Reason Updated!',
+            status: 'danger',
+            text: message
           })
-
-          this.updatingComplianceDocumentRejectReason = false
-
-          this.$router.push({ name: 'index-compliance-document-reject-reasons' })
-        } catch (err) {
-          console.log('err', err.response || err)
-
-          let message = null
-
-          if (err.response) {
-            if (err.response.status === 400 && err.response.data.error_messages) {
-              this.formErrors = err.response.data.error_messages
-            } else {
-              message = err.response.data.message
-            }
-          } else if (err.request) {
-            message = 'Something went wrong!'
-          } else {
-            message = err.message
-          }
-
-          if (message) {
-            this.$store.commit('SET_NOTIFICATION', {
-              enabled: true,
-              status: 'danger',
-              text: message,
-            })
-          }
-
-          this.updatingComplianceDocumentRejectReason = false
         }
-      },
-    },
+
+        this.updatingComplianceDocumentRejectReason = false
+      }
+    }
   }
+}
 </script>

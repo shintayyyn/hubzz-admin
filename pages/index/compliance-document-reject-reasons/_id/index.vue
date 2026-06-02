@@ -63,8 +63,8 @@
                 background="blue"
                 inClass=""
                 :label="'Edit'"
-                @click="$router.push(`/compliance-document-reject-reasons/${$route.params.id}/edit`)"
                 :draggable="false"
+                @click="$router.push(`/compliance-document-reject-reasons/${$route.params.id}/edit`)"
               />
 
               <AppButton
@@ -145,9 +145,6 @@
         this.$nuxt.error(err)
       }).finally(() => {
         this.loading = false
-        // setTimeout(() => {
-        //   this.loading = false
-        // }, 1000)
       })
     },
 

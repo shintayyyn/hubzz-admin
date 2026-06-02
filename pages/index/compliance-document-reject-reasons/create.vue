@@ -1,5 +1,5 @@
 <template>
-  <div style="transition: all 0.3s ease-in-out;">
+  <div style="transition:  0.3s ease-in-out;">
     <div class="flex-1 flex flex-col self-end">
       <AppLoading :loading="loadingComplianceDocuments" spinner />
 
@@ -12,7 +12,7 @@
 
         <div class="mx-2 md:mx-4 flex  my-4 py-2 px-3 border rounded-lg text-sm max-w-lg">
           <div class="w-full  text-sm p-2">
-            <AppInput 
+            <AppInput
               v-model="complianceDocumentId"
               type="select"
               label="Compliance Document"
@@ -22,7 +22,7 @@
               required
             />
 
-            <AppInput 
+            <AppInput
               v-model="rejectReason"
               type="textarea"
               :rows="3"
@@ -32,7 +32,11 @@
               required
             />
 
-            <AppButton class="mt-4" :label="creatingComplianceDocumentRejectReason ? 'Creating...' : 'Create'" @click="createComplianceDocumentRejectReason" />
+            <AppButton
+              class="mt-4"
+              :label="creatingComplianceDocumentRejectReason ? 'Creating...' : 'Create'"
+              @click="createComplianceDocumentRejectReason"
+            />
           </div>
         </div>
       </div>
@@ -41,168 +45,174 @@
 </template>
 
 <script>
-  import AppLoading from '@/components/Base/AppLoading'
-  import AppInput from '@/components/Base/AppInput'
-  import AppButton from '@/components/Base/AppButton'
+import AppLoading from '@/components/Base/AppLoading'
+import AppInput from '@/components/Base/AppInput'
+import AppButton from '@/components/Base/AppButton'
 
-  export default {
-    components: {
-      AppLoading,
-      AppInput,
-      AppButton,
+export default {
+  components: {
+    AppLoading,
+    AppInput,
+    AppButton
+  },
+
+  props: {
+    complianceDocuments: {
+      type: Array,
+      required: true
     },
 
-    props: {
-      complianceDocuments: {
-        type: Array,
-        required: true,
-      },
-
-      complianceDocumentSelectionList: {
-        type: Array,
-        required: true,
-      },
-
-      loadingComplianceDocuments: {
-        type: Boolean,
-        default: false,
-      },
+    complianceDocumentSelectionList: {
+      type: Array,
+      required: true
     },
 
-    data () {
-      return {
-        complianceDocumentId: null,
-        rejectReason: '',
-        formErrors: [],
-        creatingComplianceDocumentRejectReason: false,
+    loadingComplianceDocuments: {
+      type: Boolean,
+      default: false
+    }
+  },
+
+  data() {
+    return {
+      complianceDocumentId: null,
+      rejectReason: '',
+      formErrors: [],
+      creatingComplianceDocumentRejectReason: false
+    }
+  },
+
+  computed: {
+    complianceDocument() {
+      return this.complianceDocumentId
+        ? this.complianceDocuments.find(({ id }) => id.toString() === this.complianceDocumentId.toString()) || null
+        : null
+    }
+  },
+
+  watch: {
+    complianceDocumentId() {
+      this.formErrors = this.formErrors.filter(({ field }) => field !== 'compliance_document_id')
+
+      if (!this.complianceDocumentId) {
+        this.formErrors.push({
+          field: 'compliance_document_id',
+          message: 'Compliance document is required.',
+          validation: 'required'
+        })
       }
     },
 
-    computed: {
-      complianceDocument () {
-        return this.complianceDocumentId
-          ? this.complianceDocuments.find(({ id }) => id.toString() === this.complianceDocumentId.toString()) || null
-          : null
-      },
-    },
+    rejectReason() {
+      this.formErrors = this.formErrors.filter(({ field }) => field !== 'reject_reason')
 
-    watch: {
-      complianceDocumentId () {
-        this.formErrors = this.formErrors.filter(({ field }) => field !== 'compliance_document_id')
-
-        if (!this.complianceDocumentId) {
-          this.formErrors.push({
-            field: 'compliance_document_id',
-            message: 'Compliance document is required.',
-            validation: 'required',
-          })
-        }
-      },
-
-      rejectReason () {
-        this.formErrors = this.formErrors.filter(({ field }) => field !== 'reject_reason')
-
-        if (!this.rejectReason) {
-          this.formErrors.push({
-            field: 'reject_reason',
-            message: 'Reject reason is required.',
-            validation: 'required',
-          })
-
-          return
-        }
-
-        if (this.rejectReason.length > 255) {
-          this.formErrors.push({
-            field: 'reject_reason',
-            message: 'Reject reason maximum length is 255 characters.',
-            validation: 'max',
-          })
-        }
-      },
-    },
-
-    async asyncData ({ store, error }) {
-      const authAdminPermissions = store.getters["permissions"]
-
-      if (authAdminPermissions.includes('Create Compliance Document Reject Reasons') === false) {
-        error({
-          statusCode: 403,
-          message: 'You are not authorized to view this page.',
+      if (!this.rejectReason) {
+        this.formErrors.push({
+          field: 'reject_reason',
+          message: 'Reject reason is required.',
+          validation: 'required'
         })
+
         return
       }
-    },
 
-    methods: {
-      async createComplianceDocumentRejectReason () {
-        try {
-          const data = {
-            compliance_document_id: this.complianceDocumentId,
-            reject_reason: this.rejectReason,
-          }
+      if (this.rejectReason.length > 255) {
+        this.formErrors.push({
+          field: 'reject_reason',
+          message: 'Reject reason maximum length is 255 characters.',
+          validation: 'max'
+        })
+      }
+    }
+  },
 
-          this.formErrors = await this.$validator(data, {
+  async asyncData({ store, error }) {
+    const authAdminPermissions = store.getters['permissions']
+
+    if (authAdminPermissions.includes('Create Compliance Document Reject Reasons') === false) {
+      error({
+        statusCode: 403,
+        message: 'You are not authorized to view this page.'
+      })
+      return
+    }
+  },
+
+  methods: {
+    async createComplianceDocumentRejectReason() {
+      try {
+        const data = {
+          compliance_document_id: this.complianceDocumentId,
+          reject_reason: this.rejectReason
+        }
+
+        this.formErrors = await this.$validator(
+          data,
+          {
             compliance_document_id: 'required',
-            reject_reason: 'required|string|max:255',
-          }, {
+            reject_reason: 'required|string|max:255'
+          },
+          {
             'compliance_document_id.required': 'Compliance document is required.',
             'reject_reason.required': 'Reject reason is required.',
             'reject_reason.string': 'Invalid reject reason.',
-            'reject_reason.max': 'Reject reason maximum length is 255 characters.',
-          }).then(() => []).catch((errors) => errors)
-
-          if (this.formErrors.length) {
-            return
+            'reject_reason.max': 'Reject reason maximum length is 255 characters.'
           }
+        )
+          .then(() => [])
+          .catch(errors => errors)
 
-          this.creatingComplianceDocumentRejectReason = true
+        if (this.formErrors.length) {
+          return
+        }
 
-          const response = await this.$axios.post('/api/v1/admin/compliance-document-reject-reasons', data)
+        this.creatingComplianceDocumentRejectReason = true
 
-          const complianceDocumentRejectReason = response.data.data.compliance_document_reject_reason
+        const response = await this.$axios.post('/api/v1/admin/compliance-document-reject-reasons', data)
 
-          const message = response.data.message
+        const complianceDocumentRejectReason = response.data.data.compliance_document_reject_reason
 
-          this.$emit('complianceDocumentRejectReasonCreated', complianceDocumentRejectReason)
+        const message = response.data.message
 
+        this.$emit('complianceDocumentRejectReasonCreated', complianceDocumentRejectReason)
+
+        this.$store.commit('SET_NOTIFICATION', {
+          enabled: true,
+          status: 'success',
+          text: message || 'Compliance Document Reject Reason Created!'
+        })
+
+        this.creatingComplianceDocumentRejectReason = false
+
+        this.$router.push({ name: 'index-compliance-document-reject-reasons' })
+      } catch (err) {
+        console.log('err', err.response || err)
+
+        let message = null
+
+        if (err.response) {
+          if (err.response.status === 400 && err.response.data.error_messages) {
+            this.formErrors = err.response.data.error_messages
+          } else {
+            message = err.response.data.message
+          }
+        } else if (err.request) {
+          message = 'Something went wrong!'
+        } else {
+          message = err.message
+        }
+
+        if (message) {
           this.$store.commit('SET_NOTIFICATION', {
             enabled: true,
-            status: 'success',
-            text: message || 'Compliance Document Reject Reason Created!',
+            status: 'danger',
+            text: message
           })
-
-          this.creatingComplianceDocumentRejectReason = false
-
-          this.$router.push({ name: 'index-compliance-document-reject-reasons' })
-        } catch (err) {
-          console.log('err', err.response || err)
-
-          let message = null
-
-          if (err.response) {
-            if (err.response.status === 400 && err.response.data.error_messages) {
-              this.formErrors = err.response.data.error_messages
-            } else {
-              message = err.response.data.message
-            }
-          } else if (err.request) {
-            message = 'Something went wrong!'
-          } else {
-            message = err.message
-          }
-
-          if (message) {
-            this.$store.commit('SET_NOTIFICATION', {
-              enabled: true,
-              status: 'danger',
-              text: message,
-            })
-          }
-
-          this.creatingComplianceDocumentRejectReason = false
         }
-      },
-    },
+
+        this.creatingComplianceDocumentRejectReason = false
+      }
+    }
   }
+}
 </script>
