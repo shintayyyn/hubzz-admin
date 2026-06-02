@@ -18,7 +18,7 @@
               :isAfterDate="approvedAtDateStart"
             />
           </div>
-          
+
           <div class="flex flex-row md:justify-center p-1 md:p-2 align-middle  leading-none">
             <div class="m-1">
               <input id="disputed" v-model="showDisputed" type="checkbox" value="true">
@@ -49,7 +49,7 @@
           />
         </div>
       </div>
-      
+
       <!-- v-if="invoiceItems.length > 0 || disputedItems.length > 0"  -->
       <HubzzInvoice
         :forViewing="false"
@@ -68,8 +68,8 @@
     </section>
 
     <transition name="slide" mode="out-in">
-      <div 
-        v-if="chooseJobPartsModal" 
+      <div
+        v-if="chooseJobPartsModal"
         class="choose-job-parts-modal shadow-lg"
       >
         <ChooseJobParts
@@ -110,7 +110,6 @@ export default {
 
 	data () {
 		return {
-			loading: false,
 			chooseJobPartsModal: false,
       showDisputed: false,
       showCompleted: false,
@@ -125,15 +124,14 @@ export default {
 			},
 
 			practice: "",
-			chosenJobParts: [],
 			invoiceItems: [],
 			disputedItems: []
 		}
   },
-  
+
   watch: {
     approvedAtDateStart: function (value) {
-      if (value > this.approvedAtDateEnd) { 
+      if (value > this.approvedAtDateEnd) {
         this.approvedAtDateEnd = ""
       }
       this.toFilter.practice_billable_date_start = value
@@ -150,7 +148,7 @@ export default {
 				`/api/v1/admin/practices/${route.params.id}`
 			)
       const practice = response.data.practice
-      
+
       if (practice.sage_ref === null) {
         error({
           statusCode: 403,
@@ -159,16 +157,46 @@ export default {
 
         return
       }
-			
+
 			return {
 				practice
 			}
 		} catch (err) {
-			console.log("get practice error", err)
+			return {}
 		}
 	},
 
 	methods: {
+    buildInvoiceItem(jobPart) {
+      const jobPartTotalFinalPaidHoursInMinutes = jobPart.job_part_total_final_paid_hours_in_minutes
+      const jobPartTotalFinalPaidHours = parseFloat(jobPartTotalFinalPaidHoursInMinutes / 60).toFixed(2)
+      const practiceRate = jobPart.practice_rate.toFixed(2)
+      const jobPartTotalFinalPaidHourOnly = Math.floor(jobPartTotalFinalPaidHoursInMinutes / 60)
+      const jobPartTotalFinalPaidMinuteOnly = jobPartTotalFinalPaidHoursInMinutes % 60
+
+      return {
+        type: "Job Part - " + jobPart.invoice_status,
+        job_part_id: jobPart.id,
+        total_hours: jobPartTotalFinalPaidHours,
+        billed_hour_in_minutes: jobPartTotalFinalPaidHoursInMinutes,
+        description:
+          jobPart.job_part_number +
+          " for £" +
+          practiceRate +
+          " for a total time of " +
+          jobPartTotalFinalPaidHourOnly +
+          (jobPartTotalFinalPaidHourOnly > 1 ? " hours " : " hour ") +
+          (jobPartTotalFinalPaidMinuteOnly > 0
+            ? " and " + jobPartTotalFinalPaidMinuteOnly + (jobPartTotalFinalPaidMinuteOnly > 1 ? " minutes " : " minute ")
+            : "") +
+          " from " +
+          this.$moment(jobPart.date_start).format('DD/MM/YYYY') +
+          " to " +
+          this.$moment(jobPart.date_end).format('DD/MM/YYYY'),
+        total: parseFloat(jobPartTotalFinalPaidHours * practiceRate).toFixed(2),
+      }
+    },
+
 		scrollToTop () {
 			this.$nextTick(() => {
 				this.$refs.modalContainer.scrollTop = 0
@@ -183,49 +211,22 @@ export default {
       this.invoiceItems = []
 
 			for (let i = 0; i < chosenJobParts.length; i++) {
-        const jobPartTotalFinalPaidHoursInMinutes = chosenJobParts[i].job_part_total_final_paid_hours_in_minutes
-
-        const jobPartTotalFinalPaidHours = parseFloat(jobPartTotalFinalPaidHoursInMinutes / 60).toFixed(2)
-
-        const praticeRate = chosenJobParts[i].practice_rate.toFixed(2)
-
-        const jobPartTotalFinalPaidHourOnly = Math.floor(jobPartTotalFinalPaidHoursInMinutes / 60)
-
-        const jobPartTotalFinalPaidMinuteOnly = jobPartTotalFinalPaidHoursInMinutes % 60
-
-				const newItem = {
-					type: "Job Part - " + chosenJobParts[i].invoice_status,
-          job_part_id: chosenJobParts[i].id,
-          total_hours: jobPartTotalFinalPaidHours,
-          billed_hour_in_minutes: jobPartTotalFinalPaidHoursInMinutes,
-					description:
-						chosenJobParts[i].job_part_number +
-						" for £" +
-            praticeRate +
-            " for a total time of " +
-            jobPartTotalFinalPaidHourOnly +
-            (jobPartTotalFinalPaidHourOnly > 1 ? " hours " : " hour ") + 
-            (jobPartTotalFinalPaidMinuteOnly > 0 ? " and " + jobPartTotalFinalPaidMinuteOnly + (jobPartTotalFinalPaidMinuteOnly > 1 ? " minutes " : " minute ") : "") +
-						" from " +
-						this.$moment(chosenJobParts[i].date_start).format('DD/MM/YYYY') +
-						" to " +
-						this.$moment(chosenJobParts[i].date_end).format('DD/MM/YYYY'),
-					total: parseFloat(jobPartTotalFinalPaidHours * praticeRate).toFixed(2),
-        }
+        const jobPart = chosenJobParts[i]
+				const newItem = this.buildInvoiceItem(jobPart)
 
 				if (
-          chosenJobParts[i].invoice_status === "Invoiced"
-          || chosenJobParts[i].invoice_status === "Approved"
-          || chosenJobParts[i].invoice_status === "To Be Invoiced"
+          jobPart.invoice_status === "Invoiced"
+          || jobPart.invoice_status === "Approved"
+          || jobPart.invoice_status === "To Be Invoiced"
         ) {
           newItem.id = this.invoiceItems.length + 1
 
 					this.invoiceItems.push(newItem)
         }
 
-        if (chosenJobParts[i].invoice_status === "Disputed") {
+        if (jobPart.invoice_status === "Disputed") {
           newItem.id = this.disputedItems.length + 1
-          
+
 					this.disputedItems.push(newItem)
         }
       }
@@ -245,12 +246,6 @@ export default {
 </script>
 
 <style>
-  .card {
-    min-width: 100px;
-    height: 250px;
-    box-sizing: content-box;
-  }
-
   .issue-hubzz-invoice-shield {
     position: fixed;
     top: 0;
@@ -262,8 +257,7 @@ export default {
     z-index: 511;
   }
 
-  .choose-job-parts-modal,
-  .issue-hubzz-invoice-modal {
+  .choose-job-parts-modal {
     position: fixed;
     top: 0;
     right: 0;
@@ -278,7 +272,7 @@ export default {
   }
 
   @media screen and (min-width: 1200px) {
-    
+
     .choose-job-parts-modal {
       width: 80%;
     }

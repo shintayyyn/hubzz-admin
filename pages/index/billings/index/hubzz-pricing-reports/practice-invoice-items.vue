@@ -4,84 +4,41 @@
       <div class="text-lg md:text-2xl">
         Invoices
       </div>
-  
+
       <div class="text-sm md:text-lg">
         Rep-031
       </div>
 
-      <div
-        class="flex-col justify-start items-start w-full border p-3 rounded-lg flex my-2"
-      >
+      <div class="flex-col justify-start items-start w-full border p-3 rounded-lg flex my-2">
         <div class="flex w-full items-end">
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-            <AppInput
-              v-model="practiceNameIncludes"
-              placeholder="Search by Practice Name"
-              type="text"
-              label="Practice Name"
-            />
+            <AppInput v-model="practiceNameIncludes" placeholder="Search by Practice Name" type="text" label="Practice Name" />
           </div>
 
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-            <AppDate
-              v-model="dateStart"
-              label="Invoice Date Start"
-              format="YYYY-MM-DD"
-            />
+            <AppDate v-model="dateStart" label="Invoice Date Start" format="YYYY-MM-DD" />
           </div>
 
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-            <AppDate
-              v-model="dateEnd"
-              label="Invoice Date End"
-              format="YYYY-MM-DD"
-            />
+            <AppDate v-model="dateEnd" label="Invoice Date End" format="YYYY-MM-DD" />
           </div>
         </div>
 
         <div class="md:px-1 flex flex-wrap w-full justify-end">
-          <AppButton
-            label="Reset"
-            :in-style="'padding:5px 14px;margin-bottom:5px'"
-            @click="filterReset"
-          />
+          <AppButton label="Reset" :in-style="'padding:5px 14px;margin-bottom:5px'" @click="filterReset" />
 
-          <AppButton
-            class="mx-2"
-            label="Submit"
-            :in-style="'padding:5px 14px;margin-bottom:5px'"
-            @click="filterSearch"
-          />
-        </div>
-      </div>
-
-      <div v-if="false">
-        <div>
-          <label class="text-white">Limit: </label>
-          <select v-model="limit">
-            <option v-for="limitOption in limits" :key="`limit_${limitOption}`" :value="limitOption">
-              {{ limitOption }}
-            </option>
-          </select>
-        </div>
-        <div>
-          <label class="text-white">Page: </label>
-          <select v-model="activePage">
-            <option v-for="page in pages" :key="`page_${page}`" :value="page">
-              {{ page }}
-            </option>
-          </select>
+          <AppButton class="mx-2" label="Submit" :in-style="'padding:5px 14px;margin-bottom:5px'" @click="filterSearch" />
         </div>
       </div>
 
       <ReportTable
         :limit="limit"
         :items="locumInvoiceJobParts"
-        :getItemKey="(item) => item.id"
+        :getItemKey="item => item.id"
         :columnDetails="columnDetails"
         :orderBy="orderBy"
         :loading="loading"
-        @setOrderBy="(value) => orderBy = value"
+        @setOrderBy="value => (orderBy = value)"
       />
 
       <div v-if="!loading && locumInvoiceJobParts.length === 0 && !practiceNameIncludes" class="w-full flex justify-center">
@@ -106,17 +63,10 @@
             </div>
           </div>
         </div>
-        <ReportPagination
-          :count="count" 
-          :pages="pages" 
-          :page="activePage"
-          @page="setPage" 
-        />
+        <ReportPagination :count="count" :pages="pages" :page="activePage" @page="setPage" />
       </div>
 
-      <div
-        class="flex-wrap justify-start items-center w-full p-3 flex my-2"
-      >
+      <div class="flex-wrap justify-start items-center w-full p-3 flex my-2">
         <div class="md:px-1 flex flex-wrap w-full justify-end">
           <button
             :disabled="downloading || locumInvoiceJobParts.length === 0"
@@ -134,380 +84,352 @@
 </template>
 
 <script>
-  import ReportTable from '@/components/Reports/ReportTable'
-  import ReportPagination from '@/components/Reports/ReportPagination'
-  import AppInput from '@/components/Base/AppInput'
-  import AppButton from '@/components/Base/AppButton'
-  import AppDate from '@/components/Base/AppDate'
-  export default {
-    components: {
-      ReportTable,
-      ReportPagination,
-      AppInput,
-      AppButton,
-      AppDate,
+import ReportTable from '@/components/Reports/ReportTable'
+import ReportPagination from '@/components/Reports/ReportPagination'
+import AppInput from '@/components/Base/AppInput'
+import AppButton from '@/components/Base/AppButton'
+import AppDate from '@/components/Base/AppDate'
+export default {
+  components: {
+    ReportTable,
+    ReportPagination,
+    AppInput,
+    AppButton,
+    AppDate
+  },
+
+  data() {
+    return {
+      loading: false,
+      count: 0,
+      downloading: false,
+      locumInvoiceJobParts: [],
+      orderBy: [],
+      orderByProcessed: '',
+      limit: 10,
+      activePage: 1,
+
+      practiceNameIncludes: '',
+      dateStart: '',
+      dateEnd: ''
+    }
+  },
+
+  computed: {
+    itemCountInfo() {
+      const firstItem = Math.min(this.limit * this.activePage - this.limit + 1, this.count)
+      const lastItem = Math.min(
+        this.limit * this.activePage - this.limit + (this.loading ? this.limit : this.locumInvoiceJobParts.length),
+        this.count
+      )
+
+      return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
     },
 
-    data () {
-      return {
-        loading: false,
-        count: 0,
-        downloading: false,
-        locumInvoiceJobParts: [],
-        orderBy: [],
-        orderByProcessed: '',
-        orderBys: [
-          {
-            title: 'Practice Name (Ascending)',
-            column: 'practice_name',
-            direction: 'asc',
-          },
-          {
-            title: 'Practice Name (Descending)',
-            column: 'practice_name',
-            direction: 'desc',
-          },
-        ],
-        limit: 10,
-        limits: [
-          1,
-          2,
-          3,
-          4,
-          5,
-          10,
-          15,
-          20,
-          25,
-        ],
-        activePage: 1,
+    offset() {
+      return this.activePage * this.limit - this.limit
+    },
 
-        practiceNameIncludes: '',
-        areaPostcode: '',
-        dateStart: '',
-        dateEnd: '',
+    columnDetails() {
+      return [
+        {
+          title: '#',
+          key: 'index',
+          sort_key: null,
+          column: (item, index) => this.offset + index + 1,
+          justify: 'end',
+          flexGrow: 0,
+          flexShrink: 0
+        },
+        {
+          title: 'Practice',
+          key: 'practice_name',
+          sort_key: 'practice_name',
+          column: item => item.practice_name,
+          justify: 'start',
+          flexGrow: 1,
+          flexShrink: 0
+        },
+        {
+          title: 'SAGE Reference',
+          key: 'sage_ref',
+          sort_key: 'sage_ref',
+          column: item => item.sage_ref,
+          justify: 'start',
+          flexGrow: 1,
+          flexShrink: 0
+        },
+        {
+          title: 'Invoice Date',
+          key: 'issued_at',
+          sort_key: 'issued_at',
+          column: item => (item.issued_at ? this.$moment(item.issued_at, 'YYYY-MM-DD').format('DD/MM/YYYY') : null),
+          justify: 'start',
+          flexGrow: 1,
+          flexShrink: 0
+        },
+        {
+          title: 'Job Numbers',
+          key: 'job_part_numbers',
+          sort_key: 'job_part_numbers',
+          column: item => item.job_part_numbers || 'N/A',
+          justify: 'start',
+          flexGrow: 1,
+          flexShrink: 0
+        },
+        {
+          title: 'Invoice Number',
+          key: 'invoice_number',
+          sort_key: 'invoice_number',
+          column: item => item.invoice_number,
+          justify: 'start',
+          flexGrow: 1,
+          flexShrink: 0
+        },
+        {
+          title: 'Date Start',
+          key: 'date_start',
+          sort_key: 'date_start',
+          column: item => (item.date_start ? this.$moment(item.date_start, 'YYYY-MM-DD').format('DD/MM/YYYY') : null),
+          justify: 'center',
+          flexGrow: 1,
+          flexShrink: 0
+        },
+        {
+          title: 'Date End',
+          key: 'date_end',
+          sort_key: 'date_end',
+          column: item => (item.date_end ? this.$moment(item.date_end, 'YYYY-MM-DD').format('DD/MM/YYYY') : null),
+          justify: 'center',
+          flexGrow: 1,
+          flexShrink: 0
+        },
+        {
+          title: 'Profession',
+          key: 'profession_names',
+          sort_key: 'profession_names',
+          column: item => item.profession_names || 'N/A',
+          justify: 'start',
+          flexGrow: 1,
+          flexShrink: 0
+        },
+        {
+          title: 'Total Hours',
+          key: 'job_total_final_hours',
+          sort_key: 'job_total_final_hours',
+          column: item => (item.job_total_final_hours ? `${item.job_total_final_hours.toFixed(2)}` : 'N/A'),
+          justify: 'end',
+          flexGrow: 1,
+          flexShrink: 0
+        },
+        {
+          title: '£ Amount',
+          key: 'practice_invoice_item_amount',
+          sort_key: 'practice_invoice_item_amount',
+          column: item => `£ ${item.practice_invoice_item_amount}`,
+          justify: 'start',
+          flexGrow: 1,
+          flexShrink: 0
+        },
+        {
+          title: '£ Discount',
+          key: 'practice_invoice_item_credits',
+          sort_key: 'practice_invoice_item_credits',
+          column: item => `£ ${item.practice_invoice_item_credits}`,
+          justify: 'start',
+          flexGrow: 1,
+          flexShrink: 0
+        },
+        {
+          title: 'Total £',
+          key: 'total_amount',
+          sort_key: 'total_amount',
+          column: item => `£ ${item.total_amount}`,
+          justify: 'start',
+          flexGrow: 1,
+          flexShrink: 0
+        }
+      ]
+    },
+
+    pages() {
+      return Math.max(Math.ceil(this.count / this.limit), 1)
+    }
+  },
+
+  watch: {
+    orderBy(value) {
+      let replaced = ''
+      if (value.length > 0) {
+        replaced = value[0].replace(/_/g, ' ')
+        replaced = replaced.replace(/:/g, ' - ')
+        replaced = replaced.replace(/(^\w{1})|(\s{1}\w{1})/g, word => word.toUpperCase())
+        replaced = replaced.replace('Desc', 'Descending')
+        replaced = replaced.replace('Asc', 'Ascending')
+      }
+      this.orderByProcessed = replaced
+      this.getPracticeInvoiceItems()
+    },
+
+    limit() {
+      this.page = 1
+      this.getPracticeInvoiceItems()
+    },
+
+    activePage() {
+      this.getPracticeInvoiceItems()
+    }
+  },
+
+  mounted() {
+    const {
+      practice_name_includes: practiceNameIncludes,
+      date_start: dateStart,
+      date_end: dateEnd,
+      order_by: orderBy = ['id:desc'],
+      page
+    } = this.$route.query
+
+    this.practiceNameIncludes = practiceNameIncludes ? practiceNameIncludes : ''
+    this.dateStart = dateStart ? dateStart : ''
+    this.dateEnd = dateEnd ? dateEnd : ''
+
+    this.orderBy = orderBy
+    this.activePage = page ? Number.parseInt(page) : 1
+
+    this.getPracticeInvoiceItems()
+  },
+
+  methods: {
+    getFilterParams() {
+      return {
+        practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
+        date_start: this.dateStart ? this.dateStart : undefined,
+        date_end: this.dateEnd ? this.dateEnd : undefined
       }
     },
 
-    computed: {
-      itemCountInfo () {
-        const firstItem = Math.min((this.limit * this.activePage) - this.limit + 1, this.count)
-        const lastItem = Math.min((this.limit * this.activePage) - this.limit + (this.loading ? this.limit : this.locumInvoiceJobParts.length), this.count)
-        
-        return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
-      },
+    filterReset() {
+      this.practiceNameIncludes = ''
+      this.dateStart = ''
+      this.dateEnd = ''
 
-      offset () {
-        return this.activePage * this.limit - this.limit
-      },
-
-      columnDetails () {
-        return [
-          {
-            title: '#',
-            key: 'index',
-            sort_key: null,
-            column: (item, index) => this.offset + index + 1,
-            justify: 'end',
-            flexGrow: 0,
-            flexShrink: 0,
-          },
-          {
-            title: 'Practice',
-            key: 'practice_name',
-            sort_key: 'practice_name',
-            column: (item) => item.practice_name,
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'SAGE Reference',
-            key: 'sage_ref',
-            sort_key: 'sage_ref',
-            column: (item) => item.sage_ref,
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Invoice Date',
-            key: 'issued_at',
-            sort_key: 'issued_at',
-            column: (item) => item.issued_at ? this.$moment(item.issued_at, 'YYYY-MM-DD').format('DD/MM/YYYY') : null,
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Job Numbers',
-            key: 'job_part_numbers',
-            sort_key: 'job_part_numbers',
-            column: (item) => item.job_part_numbers || 'N/A',
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Invoice Number',
-            key: 'invoice_number',
-            sort_key: 'invoice_number',
-            column: (item) => item.invoice_number,
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Date Start',
-            key: 'date_start',
-            sort_key: 'date_start',
-            column: (item) => item.date_start ? this.$moment(item.date_start, 'YYYY-MM-DD').format('DD/MM/YYYY') : null,
-            justify: 'center',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Date End',
-            key: 'date_end',
-            sort_key: 'date_end',
-            column: (item) => item.date_end ? this.$moment(item.date_end, 'YYYY-MM-DD').format('DD/MM/YYYY') : null,
-            justify: 'center',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Profession',
-            key: 'profession_names',
-            sort_key: 'profession_names',
-            column: (item) => item.profession_names || 'N/A',
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Total Hours',
-            key: 'job_total_final_hours',
-            sort_key: 'job_total_final_hours',
-            column: (item) => item.job_total_final_hours ? `${item.job_total_final_hours.toFixed(2)}` : "N/A",
-            justify: 'end',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: '£ Amount',
-            key: 'practice_invoice_item_amount',
-            sort_key: 'practice_invoice_item_amount',
-            column: (item) => `£ ${item.practice_invoice_item_amount}`,
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: '£ Discount',
-            key: 'practice_invoice_item_credits',
-            sort_key: 'practice_invoice_item_credits',
-            column: (item) => `£ ${item.practice_invoice_item_credits}`,
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Total £',
-            key: 'total_amount',
-            sort_key: 'total_amount',
-            column: (item) => `£ ${item.total_amount}`,
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-        ]
-      },
-
-      pages () {
-        return Math.max(Math.ceil(this.count / this.limit), 1)
-      },
+      this.filterSearch()
     },
 
-    watch: {
-      orderBy (value) {
-        let replaced = ''
-        if(value.length > 0) {
-          replaced = value[0].replace(/_/g, ' ')
-          replaced = replaced.replace(/:/g, ' - ')
-          replaced = replaced.replace(/(^\w{1})|(\s{1}\w{1})/g, word => word.toUpperCase())
-          replaced = replaced.replace('Desc', 'Descending')
-          replaced = replaced.replace('Asc', 'Ascending')
-        } 
-        this.orderByProcessed = replaced
-        this.getPracticeInvoiceItems()
-      },
+    filterSearch() {
+      this.activePage = 1
 
-      limit () {
-        this.page = 1
-        this.getPracticeInvoiceItems()
-      },
+      const query = {
+        ...this.$route.query,
+        ...this.getFilterParams(),
+        order_by: this.orderBy ? this.orderBy : undefined,
+        page: undefined
+      }
 
-      activePage () {
-        this.getPracticeInvoiceItems()
-      },
-    },
-
-    mounted () {      
-     const {
-        practice_name_includes: practiceNameIncludes,
-        date_start: dateStart,
-        date_end: dateEnd,
-        order_by: orderBy = ['id:desc'],
-        page,
-      } = this.$route.query
-
-      this.practiceNameIncludes = practiceNameIncludes ? practiceNameIncludes : ''
-      this.dateStart = dateStart ? dateStart : ''
-      this.dateEnd = dateEnd ? dateEnd : ''
-
-      this.orderBy = orderBy
-      this.activePage = page ? Number.parseInt(page) : 1
+      if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+        this.$router.replace({ query })
+      }
 
       this.getPracticeInvoiceItems()
     },
 
-    methods: {
-      filterReset () {
-        this.practiceNameIncludes = ''
-        this.dateStart = ''
-        this.dateEnd = ''
+    setPage(page) {
+      this.activePage = page
 
-        this.filterSearch()
-      },
-
-      filterSearch () {
-        this.activePage = 1
-
-        const query = {
-          ...this.$route.query,
-          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
-          date_start: this.dateStart ? this.dateStart : undefined,
-          date_end: this.dateEnd ? this.dateEnd : undefined,
-          order_by: this.orderBy ? this.orderBy : undefined,
-          page: undefined,
-        }
-
-        if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-          this.$router.replace({ query })
-        }
-        
-        this.getPracticeInvoiceItems()
-      },
-
-      setPage (page) {
-        this.activePage = page
-
-        if (this.activePage === 1) {
-          this.$router.replace({
-            query: {
-              ...this.$route.query,
-              page: undefined,
-            }
-          })
-        } else {
-          this.$router.replace({
-            query: {
-              ...this.$route.query,
-              page: this.activePage,
-            }
-          })
-        }
-
-        this.getPracticeInvoiceItems()
-      },
-
-      setOrderBy (orderBy) {
-        this.orderBy = orderBy
-        this.activePage = 1
-
+      if (this.activePage === 1) {
         this.$router.replace({
           query: {
             ...this.$route.query,
-            order_by: this.orderBy,
-            page: undefined,
+            page: undefined
           }
         })
+      } else {
+        this.$router.replace({
+          query: {
+            ...this.$route.query,
+            page: this.activePage
+          }
+        })
+      }
 
-        this.getPracticeInvoiceItems()
-      },
+      this.getPracticeInvoiceItems()
+    },
 
-      getPracticeInvoiceItems () {
-        this.loading = true
-        this.locumInvoiceJobParts = []
+    getPracticeInvoiceItems() {
+      this.loading = true
+      this.locumInvoiceJobParts = []
 
-        const params = {
-          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
-          date_start: this.dateStart ? this.dateStart : undefined,
-          date_end: this.dateEnd ? this.dateEnd : undefined,
-        }
-        Promise.all([
-          this.$axios.get('/api/v1/admin/reports/practice-invoice-items/count', {
+      const params = this.getFilterParams()
+      Promise.all([
+        this.$axios
+          .get('/api/v1/admin/reports/practice-invoice-items/count', {
             params
-          }).then((responses) => {
+          })
+          .then(responses => {
             return responses.data.data.count
           }),
-          this.$axios.get('/api/v1/admin/reports/practice-invoice-items', {
+        this.$axios
+          .get('/api/v1/admin/reports/practice-invoice-items', {
             params: {
               ...params,
               order_by: this.orderBy,
               limit: this.limit,
-              offset: this.offset,
-            },
-          }).then((responses) => {
+              offset: this.offset
+            }
+          })
+          .then(responses => {
             return responses.data.data.practice_invoice_items
           }),
-          new Promise((resolve) => setTimeout(resolve, 500))
-        ]).then((results) => {
-          const [
-            count,
-            locumInvoiceJobParts,
-          ] = results
+        new Promise(resolve => setTimeout(resolve, 500))
+      ])
+        .then(results => {
+          const [count, locumInvoiceJobParts] = results
 
           this.count = count
           this.locumInvoiceJobParts = locumInvoiceJobParts
-        }).catch((err) => {
-          console.log('err.response ? err.response.data : err', err.response ? err.response.data : err)
+        })
+        .catch(err => {
           this.$nuxt.error(err.response ? err.response.data : err)
-        }).finally(() => {
+        })
+        .finally(() => {
           this.loading = false
         })
-      },
+    },
 
-      downloadCsv () {
-        this.downloading = true
-        const params = {
-          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
-          date_start: this.dateStart ? this.dateStart : undefined,
-          date_end: this.dateEnd ? this.dateEnd : undefined,
-          order_by: this.orderBy,
-          limit: 999,
-          offset: 0,
-        }
+    downloadCsv() {
+      this.downloading = true
+      const params = {
+        ...this.getFilterParams(),
+        order_by: this.orderBy,
+        limit: 999,
+        offset: 0
+      }
 
-        this.$axios.post('/api/v1/admin/reports/practice-invoice-items/generate-key', {
-          filename: `practiceInvoices.csv`,
-        }, {
-          params: {
-            ...params,
+      this.$axios
+        .post(
+          '/api/v1/admin/reports/practice-invoice-items/generate-key',
+          {
+            filename: `practiceInvoices.csv`
           },
-        }).then((responses) => {
-          console.log('responses', responses)
+          {
+            params: {
+              ...params
+            }
+          }
+        )
+        .then(responses => {
           const token = responses.data.data.token
 
           window.open(`${process.env.API_URL}/api/v1/admin/reports/practice-invoice-items/csv?token=${token}`)
-        }).catch((err) => {
-          console.log('err', err)
+        })
+        .catch(err => {
           this.$nuxt.error(err.response ? err.response.data : err)
-        }).finally(() => {
+        })
+        .finally(() => {
           this.downloading = false
         })
-      },
-    },
-
+    }
   }
+}
 </script>
