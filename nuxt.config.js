@@ -31,7 +31,7 @@ export default {
       {
         // OneSignal Web SDK v16
         src: 'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js',
-        defer: true,
+        defer: true
       },
       {
         src: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'
@@ -59,7 +59,7 @@ export default {
     },
     {
       src: '@/plugins/one-signal.js',
-      mode: 'client',
+      mode: 'client'
     },
     {
       src: '@/plugins/vue-svgicon.js',
@@ -85,14 +85,6 @@ export default {
       src: '@/plugins/filters.js',
       ssr: true
     },
-    // {
-    // 	src: '@/plugins/jspdf.js',
-    // 	mode: 'client',
-    // },
-    // {
-    // 	src: '@/plugins/html2canvas.js',
-    // 	mode: 'client',
-    // },
     {
       src: '@/plugins/broadcast-channel.js',
       mode: 'client'
@@ -165,21 +157,6 @@ export default {
       ignoreOrder: true
     },
 
-    // optimization: {
-    //   splitChunks: {
-    //     cacheGroups: {
-    //       styles: {
-    //         name: 'styles',
-    //         test: /\.(css|vue)$/,
-    //         chunks: 'all',
-    //         enforce: true
-    //       }
-    //     }
-    //   }
-    // },
-
     extend() {}
   }
 }
-
-// (?<!ing)(?<!Select)(?<!etc)(?<!ile)(?<!for)\.\.\.

@@ -3,9 +3,9 @@
     <template v-if="$route.name === 'index-test-script-locum-dormant-status-index'">
       <div class="flex-1 flex flex-col self-end">
         <div class="py-4">
-            <div class="text-lg font-bold">
-              Active and Dormant Locums
-            </div>
+          <div class="text-lg font-bold">
+            Active and Dormant Locums
+          </div>
 
           <AppTableNew
             v-if="count !== 0"
@@ -36,14 +36,14 @@
         </div>
       </div>
     </template>
-  
+
     <nuxt-child @refreshLocumUserTable="getLocumUsers" />
   </section>
 </template>
 
 <script>
   import debounce from 'lodash.debounce'
-  
+
   import AppTableNew from '@/components/Base/AppTableNew'
 
   export default {
@@ -114,7 +114,7 @@
             minWidth: '100px',
             maxWidth: '170px',
 					},
-          { 
+          {
             name: 'Override Date Signed-up',
             dataIndex: 'override_created_at_in_gb_formatted',
             class: 'md:text-center',
@@ -123,7 +123,7 @@
             minWidth: '100px',
             maxWidth: '170px',
           },
-          { 
+          {
             name: 'Override last job application date',
             dataIndex: 'override_last_job_application_date_in_gb_formatted',
             class: 'md:text-center',
@@ -132,7 +132,7 @@
             minWidth: '100px',
             maxWidth: '170px',
           },
-          { 
+          {
             name: 'Dormant Date',
             dataIndex: 'dormanted_at_in_gb_formatted',
             class: 'md:text-center',
@@ -146,8 +146,6 @@
 						dataIndex: 'status',
 						class: 'md:text-center',
 						sortable: true,
-						// slot: true,
-						// slotName: 'status_slot',
             flex: '1 0 0',
             minWidth: '150px',
             maxWidth: '170px',
@@ -175,12 +173,12 @@
 
 		mounted () {
       this.$socket.on("updateLocumStatus", this.locumUserUpdatedHandler)
-    
+
       this.count = 0
       this.locumUsers = []
 			this.getLocumUsers()
     },
-    
+
     destroyed () {
       this.$socket.removeListener("updateLocumStatus", this.locumUserUpdatedHandler)
     },
@@ -223,17 +221,17 @@
           this.loading = false
 				})
       },
-      
+
 			searchSubmit: debounce(function () {
 				this.currentPage = 1
         this.getLocumUsers()
 			}, 500),
-    
+
       pageChangedHandler (page) {
         this.currentPage = page
         this.getLocumUsers()
       },
-      
+
       locumUserUpdatedHandler (locumUser) {
         const index = this.locumUsers.findIndex(({ id }) => id === locumUser.id)
 
@@ -241,7 +239,7 @@
           this.locumUsers.splice(index, 1, locumUser)
         }
       },
-      
+
 			statusStyle (status) {
 				switch (status) {
 					case 'Active':
@@ -262,7 +260,7 @@
 						return
 				}
 			},
-      
+
 		},
   }
 </script>

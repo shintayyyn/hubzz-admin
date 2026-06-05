@@ -143,15 +143,15 @@ export default {
     getLocumWithdrawnJobs(state) {
         let jobs = []
         if (state.locum_withdrawn_jobs) {
-            state.locum_withdrawn_jobs.forEach(job => {
-              let job_surgery_name = ''
-              let date_time_start = ''
-              let date_time_end = ''
-              let job_rate = ''
-              let job_rate_type = ''
-              let job_title = ''
-              let job_shift = ''
-              let completed_at = ''
+            state.locum_withdrawn_jobs.forEach(jobPart => {
+                let job_surgery_name = ''
+                let date_time_start = ''
+                let date_time_end = ''
+                let job_rate = ''
+                let job_rate_type = ''
+                let job_title = ''
+                let job_shift = ''
+                let completed_at = ''
                 job_surgery_name = jobPart.job.type === 'Platform' ? jobPart.job.platform_job.practice.name : jobPart.job.private_job.private_practice.name
                 date_time_start = jobPart.time_start ? `${jobPart.date_start} | ${jobPart.time_start}` : jobPart.date_start
                 date_time_end = jobPart.time_end ? `${jobPart.date_end} | ${jobPart.time_end}` : jobPart.date_end
@@ -179,7 +179,7 @@ export default {
     getLocumCancelledJobs(state) {
         let jobs = []
         if (state.locum_cancelled_jobs) {
-            state.locum_cancelled_jobs.forEach(job => {
+            state.locum_cancelled_jobs.forEach(jobPart => {
                 let job_surgery_name = ''
                 let date_time_start = ''
                 let date_time_end = ''
@@ -444,41 +444,7 @@ export default {
         return []
     },
 
-    // getLocumWithdrawnJobs(state) {
-    //     let jobs = []
-    //     if (state.locum_withdrawn_jobs) {
-    //         state.locum_withdrawn_jobs.forEach(job => {
-    //             let surgery_name = ''
-    //             let date_time_start = ''
-    //             let date_time_end = ''
-    //             let rate_name = ''
-    //             let rate_type_name = ''
-    //             let shift_name = ''
-    //             let completed_at = ''
-    //             surgery_name = job.type === 'Platform' ? job.platform_job.practice.name : job.private_job.private_practice.name
-    //             date_time_start = job.time_start ? `${job.date_start} | ${job.time_start}` : job.date_start
-    //             date_time_end = job.time_end ? `${job.date_end} | ${job.time_end}` : job.date_end
-    //             rate_name = job.rate
-    //             rate_type_name = job.locum_detail_rate_type.name
-    //             shift_name = job.shift.name
-    //             completed_at = job.type === 'Platform' ? job.completed_at : job.date_end
-    //             jobs.push({
-    //                 ...job,
-    //                 surgery_name,
-    //                 date_time_start,
-    //                 date_time_end,
-    //                 completed_at,
-    //                 rate_name,
-    //                 rate_type_name,
-    //                 shift_name
-    //             })
-    //         })
-    //         return jobs
-    //     }
-    //     return []
-    // },
-
-    // PRACTICE 
+    // PRACTICE
     // PARTS
     getPracticeOngoingJobs(state) {
         let jobs = []
@@ -742,36 +708,6 @@ export default {
         }
         return []
     },
-    getPracticeWithdrawnJobs(state) {
-        let jobs = []
-        if (state.practice_withdrawn_jobs) {
-            state.practice_withdrawn_jobs.forEach(job => {
-                let surgery_name = ''
-                let date_time_start = ''
-                let date_time_end = ''
-                let rate_name = ''
-                let rate_type_name = ''
-                let shift_name = ''
-                surgery_name = job.type === 'Platform' ? job.platform_job.practice.name : job.private_job.private_practice.name
-                date_time_start = job.time_start ? `${job.date_start} | ${job.time_start}` : job.date_start
-                date_time_end = job.time_end ? `${job.date_end} | ${job.time_end}` : job.date_end
-                rate_name = job.rate
-                rate_type_name = job.locum_detail_rate_type.name
-                shift_name = job.shift.name
-                jobs.push({
-                    ...job,
-                    surgery_name,
-                    date_time_start,
-                    date_time_end,
-                    rate_name,
-                    rate_type_name,
-                    shift_name,
-                })
-            })
-            return jobs
-        }
-        return []
-    },
     getPracticeCancelledJobs(state) {
         let jobs = []
         if (state.practice_cancelled_jobs) {
@@ -811,13 +747,11 @@ export default {
                 let date_time_end = ''
                 let rate_name = ''
                 let rate_type_name = ''
-                let shift_name = ''
                 surgery_name = job.type === 'Platform' ? job.platform_job.practice.name : job.private_job.private_practice.name
                 date_time_start = job.time_start ? `${job.date_start} | ${job.time_start}` : job.date_start
                 date_time_end = job.time_end ? `${job.date_end} | ${job.time_end}` : job.date_end
                 rate_name = job.rate
                 rate_type_name = job.locum_detail_rate_type.name
-                shift_name = job.shift.name
                 jobs.push({
                     ...job,
                     surgery_name,
