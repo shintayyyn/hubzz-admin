@@ -2,11 +2,7 @@
   <section>
     <template v-if="isGroupedInputType">
       <div class="flex flex-col" :class="resolvedWrapperClass">
-        <div
-          v-if="label || info"
-          class="relative flex flex-wrap leading-none"
-          :class="info ? 'flex-wrap justify-between' : 'items-center'"
-        >
+        <div v-if="label || info" class="relative flex flex-wrap leading-none" :class="info ? 'flex-wrap justify-between' : 'items-center'">
           <label :for="name" class="text-xs sm:text-sm py-1">
             <span>{{ label }}</span>
 
@@ -26,16 +22,13 @@
 
         <template v-if="type === 'multi-checkbox'">
           <div v-if="updatable" class="flex flex-row justify-start items-center mt-1">
-            <div
-              class="mb-1 bg-yellow-500 text-sm p-1 shadow-lg rounded-lg cursor-pointer hover:text-white"
-              @click="add"
-            >
+            <div class="mb-1 bg-yellow-500 text-sm p-1 shadow-lg rounded-lg cursor-pointer hover:text-white" @click="add">
               Add mandatory training
             </div>
           </div>
 
           <div v-if="!required" class="flex flex-row justify-start items-center mt-1">
-            <input :id="name" v-model="na" type="checkbox" :disabled="value.length === 0">
+            <input :id="name" v-model="na" type="checkbox" :disabled="value.length === 0" />
 
             <label :for="name" class="text-xs sm:text-sm flex items-center">N/A</label>
           </div>
@@ -48,39 +41,29 @@
                   class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none py-2 font-bold text-xs sm:text-sm shadow-none"
                   placeholder="Type Training Title Here"
                   type="text"
-                >
+                />
 
                 <div v-if="errorMsg" class="text-sm text-red-500">
                   <span>{{ errorMsg }}</span>
                 </div>
               </div>
 
-              <div
-                class="ml-2 bg-yellow-500 p-1 rounded-lg shadow-lg cursor-pointer hover:text-white hover:bg-yellow-600"
-                @click="save(null, 'add')"
-              >
+              <div class="ml-2 bg-yellow-500 p-1 rounded-lg shadow-lg cursor-pointer hover:text-white hover:bg-yellow-600" @click="save(null, 'add')">
                 <span>Add</span>
               </div>
 
-              <div
-                class="ml-2 bg-red-500 p-1 rounded-lg shadow-lg cursor-pointer text-white hover:text-black hover:bg-red-400"
-                @click="cancel"
-              >
+              <div class="ml-2 bg-red-500 p-1 rounded-lg shadow-lg cursor-pointer text-white hover:text-black hover:bg-red-400" @click="cancel">
                 <span>Cancel</span>
               </div>
             </div>
           </template>
 
           <div v-if="showSelectAll" class="flex flex-row justify-start items-center mt-1">
-            <input id="inputIdSelectAll" v-model="selectAll" type="checkbox">
+            <input id="inputIdSelectAll" v-model="selectAll" type="checkbox" />
             <label for="inputIdSelectAll" class="text-xs sm:text-sm flex items-center">Select all</label>
           </div>
 
-          <div
-            v-for="(item, index) in lists"
-            :key="index"
-            class="flex flex-row justify-start items-center mt-1"
-          >
+          <div v-for="(item, index) in lists" :key="index" class="flex flex-row justify-start items-center mt-1">
             <template v-if="toEdit && editId === item.value && updatable">
               <div class="flex flex-col w-full">
                 <input
@@ -88,7 +71,7 @@
                   v-model="listLabel"
                   class="border-b-2 focus:border-yellow-400 focus:outline-none py-2 font-bold text-xs sm:text-sm shadow-none"
                   type="text"
-                >
+                />
                 <div v-if="errorMsg" class="text-sm text-red-500">
                   {{ errorMsg }}
                 </div>
@@ -103,12 +86,9 @@
                 :checked="Array.isArray(value) ? value.includes(item.value) : value"
                 :disabled="disabled"
                 @input="inputMultiCheck"
-              >
+              />
 
-              <label
-                :for="`${name}-${index}`"
-                class="text-xs sm:text-sm flex items-center"
-              >{{ item.label }}</label>
+              <label :for="`${name}-${index}`" class="text-xs sm:text-sm flex items-center">{{ item.label }}</label>
             </template>
 
             <template v-if="updatable">
@@ -146,14 +126,10 @@
 
         <template v-else>
           <div class="flex flex-row justify-start mt-1">
-            <!-- text, etc -->
             <template v-if="isSimpleInputType">
               <div class="flex flex-col w-full">
                 <div class="flex items-center justify-start">
-                  <p
-                    v-if="showMobilePrefix"
-                    class="text-xs sm:text-sm font-bold py-2 pr-1 border-b-2 border-transparent"
-                  >
+                  <p v-if="showMobilePrefix" class="text-xs sm:text-sm font-bold py-2 pr-1 border-b-2 border-transparent">
                     <span>+44</span>
                   </p>
 
@@ -162,7 +138,7 @@
                     :type="type"
                     :placeholder="placeholder"
                     class="bg-transparent border-l-2 border-t-2 border-b-2 border-gray-500 focus:border-gray-600 focus:outline-none font-bold text-xs sm:text-sm w-full shadow-none"
-                    :class="[error ? 'border-red-500' : '', button ? 'rounded-l px-2':'rounded' ,inClass]"
+                    :class="[error ? 'border-red-500' : '', button ? 'rounded-l px-2' : 'rounded', inClass]"
                     :style="inStyle"
                     :checked="value"
                     :readonly="disabled"
@@ -176,7 +152,7 @@
                     @blur="$emit('blur')"
                     @keypress="handleTextInputKeypress($event)"
                     @keydown="handleTextInputKeydown($event)"
-                  >
+                  />
                   <button
                     v-if="button"
                     class="bg-gray-500 px-2 border-gray-500 rounded-r border-r-2 border-t-2 border-b-2 text-xs sm:text-sm text-white font-bold hover:bg-gray-600 transition-hover"
@@ -187,10 +163,7 @@
                 </div>
 
                 <transition name="drop-down">
-                  <div
-                    v-if="error"
-                    class="text-red-500 py-1 text-xs text-white"
-                  >
+                  <div v-if="error" class="text-red-500 py-1 text-xs text-white">
                     {{ formattedErrorMessage }}
                   </div>
                 </transition>
@@ -198,7 +171,7 @@
             </template>
 
             <!-- password -->
-            <template v-if=" type === 'password' ">
+            <template v-if="type === 'password'">
               <div class="relative w-full mb-4">
                 <div class="relative">
                   <input
@@ -212,26 +185,18 @@
                     @keypress.enter="$emit('submit')"
                     @blur="$emit('blur')"
                     @focus="showPasswordFocus = true"
-                  >
+                  />
                   <span
                     class="absolute top-0 right-0 h-full focus:outline-none cursor-pointer flex items-center"
                     tabindex="-1"
                     @click="passwordToggle = !passwordToggle"
                   >
-                    <svgicon
-                      :name="passwordIconName"
-                      width="20"
-                      height="20"
-                      class="text-gray-500 hover:text-gray-600 fill-current"
-                    />
+                    <svgicon :name="passwordIconName" width="20" height="20" class="text-gray-500 hover:text-gray-600 fill-current" />
                   </span>
                 </div>
 
                 <transition name="drop-down">
-                  <div
-                    v-if="error"
-                    class="text-red-500 py-1 text-xs text-white"
-                  >
+                  <div v-if="error" class="text-red-500 py-1 text-xs text-white">
                     {{ formattedErrorMessage }}
                   </div>
                 </transition>
@@ -247,8 +212,8 @@
                     :value="value"
                     class="bg-transparent absolute bottom-0 border-2 focus:border-yellow-400 focus:outline-none font-bold text-sm w-full rounded"
                     :class="[
-                      (error && !disabled) ? 'border-red-500' : inClass,
-                      disabled ? 'border-gray-400 text-gray-500 cursor-not-allowed' : 'cursor-pointer',
+                      error && !disabled ? 'border-red-500' : inClass,
+                      disabled ? 'border-gray-400 text-gray-500 cursor-not-allowed' : 'cursor-pointer'
                     ]"
                     :style="inStyle"
                     :disabled="disabled"
@@ -282,10 +247,7 @@
                   </span> -->
                 </div>
                 <transition name="drop-down">
-                  <div
-                    v-if="error"
-                    class="text-red-500 py-1 text-xs text-white"
-                  >
+                  <div v-if="error" class="text-red-500 py-1 text-xs text-white">
                     {{ formattedErrorMessage }}
                   </div>
                 </transition>
@@ -302,7 +264,7 @@
                   :value="value"
                   :placeholder="placeholder"
                   class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none py-4 px-2 font-bold text-xs sm:text-sm w-full"
-                  :class="[error ? 'border-red-500':'', resize ? '' : 'resize-none']"
+                  :class="[error ? 'border-red-500' : '', resize ? '' : 'resize-none']"
                   :limit="limit"
                   :style="inStyle"
                   :readonly="disabled"
@@ -312,10 +274,7 @@
                 />
                 <div class="flex items-center justify-between">
                   <transition name="drop-down">
-                    <div
-                      v-if="error"
-                      class="text-red-500 py-1 text-xs text-white"
-                    >
+                    <div v-if="error" class="text-red-500 py-1 text-xs text-white">
                       {{ formattedErrorMessage }}
                     </div>
                   </transition>
@@ -325,14 +284,7 @@
                     :class="isTrimmedValueOverLimit ? 'text-red-600' : ''"
                   >
                     <transition name="fade">
-                      <svgicon
-                        v-if="isTrimmedValueOverLimit"
-                        name="exclamation-mark"
-                        width="12"
-                        height="12"
-                        class="mr-1"
-                        color="red"
-                      />
+                      <svgicon v-if="isTrimmedValueOverLimit" name="exclamation-mark" width="12" height="12" class="mr-1" color="red" />
                     </transition>
                     {{ trimmedValueLength }}/{{ limit }}
                   </p>
@@ -348,20 +300,11 @@
     <template v-if="type === 'single-checkbox'">
       <div class="flex flex-col py-2 mb-2">
         <div class="flex flex-row flex-no-wrap justify-start items-center">
-          <input
-            :id="name"
-            type="checkbox"
-            :checked="value"
-            :disabled="disabled"
-            @change="$emit('input', $event.target.checked)"
-          >
+          <input :id="name" type="checkbox" :checked="value" :disabled="disabled" @change="$emit('input', $event.target.checked)" />
           <label :for="name" class="text-xs sm:text-sm py-1 flex items-center">{{ label }}</label>
         </div>
         <transition name="drop-down">
-          <div
-            v-if="error"
-            class="py-1 text-xs text-red-500"
-          >
+          <div v-if="error" class="py-1 text-xs text-red-500">
             {{ formattedErrorMessage }}
           </div>
         </transition>
@@ -377,10 +320,7 @@
             <span class="ml-2 bg-gray-300 rounded px-4 py-1 text-xs">Seperate with commas</span>
           </div>
           <transition name="fade">
-            <div
-              v-if="error"
-              class="absolute right-0 bg-red-500 py-1 px-2 text-xs sm:text-sm text-white"
-            >
+            <div v-if="error" class="absolute right-0 bg-red-500 py-1 px-2 text-xs sm:text-sm text-white">
               {{ formattedErrorMessage }}
             </div>
           </transition>
@@ -392,9 +332,9 @@
             type="email"
             :placeholder="placeholder"
             class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none py-4 font-bold text-xs sm:text-sm w-full"
-            :class="error ? 'border-red-500':''"
+            :class="error ? 'border-red-500' : ''"
             @input="$emit('input', $event.target.value)"
-          >
+          />
         </div>
       </div>
     </template>
@@ -409,30 +349,25 @@
               {{ info }}
             </div>
             <transition name="fade">
-              <div
-                v-if="error"
-                class="absolute right-0 bg-red-500 py-1 px-2 text-xs sm:text-sm text-white"
-              >
+              <div v-if="error" class="absolute right-0 bg-red-500 py-1 px-2 text-xs sm:text-sm text-white">
                 {{ formattedErrorMessage }}
               </div>
             </transition>
           </div>
         </div>
-        <div
-          class="relative flex flex-row justify-start items-center border-2 mb-2 focus:border-yellow-400 rounded-lg"
-        >
+        <div class="relative flex flex-row justify-start items-center border-2 mb-2 focus:border-yellow-400 rounded-lg">
           <input
             :value="value"
             :type="type"
             :placeholder="placeholder"
             class="bg-transparent focus:outline-none pl-4 pr-6 py-3 font-bold text-xs sm:text-sm w-full rounded-lg"
-            :class="error? 'border-red-500':''"
+            :class="error ? 'border-red-500' : ''"
             :style="inStyle"
             :checked="value"
             @input="$emit('input', $event.target.value)"
             @keypress.enter="$emit('submit')"
             @blur="$emit('blur')"
-          >
+          />
           <span class="absolute right-0 px-2 py-2 bg-white">
             <svgicon name="search" height="21" width="21" class="text-gray-500 fill-current" />
           </span>
@@ -450,158 +385,155 @@ export default {
   props: {
     updatable: {
       type: Boolean,
-      default: false,
+      default: false
     },
 
     value: {
-      type: [String, Boolean, Array, Number, Object,],
-      default: null,
+      type: [String, Boolean, Array, Number, Object],
+      default: null
     },
 
     type: {
       type: String,
-      default: null,
+      default: null
     },
 
     name: {
       type: String,
-      default: null,
+      default: null
     },
 
     label: {
       type: String,
-      default: null,
+      default: null
     },
 
     placeholder: {
       type: String,
-      default: null,
+      default: null
     },
 
     error: {
       type: Object,
-      default: () => null,
+      default: () => null
     },
 
     info: {
       type: String,
-      default: null,
+      default: null
     },
 
     inStyle: {
       type: String,
-      default: null,
+      default: null
     },
 
     inClass: {
       type: String,
-      default: null,
+      default: null
     },
 
     wrapperClass: {
       type: String,
-      default: null,
+      default: null
     },
 
     limit: {
       type: Number,
-      default: null,
+      default: null
     },
 
     showMobilePrefix: {
       type: Boolean,
-      default: false,
+      default: false
     },
 
     required: {
       type: Boolean,
-      default: false,
+      default: false
     },
 
     maxInput: {
       type: Number,
-      default: null,
+      default: null
     },
 
-    // for select
     items: {
       type: Array,
-      default: () => null,
+      default: () => null
     },
-
-    // for textarea
     cols: {
       default: 30,
-      type: Number,
+      type: Number
     },
 
     rows: {
       default: 10,
-      type: Number,
+      type: Number
     },
 
     resize: {
       default: true,
-      type: Boolean,
+      type: Boolean
     },
 
-    // for multicheckbox
+
     lists: {
       type: Array,
-      default: () => [],
+      default: () => []
     },
 
-    //
+
     disabled: {
       type: Boolean,
-      default: false,
+      default: false
     },
 
     isHorizontal: Boolean,
 
     showSelectAll: {
       type: Boolean,
-      default: false,
+      default: false
     },
 
     button: {
       type: Boolean,
-      default: false,
+      default: false
     },
 
     buttonLabel: {
       type: String,
-      default: null,
-    },
+      default: null
+    }
   },
 
-  data () {
+  data() {
     return {
-      // show/hide password
+    
       passwordToggle: false,
-      //
+   
       toAdd: false,
       toEdit: false,
       editId: null,
-      listLabel: "",
-      errorMsg: null,
+      listLabel: '',
+      errorMsg: null
     }
   },
 
   computed: {
-    isGroupedInputType () {
+    isGroupedInputType() {
       return GROUPED_INPUT_TYPES.includes(this.type)
     },
 
-    isSimpleInputType () {
+    isSimpleInputType() {
       return SIMPLE_INPUT_TYPES.includes(this.type)
     },
 
-    hasCheckboxType () {
+    hasCheckboxType() {
       return this.type && this.type.includes('checkbox')
     },
 
-    formattedErrorMessage () {
+    formattedErrorMessage() {
       if (!this.error || !this.error.message) {
         return ''
       }
@@ -609,59 +541,59 @@ export default {
       return this.error.message.charAt(0).toUpperCase() + this.error.message.slice(1).replace(/_/g, ' ')
     },
 
-    resolvedWrapperClass () {
+    resolvedWrapperClass() {
       return this.wrapperClass ? this.wrapperClass : 'py-1'
     },
 
-    passwordInputType () {
+    passwordInputType() {
       return this.passwordToggle ? 'text' : 'password'
     },
 
-    passwordIconName () {
+    passwordIconName() {
       return this.passwordInputType === 'password' ? 'eye' : 'hide-eye'
     },
 
-    trimmedValue () {
+    trimmedValue() {
       return this.trimmedMessage(this.value)
     },
 
-    trimmedValueLength () {
+    trimmedValueLength() {
       return this.trimmedValue.length
     },
 
-    isTrimmedValueOverLimit () {
+    isTrimmedValueOverLimit() {
       return this.trimmedValueLength > this.limit
     },
 
     na: {
-      get () {
+      get() {
         return this.value.length === 0 ? true : false
       },
 
-      set (naValue) {
+      set(naValue) {
         if (naValue) {
-          this.$emit("uncheckAll")
+          this.$emit('uncheckAll')
         }
-      },
+      }
     },
 
     selectAll: {
-      get () {
+      get() {
         return this.value.length === this.lists.length
       },
 
-      set (selectAll) {
+      set(selectAll) {
         if (selectAll) {
-          this.$emit("selectAll")
+          this.$emit('selectAll')
         } else {
-          this.$emit("unselectAll")
+          this.$emit('unselectAll')
         }
-      },
-    },
+      }
+    }
   },
 
   methods: {
-    handleTextInputKeypress (event) {
+    handleTextInputKeypress(event) {
       if (this.type === 'number') {
         this.isNumber(event)
         return
@@ -675,7 +607,7 @@ export default {
       this.$emit('keypress')
     },
 
-    handleTextInputKeydown (event) {
+    handleTextInputKeydown(event) {
       this.$emit('keydown')
 
       if (this.limit) {
@@ -683,52 +615,46 @@ export default {
       }
     },
 
-    // for updatable multi checkbox
-    add () {
+    add() {
       this.cancel()
       this.toAdd = true
     },
-    edit (payload) {
+    edit(payload) {
       this.cancel()
       this.toEdit = true
       this.editId = payload.value
       this.listLabel = payload.label
     },
-    cancel () {
+    cancel() {
       this.toEdit = false
       this.editId = null
-      this.listLabel = ""
+      this.listLabel = ''
       this.toAdd = false
       this.errorMsg = null
     },
-    save (payload, type) {
+    save(payload, type) {
       this.errorMsg = null
       if (this.listLabel.trim().length === 0) {
-        this.errorMsg = "Name is required."
+        this.errorMsg = 'Name is required.'
       } else {
-        if (type === "add") {
-          let hasSameLabel = this.lists.find(
-            list => list.label === this.listLabel
-          )
+        if (type === 'add') {
+          let hasSameLabel = this.lists.find(list => list.label === this.listLabel)
 
           if (hasSameLabel) {
-            this.errorMsg = "Name already exists."
+            this.errorMsg = 'Name already exists.'
           } else {
-            this.$emit("addList", this.listLabel)
+            this.$emit('addList', this.listLabel)
             this.cancel()
           }
-        } else if (type === "update") {
-          let hasSameLabel = this.lists.find(
-            list =>
-              list.label === this.listLabel && list.value !== payload.value
-          )
+        } else if (type === 'update') {
+          let hasSameLabel = this.lists.find(list => list.label === this.listLabel && list.value !== payload.value)
 
           if (hasSameLabel) {
-            this.errorMsg = "Name already exists."
+            this.errorMsg = 'Name already exists.'
           } else {
-            this.$emit("updateList", {
+            this.$emit('updateList', {
               label: this.listLabel,
-              value: payload.value,
+              value: payload.value
             })
             this.cancel()
           }
@@ -736,39 +662,28 @@ export default {
       }
     },
     // for multi checkbox
-    inputMultiCheck (e) {
+    inputMultiCheck(e) {
       if (e.target.checked) {
-        this.$emit("checked", e.target.value)
+        this.$emit('checked', e.target.value)
       } else {
-        this.$emit("unchecked", e.target.value)
+        this.$emit('unchecked', e.target.value)
       }
     },
-    trimmedMessage (value) {
+    trimmedMessage(value) {
       if (value) {
-        return value.replace(/^\s*/, "").replace(/\s*$/, "")
+        return value.replace(/^\s*/, '').replace(/\s*$/, '')
       } else {
-        return ""
+        return ''
       }
     },
 
-    limitInput (e) {
-      let acceptedKeys = [
-        "Backspace",
-        "Delete",
-        "Tab",
-        "ArrowUp",
-        "ArrowDown",
-        "ArrowLeft",
-        "ArrowRight",
-      ]
+    limitInput(e) {
+      let acceptedKeys = ['Backspace', 'Delete', 'Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']
 
-      if (
-        e.target.value.length >= this.limit
-				&& !acceptedKeys.includes(e.key)
-      ) {
+      if (e.target.value.length >= this.limit && !acceptedKeys.includes(e.key)) {
         e.preventDefault()
       }
-    },
-  },
+    }
+  }
 }
 </script>

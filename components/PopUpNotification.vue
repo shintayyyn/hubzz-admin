@@ -48,7 +48,7 @@
                     >
                       {{ notification.payload.status }}
                     </div>
-          
+
                     <div
                       v-if="notification.payload_type === 'locum_invoice' && notification.payload.status"
                       class="px-2 py-1 md:text-xs font-bold rounded-lg max-w-sm cursor-pointer uppercase"
@@ -56,7 +56,7 @@
                     >
                       {{ notification.payload.status }}
                     </div>
-          
+
                     <div
                       v-if="notification.payload_type === 'practice_invoice' && notification.payload.status"
                       class="px-2 py-1 md:text-xs font-bold rounded-lg max-w-sm cursor-pointer uppercase"
@@ -64,7 +64,7 @@
                     >
                       {{ notification.payload.status }}
                     </div>
-                    
+
                     <div v-if="notification.payload_type === 'locum_user'" class="flex">
                       <div
                         v-if="notification.payload.status"
@@ -73,7 +73,7 @@
                       >
                         {{ notification.payload.status }}
                       </div>
-            
+
                       <div
                         v-if="notification.payload.compliance_status"
                         class="ml-1 px-2 py-1 md:text-xs font-bold rounded-lg max-w-sm cursor-pointer uppercase"
@@ -82,7 +82,7 @@
                         {{ notification.payload.compliance_status }}
                       </div>
                     </div>
-                    
+
                     <div v-if="notification.payload_type === 'practice'" class="flex">
                       <div
                         v-if="notification.payload && notification.payload.status"
@@ -92,7 +92,7 @@
                         {{ notification.payload.status }}
                       </div>
                     </div>
-                    
+
                     <div v-if="notification.payload_type === 'practice_user'" class="flex">
                       <div
                         v-if="notification.payload && notification.payload.status"
@@ -102,7 +102,7 @@
                         {{ notification.payload.status }}
                       </div>
                     </div>
-                    
+
                     <div v-if="notification.payload_type === 'practice_surgery'" class="flex">
                       <div
                         class="px-2 py-1 md:text-xs font-bold rounded-lg max-w-sm cursor-pointer uppercase"
@@ -149,27 +149,27 @@ export default {
   props: {
     sortedPopUpNotifications: {
       type: Array,
-      default: () => [],
+      default: () => []
     }
   },
 
-  data () {
+  data() {
     return {
-      toggleNotification: true,
+      toggleNotification: true
     }
   },
 
   computed: {
-    payloadLocumComplianceDocumentStatusClass () {
+    payloadLocumComplianceDocumentStatusClass() {
       return {
         Approved: 'bg-green-500 text-white',
         Pending: 'bg-orange-500 text-white',
         Rejected: 'bg-red-500 text-white',
-        Verified: 'bg-green-500 text-white',
+        Verified: 'bg-green-500 text-white'
       }
     },
 
-    payloadLocumJobClass () {
+    payloadLocumJobClass() {
       return {
         Allocated: 'bg-green-300 text-white',
         Ongoing: 'bg-green-500 text-white',
@@ -182,11 +182,11 @@ export default {
         Withdrawn: 'bg-red-500 text-white',
         Cancelled: 'bg-red-500 text-white',
         Completed: 'bg-green-500 text-white',
-        Approved: 'bg-green-500 text-white',
+        Approved: 'bg-green-500 text-white'
       }
     },
 
-    payloadJobClass () {
+    payloadJobClass() {
       return {
         Pending: 'bg-red-500 text-white',
         Allocated: 'bg-green-300 text-white',
@@ -198,30 +198,30 @@ export default {
         Cancelled: 'bg-red-500 text-white',
         Completed: 'bg-green-500 text-white',
         Approved: 'bg-green-500 text-white',
-        Rejected: 'bg-red-500 text-white',
+        Rejected: 'bg-red-500 text-white'
       }
     },
 
-    payloadLocumInvoiceStatusClass () {
+    payloadLocumInvoiceStatusClass() {
       return {
         Issued: 'bg-green-500 text-white',
         Invoiced: 'bg-green-500 text-white',
         Disputed: 'bg-red-500 text-white',
         Approved: 'bg-green-500 text-white',
-        Paid: 'bg-green-500 text-white',
+        Paid: 'bg-green-500 text-white'
       }
     },
 
-    payloadPracticeInvoiceStatusClass () {
+    payloadPracticeInvoiceStatusClass() {
       return {
         Issued: 'bg-green-500 text-white',
-        Paid: 'bg-green-500 text-white',
+        Paid: 'bg-green-500 text-white'
       }
-    },
+    }
   },
 
   methods: {
-    locumStatusClass (status) {
+    locumStatusClass(status) {
       switch (status) {
         case 'Active':
           return 'bg-green-500 text-white'
@@ -242,7 +242,7 @@ export default {
       }
     },
 
-    locumComplianceStatusClass (status) {
+    locumComplianceStatusClass(status) {
       switch (status) {
         case 'Empty':
           return 'border border-white text-white'
@@ -263,107 +263,105 @@ export default {
       }
     },
 
-    bgStatus (status) {
-      let str = ""
+    bgStatus(status) {
+      let str = ''
       switch (status) {
-        case "Issued":
-        case "Live":
-        case "Available":
-        case "Matched":
-        case "Draft":
-        case "Invited":
-        case "Dormant":
-          str = "bg-yellow-500"
+        case 'Issued':
+        case 'Live':
+        case 'Available':
+        case 'Matched':
+        case 'Draft':
+        case 'Invited':
+        case 'Dormant':
+          str = 'bg-yellow-500'
           break
-        case "Applied":
-        case "Pending":
-          str = "bg-orange-400 text-white"
+        case 'Applied':
+        case 'Pending':
+          str = 'bg-orange-400 text-white'
           break
-        case "Paid":
-        case "Completed":
-        case "Approved":
-        case "Active":
-          str = "bg-green-500 text-white"
+        case 'Paid':
+        case 'Completed':
+        case 'Approved':
+        case 'Active':
+          str = 'bg-green-500 text-white'
           break
-        case "Allocated":
-        case "Accepted":
-          str = "bg-green-300"
+        case 'Allocated':
+        case 'Accepted':
+          str = 'bg-green-300'
           break
-        case "Ongoing":
-          str = "bg-green-500"
+        case 'Ongoing':
+          str = 'bg-green-500'
           break
-        case "Reminder":
-          str = "bg-gray-500"
+        case 'Reminder':
+          str = 'bg-gray-500'
           break
         default:
-          str = "bg-red-500 text-white"
+          str = 'bg-red-500 text-white'
       }
       return str
-    },
-
-  },
-
+    }
+  }
 }
 </script>
 
 <style>
+.job-notification {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 700;
+  display: flex;
+  flex-direction: column;
+  max-height: 95%;
+  margin: 50px 20px 0;
+  padding: 0 4px 10px;
+}
+
+.notifications:hover .cards {
+  opacity: 1;
+}
+
+.notifications::-webkit-scrollbar {
+  display: none;
+}
+
+@media screen and (min-width: 1200px) {
   .job-notification {
-    position: fixed;
-    top: 0;
-    right: 0;
-    z-index: 700;
-    display: flex;
-    flex-direction: column;
-    max-height: 95%;
-    margin: 50px 20px 0;
-    padding: 0 4px 10px;
+    margin-left: 200px;
   }
+}
 
-  .notifications:hover .cards {
-    opacity: 1;
+@media screen and (min-width: 480px) {
+  .job-notification {
+    margin: 50px 5% 0;
   }
+}
 
-  .notifications::-webkit-scrollbar {
-    display: none;
+@media screen and (min-width: 320px) {
+  .job-notification {
+    margin: 50px 3% 0;
   }
+}
 
-  @media screen and (min-width: 1200px) {
-    .job-notification {
-      margin-left: 200px;
-    }
-  }
+.truncate-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all 0.3s linear;
+}
 
-  @media screen and (min-width: 480px) {
-    .job-notification {
-      margin: 50px 5% 0;
-    }
-  }
+.truncate-title:hover {
+  display: block;
+}
 
-  @media screen and (min-width: 320px) {
-    .job-notification {
-      margin: 50px 3% 0;
-    }
-  }
-
-  .truncate-title {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    transition: all 0.3s linear;
-  }
-
-  .truncate-title:hover {
-    display: block;
-  }
-
-  .truncate-info {
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    transition: all 0.3s linear;
-  }
+.truncate-info {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all 0.3s linear;
+}
 </style>

@@ -2,6 +2,9 @@ import * as practiceApi from '@/api/practices'
 export default {
   async initializePracticeListener ({ commit }) {
     //--------------------PRACTICE DOCUMENTS----------------------
+    // this.$socket.on("createdPracticeDocument", (practiceDocument) => {
+    //   commit('ADD_PRACTICE_DOCUMENT', practiceDocument)
+    // }),
       this.$socket.on("updatedPracticeDocument", (practiceDocument) => {
         commit('UPDATE_PRACTICE_DOCUMENT', practiceDocument)
       }),

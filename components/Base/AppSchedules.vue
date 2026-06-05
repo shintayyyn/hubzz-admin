@@ -85,14 +85,12 @@
             </p>
 
             <template v-if="schedules && schedules.length">
-              <!-- REPLACE the job part selector div with this -->
               <div v-if="type === 'create'" class="flex items-center w-2/5 mx-auto mb-6  ">
                 <p class="text-sm whitespace-no-wrap mr-2 font-bold">
                   <span>Job Part</span>
                 </p>
 
                 <div class="flex items-center gap-1 w-full">
-                  <!-- PREV button -->
                   <button
                     class="px-2 py-1 rounded border border-gray-500 text-sm focus:outline-none"
                     :disabled="job_part_id <= 1"
@@ -130,7 +128,7 @@
                     </select>
                   </div>
 
-                  <!-- NEXT button -->
+
                   <button
                     class="px-2 py-1 rounded border border-gray-500 text-sm focus:outline-none"
                     :disabled="job_part_id >= job_parts.length"

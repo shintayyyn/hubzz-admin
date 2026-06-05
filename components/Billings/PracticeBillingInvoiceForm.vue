@@ -49,7 +49,6 @@
           <div>{{ propInvoice.invoice_number }}</div>
         </div>
       </div>
-      <!--  -->
       <div
         v-if="waitingForLocumReply(propInvoice.items[0])"
         class="w-full bg-orange-400 mt-4 py-1 text-center rounded font-bold mx-2 uppercase text-gray-700"
@@ -319,7 +318,6 @@
       <div id="htmlpdf" class="relative max-w-3xl mb-2 md:mb-4 bg-white px-4 py-4 border shadow-md mb-32">
         <AppLoading :loading="exportLoading" spinner :message="'Exporting'" />
         <AppLoading :loading="saveLoading" spinner />
-        <!-- pdf header -->
         <div :ref="'pdf-header'" class="flex flex-col">
           <div class="text-xs sm:text-sm sm:text-right leading-normal">
             <div>{{ propInvoice.locum_user.name }}</div>
@@ -364,13 +362,12 @@
 
         <div class="overflow-auto">
           <div class="items-table">
-            <!-- thead / items header -->
             <div :ref="'items-header'" class="flex justify-start">
               <div class="w-full bg-gray-900 text-white px-4 py-1 font-semibold border-r-2 border-white">
                 Description
               </div>
             </div>
-            <!-- items / selected invoice -->
+
             <div v-if="form.items && form.items.length > 0" :id="`invoice-item`" :ref="`invoice-item`" class="flex flex-col border-b-2 pb-2">
               <div class="relative flex justify-start mt-2">
                 <div class="w-full text-xs sm:text-sm px-4 py-1 border-gray-300">
@@ -402,7 +399,6 @@
                   </div>
                 </div>
               </div>
-              <!-- dispute invoice attendance forms -->
               <div v-if="form.items[0].dispute && isApproved === false" class="flex flex-col justify-start mt-2 px-2">
                 <div class="flex">
                   <div class="w-1/5 flex flex-col pr-2 text-sm">
@@ -418,7 +414,7 @@
                   </div>
                   <div class="w-2/5 flex flex-col pr-2 text-sm">
                     <label for="late_hours">Hours of late</label>
-                    
+
                     <div class="flex">
                       <div class="flex items-center mr-2">
                         <input
@@ -497,7 +493,6 @@
                   </div>
                 </div>
               </div>
-              <!-- disputed invoice update form -->
               <div
                 v-if="form.items[0].dispute && (isApproved === false || (isApproved === true && form.items[0].remarks.length > 0))"
                 class="flex justify-start mt-2 px-2"
@@ -516,7 +511,6 @@
           </div>
         </div>
 
-        <!-- SUB TOTAL -->
         <div class="flex flex-col">
           <div
             v-if="propInvoice && propInvoice.ir35 && propInvoice.paid"
@@ -589,7 +583,6 @@
             />
           </div>
         </div>
-
 
         <div :ref="'pdf-footer'" class="rounded-lg border-2 border-gray-300 mt-4 p-4">
           <div v-if="propInvoice && propInvoice.paid_under_payroll" class="flex flex-col text-xs sm:text-sm">
@@ -704,7 +697,7 @@ export default {
 
     totalAmount() {
       // Job Part Total Rate (Per Hour) = (Final Hours + (Final Minutes / 60)) * Rate
-            let type = this.propInvoice.items[0].job_part.job.locum_detail_rate_type.name
+      let type = this.propInvoice.items[0].job_part.job.locum_detail_rate_type.name
 
       let finalHours = (parseInt(this.form.hours) * 60 + parseInt(this.form.minutes)) / 60
 

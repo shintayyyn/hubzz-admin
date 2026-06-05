@@ -161,7 +161,6 @@
 
                 <!-- PICK EXPIRATION DATE -->
                 <div v-if="!isRejectedSelection" class="my-4">
-                  <!-- IF NOT APPLICABLE -->
                   <div
                     v-if="
                       locumComplianceDocument.compliance_document_type_name === 'Passport' &&
@@ -171,7 +170,7 @@
                     <input id="notApplicable" v-model="expiration_not_applicable" type="checkbox" name="notApplicable" :value="true" />
                     <label for="notApplicable">Expiration Not Applicable (British Passport Only)</label>
                   </div>
-                  <!--re-commit-->
+             
                   <AppDate
                     v-model="toPutLocumDetailCompliance.expired_at"
                     :disabled="expiration_not_applicable"
@@ -184,7 +183,7 @@
                   />
                 </div>
 
-                <!-- CONFIRM BUTTON -->
+         
                 <div class="flex">
                   <AppButton class="mr-2" :label="'Save'" @click="publish()" />
                   <AppButton

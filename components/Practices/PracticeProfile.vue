@@ -329,38 +329,7 @@
                 </p>
                 <p class="flex md:mx-2 mb-2">
                   {{ practice && practice.extra_information ? practice.extra_information : 'N/A' }}
-                </p>
-                <!-- <div class="flex items-center mb-2">
-                  <span class="text-gray-800 mr-2 font-bold">Status:</span>
-                  <span
-                    class=" px-4 py-1 rounded-lg"
-                    :class="practice.status == 'Active' ? 'bg-green-500' : 'bg-red-500'"
-                  >{{ practice.status }}</span>
-                  <span
-                    class="tool"
-                    data-tip="Manual status control will only work when verification requirements are already completed (Documents and Rates)."
-                    tabindex="1"
-                  >
-                    <svgicon
-                      name="info"
-                      width="21"
-                      height="21"
-                      color="white transparent black"
-                      class="ml-2"
-                    />
-                  </span>
-                </div>-->
-                <!-- <template v-if="practice.status === 'Active'">
-                  <p class="text-gray-800 font-bold">
-                    Active Until
-                  </p>
-                  <p
-                    class="flex md:mx-2 mb-2"
-                  >
-                    {{ practice && practice.actived_until ? $moment(practice.actived_until, 'YYYY-MM-DD[T]').utc().format('DD/MM/YYYY') : 'N/A' }}
-                  </p>
-                </template>-->
-
+                </p>               
                 <div v-if="hasPendingDeleteRequest" class="flex justify-center">
                   <span>Requested to delete practice on {{ practice.practice_delete_requested_at_formatted }}</span>
                 </div>
