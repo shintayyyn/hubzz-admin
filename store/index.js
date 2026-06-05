@@ -84,8 +84,7 @@ export const actions = {
 
     this.$socket.on('Admin Session Expired', async () => {
       console.log('session expired')
-      // this.$router.push(`/session-expired`)
-      this.$auth.logout().finally(() => {
+        this.$auth.logout().finally(() => {
         this.$auth.$storage.setUniversal('_token.local', '')
         this.$router.push('/sign-in')
       })

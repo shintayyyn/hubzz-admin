@@ -61,6 +61,7 @@
 
     <div class="inline-flex">
       <div class="w-full flex flex-wrap overflow-hidden -300 py-4 md:py-0">
+        <!--COLUMN 1-->
         <div class="flex flex-col order-2 md:order-1 w-full md:w-1/3 overflow-hidden md:mb-2 md:px-4">
           <div class="mx-3 md:my-6">
             <p class="mt-2">
@@ -213,6 +214,7 @@
           </div>
         </div>
 
+        <!--COLUMN 2-->
         <div class="flex flex-col order-3 md:order-2 w-full md:w-1/3 overflow-hidden md:mb-2 md:px-4">
           <div class="mx-3 md:my-6">
             <p class="mt-2">
@@ -339,7 +341,7 @@
           </div>
         </div>
 
-   
+        <!--COLUMN 3-->
         <div class="flex flex-col order-1 md:order-3 w-full md:w-1/3 overflow-hidden md:mb-2 md:px-4">
           <div class="mx-3 md:my-6 border-b text-center pb-3">
             <AppAvatar v-if="user.avatar" class="m-auto" :src="user && user.avatar ? user.avatar.file.url : null" />
@@ -350,11 +352,20 @@
             <p class="mx-4 font-semibold">
               {{ user.is_email_verified ? 'Account is E-Mail Verified' : 'Account is not E-Mail Verified' }}
             </p>
-         
+            <!-- <p class="m-2 ">Active at </p> -->
             <div class="my-4">
               <span class="m-2">Account is</span>
               <span class="rounded p-1 px-3" :class="statusStyle(user.status)">{{ user.status }}</span>
             </div>
+
+            <!-- <AppButton
+              v-if="user.status !== 'Bogus' && user.status !== 'Active' && user.status !== 'Dormant' && !user.first_actived_at"
+              :label="'Mark as Bogus'"
+              class="mx-auto"
+              :inClass="'mt-2 bg-red-700 hover:bg-red-800 '"
+              :background="''"
+              @click="confirmBogus = true"
+            /> -->
 
             <div v-if="user && user.account_delete_status === 'Pending'">
               <span>Requested to delete account on {{ user.account_delete_requested_at_formatted }}</span>

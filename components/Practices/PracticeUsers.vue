@@ -36,6 +36,7 @@
     />
 
     <transition name="slide" mode="out-in">
+      <!-- <div class="practice-user-modal shadow-lg" v-if="modal"> -->
       <CreateUser
         v-if="modal"
         :practice="practice"

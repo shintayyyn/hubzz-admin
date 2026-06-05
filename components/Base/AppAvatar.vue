@@ -105,6 +105,13 @@ export default {
         .finally(() => {
           this.loading = false
         })
+      // .catch(err => {
+      //   this.loading = false;
+      //   if (err.response.data.status === 500) {
+      //     this.error = "File size too large";
+      //   }
+      //   console.log("AppAvatar", err.response.data);
+      // });
     },
     getBase64(img, callback) {
       const reader = new FileReader()

@@ -58,7 +58,9 @@
 
     <div v-if="modal" class="new-user-shield" @click="modal = false" />
     <transition name="slide" mode="out-in">
+      <!-- <div class="new-user-modal" > -->
       <CreateUser v-if="modal" :registeeType="'admin'" @close="modal = false" />
+      <!-- </div> -->
     </transition>
   </div>
 </template>

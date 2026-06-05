@@ -36,6 +36,7 @@
           </div>
         </div>
 
+        <!-- -------------------------------------------------------------------------- -->
         <transition-group type="transition" name="flip-list">
           <div
             v-for="(item, index) in locumSurveyQuestions"
@@ -114,6 +115,7 @@
           </div>
         </div>
 
+        <!-- -------------------------------------------------------------------------- -->
         <transition-group type="transition" name="flip-list">
           <div
             v-for="(item, index) in practiceSurveyQuestions"

@@ -31,8 +31,7 @@
       :class="$route.path.includes(`practice-allocated-sessions` ) || $route.path.includes(`surgery-allocated-sessions`)? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
     >
       Allocated
-    </nuxt-link> 
-    <!--may locum na, pero hindi pa nag sstart-->
+    </nuxt-link> <!--may locum na, pero hindi pa nag sstart-->
 
     <!--Ongoing , nag start na, by job parts -->
     <nuxt-link

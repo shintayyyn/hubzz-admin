@@ -658,6 +658,9 @@
             {{ (item.file ? item.file.size : 0 / 1048576).toFixed(2) + 'Bytes' }}
           </span>
         </div>
+        <!-- $moment(document.practiceSpecificDoc.updated_at
+          ? document.practiceSpecificDoc.updated_at
+          : document.practiceSpecificDoc.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYYY, h:mm:ss a'):null }} -->
         <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 md:px-4 xl:pr-4 py-2 align-middle md:text-center">
           <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
           <span class="break-all">{{ item.uploaded_at }}</span>

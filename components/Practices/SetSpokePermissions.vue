@@ -80,6 +80,7 @@
             />
           </div>
         </div>
+        <!-- SET MAX RATES END HERE -->
         <div class="w-full p-1">
           <AppInput
             v-model="form.allow_surgery_create_permanent_jobs"

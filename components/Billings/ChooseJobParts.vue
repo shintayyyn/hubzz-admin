@@ -39,11 +39,13 @@
 
             <template v-slot:invoice_status_slot="slotProps">
               <div class="rounded-full text-center px-4 py-1 w-32" :class="statusStyle(slotProps.item.invoice_status)">
+                <!-- {{ slotProps.item.invoice_status && slotProps.item.invoice_status === "Invoiced" ? "Approved" : slotProps.item.invoice_status }} -->
                 {{ slotProps.item.invoice_status }}
               </div>
             </template>
             <template v-slot:status_slot="slotProps">
               <div class="rounded-full text-center px-4 py-1 w-32" :class="statusStyle(slotProps.item.status)">
+                <!-- {{ slotProps.item.status && slotProps.item.status === "Invoiced" ? "Approved" : slotProps.item.status }} -->
                 {{ slotProps.item.status }}
               </div>
             </template>

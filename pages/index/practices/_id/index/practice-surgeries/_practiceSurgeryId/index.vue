@@ -19,6 +19,14 @@
       >
         Spoke Sessions
       </nuxt-link>
+
+      <!-- <nuxt-link
+        :to="{ path: `/practices/${$route.params.id}/practice-surgeries/${$route.params.practiceSurgeryId}/surgery-billing`, query: $route.query }"
+        class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+        :class="$route.path.includes(`surgery-billing`)? 'border-b-4 border-gray-500' : 'text-gray-600'"
+      >
+        Spoke Billings
+      </nuxt-link> -->
     </div>
 
     <nuxt-child

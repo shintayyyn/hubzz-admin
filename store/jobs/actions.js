@@ -8,7 +8,7 @@ export default{
                 jobId,
                 countOnly : true
             }
-    
+
             let practiceSessionParams = {
                 viewing_practice_id : state.viewing_sessions_practice_id,
                 jobId
@@ -29,7 +29,7 @@ export default{
                 jobId,
                 countOnly : true
             }
-            
+
             let response = await jobsApi.fetchSpecificJob(this.$axios,locumJobParams)
             const locumJob = response.data.job
             commit('ADD_LOCUM_UNSUCCESSFUL_JOBS', locumJob)
@@ -53,7 +53,7 @@ export default{
             commit('DEDUCT_LOCUM_CURRENT_JOBS', locumJob)
             commit('ADD_PRACTICE_WITHDRAWN_SESSIONS',practiceSession)
         })
-        
+
         //===========MANUAL TRIGGERS BY PRACTICE================
         this.$socket.on("practiceCreateNewJob", async jobId => {
             let locumJobParams = {
@@ -61,7 +61,7 @@ export default{
                 jobId,
                 countOnly : true
             }
-    
+
             let practiceSessionParams = {
                 viewing_practice_id : state.viewing_sessions_practice_id,
                 jobId
@@ -103,12 +103,12 @@ export default{
             const practiceSession = response.data.job
             response = await jobsApi.fetchSpecificJob(this.$axios, locumJobParams)
             const locumJob = response.data.job
-            
+
             commit('ADD_PRACTICE_CURRENT_SESSIONS', practiceSession)
             commit('DEDUCT_PRACTICE_APPLIED_SESSIONS', practiceSession)
             commit('DEDUCT_LOCUM_APPLIED_JOBS', locumJob)
 
-            //IF VIEWING LOCUM IS APPOINTED TO THE JOB 
+            //IF VIEWING LOCUM IS APPOINTED TO THE JOB
             locumJobParams.locum_status = 'Current'
             response = await jobsApi.fetchLocumJobs(this.$axios, locumJobParams)
             let jobCount = response.data.count
@@ -130,7 +130,7 @@ export default{
                 jobId,
                 countOnly : true
             }
-    
+
             let practiceSessionParams = {
                 viewing_practice_id : state.viewing_sessions_practice_id,
                 jobId
@@ -140,7 +140,7 @@ export default{
             const practiceSession = response.data.job
             response = await jobsApi.fetchSpecificJob(this.$axios, locumJobParams)
             const locumJob = response.data.job
-            
+
             let jobCount = 0
             commit('ADD_PRACTICE_CANCELLED_SESSIONS', practiceSession)
             commit('ADD_PRACTICE_COMPLETED_SESSIONS', practiceSession)
@@ -151,15 +151,15 @@ export default{
             response = await jobsApi.fetchLocumJobs(this.$axios, locumJobParams)
             jobCount = response.data.count
             if(jobCount > 0){
-                commit('ADD_LOCUM_CANCELLED_JOBS', locumJob)  
-            } 
+                commit('ADD_LOCUM_CANCELLED_JOBS', locumJob)
+            }
             locumJobParams.locum_status = 'Completed'
             response = await jobsApi.fetchLocumJobs(this.$axios, locumJobParams)
             jobCount = response.data.count
             if(jobCount > 0){
                 commit('ADD_LOCUM_COMPLETED_JOBS', locumJob)
             }
-            
+
         })
         this.$socket.on("practiceTerminateJob", async jobId => { //job is currently ongoing
             let locumJobParams = {
@@ -167,7 +167,7 @@ export default{
                 jobId,
                 countOnly : true
             }
-    
+
             let practiceSessionParams = {
                 viewing_practice_id : state.viewing_sessions_practice_id,
                 jobId
@@ -177,6 +177,7 @@ export default{
             const practiceSession = response.data.job
             response = await jobsApi.fetchSpecificJob(this.$axios, locumJobParams)
             const locumJob = response.data.job
+
             let jobCount = 0
             commit('ADD_PRACTICE_CANCELLED_SESSIONS', practiceSession)
             commit('ADD_PRACTICE_COMPLETED_SESSIONS', practiceSession)
@@ -187,8 +188,8 @@ export default{
             response = await jobsApi.fetchLocumJobs(this.$axios, locumJobParams)
             jobCount = response.data.count
             if(jobCount > 0){
-                commit('ADD_LOCUM_CANCELLED_JOBS', locumJob)  
-            } 
+                commit('ADD_LOCUM_CANCELLED_JOBS', locumJob)
+            }
             locumJobParams.locum_status = 'Completed'
             response = await jobsApi.fetchLocumJobs(this.$axios, locumJobParams)
             jobCount = response.data.count
