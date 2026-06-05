@@ -248,17 +248,6 @@ export default {
   },
 
   watch: {
-    // $route() {
-    //   if (this.$route.name === 'index-test-script-locum-dormant-status-index-locumUserId') {
-    //     this.loading = true
-    //     Promise.all([
-    //       this.getLocumUser(),
-    //       this.getLocumUserAppliedInJobs(),
-    //     ]).finally(() => {
-    //       this.loading = false
-    //     })
-    //   }
-    // },
 
     locumUserJobsOrderBy() {
       this.locumUserJobsCurrentPage = 1

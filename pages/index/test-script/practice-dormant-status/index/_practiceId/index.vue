@@ -1,6 +1,6 @@
 <template>
   <div style="transition: all 0.3s ease-in-out;">
-    <div class="flex-1 flex flex-col self-end">      
+    <div class="flex-1 flex flex-col self-end">
       <AppLoading :loading="loading" :message="'Loading'" />
 
       <div class="py-4">
@@ -18,7 +18,7 @@
             Last job date created: {{ practice ? practice.last_job_posted_date_in_gb_formatted : '' }}
           </div>
           <div class="text-lg font-bold">
-            Status: 
+            Status:
             <div
               class="inline-block px-4 py-1 rounded-full text-center w-32 mx-1"
               :class="practice && practice.status === 'Active' ? 'bg-green-500' : 'bg-gray-500 text-gray-700'"
@@ -28,11 +28,10 @@
           </div>
         </div>
         <!--Updated date picker new-->
-        <!-- //new ni -->
         <div class="py-4">
           <div class=" flex flex-wrap items-center">
             <div class="text-lg font-bold" style="width: 150px;">
-              Override created: 
+              Override created:
             </div>
 
             <div class="px-2 flex flex-wrap items-center">
@@ -71,7 +70,7 @@
 
           <div class=" flex flex-wrap items-center">
             <div class="text-lg font-bold" style="width: 150px;">
-              Override last job posted date: 
+              Override last job posted date:
             </div>
 
             <div class="px-2 flex flex-wrap items-center">
@@ -215,7 +214,7 @@
             minWidth: '120px',
             maxWidth: '550px',
           },
-          { 
+          {
             name: 'Date Created',
             dataIndex: 'date_created_in_gb_formatted',
             class: 'md:text-center',
@@ -254,18 +253,6 @@
     },
 
     watch: {
-      // $route() {
-      //   if (this.$route.name === 'index-test-script-practice-dormant-status-index-practiceId') {
-      //     this.loading = true
-      //     Promise.all([
-      //       this.getPractice(),
-      //       this.getPracticeJobs(),
-      //     ]).finally(() => {
-      //       this.loading = false
-      //     })
-      //   }
-      // },
-      
       practiceJobsOrderBy () {
         this.practiceJobsCurrentPage = 1
         this.getPracticeJobs()
@@ -284,7 +271,7 @@
         this.loading = false
       })
     },
-    
+
 		methods: {
       setValues () {
         this.overrideCreatedDate = this.practice && this.practice.override_created_at
@@ -449,12 +436,12 @@
           this.practiceJobsLoading = false
         })
       },
-      
+
       practiceJobsPageChangedHandler (page) {
         this.practiceJobsCurrentPage = page
         this.getPracticeJobs()
       },
-      
+
 		},
   }
 </script>

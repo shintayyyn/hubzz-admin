@@ -572,12 +572,10 @@ export default {
       loading: false,
       dataLoading: false,
 
-      // Job infos prior to creation
       datePosted: '',
       dateClosing: '',
       jobStatus: '',
 
-      // Practice infos to job
       selectedPractice: '',
       rateLists: [],
       mandatory_training: [],
@@ -610,7 +608,6 @@ export default {
       selectedClinicalSystem: [],
       selectedSpokenLanguage: [],
 
-      // SPLIT JOBS
       tabActive: 'details',
       hasShiftError: false,
       total_working_hours: 0,
@@ -620,7 +617,6 @@ export default {
       schedules: [],
       job_parts: [],
 
-      // To Input for jobs
       form: {
         practice_id: '',
         title: '',
@@ -635,11 +631,6 @@ export default {
         session_requirements: [],
         session_structure_information: '',
         extra_information: '',
-        // rate: "",
-        // hours: 0,
-        // minutes: 0,
-        // total_hours: "",
-        // locum_detail_rate_type_id: 1,
         ir35: false,
         mandatory_training_id: [],
         other_mandatory_training_id: [],
@@ -648,24 +639,14 @@ export default {
         clinical_system: [],
         spoken_language_id: [],
         compliance_document_id: [],
-        // dates: [],
         schedules: [],
         schedule_templates: [],
-        // date_start: null,
-        // date_end: null,
-        // time_start: null,
-        // time_end: null,
-        // include_saturday: true,
-        // include_sunday: true,
-        // unpaid_breaks_in_minutes: "",
-        // shift: "",
         auto_assign_at: null,
         selection_date: null,
         favorite_only: false,
         favorite_only_until: null
       },
 
-      // Locums
       locumCount: 0,
       locums: [],
       locumFilter: {
@@ -681,10 +662,8 @@ export default {
       },
       chosenLocums: [],
 
-      // Shows
       showCriteriaInputs: false,
       showLocumPicker: false,
-      // Errors
       formError: []
     }
   },
@@ -864,7 +843,6 @@ export default {
         .toFixed(2)
     },
 
-    // for locums
     columns() {
       return [
         {
@@ -970,7 +948,6 @@ export default {
     jobStatus(value) {
       if (value !== 'Live') {
         this.chosenLocums = []
-        // this.locumFilter.profession_id = this.form.role
         this.getCompatibleLocums()
 
         this.showLocumPicker = true
@@ -1215,7 +1192,6 @@ export default {
         this.$axios
           .$post(`/api/v1/admin/admin-seeder/jobs/create-job/check`, {
             ...this.form,
-            // for Locums
             posting_status: this.jobStatus,
             locum_applicants: this.jobStatus !== 'Live' ? this.chosenLocums : [],
             old_job_id: this.repostJob && !['Cancelled'].includes(this.repostJob.status) ? this.repostJob.id : null
@@ -1244,14 +1220,6 @@ export default {
             if (err.response) {
               if (err.response.data.error_messages && err.response.data.error_messages.length > 0) {
                 this.shiftErrors = err.response.data.error_messages
-                // let detailsError = [
-                //   "practice_id",
-                //   "number_of_patients",
-                //   "duration_for_each_appointment",
-                //   "role",
-                //   "specialty",
-                //   "clinical_system",
-                // ]
                 let sched_has_conflict = this.shiftErrors.find(err => err.field === 'schedules')
                 if (sched_has_conflict) {
                   has_conflict = true
@@ -1291,11 +1259,6 @@ export default {
               } else {
                 message = err.response.data.message
               }
-              // if (this.shiftErrors.length) {
-              //   let sched_has_conflict = this.shiftErrors.find(
-              //     err => err.field === "schedules"
-              //   )
-              // }
             } else if (err.request) {
               message = 'Something weng wrong!'
             } else {
@@ -1332,9 +1295,6 @@ export default {
               } else if (index === job_parts.length - 1) {
                 partsLabel += `${item}`
               }
-              //  else {
-              // partsLabel += ` and ${item}`
-              // }
             } else {
               partsLabel += item
             }
@@ -1416,14 +1376,6 @@ export default {
         this.form.qualification_id = this.form.specialty.map(item => item.value)
         this.selectedSpokenLanguage = [...this.form.spoken_language_id]
         this.form.spoken_language_id = this.form.spoken_language_id.map(item => item.value)
-        // this.form.date_start = this.$moment(
-        //   this.form.date_start,
-        //   "YYYY-MM-DD"
-        // ).format("YYYY-MM-DD")
-        // this.form.date_end = this.$moment(
-        //   this.form.date_end,
-        //   "YYYY-MM-DD"
-        // ).format("YYYY-MM-DD")
 
         if (Array.isArray(this.form.session_requirements)) {
           if (this.form.session_requirements.length === 1) {
@@ -1471,7 +1423,6 @@ export default {
         await this.$axios
           .$post(`/api/v1/admin/admin-seeder/jobs/create-job`, {
             ...this.form,
-            // for Locums
             posting_status: this.jobStatus,
             locum_applicants: this.jobStatus !== 'Live' ? this.chosenLocums : [],
             old_job_id: this.repostJob && !['Cancelled'].includes(this.repostJob.status) ? this.repostJob.id : null
