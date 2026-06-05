@@ -43,18 +43,12 @@
             <input id="completed" v-model="jobStatus" type="radio" value="Completed" />
             <label for="completed">Completed</label>
           </div>
-          <!-- <div>
-            <input id="approved" v-model="jobStatus" type="radio" value="Approved">
-            <label for="approved">Approved</label>
-          </div> -->
         </div>
       </div>
 
       <div v-if="showCriteriaInputs && jobStatus" class="flex flex-col">
-        <!-- PAGE 1 -->
         <div class="flex flex-row">
           <div class="w-full md:w-1/2 lg:pl-4 mb-4">
-            <!-- CRITERIA -->
             <div>
               <h4 class="font-bold mt-4">
                 Criteria
@@ -131,10 +125,6 @@
                     "
                     @uncheckAll="form.compliance_document_id = []"
                   />
-
-                  <!-- <div v-if="compliances.length === 0" class="mb-6 text-center md:text-left mt-2">
-                    <AppButton :label="'Go to Profile to add items here'" @click="goToProfile" />
-                  </div> -->
                 </template>
                 <template v-else-if="!form.practice_id">
                   <div class="mb-2">
@@ -146,7 +136,6 @@
                 </template>
               </template>
             </div>
-            <!-- DURATION -->
             <div class="flex flex-col">
               <h4 class="font-bold mt-4">
                 Duration
@@ -446,7 +435,6 @@
           </div>
         </div>
 
-        <!-- PAGE 2 -->
         <div>
           <div v-if="jobStatus === 'Ongoing'" class="font-bold text-lg">
             Ongoing Jobs should include days before and after {{ $moment().format('DD/MM/YYYY') }}
@@ -463,7 +451,6 @@
           />
         </div>
 
-        <!-- PAGE 3 CHOOSE LOCUMS -->
         <div v-if="jobStatus === 'Applied' || jobStatus === 'Allocated' || jobStatus === 'Ongoing' || jobStatus === 'Completed'">
           <div class="text-xl font-bold">
             3. Candidate Locums (Choose Applicants)
@@ -500,7 +487,6 @@
         </div>
 
         <div class="pt-4 pb-8 w-full flex justify-between">
-          <!-- <AppButton class="mr-2" :label="'Back'" :disabled="loading" @click="tabActive='details'" /> -->
           <AppButton :disabled="!form.schedules.length || loading" :label="'Publish'" @click="canPublish" />
         </div>
       </div>
@@ -558,6 +544,26 @@ const session_requirements_lists = [
   { label: 'Telephone triage', value: 'Telephone triage' },
   { label: 'Home visits', value: 'Home visits' }
 ]
+
+const STATUS_CLASSES = {
+  Active: 'bg-green-500 ',
+  Inactive: 'bg-gray-500 text-gray-700',
+  Deactivated: 'bg-red-800 text-red-400',
+  'Account Suspension': 'bg-red-600 ',
+  'Compliance Suspension': 'bg-red-600 ',
+  Dormant: 'bg-orange-500 ',
+  Bogus: 'bg-gray-700 '
+}
+
+const COMPLIANCE_STATUS_CLASSES = {
+  Empty: 'border border-white ',
+  Incomplete: 'bg-orange-600 ',
+  Pending: 'bg-yellow-500 text-yellow-800',
+  Expiring: 'bg-red-400 ',
+  Expired: 'bg-red-800 text-red-400',
+  Rejected: 'bg-red-600 ',
+  Compliant: 'bg-green-500 '
+}
 export default {
   components: {
     AppSuggestSelect,
@@ -572,8 +578,6 @@ export default {
       loading: false,
       dataLoading: false,
 
-      datePosted: '',
-      dateClosing: '',
       jobStatus: '',
 
       selectedPractice: '',
@@ -663,15 +667,10 @@ export default {
       chosenLocums: [],
 
       showCriteriaInputs: false,
-      showLocumPicker: false,
       formError: []
     }
   },
   computed: {
-    authPermissions() {
-      return this.$store.getters['permissions']
-    },
-
     repostJob() {
       return this.$store.state.calendar.repost_job
     },
@@ -714,17 +713,6 @@ export default {
       )
 
       return professionComplianceCategory || null
-    },
-
-    emptyComplianceDocumentId: {
-      get() {
-        return this.form.compliance_document_id.length === 0
-      },
-      set(emptyComplianceDocumentId) {
-        if (emptyComplianceDocumentId) {
-          this.form.compliance_document_id = []
-        }
-      }
     },
 
     compliances() {
@@ -779,8 +767,6 @@ export default {
 
       const complianceDocumentIds = complianceDocuments.map(({ value }) => value)
 
-      console.log('complianceDocuments', complianceDocuments)
-
       return this.practiceProfessionComplianceCategoryComplianceDocuments
         .filter(practiceProfessionComplianceCategoryComplianceDocument => {
           const {
@@ -797,7 +783,6 @@ export default {
             compliance_document_id: complianceDocumentId,
             compliance_document_name: complianceDocumentName
           } = practiceProfessionComplianceCategoryComplianceDocument
-          console.log('complianceDocumentName', complianceDocumentName)
           return {
             label: complianceDocumentName,
             value: complianceDocumentId
@@ -806,7 +791,6 @@ export default {
     },
 
     practice_rate() {
-      console.log('practice rate', this.selectedPractice)
       const profession = this.professions_categories.find(profession => profession.id.toString() === this.form.role.toString())
 
       const practiceRates = this.selectedPractice && this.selectedPractice.practice_rates ? this.selectedPractice.practice_rates : []
@@ -817,7 +801,6 @@ export default {
     },
 
     hubzz_fee() {
-      console.log('totalHours', this.totalHours)
       return this.schedules
         .reduce((scheduleTotal, sched) => {
           const shiftTotal = sched.shifts.reduce((shiftTotal, shift) => {
@@ -950,11 +933,9 @@ export default {
         this.chosenLocums = []
         this.getCompatibleLocums()
 
-        this.showLocumPicker = true
       } else {
         this.locums = []
         this.chosenLocums = []
-        this.showLocumPicker = false
       }
     }
   },
@@ -966,7 +947,6 @@ export default {
     },
 
     tailorForPractice() {
-      console.log(this.form)
       this.dataLoading = true
 
       Promise.all([
@@ -992,8 +972,6 @@ export default {
           const [rateLists, shiftLists, professions, profileProfile, professionComplianceCategories] = responses
 
           this.selectedPractice = profileProfile
-
-          console.log('rateLists', rateLists)
 
           this.rateLists = rateLists
           this.shifts = shiftLists
@@ -1136,7 +1114,6 @@ export default {
         }
       })
       if (!this.shiftErrors.length) {
-        console.log('there are no errors')
         this.form.profession_id = this.form.role
         this.form.shift_id = this.form.shift
         this.selectedClinicalSystem = [...this.form.clinical_system]
@@ -1203,8 +1180,6 @@ export default {
             this.loading = false
           })
           .catch(err => {
-            console.log('err', err.response || err)
-
             this.$refs.modalContainer.scrollTop = 0
 
             this.form.clinical_system = this.selectedClinicalSystem
@@ -1247,7 +1222,6 @@ export default {
 
                 this.formError = err.response.data.error_messages
 
-                console.log('formErropr', this.formError)
                 let detailsError = ['practice_id', 'number_of_patients', 'duration_for_each_appointment', 'role', 'specialty', 'clinical_system']
 
                 let hasDetailsError = this.formError.map(err => detailsError.includes(err.field)).includes(true)
@@ -1376,7 +1350,6 @@ export default {
         this.form.qualification_id = this.form.specialty.map(item => item.value)
         this.selectedSpokenLanguage = [...this.form.spoken_language_id]
         this.form.spoken_language_id = this.form.spoken_language_id.map(item => item.value)
-
         if (Array.isArray(this.form.session_requirements)) {
           if (this.form.session_requirements.length === 1) {
             this.form.session_requirements = this.form.session_requirements[0]
@@ -1428,7 +1401,6 @@ export default {
             old_job_id: this.repostJob && !['Cancelled'].includes(this.repostJob.status) ? this.repostJob.id : null
           })
           .then(async res => {
-            console.log('res', res)
             if (this.jobStatus === 'Completed') {
               const jobParts = res.data.job.job_parts
               await jobParts.forEach(jobPart => {
@@ -1448,8 +1420,6 @@ export default {
             }
           })
           .catch(err => {
-            console.log('err', err.response || err)
-
             this.$refs.modalContainer.scrollTop = 0
 
             this.form.clinical_system = this.selectedClinicalSystem
@@ -1500,7 +1470,6 @@ export default {
         if (hasDetailsError) {
           this.tabActive = 'details'
         }
-        console.log('errors', this.formError)
         this.toPublish = false
         this.$nextTick(() => {
           this.$refs.modalContainer.scrollTop = 0
@@ -1514,7 +1483,6 @@ export default {
     },
 
     getCompatibleLocums() {
-      console.log('locumFilter', this.locumFilter)
       Promise.all([
         this.$axios
           .get('/api/v1/admin/locum-users/count', {
@@ -1576,49 +1544,14 @@ export default {
           this.chosenLocums.splice(index, 1)
         }
       }
-      console.log('chosen chosenLocumsChecker', this.chosenLocums)
     },
 
     statusStyle(status) {
-      switch (status) {
-        case 'Active':
-          return 'bg-green-500 '
-        case 'Inactive':
-          return 'bg-gray-500 text-gray-700'
-        case 'Deactivated':
-          return 'bg-red-800 text-red-400'
-        case 'Account Suspension':
-          return 'bg-red-600 '
-        case 'Compliance Suspension':
-          return 'bg-red-600 '
-        case 'Dormant':
-          return 'bg-orange-500 '
-        case 'Bogus':
-          return 'bg-gray-700 '
-        default:
-          return
-      }
+      return STATUS_CLASSES[status]
     },
 
     complianceStatusStyle(status) {
-      switch (status) {
-        case 'Empty':
-          return 'border border-white '
-        case 'Incomplete':
-          return 'bg-orange-600 '
-        case 'Pending':
-          return 'bg-yellow-500 text-yellow-800'
-        case 'Expiring':
-          return 'bg-red-400 '
-        case 'Expired':
-          return 'bg-red-800 text-red-400'
-        case 'Rejected':
-          return 'bg-red-600 '
-        case 'Compliant':
-          return 'bg-green-500 '
-        default:
-          return
-      }
+      return COMPLIANCE_STATUS_CLASSES[status]
     }
   }
 }
