@@ -300,7 +300,11 @@
             <div class="md:w-1/2">
               <div class="flex flex-wrap justify-between items-center">
                 <span class="text-lg mr-2 font-bold">Other Information</span>
-                <AppButton v-if="canEditPracticeOtherInformation" :label="toEdit ? 'Cancel Editing' : 'Edit'" @click="edit()" />
+                <AppButton
+                  v-if="authAdminPermissions.includes('Edit Practice Other Information')"
+                  :label="toEdit ? 'Cancel Editing' : 'Edit'"
+                  @click="edit()"
+                />
               </div>
               <!-- VIEWING OTHER INFORMATION -->
               <div v-if="!toEdit">
@@ -361,7 +365,7 @@
                   </p>
                 </template>-->
 
-                <div v-if="hasPendingDeleteRequest" class="flex justify-center">
+                <div v-if="practice && practice.practice_delete_status === 'Pending'" class="flex justify-center">
                   <span>Requested to delete practice on {{ practice.practice_delete_requested_at_formatted }}</span>
                 </div>
 
@@ -369,37 +373,37 @@
                   <AppButton
                     label="Delete this Practice"
                     class="m-1"
-                    :disabled="!canEditPracticeOtherInformation"
+                    :disabled="!authAdminPermissions.includes('Edit Practice Other Information')"
                     @click="showDeletePracticeModal = true"
                   />
 
                   <AppButton
-                    v-if="hasPendingDeleteRequest"
+                    v-if="practice && practice.practice_delete_status === 'Pending'"
                     label="Reject Delete Request"
                     class="m-1"
-                    :disabled="!canEditPracticeOtherInformation"
+                    :disabled="!authAdminPermissions.includes('Edit Practice Other Information')"
                     @click="showRejectDeletePracticeModal = true"
                   />
 
                   <AppButton
-                    v-if="!isDeactivatedPractice"
+                    v-if="practice && practice.status !== 'Deactivated'"
                     label="Deactivate this Practice"
                     class="m-1"
-                    :disabled="!canEditPracticeOtherInformation"
+                    :disabled="!authAdminPermissions.includes('Edit Practice Other Information')"
                     @click="showDeactivatePracticeModal = true"
                   />
 
                   <AppButton
-                    v-if="isDeactivatedPractice"
+                    v-if="practice && practice.status === 'Deactivated'"
                     label="Reactivate this Practice"
                     class="m-1"
-                    :disabled="!canEditPracticeOtherInformation"
+                    :disabled="!authAdminPermissions.includes('Edit Practice Other Information')"
                     @click="showReactivatePracticeModal = true"
                   />
 
-                  <template v-if="isNotDeactivatedDeletedPractice">
+                  <template v-if="practice && practice.status !== 'Deactivated' && practice.status !== 'Deleted'">
                     <button
-                      v-if="canMarkBogus"
+                      v-if="practice.status !== 'Bogus' && practice.status !== 'Active' && practice.status !== 'Dormant'"
                       class="m-1 text-sm text-white text-center rounded-lg bg-red-600 hover:bg-red-700 px-4 py-1 cursor-pointer transition-hover"
                       @click="toMarkBogus()"
                     >
@@ -418,7 +422,7 @@
               </div>
 
               <!-- EDITING OTHER INFORMATION -->
-              <div v-if="toEdit && canEditPracticeOtherInformation">
+              <div v-if="toEdit && authAdminPermissions.includes('Edit Practice Other Information')">
                 <template v-if="['true', true].includes(toPutPractice.direct_debit)">
                   <AppInput v-model="toPutPractice.sage_ref" :type="'text'" :name="'sage_ref'" :label="'Sage reference'" />
                 </template>
@@ -452,9 +456,8 @@
                 </div>
 
                 <AppButton
-                  v-if="canEditPracticeOtherInformation"
+                  v-if="authAdminPermissions.includes('Edit Practice Other Information')"
                   :label="toEditPracticeStatus ? 'Cancel Editing' : 'Edit'"
-                  :disabled="isDormant"
                   @click="editPracticeStatus()"
                 />
               </div>
@@ -508,11 +511,7 @@
                 </div>
 
                 <div>
-                  <AppButton
-                    v-if="canEditPracticeOtherInformation"
-                    :label="toEditPracticeStatus ? 'Cancel Editing' : 'Edit'"
-                    @click="editPracticeStatus()"
-                  />
+                  <AppButton :label="'Change'" @click="toPutPracticeInfo" />
                 </div>
               </div>
 
@@ -521,7 +520,7 @@
                 <span class="text-lg mr-2 font-bold">Practice Type</span>
 
                 <AppButton
-                  v-if="canEditPracticeOtherInformation"
+                  v-if="authAdminPermissions.includes('Edit Practice Other Information')"
                   :label="toEditPracticeType ? 'Cancel Editing' : 'Edit'"
                   @click="editPracticeType()"
                 />
@@ -542,7 +541,7 @@
               </div>
 
               <!-- EDIT PRACTICE TYPE -->
-              <div v-if="toEditPracticeType && canChangePracticeType">
+              <div v-if="toEditPracticeType && authAdminPermissions.includes('Change Practice Type')">
                 <AppInput
                   v-model="toPutPracticeType.type"
                   :type="'select'"
@@ -764,17 +763,6 @@ import AppInput from '@/components/Base/AppInput'
 import AppButton from '@/components/Base/AppButton'
 import AppConfirm from '@/components/Base/AppConfirm'
 
-const PRACTICE_SOCKET_EVENTS = [
-  'Admin Notification Practice Deactivated',
-  'Admin Notification Practice Deactivated By Admin',
-  'Admin Notification Practice Reactivated',
-  'Admin Notification Practice Reactivated By Admin',
-  'Admin Notification Practice Delete Requested',
-  'Admin Notification Practice Delete Request Cancelled',
-  'Admin Notification Practice Delete Request Rejected',
-  'Admin Notification Practice Deleted'
-]
-
 export default {
   components: {
     AppDate,
@@ -799,6 +787,7 @@ export default {
     return {
       practiceStatusChoices: [],
 
+      toBogus: false,
       toPutPractice: {
         direct_debit: '',
         sage_ref: '',
@@ -817,6 +806,9 @@ export default {
       },
 
       toEditPracticeStatus: false,
+      toPutPracticeStatus: {
+        status: this.practice.status
+      },
 
       hubzzPracticeNotes: '',
 
@@ -837,27 +829,6 @@ export default {
   computed: {
     authAdminPermissions() {
       return this.$store.getters['permissions']
-    },
-    canEditPracticeOtherInformation() {
-      return this.authAdminPermissions.includes('Edit Practice Other Information')
-    },
-    canChangePracticeType() {
-      return this.authAdminPermissions.includes('Change Practice Type')
-    },
-    hasPendingDeleteRequest() {
-      return this.practice && this.practice.practice_delete_status === 'Pending'
-    },
-    isDeactivatedPractice() {
-      return this.practice && this.practice.status === 'Deactivated'
-    },
-    isNotDeactivatedDeletedPractice() {
-      return this.practice && this.practice.status !== 'Deactivated' && this.practice.status !== 'Deleted'
-    },
-    canMarkBogus() {
-      return this.practice && !['Bogus', 'Active', 'Dormant'].includes(this.practice.status)
-    },
-    isDormant() {
-      return this.practice?.status === 'Dormant'
     }
   },
 
@@ -870,15 +841,27 @@ export default {
   mounted() {
     this.setPracticeStatusChoices()
 
-    PRACTICE_SOCKET_EVENTS.forEach(eventName => {
-      this.$socket.on(eventName, this.emitUpdatePractice)
-    })
+    console.log('practice', this.practice)
+
+    this.$socket.on('Admin Notification Practice Deactivated', this.emitUpdatePractice)
+    this.$socket.on('Admin Notification Practice Deactivated By Admin', this.emitUpdatePractice)
+    this.$socket.on('Admin Notification Practice Reactivated', this.emitUpdatePractice)
+    this.$socket.on('Admin Notification Practice Reactivated By Admin', this.emitUpdatePractice)
+    this.$socket.on('Admin Notification Practice Delete Requested', this.emitUpdatePractice)
+    this.$socket.on('Admin Notification Practice Delete Request Cancelled', this.emitUpdatePractice)
+    this.$socket.on('Admin Notification Practice Delete Request Rejected', this.emitUpdatePractice)
+    this.$socket.on('Admin Notification Practice Deleted', this.emitUpdatePractice)
   },
 
   destroyed() {
-    PRACTICE_SOCKET_EVENTS.forEach(eventName => {
-      this.$socket.removeListener(eventName, this.emitUpdatePractice)
-    })
+    this.$socket.removeListener('Admin Notification Practice Deactivated', this.emitUpdatePractice)
+    this.$socket.removeListener('Admin Notification Practice Deactivated By Admin', this.emitUpdatePractice)
+    this.$socket.removeListener('Admin Notification Practice Reactivated', this.emitUpdatePractice)
+    this.$socket.removeListener('Admin Notification Practice Reactivated By Admin', this.emitUpdatePractice)
+    this.$socket.removeListener('Admin Notification Practice Delete Requested', this.emitUpdatePractice)
+    this.$socket.removeListener('Admin Notification Practice Delete Request Cancelled', this.emitUpdatePractice)
+    this.$socket.removeListener('Admin Notification Practice Delete Request Rejected', this.emitUpdatePractice)
+    this.$socket.removeListener('Admin Notification Practice Deleted', this.emitUpdatePractice)
   },
 
   created() {
@@ -890,6 +873,7 @@ export default {
     this.toPutPractice.status = this.practice.status
     this.toPutPractice.actived_until = this.practice.actived_until
 
+    this.toPutPracticeStatus.status = this.practice.status
     this.toPutPracticeType.type = this.practice.type
     this.toPutPracticeType.hub_type = this.practice.hub_type
 
@@ -911,6 +895,7 @@ export default {
           { label: 'Account Suspension', value: 'Account Suspension' }
         ]
       } else {
+        this.toBogus = true
         this.practiceStatusChoices = [
           { label: 'Inactive', value: 'Inactive' },
           { label: 'Account Suspension', value: 'Account Suspension' }
@@ -924,7 +909,17 @@ export default {
       }
     },
 
+    getQuery() {
+      const query = {
+        ...this.$route.query
+      }
+      const offset = parseInt(query.page) * 8 - 8
+      return offset
+    },
+
     errorHandler(err) {
+      console.log('err', err.response || err)
+
       let message = null
 
       if (err.response) {
@@ -1175,6 +1170,7 @@ export default {
             })
           })
       } catch (err) {
+        console.log('put practice info error', err)
         this.$store.commit('SET_NOTIFICATION', {
           enabled: true,
           status: 'danger',
@@ -1210,6 +1206,9 @@ export default {
 
     editPracticeStatus() {
       this.toEditPracticeStatus = !this.toEditPracticeStatus
+      if (this.toEditPracticeStatus) {
+        this.toPutPracticeStatus = this.practice.status
+      }
     },
 
     editPracticeType() {
