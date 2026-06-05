@@ -7,7 +7,12 @@
             Jobs
           </div>
           <div>
-            <AppButton class="text-sm" label="Create Job" icon="add-rectangle" @click="$router.push('/test-script/job-scripts/create-job-seed')" />
+            <AppButton
+              class="text-sm"
+              :label="'Create Job'"
+              :icon="'add-rectangle'"
+              @click="$router.push(`/test-script/job-scripts/create-job-seed`)"
+            />
           </div>
         </div>
 
@@ -18,7 +23,7 @@
           :perPage="limit"
           :columns="columns"
           :loading="loading"
-          :routerLink="jobPreviewLink"
+          routerLink="/test-script/job-scripts/preview"
           :orderBy="orderBy"
           @pagechanged="pageChangedHandler"
           @sorted="_orderBy => (orderBy = _orderBy)"
@@ -40,18 +45,10 @@
 </template>
 
 <script>
+import debounce from 'lodash.debounce'
+
 import AppTableNew from '@/components/Base/AppTableNew'
 import AppButton from '@/components/Base/AppButton'
-
-const STATUS_CLASSES = {
-  Active: 'bg-green-500 ',
-  Inactive: 'bg-gray-500 text-gray-700',
-  Deactivated: 'bg-red-800 text-red-400',
-  'Account Suspension': 'bg-red-600 ',
-  'Compliance Suspension': 'bg-red-600 ',
-  Dormant: 'bg-orange-500 ',
-  Bogus: 'bg-gray-700 '
-}
 
 export default {
   components: {
@@ -123,6 +120,8 @@ export default {
           dataIndex: 'status',
           class: 'md:text-center',
           sortable: true,
+          // slot: true,
+          // slotName: 'status_slot',
           flex: '1 0 0',
           minWidth: '150px',
           maxWidth: '170px'
@@ -132,10 +131,25 @@ export default {
 
     offset() {
       return this.limit * (this.currentPage - 1)
+    },
+
+    totalPages() {
+      return Math.ceil(this.count / this.limit)
+    },
+
+    orderByValue: {
+      get() {
+        return this.orderBy.length > 0 ? this.orderBy[0] : null
+      },
+      set(orderBy) {
+        this.orderBy = [orderBy]
+      }
     }
   },
 
   mounted() {
+    // this.$socket.on("updateLocumStatus", this.locumUserUpdatedHandler)
+
     this.count = 0
     this.jobs = []
     this.getAllJobs()
@@ -146,20 +160,13 @@ export default {
   },
 
   methods: {
-    jobPreviewLink(job) {
-      return {
-        name: 'index-test-script-job-scripts-index-id',
-        params: {
-          id: job.id
-        },
-        query: {
-          ...this.$route.query
-        }
-      }
-    },
-
     getAllJobs() {
-      const filters = {}
+      const filters = {
+        // status: [
+        //   'Active',
+        //   'Dormant',
+        // ],
+      }
 
       this.loading = true
 
@@ -193,6 +200,11 @@ export default {
         })
     },
 
+    searchSubmit: debounce(function() {
+      this.currentPage = 1
+      this.getAllJobs()
+    }, 500),
+
     pageChangedHandler(page) {
       this.currentPage = page
       this.getAllJobs()
@@ -207,7 +219,24 @@ export default {
     },
 
     statusStyle(status) {
-      return STATUS_CLASSES[status]
+      switch (status) {
+        case 'Active':
+          return 'bg-green-500 '
+        case 'Inactive':
+          return 'bg-gray-500 text-gray-700'
+        case 'Deactivated':
+          return 'bg-red-800 text-red-400'
+        case 'Account Suspension':
+          return 'bg-red-600 '
+        case 'Compliance Suspension':
+          return 'bg-red-600 '
+        case 'Dormant':
+          return 'bg-orange-500 '
+        case 'Bogus':
+          return 'bg-gray-700 '
+        default:
+          return
+      }
     }
   }
 }
