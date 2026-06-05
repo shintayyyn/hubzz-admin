@@ -458,6 +458,7 @@
                 <AppButton
                   v-if="authAdminPermissions.includes('Edit Practice Other Information')"
                   :label="toEditPracticeStatus ? 'Cancel Editing' : 'Edit'"
+                  :disabled="practice.status === 'Dormant'"
                   @click="editPracticeStatus()"
                 />
               </div>
@@ -946,19 +947,25 @@ export default {
           status: 'danger',
           text: 'Upload practice documents and set the practice rates first.'
         })
-
         return
       }
 
-      this.toPutPractice.status = this.toPutPractice.status === 'Dormant' ? 'Active' : this.toPutPractice.status
+      // Only coerce Dormant→Active when the user is editing the status field
+      if (this.toEditPracticeStatus && this.toPutPractice.status === 'Dormant') {
+        this.toPutPractice.status = 'Active'
+      }
 
-      if (this.practice.status !== this.toPutPractice.status && this.toPutPractice.status === 'Active' && !this.toPutPractice.actived_until) {
+      if (
+        this.toEditPracticeStatus &&
+        this.practice.status !== this.toPutPractice.status &&
+        this.toPutPractice.status === 'Active' &&
+        !this.toPutPractice.actived_until
+      ) {
         this.$store.commit('SET_NOTIFICATION', {
           enabled: true,
           status: 'danger',
           text: 'Actived Until is Required'
         })
-
         return
       }
 
