@@ -120,7 +120,6 @@
           </div>
         </div>
 
-        <!-- TO PAID CONFIRM CANCEL ENDS HERE -->
 
         <!-- PAID OR UNPAID MODAL RED AND BLUE BUTTONS -->
         <div v-if="paymentModal === false && modalPaidUnpaid === true" class="flex flex-col text-center text-lg font-semibold h-full mt-6 text-white">
@@ -135,7 +134,6 @@
             </div>
           </div>
         </div>
-        <!-- PAID OR UNPAID MODAL RED AND BLUE BUTTONS ENDS HERE-->
 
         <div class="flex flex-col w-full px-8 justify-between">
           <div v-if="paymentModal === true && modalPaidUnpaid === false">

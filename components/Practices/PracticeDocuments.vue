@@ -19,7 +19,6 @@
         Upload New File
       </div>
     </div>
-    <!-- END HEADER -->
 
     <!-- BODY -->
     <div
@@ -46,7 +45,6 @@
       </div>
       <div class="w-full md:w-1/4 py-2 md:px-2 flex flex-col md:flex-row md:items-center md:justify-center">
         <strong class="block md:hidden text-sm uppercase">Last Upload Date</strong>
-        <!-- <span class="">{{ $moment(item.date_created, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span> -->
         <span class="break-all">{{
           document.practiceSpecificDoc && document.practiceSpecificDoc.last_uploaded_at_in_gb_formatted
             ? document.practiceSpecificDoc.last_uploaded_at_in_gb_formatted
@@ -104,10 +102,8 @@
           </div>
         </div>
       </div>
-    </div>
-    <!-- END BODY -->
+    </div> 
   </div>
-  <!-- END TABLE -->
 </template>
 
 <script>

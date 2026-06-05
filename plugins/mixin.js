@@ -10,9 +10,9 @@ Vue.mixin({
 				trimmedFieldName = fieldName.replace(/_id/g, "")
 			}
 			let displayFieldName = trimmedFieldName.charAt(0).toUpperCase() + trimmedFieldName.slice(1).replace(/_/g, " ")
-
+			
 			let index = this.formError.findIndex(item => item.field === fieldName)
-
+			
 			if (index >= 0) {
 				this.formError.splice(index, 1)
 			}
@@ -20,7 +20,7 @@ Vue.mixin({
 			if (!this.formError) {
 				return
 			}
-
+			
 			if (!(inputField instanceof Array) && !inputField) {
 				this.formError.push({
 					field: fieldName,
@@ -48,8 +48,8 @@ Vue.mixin({
 				}
 			}
 			if (fieldName === 'email') {
-				/* eslint-disable-next-line no-useless-escape */
-				const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+				// eslint-disable-next-line no-useless-escape
+				let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 				if (!re.test(String(inputField).toLowerCase())) {
 					this.formError.push({
 						field: fieldName,
@@ -67,6 +67,7 @@ Vue.mixin({
 					trimmedFieldName = removed_id.charAt(0).toUpperCase() + removed_id.slice(1).replace(/_/g, " ")
 				}
 				let displayFieldName = trimmedFieldName
+				// check if value is array
 				if (Array.isArray(value)) {
 					if (value.length === 0) {
 						if (!lists) {
@@ -100,6 +101,7 @@ Vue.mixin({
 				}
 			}
 
+			// console.log("formError", this.formError)
 
 			if (this.formError && this.formError.length) {
 				this.scrollToTop()
@@ -118,8 +120,8 @@ Vue.mixin({
 			}
 		},
 		ValidateEmail (email) {
-			/* eslint-disable-next-line no-useless-escape */
-			const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+			// eslint-disable-next-line no-useless-escape
+			let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 			if (email && !re.test(String(email).toLowerCase())) {
 				return {
 					field: "email",
@@ -128,6 +130,7 @@ Vue.mixin({
 			}
 		},
 		isNumber (e) {
+			// for input type number to avoid entering 'e'
 			e = e ? e : window.event
 			let charCode = (e.which) ? e.which : e.keyCode
 			console.log("charCode", charCode)
@@ -151,13 +154,13 @@ Vue.mixin({
 
 		isNumberDash (e) {
       var charCode = (e.which) ? e.which : e.keyCode
-      // && charCode != 45
+      // && charCode != 45 
       if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
         e.preventDefault()
       }
       return true
 		},
-
+		
 		alphaNumeric (e) {
 			// numbers only [0-9]
 			e = (e) ? e : window.event

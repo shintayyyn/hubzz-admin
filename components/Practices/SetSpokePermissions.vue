@@ -1,7 +1,7 @@
 <template>
   <div class=" w-full">
     <div class="flex justify-between text-sm  py-4 px-4 md:px-8">
-      <div @click="$emit('close')" class="cursor-pointer">
+      <div class="cursor-pointer" @click="$emit('close')">
         <svgicon
           name="arrow-left-solid"
           height="32"
@@ -26,8 +26,8 @@
         </div>
         <!-- SET MAX RATES ;  NOT REQUIRED -->
         <div
-          class="p-2 mx-2 bg-gray-500 rounded-lg"
           v-if="surgeryCreateSessions == 'true' ||form.allow_surgery_create_sessions == 'true'"
+          class="p-2 mx-2 bg-gray-500 rounded-lg"
         >
           <div class="w-full p-1">
             <AppInput
@@ -80,7 +80,6 @@
             />
           </div>
         </div>
-        <!-- SET MAX RATES END HERE -->
         <div class="w-full p-1">
           <AppInput
             v-model="form.allow_surgery_create_permanent_jobs"
@@ -145,17 +144,28 @@
       <button
         class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow float:right font-bold"
         @click.prevent="publish()"
-      >Save</button>
+      >
+        Save
+      </button>
     </div>
   </div>
 </template>
 <script>
-import AppInput from "@/components/Base/AppInput";
+import AppInput from "@/components/Base/AppInput"
 export default {
   components: {
     AppInput
   },
-  props: ["practice", "practiceSpokeId"],
+  props: {
+    practice: {
+      type: Object,
+      required: true
+    },
+    practiceSpokeId: {
+      type: [String, Number],
+      required: true
+    }
+  },
   data() {
     return {
       form: {
@@ -173,11 +183,11 @@ export default {
         share_my_banks: ""
       },
       formError: []
-    };
+    }
   },
   computed: {
     surgeryCreateSessions: function() {
-      return this.form.allow_surgery_create_sessions;
+      return this.form.allow_surgery_create_sessions
     }
   },
   created() {},
@@ -185,7 +195,7 @@ export default {
     getPracticeSpokes(practiceId) {
       this.$store.dispatch("practices/fetchSpokes", {
         practice_id: practiceId
-      });
+      })
     },
     publish() {
       let notRequired = [
@@ -194,34 +204,34 @@ export default {
         "max_wholeday_rate_limit",
         "max_ooh_rate_limit",
         "max_excess_hours"
-      ];
-      this.Validate(this.form, notRequired);
+      ]
+      this.Validate(this.form, notRequired)
       if (!this.formError.length) {
-        this.addSpoke();
+        this.addSpoke()
       }
     },
     async addSpoke() {
-      console.log("it worked", this.form);
+      console.log("it worked", this.form)
       if (this.practice.type == "Hub") {
-        this.formError = [];
+        this.formError = []
         // this.Validate(this.form);
-        console.log("formerror", this.formError);
+        console.log("formerror", this.formError)
         if (!this.formError.length) {
           await this.$axios
             .post(
               `/api/v1/admin/practices/${this.practice.id}/practice-surgeries`,
               this.form
             )
-            .then(res => {
+            .then(() => {
               this.$store.commit("SET_NOTIFICATION", {
                 enabled: true,
                 status: "success",
                 text: "Practice Child Added"
-              });
-              this.getPracticeSpokes(this.practice.id);
+              })
+              this.getPracticeSpokes(this.practice.id)
               this.$router.push(
                 `/practices/${this.$route.params.id}/practice-surgeries`
-              );
+              )
               // this.$emit("practiceSpokePosted");
             })
             .catch(err => {
@@ -229,13 +239,13 @@ export default {
                 enabled: true,
                 status: "danger",
                 text: err.response.data.message
-              });
-              this.formError.push(err.response.data.error_messages);
-            });
-          await this.$emit("close");
+              })
+              this.formError.push(err.response.data.error_messages)
+            })
+          await this.$emit("close")
         }
       }
     }
   }
-};
+}
 </script>

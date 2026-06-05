@@ -1,6 +1,5 @@
 <template>
   <div class=" mt-2">
-    <!-- tabs here -->
     <div v-if="!$route.params.roleId" class="flex flex-row overflow-x-auto border-b border-gray-500 mb-2">
       <nuxt-link
         :to="getRoute()"

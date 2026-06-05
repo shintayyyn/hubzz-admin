@@ -57,8 +57,6 @@
         </div>
       </div>
 
-      <!-- END TABLE -->
-
       <transition name="slide" mode="out-in">
         <div v-if="addPracticeSurgeryModal" class="add-practice-modal shadow-lg">
           <AddPracticeSurgery :practice="practice" :spokesCount="total" @close="addPracticeSurgeryModal = false" />

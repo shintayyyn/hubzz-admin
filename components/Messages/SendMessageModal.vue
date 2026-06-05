@@ -8,7 +8,6 @@
             <span class="font-bold">{{ user.name }}</span>
           </div>
           <div class="flex items-center">
-            <!-- <div class="px-2 font-bold text-lg hover:text-black-500 cursor-pointer" @click="$emit('close')">x</div> -->
             <svgicon
               v-if="hasDropdownMenu"
               name="menu"

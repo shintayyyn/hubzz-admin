@@ -3,7 +3,6 @@
     <!-- text / email / password / time / select / textarea / multicheckbox / number -->
     <template v-if="isStandardInputType">
       <div class="flex flex-col py-3 justify-between">
-        <!-- LABEL -->
         <div class="relative flex justify-between flex-wrap leading-none">
           <label :for="name" class="text-xs sm:text-sm py-1 pr-2 font-bold">{{ label }} <span v-if="required" class="text-red-500">*</span></label>
 
@@ -16,8 +15,7 @@
             </div>
           </div>
         </div>
-
-        <!-- multi-checkbox -->
+  
         <template v-if="type === 'multi-checkbox'">
           <div v-for="(item, index) in lists" :key="index" class="flex flex-row justify-start items-center mt-1">
             <input
@@ -89,7 +87,6 @@
               </div>
             </template>
 
-            <!-- select -->
             <template v-if="type === 'select'">
               <div class="flex flex-col w-full items-start py-6" style="z-index: 1">
                 <div class="flex w-full relative " :class="multiple ? 'flex-col' : 'items-center'">
@@ -127,7 +124,6 @@
               </div>
             </template>
 
-            <!-- text area -->
             <template v-if="type === 'textarea'">
               <div class="flex flex-col w-full">
                 <textarea
@@ -151,7 +147,6 @@
       </div>
     </template>
 
-    <!-- single checkbox -->
     <template v-if="type === 'single-checkbox'">
       <div class="flex flex-col py-2 mb-2">
         <div class="flex justify-end">
@@ -174,7 +169,6 @@
       </div>
     </template>
 
-    <!-- multiemail -->
     <template v-if="type === 'multiemail'">
       <div class="flex flex-col py-2 mb-3 md:mb-6">
         <div class="relative flex flex-row flex-wrap justify-between">
@@ -200,7 +194,6 @@
       </div>
     </template>
 
-    <!-- search -->
     <template v-if="type === 'search'">
       <div v-if="type === 'search'" class="flex flex-col">
         <div v-if="label" class="relative flex flex-row flex-wrap justify-between">
@@ -241,23 +234,54 @@ const ACCEPTED_LIMIT_KEYS = ['Backspace', 'Delete', 'Tab', 'ArrowUp', 'ArrowDown
 
 export default {
   props: {
-    value: [String, Boolean, Array, Number, Object],
-    type: String,
-    name: String,
-    label: String,
-    placeholder: String,
-    error: Object,
-    info: String,
-    inStyle: String,
-    inClass: String,
+    value: {
+      type: [String, Boolean, Array, Number, Object],
+      default: null
+    },
+    type: {
+      type: String,
+      default: ''
+    },
+    name: {
+      type: String,
+      default: ''
+    },
+    label: {
+      type: String,
+      default: ''
+    },
+    placeholder: {
+      type: String,
+      default: ''
+    },
+    error: {
+      type: Object,
+      default: null
+    },
+    info: {
+      type: String,
+      default: ''
+    },
+    inStyle: {
+      type: String,
+      default: ''
+    },
+    inClass: {
+      type: String,
+      default: ''
+    },
     required: {
       type: Boolean,
       default: false
     },
-    // for select
-    items: Array,
-    multiple: Boolean,
-    // for textarea
+    items: {
+      type: Array,
+      default: () => []
+    },
+    multiple: {
+      type: Boolean,
+      default: false
+    },
     cols: {
       default: 30,
       type: Number
@@ -270,12 +294,10 @@ export default {
       default: true,
       type: Boolean
     },
-    // for multicheckbox
     lists: {
       type: Array,
       default: () => null
     },
-    //
     disabled: {
       type: Boolean,
       default: false
@@ -292,7 +314,6 @@ export default {
   data() {
     return {
       passwordValue: '',
-      // show/hide password
       passwordToggle: false
     }
   },
@@ -334,9 +355,7 @@ export default {
         return
       }
       this.$emit('keypress')
-    },
-    // for multi checkbox
-    inputMultiCheck(e) {
+    },    inputMultiCheck(e) {
       if (e.target.checked) {
         this.$emit('checked', e.target.value)
       } else {

@@ -40,6 +40,7 @@ export default {
     gettingMoreConversations: false,
     limit: 10,
 
+    // default filter: Locum
     domain: 'Locum'
   }),
 
@@ -78,6 +79,7 @@ export default {
   mounted() {
     this.getConversations()
 
+    // accept several event names emitted by backend for different channels
     this._messageEvents = [
       'newMessage',
       'newMessageLocum',
@@ -136,6 +138,7 @@ export default {
         const res = await this.$axios.get(`/api/v1/admin/locum-users/${locumUserId}`)
         return res.data && res.data.data ? res.data.data.locum_user || null : null
       } catch (err) {
+        // silent fail — avatar is optional
         console.log('fetchLocumUser err', err.response || err)
         return null
       }
@@ -146,6 +149,7 @@ export default {
         if (conv && conv.locum_user && (!conv.locum_user.avatar || !conv.locum_user.avatar.file)) {
           const full = await this.fetchLocumUser(conv.locum_user.id)
           if (full && full.avatar) {
+            // merge avatar into existing object
             conv.locum_user.avatar = full.avatar
           }
         }
@@ -176,12 +180,14 @@ export default {
     }, 500),
 
     async newMessageInConversationHandler(raw) {
+      // normalize payload: sometimes backend may send { conversation: {...} } or the conversation directly
       const conversation = raw && raw.conversation ? raw.conversation : raw
       if (!conversation || !conversation.id) return
 
       console.log('messages newMessageInConversationHandler', conversation)
 
       const upsertAsync = async conv => {
+        // ensure locum avatar is present when available
         if (conv && conv.locum_user && (!conv.locum_user.avatar || !conv.locum_user.avatar.file)) {
           try {
             const full = await this.fetchLocumUser(conv.locum_user.id)
@@ -196,6 +202,7 @@ export default {
         this.conversations.unshift(conv)
       }
 
+      // always upsert incoming conversation so admin sees messages from both Locum and Practice in real time
       await upsertAsync(conversation)
     },
 

@@ -173,7 +173,7 @@
                 required
                 @blur="CheckEmptyField(toPostUser.sort_code, 'sort_code')"
               />
-              <!--New app input-->
+            
               <AppInput
                 v-model="toPostUser.account_number"
                 :type="'number'"
@@ -184,7 +184,7 @@
                 required
                 @blur="CheckEmptyField(toPostUser.account_number, 'account_number')"
               />
-              <!-- end -->
+          
               <AppInput
                 v-model="toPostUser.practice_type_id"
                 :type="'multi-checkbox'"

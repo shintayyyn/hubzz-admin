@@ -3,11 +3,10 @@
     <div class="w-full md:mt-6">
       <div class="md:hidden flex items-center text-white">
         <label for="sort" class="text-sm whitespace-no-wrap">Sort by</label>
-        <select
-          v-model="sort"
-          class="outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 focus:hubzz-yellow bg-waterloo ml-2"
-        >
-          <option selected>Job Number</option>
+        <select v-model="sort" class="outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 focus:hubzz-yellow bg-waterloo ml-2">
+          <option selected>
+            Job Number
+          </option>
           <option>Practice/Surgery</option>
           <option>Title</option>
           <option>From</option>
@@ -17,13 +16,10 @@
       </div>
 
       <div class="hidden md:flex items-center text-sm text-white justify-around font-semibold">
-        <div
-          class="align-middle px-2 w-1/6 cursor-pointer"
-          @click="sortBy(isJobParts ? 'job_part_number':'job_number',currentPage,search)"
-        >
+        <div class="align-middle px-2 w-1/6 cursor-pointer" @click="sortBy(isJobParts ? 'job_part_number' : 'job_number', currentPage, search)">
           {{ isJobParts ? 'Job Part Number' : 'Job Number' }}
           <svgicon
-            v-if="sortedBy!='job_number' && sortedBy!='job_part_number' "
+            v-if="sortedBy != 'job_number' && sortedBy != 'job_part_number'"
             class="inline align-baseline"
             name="sort"
             height="12"
@@ -31,7 +27,7 @@
             color="white black"
           />
           <svgicon
-            v-if="sortType==true && (sortedBy=='job_number' || sortedBy=='job_part_number')"
+            v-if="sortType == true && (sortedBy == 'job_number' || sortedBy == 'job_part_number')"
             class="inline align-baseline"
             name="sort-ascend"
             height="12"
@@ -39,7 +35,7 @@
             color="white"
           />
           <svgicon
-            v-if="sortType==false && (sortedBy=='job_number' || sortedBy=='job_part_number')"
+            v-if="sortType == false && (sortedBy == 'job_number' || sortedBy == 'job_part_number')"
             class="inline align-baseline"
             name="sort-descend"
             height="12"
@@ -49,11 +45,11 @@
         </div>
         <div
           class="align-middle px-2 text-center w-1/6 cursor-pointer"
-          @click="sortBy(isJobParts ? 'job_surgery_name':'surgery_name',currentPage,search)"
+          @click="sortBy(isJobParts ? 'job_surgery_name' : 'surgery_name', currentPage, search)"
         >
           Practice / Surgery
           <svgicon
-            v-if="sortedBy!='surgery_name' && sortedBy!='job_surgery_name'"
+            v-if="sortedBy != 'surgery_name' && sortedBy != 'job_surgery_name'"
             class="inline align-baseline"
             name="sort"
             height="12"
@@ -61,7 +57,7 @@
             color="white black"
           />
           <svgicon
-            v-if="sortType==true && (sortedBy=='surgery_name' || sortedBy=='job_surgery_name')"
+            v-if="sortType == true && (sortedBy == 'surgery_name' || sortedBy == 'job_surgery_name')"
             class="inline align-baseline"
             name="sort-ascend"
             height="12"
@@ -69,7 +65,7 @@
             color="white"
           />
           <svgicon
-            v-if="sortType==false && (sortedBy=='surgery_name' || sortedBy=='job_surgery_name')"
+            v-if="sortType == false && (sortedBy == 'surgery_name' || sortedBy == 'job_surgery_name')"
             class="inline align-baseline"
             name="sort-descend"
             height="12"
@@ -77,13 +73,10 @@
             color="white"
           />
         </div>
-        <div
-          class="align-middle px-2 text-center w-1/6 cursor-pointer"
-          @click="sortBy(isJobParts ? 'job_title':'title',currentPage,search)"
-        >
+        <div class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy(isJobParts ? 'job_title' : 'title', currentPage, search)">
           Title
           <svgicon
-            v-if="sortedBy!='title' && sortedBy!='job_title'"
+            v-if="sortedBy != 'title' && sortedBy != 'job_title'"
             class="inline align-baseline"
             name="sort"
             height="12"
@@ -91,7 +84,7 @@
             color="white black"
           />
           <svgicon
-            v-if="sortType==true && (sortedBy=='title' || sortedBy=='job_title')"
+            v-if="sortType == true && (sortedBy == 'title' || sortedBy == 'job_title')"
             class="inline align-baseline"
             name="sort-ascend"
             height="12"
@@ -99,7 +92,7 @@
             color="white"
           />
           <svgicon
-            v-if="sortType==false && (sortedBy=='title' || sortedBy=='job_title')"
+            v-if="sortType == false && (sortedBy == 'title' || sortedBy == 'job_title')"
             class="inline align-baseline"
             name="sort-descend"
             height="12"
@@ -107,25 +100,14 @@
             color="white"
           />
         </div>
-        <div
-          v-if="tabStatus === 'Allocated' || tabStatus === 'Ongoing'"
-          class="align-middle px-2 text-center w-1/6 cursor-pointer"
-        >Assigned to Locum</div>
-        <div
-          class="align-middle px-2 text-center w-1/6 cursor-pointer"
-          @click="sortBy('date_start',currentPage,search)"
-        >
+        <div v-if="tabStatus === 'Allocated' || tabStatus === 'Ongoing'" class="align-middle px-2 text-center w-1/6 cursor-pointer">
+          Assigned to Locum
+        </div>
+        <div class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy('date_start', currentPage, search)">
           From
+          <svgicon v-if="sortedBy != 'date_start'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon
-            v-if="sortedBy!='date_start'"
-            class="inline align-baseline"
-            name="sort"
-            height="12"
-            width="12"
-            color="white black"
-          />
-          <svgicon
-            v-if="sortType==true && sortedBy=='date_start'"
+            v-if="sortType == true && sortedBy == 'date_start'"
             class="inline align-baseline"
             name="sort-ascend"
             height="12"
@@ -133,7 +115,7 @@
             color="white"
           />
           <svgicon
-            v-if="sortType==false && sortedBy=='date_start'"
+            v-if="sortType == false && sortedBy == 'date_start'"
             class="inline align-baseline"
             name="sort-descend"
             height="12"
@@ -141,21 +123,11 @@
             color="white"
           />
         </div>
-        <div
-          class="align-middle px-2 text-center w-1/6 cursor-pointer"
-          @click="sortBy('date_end',currentPage,search)"
-        >
+        <div class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy('date_end', currentPage, search)">
           To
+          <svgicon v-if="sortedBy != 'date_end'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon
-            v-if="sortedBy!='date_end'"
-            class="inline align-baseline"
-            name="sort"
-            height="12"
-            width="12"
-            color="white black"
-          />
-          <svgicon
-            v-if="sortType==true && sortedBy=='date_end'"
+            v-if="sortType == true && sortedBy == 'date_end'"
             class="inline align-baseline"
             name="sort-ascend"
             height="12"
@@ -163,7 +135,7 @@
             color="white"
           />
           <svgicon
-            v-if="sortType==false && sortedBy=='date_end'"
+            v-if="sortType == false && sortedBy == 'date_end'"
             class="inline align-baseline"
             name="sort-descend"
             height="12"
@@ -172,21 +144,20 @@
           />
         </div>
         <div
-          v-if="tabStatus !== 'Approved' && tabStatus !== 'Allocated' && tabStatus !== 'Ongoing' && locumTabStatus !== 'Allocated' && locumTabStatus !== 'Ongoing' "
+          v-if="
+            tabStatus !== 'Approved' &&
+              tabStatus !== 'Allocated' &&
+              tabStatus !== 'Ongoing' &&
+              locumTabStatus !== 'Allocated' &&
+              locumTabStatus !== 'Ongoing'
+          "
           class="align-middle px-2 text-center w-1/6 cursor-pointer"
-          @click="sortBy('job_date_created',currentPage,search)"
+          @click="sortBy('job_date_created', currentPage, search)"
         >
           Created
+          <svgicon v-if="sortedBy != 'job_date_created'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon
-            v-if="sortedBy!='job_date_created'"
-            class="inline align-baseline"
-            name="sort"
-            height="12"
-            width="12"
-            color="white black"
-          />
-          <svgicon
-            v-if="sortType==true && sortedBy=='job_date_created'"
+            v-if="sortType == true && sortedBy == 'job_date_created'"
             class="inline align-baseline"
             name="sort-ascend"
             height="12"
@@ -194,7 +165,7 @@
             color="white"
           />
           <svgicon
-            v-if="sortType==false && sortedBy=='job_date_created'"
+            v-if="sortType == false && sortedBy == 'job_date_created'"
             class="inline align-baseline"
             name="sort-descend"
             height="12"
@@ -205,19 +176,12 @@
         <div
           v-if="tabStatus === 'Allocated' || tabStatus === 'Ongoing' || locumTabStatus === 'Allocated' || locumTabStatus === 'Ongoing'"
           class="align-middle px-2 text-center w-1/6 cursor-pointer"
-          @click="sortBy('job_appointed_at',currentPage,search)"
+          @click="sortBy('job_appointed_at', currentPage, search)"
         >
           Allocated At
+          <svgicon v-if="sortedBy != 'job_appointed_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon
-            v-if="sortedBy!='job_appointed_at'"
-            class="inline align-baseline"
-            name="sort"
-            height="12"
-            width="12"
-            color="white black"
-          />
-          <svgicon
-            v-if="sortType==true && sortedBy=='job_appointed_at'"
+            v-if="sortType == true && sortedBy == 'job_appointed_at'"
             class="inline align-baseline"
             name="sort-ascend"
             height="12"
@@ -225,7 +189,7 @@
             color="white"
           />
           <svgicon
-            v-if="sortType==false && sortedBy=='job_appointed_at'"
+            v-if="sortType == false && sortedBy == 'job_appointed_at'"
             class="inline align-baseline"
             name="sort-descend"
             height="12"
@@ -236,19 +200,12 @@
         <div
           v-if="tabStatus === 'Completed' || tabStatus === 'Approved' || locumTabStatus === 'Completed' || locumTabStatus === 'Approved'"
           class="align-middle px-2 text-center w-1/6 cursor-pointer"
-          @click="sortBy('completed_at',currentPage,search)"
+          @click="sortBy('completed_at', currentPage, search)"
         >
           Completed At
+          <svgicon v-if="sortedBy != 'completed_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon
-            v-if="sortedBy!='completed_at'"
-            class="inline align-baseline"
-            name="sort"
-            height="12"
-            width="12"
-            color="white black"
-          />
-          <svgicon
-            v-if="sortType==true && sortedBy=='completed_at'"
+            v-if="sortType == true && sortedBy == 'completed_at'"
             class="inline align-baseline"
             name="sort-ascend"
             height="12"
@@ -256,7 +213,7 @@
             color="white"
           />
           <svgicon
-            v-if="sortType==false && sortedBy=='completed_at'"
+            v-if="sortType == false && sortedBy == 'completed_at'"
             class="inline align-baseline"
             name="sort-descend"
             height="12"
@@ -265,21 +222,14 @@
           />
         </div>
         <div
-          v-if=" tabStatus === 'Approved' || locumTabStatus === 'Approved'"
+          v-if="tabStatus === 'Approved' || locumTabStatus === 'Approved'"
           class="align-middle px-2 text-center w-1/6 cursor-pointer"
-          @click="sortBy('approved_at',currentPage,search)"
+          @click="sortBy('approved_at', currentPage, search)"
         >
           Approved At
+          <svgicon v-if="sortedBy != 'approved_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon
-            v-if="sortedBy!='approved_at'"
-            class="inline align-baseline"
-            name="sort"
-            height="12"
-            width="12"
-            color="white black"
-          />
-          <svgicon
-            v-if="sortType==true && sortedBy=='approved_at'"
+            v-if="sortType == true && sortedBy == 'approved_at'"
             class="inline align-baseline"
             name="sort-ascend"
             height="12"
@@ -287,7 +237,7 @@
             color="white"
           />
           <svgicon
-            v-if="sortType==false && sortedBy=='approved_at'"
+            v-if="sortType == false && sortedBy == 'approved_at'"
             class="inline align-baseline"
             name="sort-descend"
             height="12"
@@ -298,19 +248,12 @@
         <div
           v-if="tabStatus === 'Cancelled'"
           class="align-middle px-2 text-center w-1/6 cursor-pointer"
-          @click="sortBy('cancelled_at',currentPage,search)"
+          @click="sortBy('cancelled_at', currentPage, search)"
         >
           Cancelled At
+          <svgicon v-if="sortedBy != 'cancelled_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon
-            v-if="sortedBy!='cancelled_at'"
-            class="inline align-baseline"
-            name="sort"
-            height="12"
-            width="12"
-            color="white black"
-          />
-          <svgicon
-            v-if="sortType==true && sortedBy=='cancelled_at'"
+            v-if="sortType == true && sortedBy == 'cancelled_at'"
             class="inline align-baseline"
             name="sort-ascend"
             height="12"
@@ -318,7 +261,7 @@
             color="white"
           />
           <svgicon
-            v-if="sortType==false && sortedBy=='cancelled_at'"
+            v-if="sortType == false && sortedBy == 'cancelled_at'"
             class="inline align-baseline"
             name="sort-descend"
             height="12"
@@ -329,19 +272,12 @@
         <div
           v-if="tabStatus === 'Withdrawn'"
           class="align-middle px-2 text-center w-1/6 cursor-pointer"
-          @click="sortBy('declined_at',currentPage,search)"
+          @click="sortBy('declined_at', currentPage, search)"
         >
           Withdrawn At
+          <svgicon v-if="sortedBy != 'cancelled_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon
-            v-if="sortedBy!='cancelled_at'"
-            class="inline align-baseline"
-            name="sort"
-            height="12"
-            width="12"
-            color="white black"
-          />
-          <svgicon
-            v-if="sortType==true && sortedBy=='cancelled_at'"
+            v-if="sortType == true && sortedBy == 'cancelled_at'"
             class="inline align-baseline"
             name="sort-ascend"
             height="12"
@@ -349,7 +285,7 @@
             color="white"
           />
           <svgicon
-            v-if="sortType==false && sortedBy=='cancelled_at'"
+            v-if="sortType == false && sortedBy == 'cancelled_at'"
             class="inline align-baseline"
             name="sort-descend"
             height="12"
@@ -357,14 +293,12 @@
             color="white"
           />
         </div>
-        <div
-          v-if="tabStatus == 'Completed'"
-          class="align-middle px-2 text-center w-64"
-        >Locum Invoice Status</div>
-        <div
-          v-if="tabStatus == 'Completed' && !locumUser"
-          class="align-middle px-2 text-center w-64"
-        >Invoiced by HUBZZ?</div>
+        <div v-if="tabStatus == 'Completed'" class="align-middle px-2 text-center w-64">
+          Locum Invoice Status
+        </div>
+        <div v-if="tabStatus == 'Completed' && !locumUser" class="align-middle px-2 text-center w-64">
+          Invoiced by HUBZZ?
+        </div>
       </div>
     </div>
   </div>
@@ -372,14 +306,32 @@
 
 <script>
 export default {
-  props: [
-    "tabStatus",
-    "locumTabStatus",
-    "practice",
-    "locumUser",
-    "currentPage",
-    "isJobParts"
-  ],
+  props: {
+    tabStatus: {
+      type: String,
+      default: ''
+    },
+    locumTabStatus: {
+      type: String,
+      default: ''
+    },
+    practice: {
+      type: Object,
+      default: () => ({})
+    },
+    locumUser: {
+      type: Object,
+      default: null
+    },
+    currentPage: {
+      type: Number,
+      default: 1
+    },
+    isJobParts: {
+      type: Boolean,
+      default: false
+    }
+  },
 
   data() {
     return {
@@ -387,48 +339,36 @@ export default {
       counter: 0,
       perPage: 10,
 
-      search: "",
+      search: '',
       paramSort: {
-        order_by: ""
+        order_by: ''
       },
-      sort: "",
-      sortedBy: "",
-      sortType: "",
-      order_by: ""
-    };
+      sort: '',
+      sortedBy: '',
+      sortType: '',
+      order_by: ''
+    }
   },
 
   watch: {
     sort(value) {
-      if (value === "Job Number") {
-        this.sortBy(
-          this.isJobParts ? "job_part_number" : "job_number",
-          this.currentPage,
-          this.search
-        );
+      if (value === 'Job Number') {
+        this.sortBy(this.isJobParts ? 'job_part_number' : 'job_number', this.currentPage, this.search)
       }
-      if (value === "Practice/Surgery") {
-        this.sortBy(
-          this.isJobParts ? "job_surgery_name" : "surgery_name",
-          this.currentPage,
-          this.search
-        );
+      if (value === 'Practice/Surgery') {
+        this.sortBy(this.isJobParts ? 'job_surgery_name' : 'surgery_name', this.currentPage, this.search)
       }
-      if (value === "Title") {
-        this.sortBy(
-          this.isJobParts ? "job_title" : "title",
-          this.currentPage,
-          this.search
-        );
+      if (value === 'Title') {
+        this.sortBy(this.isJobParts ? 'job_title' : 'title', this.currentPage, this.search)
       }
-      if (value === "From") {
-        this.sortBy("date_start", this.currentPage, this.search);
+      if (value === 'From') {
+        this.sortBy('date_start', this.currentPage, this.search)
       }
-      if (value === "To") {
-        this.sortBy("date_end", this.currentPage, this.search);
+      if (value === 'To') {
+        this.sortBy('date_end', this.currentPage, this.search)
       }
-      if (value === "Created") {
-        this.sortBy("date_end", this.currentPage, this.search);
+      if (value === 'Created') {
+        this.sortBy('date_end', this.currentPage, this.search)
       }
     }
   },
@@ -437,36 +377,34 @@ export default {
     getQuery() {
       const query = {
         ...this.$route.query
-      };
+      }
 
-      const offset = parseInt(query.job_page) * 10 - 10;
+      const offset = parseInt(query.job_page) * 10 - 10
 
-      return offset;
+      return offset
     },
 
     async sortBy(sortedBy, job_page, search) {
-      await this.$store.commit("jobs/TOGGLE_LOADING", true);
+      await this.$store.commit('jobs/TOGGLE_LOADING', true)
 
       if (this.sortedBy == sortedBy && this.sortType == true) {
-        this.paramSort.order_by = "job_date_created:desc";
-        this.sortedBy = "";
+        this.paramSort.order_by = 'job_date_created:desc'
+        this.sortedBy = ''
       } else {
-        this.sortedBy = sortedBy;
-        this.sortType = !this.sortType;
-        this.paramSort.order_by = await `${sortedBy}:${
-          this.sortType ? "asc" : "desc"
-        }`;
+        this.sortedBy = sortedBy
+        this.sortType = !this.sortType
+        this.paramSort.order_by = await `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
       }
 
-      let order_by = await this.paramSort.order_by;
+      let order_by = await this.paramSort.order_by
 
       let query = {
         ...this.$router.query,
         order_by
-      };
+      }
 
       if (job_page === 1) {
-        delete query.job_page;
+        delete query.job_page
       }
 
       if (job_page) {
@@ -474,7 +412,7 @@ export default {
           ...this.$router.query,
           job_page,
           order_by
-        };
+        }
       }
 
       if (search) {
@@ -482,7 +420,7 @@ export default {
           ...this.$router.query,
           search,
           order_by
-        };
+        }
       }
 
       if (job_page & search) {
@@ -491,16 +429,16 @@ export default {
           job_page,
           search,
           order_by
-        };
+        }
       }
 
       if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-        this.loading = true;
+        this.loading = true
       }
 
-      this.getJobs();
+      this.getJobs()
 
-      this.$router.push({ query });
+      this.$router.push({ query })
     },
 
     async getJobs() {
@@ -510,31 +448,26 @@ export default {
         status: this.tabStatus ? this.tabStatus : null,
         locum_status: this.locumTabStatus ? this.locumTabStatus : null,
         order_by: this.paramSort.order_by,
-        surgery_id: this.practice_surgery ? this.practice_surgery.id : "",
+        surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
         limit: this.perPage,
         offset: this.getQuery()
-      };
-      await this.$axios
-        .$get(
-          `/api/v1/admin/${this.isJobParts === true ? "job-parts" : "jobs"}`,
-          { params }
-        )
-        .then(async res => {
-          if (this.practice) {
-            await this.$store.commit(
-              `jobs/SET_PRACTICE_${this.tabStatus.toUpperCase()}_SESSIONS`,
-              this.isJobParts === true ? res.data.job_parts : res.data.jobs
-            );
-            await this.$store.commit("jobs/TOGGLE_LOADING", false);
-          } else if (this.locumUser) {
-            await this.$store.commit(
-              `jobs/SET_LOCUM_${this.locumTabStatus.toUpperCase()}_JOBS`,
-              this.isJobParts === true ? res.data.job_parts : res.data.jobs
-            );
-            await this.$store.commit("jobs/TOGGLE_LOADING", false);
-          }
-        });
+      }
+      await this.$axios.$get(`/api/v1/admin/${this.isJobParts === true ? 'job-parts' : 'jobs'}`, { params }).then(async res => {
+        if (this.practice) {
+          await this.$store.commit(
+            `jobs/SET_PRACTICE_${this.tabStatus.toUpperCase()}_SESSIONS`,
+            this.isJobParts === true ? res.data.job_parts : res.data.jobs
+          )
+          await this.$store.commit('jobs/TOGGLE_LOADING', false)
+        } else if (this.locumUser) {
+          await this.$store.commit(
+            `jobs/SET_LOCUM_${this.locumTabStatus.toUpperCase()}_JOBS`,
+            this.isJobParts === true ? res.data.job_parts : res.data.jobs
+          )
+          await this.$store.commit('jobs/TOGGLE_LOADING', false)
+        }
+      })
     }
   }
-};
+}
 </script>

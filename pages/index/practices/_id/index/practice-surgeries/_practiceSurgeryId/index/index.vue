@@ -153,7 +153,7 @@
                 required
               />
             </div>
-            <!-- SET MAX RATES ;  NOT REQUIRED -->
+   
 
             <div v-if="allowSurgeryCreateSessions === 'true'" class="p-2 mx-2 bg-gray-300 rounded-lg">
               <div class="w-full p-1">
@@ -207,7 +207,7 @@
               </div>
             </div>
 
-            <!-- SET MAX RATES END HERE -->
+      
             <div class="w-full p-1">
               <AppInput
                 v-model="allowSurgeryCreatePermanentJobs"

@@ -66,7 +66,6 @@
         </div>
       </div>
     </div>
-    <!-- <span class="font-mono absolute right-0 border-2 border-gray-400 text-gray-400 rounded-full w-6 h-6 mx-4 font-bold text-sm flex items-center justify-center cursor-pointer">i</span> -->
   </div>
 </template>
 

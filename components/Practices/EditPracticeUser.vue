@@ -25,10 +25,9 @@
         </div>
       </div>
     </div>
-    <!-- TABS END HERE -->
+    
 
     <div class="flex sm:p-2 max-w-lg">
-      <!-- TAB 1 -->
       <div v-if="tab1" class="flex flex-col relative p-4 border rounded-lg text-sm w-full">
         <div v-if="canEditPracticeUser && !isDeletedPracticeUser && tab1" class="absolute right-0 px-4">
           <button class="rounded-lg py-1 px-4 text-sm bg-sunglow hover:bg-sunglow-dark text-black" @click="editProfile = !editProfile">
@@ -251,7 +250,7 @@
         </div>
       </div>
 
-      <!-- TAB 2 -->
+      
       <div v-if="tab2" class="flex text-sm  border p-4 rounded-lg w-full">
         <div class="overflow-hidden  text-sm p-2 w-full">
           <AppInput
@@ -445,10 +444,8 @@ export default {
         this.toPutPracticeUser.first_name = this.practiceUser.first_name
         this.toPutPracticeUser.last_name = this.practiceUser.last_name
         this.toPutPracticeUser.suffix = this.practiceUser.suffix
-        //data fix not matching on backend
         this.toPutPracticeUser.practice_role = this.practiceUser.practice_detail?.practice_role || ''
-        this.toPutPracticeUser.practice_user_role_id = this.practiceUser.practice_detail?.role?.id || ''
-        //end
+        this.toPutPracticeUser.practice_user_role_id = this.practiceUser.practice_detail?.role?.id || ''    
         this.toPutPracticeUser.status = this.practiceUser.status
       }
     }
@@ -464,10 +461,8 @@ export default {
       first_name: this.practiceUser.first_name,
       last_name: this.practiceUser.last_name,
       suffix: this.practiceUser.suffix,
-      //data fix not matching on backend
       practice_role: this.practiceUser.practice_detail?.practice_role || '',
       practice_user_role_id: this.practiceUser.practice_detail?.role?.id || '',
-      //end
       status: this.practiceUser.status
     }
 
@@ -478,7 +473,6 @@ export default {
           this.practice_user_roles.push({ label: role.name, value: role.id })
         })
 
-        // ← if Practice User Admin, add it manually so it shows in the disabled select
         if (
           this.practiceUser.practice_detail &&
           this.practiceUser.practice_detail.role &&

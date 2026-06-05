@@ -1,7 +1,6 @@
 <template>
   <div class="bg-gray-200 rounded-lg border p-4">
     <div>
-      <!-- <div class="text-base md:text-4xl font-bold md:font-normal px-2 mb-4 text-white">Terms and Conditions</div> -->
       <no-ssr placeholder="Loading...">
         <quill-editor
           ref="myTextEditor"
@@ -123,11 +122,6 @@ export default {
         }
       } else {
         this.$emit('formError')
-        // this.$store.commit("SET_NOTIFICATION", {
-        // 	enabled: true,
-        // 	status: "danger",
-        // 	text: "Terms and Condition can't be empty."
-        // });
       }
     }
   }

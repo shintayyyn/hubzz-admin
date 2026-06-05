@@ -28,7 +28,6 @@
     <div v-if="practice && practiceInvoice && practice.direct_debit === false" class="text-white mx-4 mb-2">
       *Assign a SAGE Reference Number to this Practice to proceed with the file export.
     </div>
-    <!-- HEADER ENDS HERE -->
 
     <div v-if="forViewing == false">
       <div class="font-bold text-xl mx-3">
@@ -582,7 +581,7 @@
         </div>
       </div>
     </div>
-    <!-- FIRST PAGE ENDS HERE -->
+
     <!-- BODY ENDS HERE-->
 
     <div class="m-4">

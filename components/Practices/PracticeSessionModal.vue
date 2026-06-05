@@ -362,15 +362,7 @@
                     {{
                       job.platform_job && job.platform_job.session_structure_information ? job.platform_job.session_structure_information : '(none)'
                     }}
-                  </p>
-
-                  <!-- <p class="font-semibold">
-                    Unpaid Breaks (in minutes)
-                  </p>
-                  <p class="ml-2 mb-2">
-                    {{ job.platform_job.unpaid_breaks_in_minutes }}
-                  </p> -->
-
+                  </p>                
                   <p class="w-1/2 font-semibold">
                     Speciality
                   </p>
@@ -481,8 +473,7 @@
                       <div class="w-1/4">
                         Job Part Status
                       </div>
-                    </div>
-                    <!-- :class="`${jobParts.length > 3 && job.platform_job.appointed_to_locum  ? 'h-48' : 'h-full'}`" -->
+                    </div>                 
                     <div
                       v-for="(item, index) in jobParts"
                       :key="`item-${index}`"
@@ -728,9 +719,7 @@
                   </div>
                 </div>
               </div>
-            </div>
-            <!-- :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'md:w-2/6 my-2 overflow-hidden':'md:w-1/5 w-full my-2 overflow-hidden'}`" -->
-
+            </div>       
             <div v-if="hasPracticeMapData && isUnfilledStatus" class="p-4 my-4 text-sm no-underline border rounded-lg">
               <div v-if="job && job.platform_job" class="w-full">
                 <div class="pb-2">

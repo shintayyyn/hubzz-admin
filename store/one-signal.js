@@ -19,6 +19,7 @@ export const actions = {
     }
 
     const getIsPushSupported = async () => {
+      // OneSignal Web SDK API differs across versions; support multiple.
       if (typeof OneSignal.isPushSupported === 'function') return await OneSignal.isPushSupported()
       if (OneSignal.Notifications && typeof OneSignal.Notifications.isPushSupported === 'function') {
         return await OneSignal.Notifications.isPushSupported()
