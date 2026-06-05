@@ -23,6 +23,7 @@
                 <span class="pr-1">Action</span>
               </div>
             </div>
+            <!-- TABLE HEADER -->
 
             <!-- TABLE BODY -->
             <div class="row py-2">

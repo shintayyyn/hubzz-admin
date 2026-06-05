@@ -280,6 +280,8 @@ export default {
       return this.daysInMonth.findIndex(({ day }) => day === 0)
     },
     filteredMonths() {
+      // if selected year === current year, get only the current month up to last month,
+      // if not, get all the months
       if (this.selectedYear === this.$moment().format('YYYY')) {
         if (this.isAfter) {
           return this.months.filter(month => parseInt(month.value) >= parseInt(this.$moment().format('M')))
@@ -529,8 +531,16 @@ export default {
         date = date.add(1, 'days')
       }
       this.daysInMonth = days
+      // days.forEach(day => {
+      //   this.daysInMonth.push({
+      //     day: day.getDay(),
+      //     date: day.getDate(),
+      //     fullDate: this.$moment(day).format("MM-DD-YYYY")
+      //   });
+      // });
     },
     validateInput(e) {
+      // e.preventDefault();
       if ((e.key >= 0 && e.key <= 9) || e.key === '/') {
         return
       } else {
@@ -550,6 +560,7 @@ export default {
           }
         }
         this.$emit('input', this.dates)
+        // this.dates.sort((a, b) => new Date(a) - new Date(b))
       }
     }
   }

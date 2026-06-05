@@ -1,5 +1,6 @@
 <template>
   <div class="mt-5 px-2">
+    <!-- tabs here -->
     <transition name="fade" mode="out-in">
       <PracticeUsers :practice="practice" @practiceUpdated="() => $emit('practiceUpdated')" />
     </transition>

@@ -1,6 +1,7 @@
 <template>
   <div>
     <div>
+      <!-- FILTER -->
       <div
         class="flex-wrap justify-start items-center w-full shadow-lg p-3 rounded-lg flex bg-waterloo text-white my-2"
       >
@@ -41,6 +42,7 @@
           />
         </div>
       </div>
+      <!-- FILTER ENDS HERE -->
       <div>
         <label class="text-white">Limit: </label>
         <select v-model="limit">

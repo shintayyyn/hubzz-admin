@@ -50,6 +50,7 @@
         </div>
       </div>
 
+      <!-- v-if="invoiceItems.length > 0 || disputedItems.length > 0"  -->
       <HubzzInvoice
         :forViewing="false"
         :practice="practice"

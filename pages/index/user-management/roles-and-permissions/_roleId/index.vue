@@ -190,30 +190,63 @@
             formError.find(item => item.field === 'permission_id').message
           }}</span>
         </p>
+        <!-- <div class="flex flex-wrap justify-start">
+					<div
+						class="w-full md:w-1/2 lg:w-1/3 pb-3 px-1"
+						v-for="(role, index) in permissions"
+						:key="index"
+					>
+						<div class="flex flex-col">
+							<div class="w-full flex flex-row items-center">
+								<input
+									type="checkbox"
+									:id="role.category"
+									:checked="isChecked(role.permissions)"
+									@change="checkAll(index, $event.target.checked)"
+								/>
+								<label class="font-bold text-xl pl-1" :for="role.category">{{ role.category }} Management</label>
+							</div>
+							<div
+								class="w-full flex flex-row justify-start items-center mb-1"
+								v-for="permission in role.permissions"
+								:key="permission.id"
+							>
+								<input
+									v-model="permission.done"
+									type="checkbox"
+									:id="permission.id"
+									:checked="permission.done"
+								/>
+								<label
+									:for="permission.id"
+									class="text-xs sm:text-sm flex items-center"
+								>{{ permission.name }}</label>
+							</div>
+						</div>
+					</div>
+				</div>-->
         <div class="masonry-container three">
-          <div v-for="(permissionCategory, roleIndex) in permissions" :key="roleIndex" class="item p-2">
+          <div v-for="(permissionGroup, permissionGroupIndex) in permissions" :key="permissionGroupIndex" class="item p-2">
             <div class="flex flex-col">
               <div class="w-full flex flex-row items-center pb-1">
                 <input
-                  :id="permissionCategory.category"
+                  :id="permissionGroup.category"
                   type="checkbox"
-                  :checked="isChecked(permissionCategory.permissions, permissionCategory.category)"
-                  @change="checkAll(roleIndex, $event.target.checked)"
+                  :checked="isChecked(permissionGroup.permissions, permissionGroup.category)"
+                  @change="checkAll(permissionGroupIndex, $event.target.checked)"
                 />
 
-                <label class="font-bold md:text-xl pl-1 leading-none flex items-center" :for="permissionCategory.category">{{ permissionCategory.category }} Management</label>
+                <label class="font-bold md:text-xl pl-1 leading-none flex items-center" :for="permissionGroup.category">{{ permissionGroup.category }} Management</label>
               </div>
 
-              <div v-for="(hierarchyPermissionGroup, permissionGroupIndex) in hierarchyPermissions" :key="permissionGroupIndex">
-                <template v-if="permissionCategory.category === hierarchyPermissionGroup.category">
+              <div v-for="(hierarchyPermissionGroup, hierarchyPermissionGroupIndex) in hierarchyPermissions" :key="hierarchyPermissionGroupIndex">
+                <!-- {{item.category}}
+									{{item.permissions}}-->
+                <template v-if="permissionGroup.category === hierarchyPermissionGroup.category">
                   <div class="w-full p-2">
                     <div class="flex flex-col w-full">
                       <div class="pl-4 w-full">
-                        <div
-                          v-for="(permission, permissionIndex) in hierarchyPermissionGroup.permissions"
-                          :key="permission.id"
-                          class="flex flex-col px-1 w-full"
-                        >
+                        <div v-for="(permission, permissionIndex) in hierarchyPermissionGroup.permissions" :key="permission.id" class="flex flex-col px-1 w-full">
                           <input
                             :id="permission.id"
                             v-model="permission.done"

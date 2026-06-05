@@ -131,6 +131,9 @@
     <div v-else class="border-b-2 border-white mt-2">
       <div class="hidden md:flex justify-around font-semibold w-full px-4">
         <div class="flex flex-row w-full text-sm justify-around">
+          <!-- ORIGINAL -->
+          <!-- ORIGINAL ENDS HERE -->
+
           <!-- FOR QA TESTING ONLY -->
           <div class="text-center" style="flex: 1 0 0; min-width: 100px; max-width: 210px;">
             Practice
@@ -157,7 +160,7 @@
         </div>
       </div>
 
-   
+      <!-- New -->
       <div class="overflow-auto" style="max-height: 43vh">
         <div v-for="item in allBillablePractices" :key="item.id">
           <div class="flex flex-col lg:flex-row m-2">
