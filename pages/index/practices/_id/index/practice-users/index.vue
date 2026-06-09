@@ -20,7 +20,7 @@
       </nuxt-link>
     </div>
 
-    <nuxt-child @practiceUpdated="() => $emit('practiceUpdated')" />
+    <nuxt-child @practiceUpdated="practice => $emit('practiceUpdated', practice)" />
   </div>
 </template>
 <script>
