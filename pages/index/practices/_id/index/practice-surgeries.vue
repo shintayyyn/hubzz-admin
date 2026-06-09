@@ -181,6 +181,7 @@ export default {
     canCreateNewSpokeToHub() {
       return this.practice && this.practice.status === 'Active' && this.authAdminPermissions.includes('Create New Spoke To Hub')
     },
+
     practiceSurgeriesPath() {
       return `/practices/${this.routePracticeId}/practice-surgeries`
     },

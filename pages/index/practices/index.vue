@@ -428,6 +428,8 @@ export default {
   watch: {
     practiceTab() {
       this.currentPage = 1
+      this.filterPracticeType = null
+      this.filterPracticeHubType = null
       this.getPractices()
     },
 
@@ -502,7 +504,7 @@ export default {
           const [count, practices] = responses
 
           this.count = count
-          this.practices = practices
+          this.practices = [...practices]
           this.dynamicColumns = this.getDynamicColumns()
         })
         .finally(() => {
@@ -535,17 +537,22 @@ export default {
       this.getPractices()
     },
 
-    practiceUpdatedHandler(practice) {
-      if (!practice) {
+    practiceUpdatedHandler(updatedPractice) {
+      if (!updatedPractice) {
         this.getPractices()
         return
       }
 
-      const index = this.practices.findIndex(({ id }) => id === practice.id)
+      const index = this.practices.findIndex(practice => practice.id === updatedPractice.id)
 
-      if (index > -1) {
-        this.practices.splice(index, 1, practice)
+      if (index !== -1) {
+        this.$set(this.practices, index, {
+          ...this.practices[index],
+          ...updatedPractice
+        })
       }
+
+      this.getPractices()
     },
 
     getPracticeFilters() {

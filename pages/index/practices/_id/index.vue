@@ -233,21 +233,22 @@ export default {
   },
 
   methods: {
-    practiceUpdatedHandler(practice) {
-      if (practice) {
-        this.practice = practice
-      } else {
-        this.getPractice()
-      }
+    async practiceUpdatedHandler() {
+      const practice = await this.getPractice()
 
       this.$emit('practiceUpdated', practice)
     },
 
     async getPractice() {
-      await this.$axios.$get(`/api/v1/admin/practices/${this.$route.params.id}`).then(res => {
-        const practice = res.data.practice
-        this.$store.commit('practices/SET_SPECIFIC_PRACTICE', practice)
-      })
+      const res = await this.$axios.$get(`/api/v1/admin/practices/${this.$route.params.id}`)
+
+      const practice = res.data.practice
+
+      this.practice = { ...practice }
+
+      this.$store.commit('practices/SET_SPECIFIC_PRACTICE', practice)
+
+      return practice
     }
   }
 }
