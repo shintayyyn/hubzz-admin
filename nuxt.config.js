@@ -95,7 +95,8 @@ export default {
     },
     {
       src: '@/plugins/axios.js'
-    }
+    },
+    { src: '~/plugins/axios-cache.js', mode: 'client' }
   ],
 
   modules: ['@nuxtjs/axios', '@nuxtjs/auth'],
