@@ -222,6 +222,8 @@ export default {
     },
 
     toggleCheck(item) {
+      if (this.isRowDisabled(item)) return
+
       const index = this.chosenJobParts.findIndex(jobPart => {
         return jobPart.id === item.id
       })
