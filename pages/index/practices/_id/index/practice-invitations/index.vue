@@ -32,7 +32,7 @@
       </div>
     </template>
 
-    <template v-if="practice && practice.type === 'Spoke'">
+    <template v-else-if="practice && practice.type === 'Spoke'">
       <div v-if="practice.hub_practice" class="flex flex-col mx-4 border rounded-lg p-4 max-w-sm ">
         <div class="font-bold text-xl mb-4">
           Practice Hub
@@ -87,6 +87,12 @@
       </div>
     </template>
 
+    <template v-else>
+      <div class="text-center text-lg font-bold">
+        Invitations are only available for Hub/Spoke practices.
+      </div>
+    </template>
+
     <AppConfirm
       v-if="toggle_reject_modal"
       :message="'Reject this spoke invitation to this Practice?'"
@@ -102,7 +108,8 @@
     <transition name="fade" mode="out-in">
       <div v-if="showShield" class="shield" @click="closeOverlays" />
     </transition>
-    <nuxt-child :practiceType="practice.type" @acceptInvitation="getInit" />
+
+    <nuxt-child :practiceType="practice ? practice.type : null" @acceptInvitation="getInit" />
   </div>
 </template>
 <script>
