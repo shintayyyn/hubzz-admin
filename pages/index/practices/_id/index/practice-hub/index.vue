@@ -183,7 +183,7 @@ export default {
         { name: 'Invited at', dataIndex: 'created_at_in_gb_formatted', class: 'text-center' },
         { name: 'Actions', dataIndex: '', slot: true, slotName: 'actions', class: 'text-center' }
       ],
-
+      // Static permission row definitions (non-reactive, never changes)
       permissionRows: [
         { key: 'allow_surgery_create_permanent_jobs', label: 'Does Hub allow the creation of Permanent Jobs?' },
         { key: 'allow_surgery_bill_locum', label: 'Does Hub permit billing of Locums?' },
@@ -216,7 +216,7 @@ export default {
     hubInvitations() {
       return this.$store.state.practices.hubInvitations
     },
-
+    // Rate limit rows derived from practice — avoids repeated template ternaries
     rateLimits() {
       const p = this.practice
       return [
@@ -313,82 +313,66 @@ export default {
     },
 
     async toTerminateFromHub() {
-      try {
-        await this.$axios.$delete(`/api/v1/admin/practices/${this.$route.params.id}/parent-surgery`)
-
-        this.$store.commit('practices/SET_PRACTICE_HUB', null)
-        this.$store.commit('practices/SET_PRACTICE_PARENT', null)
-
-        await this.refreshPageData()
-
-        this.$store.commit('SET_NOTIFICATION', {
-          enabled: true,
-          status: 'success',
-          text: 'Successfully Terminated Spoke'
+      await this.$axios
+        .$delete(`/api/v1/admin/practices/${this.$route.params.id}/parent-surgery`)
+        .then(() => {
+          this.$store.commit('practices/SET_PRACTICE_HUB', null)
+          this.$store.commit('practices/SET_PRACTICE_PARENT', null)
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'success',
+            text: 'Successfully Terminated Spoke'
+          })
+          this.confirm = false
+          this.getHubInvitations()
         })
-        this.confirm = false
-      } catch (err) {
-        this.$store.commit('SET_NOTIFICATION', {
-          enabled: true,
-          status: 'danger',
-          text: err.response.data.message
+        .catch(err => {
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'danger',
+            text: err.response.data.message
+          })
         })
-      }
-    },
-
-    async refreshPageData() {
-      const id = this.$route.params.id
-      const params = this.params
-
-      const practiceRes = await this.$axios.$get(`/api/v1/admin/practices/${id}`)
-      const practice = practiceRes.data.practice
-      await this.$store.commit('practices/SET_SPECIFIC_PRACTICE', practice)
-
-      await this.$store.commit('practices/SET_PRACTICE_HUB', null)
-
-      const countRes = await this.$axios.$get(`/api/v1/admin/practices/${id}/parent-surgery/invitations-count`)
-      await this.$store.commit('practices/SET_HUBZZ_INVITATIONS_COUNT', countRes.data.count)
-
-      const invRes = await this.$axios.$get(`/api/v1/admin/practices/${id}/parent-surgery/invitations`, { params })
-      await this.$store.commit('practices/SET_HUBZZ_INVITATIONS', invRes.data.practice_surgeries)
     },
 
     async toAcceptInvitation(id) {
-      try {
-        await this.$axios.$put(`/api/v1/admin/practices/${this.$route.params.id}/parent-surgery/invitations/${id}/accept-invitation`)
-
-        await this.refreshPageData()
-        this.$store.commit('SET_NOTIFICATION', {
-          enabled: true,
-          status: 'success',
-          text: 'Successfully Accepted Invitation'
+      await this.$axios
+        .$put(`/api/v1/admin/practices/${this.$route.params.id}/parent-surgery/invitations/${id}/accept-invitation`)
+        .then(() => {
+          this.getHubInvitations()
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'success',
+            text: 'Successfully Accepted Invitation'
+          })
         })
-      } catch (err) {
-        this.$store.commit('SET_NOTIFICATION', {
-          enabled: true,
-          status: 'danger',
-          text: err.response.data.message
+        .catch(err => {
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'danger',
+            text: err.response.data.message
+          })
         })
-      }
     },
 
     async toRejectInvitation(id) {
-      try {
-        await this.$axios.$put(`/api/v1/admin/practices/${this.$route.params.id}/parent-surgery/invitations/${id}/reject-invitation`)
-
-        await this.refreshPageData()
-        this.$store.commit('SET_NOTIFICATION', {
-          enabled: true,
-          status: 'success',
-          text: 'Successfully Rejected Invitation'
+      await this.$axios
+        .$put(`/api/v1/admin/practices/${this.$route.params.id}/parent-surgery/invitations/${id}/reject-invitation`)
+        .then(() => {
+          this.getHubInvitations()
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'success',
+            text: 'Successfully Rejected Invitation'
+          })
         })
-      } catch (err) {
-        this.$store.commit('SET_NOTIFICATION', {
-          enabled: true,
-          status: 'danger',
-          text: err.response.data.message
+        .catch(err => {
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'danger',
+            text: err.response.data.message
+          })
         })
-      }
     }
   }
 }
